@@ -60,7 +60,9 @@ class UserProfileView(APIView):
 
     def get(self, request):
         user = request.user
-        return Response(UserProfileSerializer(user).data, status=status.HTTP_200_OK)
+        serialized_user = UserProfileSerializer(user).data
+        response_data = {"user": serialized_user}
+        return Response(response_data, status=status.HTTP_200_OK)
 
     def patch(self, request):
         user = request.user
