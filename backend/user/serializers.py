@@ -81,3 +81,74 @@ class EmailCheckSerializer(serializers.Serializer):
             raise ValidationError("email address unavailable (already taken)")
 
         return data
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'nickname',
+            'email_verified',
+            'updated_at',
+        )
+
+
+class UserProfileUpdateSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=False, max_length=50)
+    nickname = serializers.CharField(required=False, max_length=15)
+    origin_password = serializers.CharField(required=False)
+    new_password = serializers.CharField(required=False)
+
+    def validate(self, data):
+        user = self.context['user']
+        origin_password = data.get('origin_password')
+        origin_email = user.email
+        new_password = data.get('new_password')
+        email = data.get('email')
+        nickname = data.get('nickname')
+
+        if not origin_password:
+            raise ValidationError("password required")
+
+        if not email and not nickname and not new_password:
+            raise ValidationError("At least one of email, nickname, or password must be provided.")
+
+        user = authenticate(email=origin_email, password=origin_password)
+        if user is None:
+            raise ValidationError("wrong password (original password)")
+
+        if new_password:
+            if len(new_password) < 8:
+                raise ValidationError("password unavailable (short password)")
+        if email:
+            normalize_email(email)
+            if user.email == email:
+                raise ValidationError('새 이메일이 기존 이메일과 같습니다.')
+            if User.objects.filter(email=email).exists():
+                raise ValidationError('email address unavailable (already taken)')
+            data['email'] = email
+        if nickname:
+            if user.nickname == nickname:
+                raise ValidationError('새 닉네임이 기존 닉네임과 같습니다.')
+
+        return data
+
+    def update(self, user, validated_data):
+        new_password = validated_data.get('new_password')
+        email = validated_data.get('email')
+        nickname = validated_data.get('nickname')
+        queryset = User.objects.filter(email=email)
+
+        if new_password is not None:
+            user.set_password(new_password)
+
+        if email is not None:
+            user.email = email
+
+        if nickname is not None:
+            user.nickname = nickname
+
+        user.save()
+        return user

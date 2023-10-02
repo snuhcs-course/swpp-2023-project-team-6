@@ -5,7 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from config.utils import AccessToken
 
-from .serializers import UserSignUpSerializer, UserLoginSerializer, UserLogoutSerializer, EmailCheckSerializer
+from .serializers import UserSignUpSerializer, UserLoginSerializer, UserLogoutSerializer, EmailCheckSerializer, \
+    UserProfileSerializer, UserProfileUpdateSerializer
 
 
 class UserSignUpView(APIView):
@@ -51,4 +52,24 @@ class EmailCheckView(APIView):
     def get(self, request):
         serializer = EmailCheckSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        return Response(status=status.HTTP_200_OK)
+
+
+class UserProfileView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        return Response(UserProfileSerializer(user).data, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        user = request.user
+        data = request.data
+        serializer = UserProfileUpdateSerializer(user, data=data, context={'user': user})
+        print(data)
+        serializer.is_valid(raise_exception=True)
+        print("------")
+        print(serializer.validated_data)
+        serializer.save()
+
         return Response(status=status.HTTP_200_OK)
