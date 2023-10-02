@@ -56,3 +56,7 @@ class UserLoginSerializer(serializers.Serializer):
         return {
             'token': jwt_token
         }
+
+
+class UserLogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField(required=True)

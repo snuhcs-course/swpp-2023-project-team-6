@@ -1,9 +1,11 @@
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
+from config.utils import AccessToken
 
-from .serializers import UserSignUpSerializer, UserLoginSerializer
+from .serializers import UserSignUpSerializer, UserLoginSerializer, UserLogoutSerializer
 
 
 class UserSignUpView(APIView):
@@ -27,3 +29,17 @@ class UserLoginView(APIView):
         token = serializer.validated_data['token']
 
         return Response(token, status=status.HTTP_200_OK)
+
+
+class UserLogoutView(APIView):
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def post(self, request):
+        serializer = UserLogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        refresh_token = RefreshToken(serializer.validated_data['refresh'])
+        access_token = AccessToken(request.META.get('HTTP_AUTHORIZATION').split()[1])
+        refresh_token.blacklist()
+        access_token.blacklist()
+        return Response(status=status.HTTP_200_OK)
