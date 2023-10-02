@@ -1,1 +1,5 @@
 .DS_Store
+
+backend/confidential.py
+backend/secrets.json
+
