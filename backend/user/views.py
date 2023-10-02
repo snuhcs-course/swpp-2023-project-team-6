@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from config.utils import AccessToken
 
-from .serializers import UserSignUpSerializer, UserLoginSerializer, UserLogoutSerializer
+from .serializers import UserSignUpSerializer, UserLoginSerializer, UserLogoutSerializer, EmailCheckSerializer
 
 
 class UserSignUpView(APIView):
@@ -42,4 +42,13 @@ class UserLogoutView(APIView):
         access_token = AccessToken(request.META.get('HTTP_AUTHORIZATION').split()[1])
         refresh_token.blacklist()
         access_token.blacklist()
+        return Response(status=status.HTTP_200_OK)
+
+
+class EmailCheckView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        serializer = EmailCheckSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         return Response(status=status.HTTP_200_OK)
