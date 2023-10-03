@@ -101,15 +101,18 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'sqlite3_for_dev'),
-    }
-}
+# Local DB setting
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'sqlite3_for_dev'),
+#     }
+# }
 
-# import confidential
-# DATABASES = confidential.DATABASES
+# Remote DB setting
+# Add your own confidential.py
+import confidential
+DATABASES = confidential.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
