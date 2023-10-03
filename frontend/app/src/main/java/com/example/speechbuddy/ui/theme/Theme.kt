@@ -15,16 +15,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val _lightColorScheme = lightColorScheme(
+    primary = sb_theme_light_green,
+    secondary = sb_theme_light_pink,
+    tertiary = sb_theme_light_purple,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val _darkColorScheme = darkColorScheme(
+    primary = sb_theme_dark_green,
+    secondary = sb_theme_dark_pink,
+    tertiary = sb_theme_dark_purple,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -50,8 +50,8 @@ fun SpeechBuddyTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> _darkColorScheme
+        else -> _lightColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
