@@ -68,10 +68,7 @@ class UserProfileView(APIView):
         user = request.user
         data = request.data
         serializer = UserProfileUpdateSerializer(user, data=data, context={'user': user})
-        print(data)
         serializer.is_valid(raise_exception=True)
-        print("------")
-        print(serializer.validated_data)
         serializer.save()
 
         return Response(status=status.HTTP_200_OK)

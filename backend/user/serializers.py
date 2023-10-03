@@ -14,12 +14,12 @@ class UserSignUpSerializer(serializers.Serializer):
     def validate(self, data):
         pw = data.get('password')
         if len(pw) < 8:
-            raise ValidationError("password unavailable (short password)")
+            raise ValidationError({"password": ["password unavailable (short password)"]})
 
         email = data.get('email')
 
         if User.objects.filter(email=email).exists():
-            raise ValidationError('email address unavailable (already taken)')
+            raise ValidationError({"email": ["email address unavailable (already taken)"]})
         return data
 
     def create(self, validated_data):
@@ -38,12 +38,12 @@ class UserLoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email', None)
         if not User.objects.filter(email=email).exists():
-            raise ValidationError('wrong email address')
+            raise ValidationError({"email": ["wrong email address"]})
 
         password = data.get('password', None)
         user = authenticate(email=email, password=password)
         if user is None:
-            raise ValidationError("wrong password")
+            raise ValidationError({"password": ["wrong password"]})
 
         token = TokenObtainPairSerializer.get_token(user)
         refresh = str(token)
@@ -78,7 +78,7 @@ class EmailCheckSerializer(serializers.Serializer):
     def validate(self, data):
         email = normalize_email(data.get('email'))
         if User.objects.filter(email=email).exists():
-            raise ValidationError("email address unavailable (already taken)")
+            raise ValidationError({"email": ["email address unavailable (already taken)"]})
 
         return data
 
@@ -98,7 +98,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserProfileUpdateSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False, max_length=50)
     nickname = serializers.CharField(required=False, max_length=15)
-    origin_password = serializers.CharField(required=False)
+    origin_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=False)
 
     def validate(self, data):
@@ -108,9 +108,6 @@ class UserProfileUpdateSerializer(serializers.Serializer):
         new_password = data.get('new_password')
         email = data.get('email')
         nickname = data.get('nickname')
-
-        if not origin_password:
-            raise ValidationError("password required")
 
         if not email and not nickname and not new_password:
             raise ValidationError("At least one of email, nickname, or password must be provided.")
