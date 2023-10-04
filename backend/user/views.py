@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from config.utils import AccessToken
 
 from .serializers import UserSignUpSerializer, UserLoginSerializer, UserLogoutSerializer, EmailCheckSerializer, \
-    UserProfileSerializer, UserProfileUpdateSerializer
+    UserProfileSerializer, EmailUpdateSerializer, PasswordUpdateSerializer, NicknameUpdateSerializer
 
 
 class UserSignUpView(APIView):
@@ -64,11 +64,38 @@ class UserProfileView(APIView):
         response_data = {"user": serialized_user}
         return Response(response_data, status=status.HTTP_200_OK)
 
+
+class EmailUpdateView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def patch(self, request):
         user = request.user
         data = request.data
-        serializer = UserProfileUpdateSerializer(user, data=data, context={'user': user})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        email_serializer = EmailUpdateSerializer(user, data=data, context={'user': user})
+        email_serializer.is_valid(raise_exception=True)
+        email_serializer.save()
+        return Response(status=status.HTTP_200_OK)
 
+
+class PasswordUpdateView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def patch(self, request):
+        user = request.user
+        data = request.data
+        password_serializer = PasswordUpdateSerializer(user, data=data, context={'user': user})
+        password_serializer.is_valid(raise_exception=True)
+        password_serializer.save()
+        return Response(status=status.HTTP_200_OK)
+
+
+class NicknameUpdateView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def patch(self, request):
+        user = request.user
+        data = request.data
+        nickname_serializer = NicknameUpdateSerializer(user, data=data, context={'user': user})
+        nickname_serializer.is_valid(raise_exception=True)
+        nickname_serializer.save()
         return Response(status=status.HTTP_200_OK)
