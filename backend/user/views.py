@@ -49,7 +49,7 @@ class UserLogoutView(APIView):
 class EmailCheckView(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request):
+    def post(self, request):
         serializer = EmailCheckSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(status=status.HTTP_200_OK)
