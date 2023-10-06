@@ -100,11 +100,8 @@ class PasswordUpdateSerializer(serializers.Serializer):
 
     def validate(self, data):
         password = data.get('password')
-        if password:
-            if len(password) < 8:
-                raise ValidationError({"password": ["short password"]})
-        else:
-            raise ValidationError({"password": ["The field is empty"]})
+        if len(password) < 8:
+            raise ValidationError({"password": ["short password"]})
         return data
 
     def update(self, user, validated_data):
@@ -120,11 +117,8 @@ class NicknameUpdateSerializer(serializers.Serializer):
     def validate(self, data):
         user = self.context['user']
         nickname = data.get('nickname')
-        if nickname:
-            if user.nickname == nickname:
-                raise ValidationError({"nickname": ["The new nickname is the same as the original one"]})
-        else:
-            raise ValidationError({"nickname": ["The field is empty"]})
+        if user.nickname == nickname:
+            raise ValidationError({"nickname": ["The new nickname is the same as the original one"]})
         return data
 
     def update(self, user, validated_data):
