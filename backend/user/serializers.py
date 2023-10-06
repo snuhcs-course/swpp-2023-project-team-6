@@ -109,7 +109,7 @@ class PasswordUpdateSerializer(serializers.Serializer):
 
     def update(self, user, validated_data):
         password = validated_data.get('password')
-        user.password = password
+        user.set_password(password)
         user.save()
         return user
 
