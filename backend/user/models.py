@@ -39,7 +39,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(max_length=15, null=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-    email_verified = models.BooleanField(default=False)
     updated_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
