@@ -95,31 +95,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
 
 
-class EmailUpdateSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True, max_length=50)
-
-    def validate(self, data):
-        user = self.context['user']
-        email = data.get('email')
-
-        if email:
-            normalize_email(email)
-            if user.email == email:
-                raise ValidationError({"email": ["The new email address is the same as the original one"]})
-            if User.objects.filter(email=email).exists():
-                raise ValidationError({"email": ["email address unavailable (already taken)"]})
-            data['email'] = email
-        else:
-            raise ValidationError({"email": ["The field is empty"]})
-        return data
-
-    def update(self, user, validated_data):
-        email = validated_data.get('email')
-        user.email = email
-        user.save()
-        return user
-
-
 class PasswordUpdateSerializer(serializers.Serializer):
     password = serializers.CharField(required=True)
 
@@ -157,3 +132,4 @@ class NicknameUpdateSerializer(serializers.Serializer):
         user.nickname = nickname
         user.save()
         return user
+
