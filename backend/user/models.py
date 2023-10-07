@@ -52,3 +52,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.email
+
+
+class EmailVerification(models.Model):
+    email = models.EmailField(max_length=50, unique=True, null=False, blank=False)
+    code = models.CharField(max_length=6, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now=True)

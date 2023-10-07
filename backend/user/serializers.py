@@ -3,6 +3,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from user.models import EmailVerification
+from user.utils import normalize_email
+
 User = get_user_model()
 
 
@@ -28,6 +31,36 @@ class UserSignUpSerializer(serializers.Serializer):
         nickname = validated_data.get('nickname')
         user = User.objects.create_user(nickname, email, password)
         return user
+
+
+class EmailCheckSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True, max_length=50)
+
+    def validate(self, data):
+        email = normalize_email(data.get('email'))
+        if User.objects.filter(email=email).exists():
+            raise ValidationError({"email": ["email address unavailable (already taken)"]})
+
+        return data
+
+
+class CodeCheckSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True, max_length=50)
+    code = serializers.CharField(required=True, max_length=6)
+
+    def validate(self, data):
+        email = normalize_email(data.get('email'))
+        code = data.get('code')
+        if not len(code) == 6:
+            raise ValidationError({"code": ["Invalid code length(should be 6)"]})
+
+        if not EmailVerification.objects.filter(email=email, code=code).exists():
+            raise ValidationError({"fail": ["wrong code"]})
+        else:
+            # successfully verified
+            verification = EmailVerification.objects.get(email=email, code=code)
+            verification.delete()
+        return data
 
 
 class UserLoginSerializer(serializers.Serializer):
@@ -60,27 +93,6 @@ class UserLoginSerializer(serializers.Serializer):
 
 class UserLogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField(required=True)
-
-
-def normalize_email(email):
-    try:
-        email_name, domain_part = email.strip().rsplit("@", 1)
-    except ValueError:
-        pass
-    else:
-        email = email_name + "@" + domain_part.lower()
-    return email
-
-
-class EmailCheckSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True, max_length=50)
-
-    def validate(self, data):
-        email = normalize_email(data.get('email'))
-        if User.objects.filter(email=email).exists():
-            raise ValidationError({"email": ["email address unavailable (already taken)"]})
-
-        return data
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -126,4 +138,3 @@ class NicknameUpdateSerializer(serializers.Serializer):
         user.nickname = nickname
         user.save()
         return user
-
