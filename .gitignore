@@ -127,3 +127,17 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+*.iml
+.idea
+.DS_Store
+local.properties
+
+frontend/.gradle
+frontend/local.properties
+frontend/.idea
+frontend/.DS_Store
+frontend/build
+frontend/captures
+frontend/.externalNativeBuild
+frontend/.cxx
+frontend/app/build
