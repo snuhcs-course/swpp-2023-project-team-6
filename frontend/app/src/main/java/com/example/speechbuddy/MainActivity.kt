@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.example.speechbuddy.compose.SpeechBuddyApp
-import com.example.speechbuddy.ui.theme.SpeechBuddyTheme
+import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

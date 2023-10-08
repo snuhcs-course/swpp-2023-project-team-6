@@ -1,4 +1,4 @@
-package com.example.speechbuddy.ui.theme
+package com.example.speechbuddy.ui
 
 import android.app.Activity
 import android.os.Build
