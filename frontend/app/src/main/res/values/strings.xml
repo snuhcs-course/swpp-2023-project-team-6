@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SpeechBuddy</string>
+    <string name="guess_mode_action">게스트 모드로 시작하기</string>
+    <string name="login_action">로그인하기</string>
 </resources>
