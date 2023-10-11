@@ -2,4 +2,13 @@
     <string name="app_name">SpeechBuddy</string>
     <string name="guess_mode_action">게스트 모드로 시작하기</string>
     <string name="login_action">로그인하기</string>
+    <string name="forgot_passowrd">비밀번호를 잊으셨나요?</string>
+    <string name="signup">회원가입</string>
+    <string name="login_text">로그인</string>
+    <string name="login_explain">로그인해 SpeechBuddy의 많은 기능을 사용해보세요</string>
+    <string name="unreg_email">등록되지 않은 이메일입니다</string>
+    <string name="false_email">이메일 주소가 올바르지 않습니다</string>
+    <string name="false_password">비밀번호가 올바르지 않습니다</string>
+    <string name="email_field">이메일</string>
+    <string name="password_field">비밀번호</string>
 </resources>
