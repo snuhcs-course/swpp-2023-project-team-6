@@ -20,11 +20,18 @@ fun ButtonUi(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    error: Boolean = false,
+//    error: Boolean = false,
+    color: Color = MaterialTheme.colorScheme.primary,
 ) {
-    val containerColor: Color = when (error) {
-        true -> MaterialTheme.colorScheme.error
-        else -> MaterialTheme.colorScheme.primary
+//    val containerColor: Color = when (error) {
+//        true -> MaterialTheme.colorScheme.error
+//        else -> MaterialTheme.colorScheme.primary
+//    }
+    val containerColor: Color;
+    if (color == MaterialTheme.colorScheme.primary){
+        containerColor = MaterialTheme.colorScheme.primary
+    }else{
+        containerColor = color
     }
 
     Button(
