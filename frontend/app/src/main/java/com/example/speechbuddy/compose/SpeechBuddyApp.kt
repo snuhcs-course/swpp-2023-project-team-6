@@ -34,6 +34,9 @@ fun SpeechBuddyNavHost(
             LoginScreen(
                 onSignupClick = {
                     navController.navigate("signup")
+                },
+                onLandingClick = {
+                    navController.navigate("landing")
                 }
             )
         }

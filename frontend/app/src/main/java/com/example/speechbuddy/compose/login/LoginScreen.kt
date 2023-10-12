@@ -38,6 +38,7 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import androidx.navigation.fragment.findNavController
+import com.example.speechbuddy.viewmodels.LoginViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -45,6 +46,7 @@ import androidx.navigation.fragment.findNavController
 @Composable
 fun LoginScreen(
     onSignupClick: () -> Unit,
+    onLandingClick: () -> Unit,
 ) {
     Surface(
         modifier = Modifier
@@ -66,6 +68,7 @@ fun LoginScreen(
                     navigationIcon = {
                         IconButton(onClick = {
                             /*TODO*/
+                            onLandingClick()
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
@@ -171,6 +174,6 @@ fun LoginScreen(
 @Preview
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen({})
+    LoginScreen(onLandingClick = {}, onSignupClick = {})
 }
 
