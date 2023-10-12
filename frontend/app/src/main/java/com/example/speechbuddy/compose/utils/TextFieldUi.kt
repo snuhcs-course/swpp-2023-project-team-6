@@ -37,7 +37,7 @@ fun TextFieldUi(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun TextFieldUiPreview() {
     SpeechBuddyTheme {

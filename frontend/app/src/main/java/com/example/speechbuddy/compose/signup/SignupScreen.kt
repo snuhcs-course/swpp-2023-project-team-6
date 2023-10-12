@@ -28,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
-import com.example.speechbuddy.compose.utils.LoginPageExplanationUi
-import com.example.speechbuddy.compose.utils.LoginTopAppBarUi
+import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.md_theme_light_error
 import com.example.speechbuddy.ui.md_theme_light_primary
@@ -47,7 +47,7 @@ fun SignupScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             Scaffold(
-                topBar = { LoginTopAppBarUi(onPreviousClick) }
+                topBar = { TopAppBarUi(onBackClick = onPreviousClick) }
             ) {
                 var nickname by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
@@ -60,9 +60,9 @@ fun SignupScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    LoginPageExplanationUi(
-                        titleText = R.string.signup_text,
-                        explainText = R.string.signup_explain
+                    TitleUi(
+                        title = stringResource(id = R.string.signup_text),
+                        description = stringResource(id = R.string.signup_explain)
                     )
 
                     OutlinedTextField(
