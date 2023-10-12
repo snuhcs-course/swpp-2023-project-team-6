@@ -26,11 +26,11 @@ import androidx.compose.ui.res.stringResource
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.LoginTopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.compose.utils.ButtonUi
+import com.example.speechbuddy.compose.utils.LoginInputFieldUi
 import com.example.speechbuddy.compose.utils.LoginPageExplanationUi
 import com.example.speechbuddy.ui.md_theme_light_primary
 import com.example.speechbuddy.ui.md_theme_light_error
@@ -80,24 +80,14 @@ fun SignupScreen(
                     )
                     Spacer(modifier = Modifier.height(25.dp))
 
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp)
-                            .height(45.dp),
-                        value = nickname,
-                        onValueChange = {nickname = it},
-                        shape = RoundedCornerShape(10.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = md_theme_light_error)
-                    )
+                    LoginInputFieldUi(value = nickname, labelId = R.string.nickname, focusedBorderColor = MaterialTheme.colorScheme.primary)
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 5.dp, vertical = 4.dp),
                         text = stringResource(id = R.string.false_nickname),
                         style = MaterialTheme.typography.bodySmall,
-                        color = md_theme_light_error,
+                        color = MaterialTheme.colorScheme.primary,
                     )
 
                     OutlinedTextField(

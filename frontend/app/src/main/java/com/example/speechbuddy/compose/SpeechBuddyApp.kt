@@ -38,7 +38,7 @@ fun SpeechBuddyNavHost(
             )
         }
         composable("signup") {
-            SignupScreen()
+            //SignupScreen()
         }
     }
 }
