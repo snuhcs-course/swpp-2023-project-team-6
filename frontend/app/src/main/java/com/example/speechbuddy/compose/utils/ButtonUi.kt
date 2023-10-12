@@ -20,25 +20,18 @@ fun ButtonUi(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-//    error: Boolean = false,
-    color: Color = MaterialTheme.colorScheme.primary,
+    error: Boolean = false,
 ) {
-//    val containerColor: Color = when (error) {
-//        true -> MaterialTheme.colorScheme.error
-//        else -> MaterialTheme.colorScheme.primary
-//    }
-    val containerColor: Color;
-    if (color == MaterialTheme.colorScheme.primary){
-        containerColor = MaterialTheme.colorScheme.primary
-    }else{
-        containerColor = color
+    val containerColor: Color = when (error) {
+        true -> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.primary
     }
 
     Button(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(44.dp),
+            .height(48.dp),
         enabled = enabled,
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(containerColor)

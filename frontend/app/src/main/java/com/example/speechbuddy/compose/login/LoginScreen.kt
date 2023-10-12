@@ -33,12 +33,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
-import androidx.navigation.fragment.findNavController
-import com.example.speechbuddy.viewmodels.LoginViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -111,7 +107,8 @@ fun LoginScreen(
                     onValueChange = { username.value = it },
                     label = { Text(stringResource(id = R.string.email_field)) },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = MaterialTheme.colorScheme.error)
+                        focusedBorderColor = MaterialTheme.colorScheme.error
+                    )
 //                keyboardOptions = Default.copy(imeAction = ImeAction.Next),
 //                keyboardActions = KeyboardActions(onNext = { /* focus next field */ })
                 )
@@ -155,9 +152,8 @@ fun LoginScreen(
 
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_passowrd),
-                    color = MaterialTheme.colorScheme.secondaryContainer,
                     onClick = { /*forgot password*/ },
-                    )
+                )
 
                 Spacer(modifier = Modifier.height(145.dp))
 

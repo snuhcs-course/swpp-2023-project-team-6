@@ -1,7 +1,7 @@
 package com.example.speechbuddy.compose.utils
 
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +28,7 @@ fun TextFieldUi(
         onValueChange = onValueChange,
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp),
+            .defaultMinSize(minHeight = 48.dp),
         textStyle = MaterialTheme.typography.bodySmall,
         label = label,
         placeholder = placeholder,
