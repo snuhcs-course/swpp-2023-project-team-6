@@ -19,37 +19,35 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginTopAppBarUi(
-    onPreviousClick: ()->Unit
-){
+fun TopAppBarUi(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit
+) {
     CenterAlignedTopAppBar(
         title = {
             Image(
                 painter = painterResource(id = R.drawable.top_app_bar_ic),
                 contentDescription = "app logo",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.size(148.dp)
+                modifier = modifier.size(148.dp)
             )
         },
         navigationIcon = {
-            IconButton(onClick = {
-                /*TODO*/
-            }) {
+            IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Go back to landing page"
                 )
             }
         },
-//                    scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     )
 }
 
 @Preview
 @Composable
-fun LoginTopAppBarUiPreview(){
+fun TopAppBarUiPreview() {
     SpeechBuddyTheme {
-        LoginTopAppBarUi(onPreviousClick = {})
+        TopAppBarUi(onBackClick = {})
     }
 }
 
