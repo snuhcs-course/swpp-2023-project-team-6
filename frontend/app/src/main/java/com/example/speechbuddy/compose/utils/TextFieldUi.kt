@@ -28,11 +28,12 @@ fun TextFieldUi(
         onValueChange = onValueChange,
         modifier = modifier
             .fillMaxWidth()
-            .height(44.dp),
+            .height(56.dp),
         textStyle = MaterialTheme.typography.bodySmall,
         label = label,
         placeholder = placeholder,
         isError = isError,
+        singleLine = true,
         shape = RoundedCornerShape(10.dp),
     )
 }
