@@ -20,20 +20,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.LoginTopAppBarUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
-import com.example.speechbuddy.compose.utils.LoginInputFieldUi
 import com.example.speechbuddy.compose.utils.LoginPageExplanationUi
-import com.example.speechbuddy.ui.md_theme_light_primary
+import com.example.speechbuddy.compose.utils.LoginTopAppBarUi
+import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.md_theme_light_error
+import com.example.speechbuddy.ui.md_theme_light_primary
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,13 +45,13 @@ fun SignupScreen(
     SpeechBuddyTheme {
         Surface(
             modifier = Modifier.fillMaxSize()
-        ){
+        ) {
             Scaffold(
                 topBar = { LoginTopAppBarUi(onPreviousClick) }
-            ){
+            ) {
                 var nickname by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
-                var passwordCheck by remember {mutableStateOf("")}
+                var passwordCheck by remember { mutableStateOf("") }
 
                 Column(
                     modifier = Modifier
@@ -60,10 +59,10 @@ fun SignupScreen(
                         .padding(horizontal = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
-                ){
+                ) {
                     LoginPageExplanationUi(
-                        titleText=R.string.signup_text,
-                        explainText=R.string.signup_explain
+                        titleText = R.string.signup_text,
+                        explainText = R.string.signup_explain
                     )
 
                     OutlinedTextField(
@@ -80,7 +79,7 @@ fun SignupScreen(
                     )
                     Spacer(modifier = Modifier.height(25.dp))
 
-                    LoginInputFieldUi(value = nickname, labelId = R.string.nickname, focusedBorderColor = MaterialTheme.colorScheme.primary)
+                    //LoginInputFieldUi(value = nickname, labelId = R.string.nickname, focusedBorderColor = MaterialTheme.colorScheme.primary)
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -96,10 +95,11 @@ fun SignupScreen(
                             .padding(horizontal = 5.dp)
                             .height(45.dp),
                         value = password,
-                        onValueChange = {password = it},
+                        onValueChange = { password = it },
                         shape = RoundedCornerShape(10.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = md_theme_light_error)
+                            focusedBorderColor = md_theme_light_error
+                        )
                     )
                     Text(
                         modifier = Modifier
@@ -116,10 +116,11 @@ fun SignupScreen(
                             .padding(horizontal = 5.dp)
                             .height(45.dp),
                         value = passwordCheck,
-                        onValueChange = {passwordCheck = it},
+                        onValueChange = { passwordCheck = it },
                         shape = RoundedCornerShape(10.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = md_theme_light_error)
+                            focusedBorderColor = md_theme_light_error
+                        )
                     )
                     Text(
                         modifier = Modifier
@@ -130,8 +131,10 @@ fun SignupScreen(
                         color = md_theme_light_error
                     )
 
-                    ButtonUi(text = stringResource(id=R.string.signup), onClick = { /*TODO*/ },
-                        modifier=Modifier.padding(horizontal = 5.dp))
+                    ButtonUi(
+                        text = stringResource(id = R.string.signup), onClick = { /*TODO*/ },
+                        modifier = Modifier.padding(horizontal = 5.dp)
+                    )
                 }
 
             }
@@ -141,7 +144,7 @@ fun SignupScreen(
 
 @Preview
 @Composable
-fun SignupScreenPreview(){
+fun SignupScreenPreview() {
     SpeechBuddyTheme {
         SignupScreen(onSignupClick = { /*TODO*/ }, onPreviousClick = { /*TODO*/ }, email = "asdf")
     }
