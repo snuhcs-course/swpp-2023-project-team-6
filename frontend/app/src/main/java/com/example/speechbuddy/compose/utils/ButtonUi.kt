@@ -24,16 +24,16 @@ enum class ButtonLevel {
  * @param text displayed on the center of this button
  * @param onClick called when this button is clicked
  * @param modifier the Modifier to be applied to this button
- * @param enabled controls the enabled state of this button. When false, this component will not respond to user input, and it will appear visually disabled and disabled to accessibility services.
- * @param isError defines the color and the enabled state of this button. When true, this component will be disabled, and it will be displayed in red.
- * @param level should be either ButtonLevel.PRIMARY or ButtonLevel.SECONDARY. ButtonLevel.PRIMARY is the default value.
+ * @param isEnabled controls the enabled state of this button. When false, this component will not respond to user input, and it will appear visually disabled and disabled to accessibility services
+ * @param isError defines the color and the enabled state of this button. When true, this component will be disabled, and it will be displayed in error color
+ * @param level should be either ButtonLevel.PRIMARY or ButtonLevel.SECONDARY. ButtonLevel.PRIMARY is the default value
  */
 @Composable
 fun ButtonUi(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
+    isEnabled: Boolean = true,
     isError: Boolean = false,
     level: ButtonLevel = ButtonLevel.PRIMARY
 ) {
@@ -42,7 +42,7 @@ fun ButtonUi(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp),
-        enabled = enabled,
+        enabled = isEnabled,
         shape = RoundedCornerShape(10.dp),
         colors = getButtonColors(level, isError)
     ) {
