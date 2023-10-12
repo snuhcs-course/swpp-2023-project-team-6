@@ -11,13 +11,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.speechbuddy.R
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
+/**
+ * Custom UI designed for titles.
+ *
+ * @param modifier the Modifier to be applied to this title
+ * @param title displayed on the top of this component. Default style is displayMedium
+ * @param description displayed on the bottom of this component. Default style is bodyMedium
+ */
 @Composable
 fun TitleUi(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
 ) {
-    Column {
+    Column(modifier = modifier) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = title,

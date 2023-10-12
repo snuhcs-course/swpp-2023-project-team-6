@@ -17,6 +17,12 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
+/**
+ * Custom UI designed for top app bars.
+ *
+ * @param modifier the Modifier to be applied to this top app bar
+ * @param onBackClick called when the back icon of this top app bar is clicked
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarUi(
@@ -24,12 +30,13 @@ fun TopAppBarUi(
     onBackClick: () -> Unit
 ) {
     CenterAlignedTopAppBar(
+        modifier = modifier,
         title = {
             Image(
                 painter = painterResource(id = R.drawable.top_app_bar_ic),
                 contentDescription = "app logo",
                 contentScale = ContentScale.Fit,
-                modifier = modifier.size(148.dp)
+                modifier = Modifier.size(148.dp)
             )
         },
         navigationIcon = {
