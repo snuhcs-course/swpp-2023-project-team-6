@@ -22,4 +22,16 @@
     <string name="send_validation_number">인증번호 발송</string>
     <string name="password_check_field">비밀번호 확인</string>
     <string name="next">다음</string>
+    <string name="reset_passoword_title">새 비밀번호 설정</string>
+    <string name="reset_password_subtitle1">이메일 인증을 통해 비밀번호를 재설정 할 수 있습니다</string>
+    <string name="reset_password_send_email">으로 인증번호를 방송하였습니다</string>
+    <string name="reset_password_false_validation_number">인증번호가 잘못되었습니다</string>
+    <string name="reset_password_send_validationNumber">인증번호 발송</string>
+    <string name="validation_number_field">인증번호</string>
+    <string name="reset_password_next">다음</string>
+    <string name="reset_password_subtitle2">비밀번호를 잊으셨다면 새로운 비밀번호로 바꿔주세요</string>
+    <string name="new_password_field">새 비밀번호</string>
+    <string name="new_password_check_field">새 비밀번호 확인</string>
+    <string name="false_new_password">8자 이상 입력해주세요</string>
+    <string name="false_new_password_check">비밀번호가 일치하지 않습니다</string>
 </resources>
