@@ -4,19 +4,13 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,22 +19,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
+import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.ui.md_theme_light_error
-import com.example.speechbuddy.ui.md_theme_light_primary
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import com.example.speechbuddy.compose.utils.TextFieldUi
-import com.example.speechbuddy.compose.utils.TextUi
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -96,29 +82,34 @@ fun SignupColumn(
         )
         Spacer(modifier = Modifier.height(15.dp))
 
-        TextFieldUi(value = email,
+        TextFieldUi(
+            value = email,
             onValueChange = {},
             label = { Text(text = stringResource(id = R.string.email_field)) },
-            enabled = false)
+            enabled = false
+        )
         Spacer(modifier = Modifier.height(25.dp))
 
         TextFieldUi(value = nickname,
             onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.nickname)) })
-        TextUi(textId = R.string.nickname)
+            label = { Text(text = stringResource(id = R.string.nickname)) },
+            supportingText = { Text(text = stringResource(id = R.string.nickname)) })
 
         TextFieldUi(value = password,
             onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.password_field)) })
-        TextUi(textId = R.string.password_field)
+            label = { Text(text = stringResource(id = R.string.password_field)) },
+            supportingText = { Text(text = stringResource(id = R.string.password_field)) })
 
-        TextFieldUi(value = passwordCheck,
+        TextFieldUi(
+            value = passwordCheck,
             onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.password_check_field)) })
-        TextUi(textId = R.string.password_field)
+            label = { Text(text = stringResource(id = R.string.password_check_field)) },
+            supportingText = { Text(stringResource(id = R.string.password_field)) }
+        )
 
         ButtonUi(
-            text = stringResource(id = R.string.signup), onClick = { /*TODO*/ },
+            text = stringResource(id = R.string.signup),
+            onClick = { /*TODO*/ },
         )
     }
 }

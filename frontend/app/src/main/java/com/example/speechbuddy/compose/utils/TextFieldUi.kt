@@ -43,7 +43,7 @@ fun TextFieldUi(
     isError: Boolean = false,
     isValid: Boolean = false,
     isHidden: Boolean = false,
-    enabled:  Boolean = true
+    isEnabled:  Boolean = true
 ) {
     OutlinedTextField(
         value = value,
@@ -64,7 +64,7 @@ fun TextFieldUi(
         singleLine = true,
         shape = RoundedCornerShape(10.dp),
         colors = getTextFieldColors(isValid),
-        enabled = enabled
+        enabled = isEnabled
     )
 }
 

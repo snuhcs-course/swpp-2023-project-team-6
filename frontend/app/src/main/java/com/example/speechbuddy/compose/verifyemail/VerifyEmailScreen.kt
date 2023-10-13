@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -23,12 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.signup.SignupColumn
-import com.example.speechbuddy.compose.signup.SignupScreen
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
-import com.example.speechbuddy.compose.utils.TextUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
@@ -78,19 +74,21 @@ fun VerifyEmailColumn(
         TextFieldUi(value = email,
             onValueChange = {},
             label = { Text(text = stringResource(id = R.string.email_field)) },
-            supportingButton = {ButtonUi(
-                text = stringResource(id = R.string.send_validation_number),
-                onClick = {/* TODO */},
-                level = ButtonLevel.TERTIARY
-                )},
-            )
-        TextUi(textId=R.string.email_field)
+            supportingButton = {
+                ButtonUi(
+                    text = stringResource(id = R.string.send_validation_number),
+                    onClick = {/* TODO */ },
+                    level = ButtonLevel.TERTIARY
+                )
+            },
+            supportingText = { Text(stringResource(id = R.string.email_field)) }
+        )
 
         TextFieldUi(value = verifyNumber,
             onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.validation_number))},
+            label = { Text(text = stringResource(id = R.string.validation_number)) },
+            supportingText = { Text(text = stringResource(id = R.string.verify_email_field)) }
         )
-        TextUi(textId = R.string.validation_number)
 
         ButtonUi(
             text = stringResource(id = R.string.next), onClick = { /*TODO*/ },
