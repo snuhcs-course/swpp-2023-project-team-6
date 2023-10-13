@@ -86,7 +86,6 @@ fun SignupColumn(
             value = email,
             onValueChange = {},
             label = { Text(text = stringResource(id = R.string.email_field)) },
-            enabled = false
         )
         Spacer(modifier = Modifier.height(25.dp))
 
