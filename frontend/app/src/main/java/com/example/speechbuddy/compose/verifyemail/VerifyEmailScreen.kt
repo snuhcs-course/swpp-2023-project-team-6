@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
@@ -28,18 +29,27 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodels.VerifyEmailViewModel
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.LiveData
+import com.example.speechbuddy.viewmodels.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VerifyEmailScreen(onPreviousClick: () -> Unit) {
+fun VerifyEmailScreen(
+    onPreviousClick: () -> Unit,
+    verifyEmailViewModel: VerifyEmailViewModel = viewModel()
+) {
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
         Scaffold(topBar = { TopAppBarUi(onBackClick = onPreviousClick) }) {
-            var email by remember { mutableStateOf("") }
-            var verifyNumber by remember { mutableStateOf("") }
-            VerifyEmailColumn(email, verifyNumber)
+            VerifyEmailColumn(
+                verifyEmailViewModel = verifyEmailViewModel,
+                onEmailChanged = {verifyEmailViewModel.updateEmail(it)},
+                onVerifyNumberChanged = {verifyEmailViewModel.updateVerifyNumber(it)}
+                )
         }
     }
 }
@@ -55,8 +65,9 @@ fun VerifyEmailScreenPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyEmailColumn(
-    email: String,
-    verifyNumber: String
+    verifyEmailViewModel: VerifyEmailViewModel,
+    onEmailChanged: (String) -> Unit,
+    onVerifyNumberChanged: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -71,8 +82,8 @@ fun VerifyEmailColumn(
         )
         Spacer(modifier = Modifier.height(15.dp))
 
-        TextFieldUi(value = email,
-            onValueChange = {},
+        TextFieldUi(value = verifyEmailViewModel.getEmail(),
+            onValueChange = onEmailChanged,
             label = { Text(text = stringResource(id = R.string.email_field)) },
             supportingButton = {
                 ButtonUi(
@@ -81,13 +92,15 @@ fun VerifyEmailColumn(
                     level = ButtonLevel.TERTIARY
                 )
             },
-            supportingText = { Text(stringResource(id = R.string.email_field)) }
+            isError = verifyEmailViewModel.warnEmail(),
+            supportingText = { Text(verifyEmailViewModel.warnEmailMessage()) }
         )
 
-        TextFieldUi(value = verifyNumber,
-            onValueChange = {},
+        TextFieldUi(value = verifyEmailViewModel.getVerifyNumber(),
+            onValueChange = onVerifyNumberChanged,
             label = { Text(text = stringResource(id = R.string.validation_number)) },
-            supportingText = { Text(text = stringResource(id = R.string.verify_email_field)) }
+            isError = verifyEmailViewModel.warnVerifyNumber(),
+            supportingText = { Text(verifyEmailViewModel.warnVerifyNumberMessage()) }
         )
 
         ButtonUi(
