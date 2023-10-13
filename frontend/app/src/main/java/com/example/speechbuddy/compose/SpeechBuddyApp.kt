@@ -9,6 +9,7 @@ import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPassword
 import com.example.speechbuddy.compose.resetpasswordcheck.ResetPasswordCheck
+import com.example.speechbuddy.viewmodels.LoginViewModel
 
 @Composable
 fun SpeechBuddyApp() {

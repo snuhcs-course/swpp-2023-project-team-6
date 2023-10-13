@@ -26,7 +26,7 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-
+import com.example.speechbuddy.viewmodels.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,8 +50,7 @@ fun LoginScreen(
                 )
             }
         ) {
-            var username = remember { mutableStateOf("") }
-            var password = remember { mutableStateOf("") }
+            var viewModel = remember { LoginViewModel() }
 
             Column(
                 modifier = Modifier
@@ -70,10 +69,16 @@ fun LoginScreen(
                 // Email Text Field
                 TextFieldUi(
                     label = { Text(stringResource(id = R.string.email_field)) },
-                    value = username.value,
-                    onValueChange = { username.value = it },
-                    supportingText = { Text(stringResource(id = R.string.false_email)) },
-                    isError = false,
+                    value = viewModel.getEmail(),
+                    onValueChange = { viewModel.validateEmail(it) },
+                    supportingText = {
+                        if (viewModel.getEmailError()) {
+                            Text(stringResource(id = R.string.false_email))
+                        } else {
+                            Text("")
+                        }
+                    },
+                    isError = viewModel.getEmailError(),
                     isValid = false,
                     isHidden = false,
                 )
@@ -81,12 +86,18 @@ fun LoginScreen(
                 // Password Text Field
                 TextFieldUi(
                     label = { Text(stringResource(id = R.string.password_field)) },
-                    value = password.value,
-                    onValueChange = { password.value = it },
-                    supportingText = { Text(stringResource(id = R.string.false_password)) },
-                    isError = false,
+                    value = viewModel.getPassword(),
+                    onValueChange = { viewModel.validatePassword(it) },
+                    supportingText = {
+                        if (viewModel.getPasswordError()) {
+                            Text(stringResource(id = R.string.false_password))
+                        } else {
+                            Text("")
+                        }
+                    },
+                    isError = viewModel.getPasswordError(),
                     isValid = false,
-                    isHidden = false,
+                    isHidden = true,
                 )
 
                 // Login Button
