@@ -62,45 +62,45 @@ fun ResetPasswordCheck(
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
+                // Email Text Field
+                TextFieldUi(
+                    label = { Text(stringResource(id = R.string.email_field)) },
+                    value = email.value,
+                    onValueChange = { email.value = it },
+                    supportingText = { Text(stringResource(id = R.string.false_email)) },
+                    supportingButton = {
+                        ButtonUi(
+                            text = stringResource(id = R.string.reset_password_send_validationNumber),
+                            onClick = { /*TODO*/ },
+                            isError = false,
+                            level = ButtonLevel.TERTIARY
+                        )
+                    },
+                    isError = false,
+                    isValid = false,
+                    isHidden = false,
+                )
+
+                // Validation number Text Field
+                TextFieldUi(
+                    label = { Text(stringResource(id = R.string.validation_number_field)) },
+                    value = validationNumber.value,
+                    onValueChange = { validationNumber.value = it },
+                    supportingText = { Text(stringResource(id = R.string.reset_password_false_validation_number)) },
+                    isError = false,
+                    isValid = false,
+                    isHidden = false,
+                )
+
+                // Next Button
+                ButtonUi(
+                    text = stringResource(id = R.string.reset_password_next),
+                    onClick = { onNextClick() },
+                    isError = false,
+                    isEnabled = true,
+                    level = ButtonLevel.PRIMARY
+                )
             }
-            // Email Text Field
-            TextFieldUi(
-                label = { Text(stringResource(id = R.string.email_field)) },
-                value = email.value,
-                onValueChange = { email.value = it },
-                supportingText = { Text(stringResource(id = R.string.false_email)) },
-                supportingButton = {
-                    ButtonUi(
-                        text = stringResource(id = R.string.reset_password_send_validationNumber),
-                        onClick = { /*TODO*/ },
-                        isError = false,
-                        level = ButtonLevel.TERTIARY
-                    )
-                },
-                isError = false,
-                isValid = false,
-                isHidden = false,
-            )
-
-            // Validation number Text Field
-            TextFieldUi(
-                label = { Text(stringResource(id = R.string.validation_number_field)) },
-                value = validationNumber.value,
-                onValueChange = { validationNumber.value = it },
-                supportingText = { Text(stringResource(id = R.string.reset_password_false_validation_number)) },
-                isError = false,
-                isValid = false,
-                isHidden = false,
-            )
-
-            // Next Button
-            ButtonUi(
-                text = stringResource(id = R.string.reset_password_next),
-                onClick = { onNextClick() },
-                isError = false,
-                isEnabled = true,
-                level = ButtonLevel.PRIMARY
-            )
         }
     }
 }
