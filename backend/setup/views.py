@@ -2,7 +2,7 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from setup.models import Setting
-from setup.serializers import SettingBackupSerializer, SettingOptionSerializer
+from setup.serializers import SettingBackupSerializer
 
 
 # Create your views here.
@@ -18,7 +18,7 @@ class SettingBackupView(APIView):
         default_menu = serializer.validated_data['default_menu']
 
         if not Setting.objects.filter(user=user).exists():
-            curr_setting = Setting.objects.create(display_mode=display_mode, default_menu=default_menu, user=user)
+            Setting.objects.create(display_mode=display_mode, default_menu=default_menu, user=user)
         else:
             curr_setting = Setting.objects.get(user=user)
             curr_setting.display_mode = display_mode
@@ -38,6 +38,6 @@ class SettingBackupView(APIView):
             return Response(response_data, status=status.HTTP_200_OK)
         else:
             curr_setting = Setting.objects.get(user=user)
-            response_data = SettingOptionSerializer(curr_setting).data
+            response_data = SettingBackupSerializer(curr_setting).data
             return Response(response_data, status=status.HTTP_200_OK)
 

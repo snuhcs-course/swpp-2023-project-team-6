@@ -16,12 +16,3 @@ class SettingBackupSerializer(serializers.Serializer):
         if default_menu not in [0, 1]:
             raise ValidationError({"default_menu": ["invalid default_menu (not 0 or 1)"]})
         return data
-
-
-class SettingOptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Setting
-        fields = (
-            'display_mode',
-            'default_menu',
-        )
