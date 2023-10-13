@@ -34,4 +34,7 @@
     <string name="new_password_check_field">새 비밀번호 확인</string>
     <string name="false_new_password">8자 이상 입력해주세요</string>
     <string name="false_new_password_check">비밀번호가 일치하지 않습니다</string>
+    <string name="tts_text">소리로 말해보아요</string>
+    <string name="tts_explain">키보드로 텍스트를 입력해주세요</string>
+    <string name="play_text">재생하기</string>
 </resources>
