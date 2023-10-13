@@ -15,10 +15,11 @@
     <string name="email_field">이메일</string>
     <string name="password_field">비밀번호</string>
     <string name="signup">회원가입하기</string>
-    <string name="emailCheck_text">이메일 인증</string>
-    <string name="validationNumber">인증번호</string>
-    <string name="false_validationNumber">인증번호가 잘못되었습니다</string>
-    <string name="emailCheck_explain">회원가입을 위해 이메일 인증을 진행해주세요</string>
-    <string name="send_validationNumber">인증번호 발송</string>
+    <string name="verify_email_field">이메일 인증</string>
+    <string name="validation_number">인증번호</string>
+    <string name="false_validation_number">인증번호가 잘못되었습니다</string>
+    <string name="verify_email_explain">회원가입을 위해 이메일 인증을 진행해주세요</string>
+    <string name="send_validation_number">인증번호 발송</string>
     <string name="password_check_field">비밀번호 확인</string>
+    <string name="next">다음</string>
 </resources>
