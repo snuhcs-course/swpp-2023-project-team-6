@@ -20,4 +20,5 @@
     <string name="false_validationNumber">인증번호가 잘못되었습니다</string>
     <string name="emailCheck_explain">회원가입을 위해 이메일 인증을 진행해주세요</string>
     <string name="send_validationNumber">인증번호 발송</string>
+    <string name="password_check_field">비밀번호 확인</string>
 </resources>

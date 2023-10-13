@@ -29,6 +29,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
  * @param isError indicates if the text field's current value is in error. If set to true, the style of this text field by default will be displayed in error color
  * @param isValid indicates if the text field's current value is valid. If set to true, the style of this text field by default will be displayed in primary color
  * @param isHidden controls the visual transformation of the text field's current value. If set to true, the value of this text field will be displayed as a series of dots
+ * @param enabled indicates if the text in the text field is modifiable
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +42,8 @@ fun TextFieldUi(
     supportingText: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     isValid: Boolean = false,
-    isHidden: Boolean = false
+    isHidden: Boolean = false,
+    enabled:  Boolean = true
 ) {
     OutlinedTextField(
         value = value,
@@ -61,7 +63,8 @@ fun TextFieldUi(
         },
         singleLine = true,
         shape = RoundedCornerShape(10.dp),
-        colors = getTextFieldColors(isValid)
+        colors = getTextFieldColors(isValid),
+        enabled = enabled
     )
 }
 

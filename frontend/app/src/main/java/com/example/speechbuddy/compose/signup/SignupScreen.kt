@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
@@ -33,111 +36,33 @@ import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.md_theme_light_error
 import com.example.speechbuddy.ui.md_theme_light_primary
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import com.example.speechbuddy.compose.utils.TextFieldUi
+import com.example.speechbuddy.compose.utils.TextUi
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(
-    onSignupClick: () -> Unit,
-    onPreviousClick: () -> Unit,
-    email: String
+    onSignupClick: () -> Unit, onPreviousClick: () -> Unit, email: String
 ) {
-    SpeechBuddyTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Scaffold(
-                topBar = { TopAppBarUi(onBackClick = onPreviousClick) }
-            ) {
-                var nickname by remember { mutableStateOf("") }
-                var password by remember { mutableStateOf("") }
-                var passwordCheck by remember { mutableStateOf("") }
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Scaffold(topBar = { TopAppBarUi(onBackClick = onPreviousClick) }) {
+            var nickname by remember { mutableStateOf("") }
+            var password by remember { mutableStateOf("") }
+            var passwordCheck by remember { mutableStateOf("") }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    TitleUi(
-                        title = stringResource(id = R.string.signup_text),
-                        description = stringResource(id = R.string.signup_explain)
-                    )
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp)
-                            .height(45.dp),
-                        value = email,
-                        onValueChange = {},
-                        shape = RoundedCornerShape(10.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = md_theme_light_primary
-                        ), textStyle = MaterialTheme.typography.bodySmall
-                    )
-                    Spacer(modifier = Modifier.height(25.dp))
-
-                    //LoginInputFieldUi(value = nickname, labelId = R.string.nickname, focusedBorderColor = MaterialTheme.colorScheme.primary)
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp, vertical = 4.dp),
-                        text = stringResource(id = R.string.false_nickname),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp)
-                            .height(45.dp),
-                        value = password,
-                        onValueChange = { password = it },
-                        shape = RoundedCornerShape(10.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = md_theme_light_error
-                        )
-                    )
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp, vertical = 4.dp),
-                        text = stringResource(id = R.string.false_password),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = md_theme_light_error
-                    )
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp)
-                            .height(45.dp),
-                        value = passwordCheck,
-                        onValueChange = { passwordCheck = it },
-                        shape = RoundedCornerShape(10.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = md_theme_light_error
-                        )
-                    )
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp, vertical = 4.dp),
-                        text = stringResource(id = R.string.false_password),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = md_theme_light_error
-                    )
-
-                    ButtonUi(
-                        text = stringResource(id = R.string.signup), onClick = { /*TODO*/ },
-                        modifier = Modifier.padding(horizontal = 5.dp)
-                    )
-                }
-
-            }
+            SignupColumn(
+                email = email,
+                nickname = nickname,
+                password = password,
+                passwordCheck = passwordCheck
+            )
         }
     }
 }
@@ -149,3 +74,53 @@ fun SignupScreenPreview() {
         SignupScreen(onSignupClick = { /*TODO*/ }, onPreviousClick = { /*TODO*/ }, email = "asdf")
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SignupColumn(
+    email: String,
+    nickname: String,
+    password: String,
+    passwordCheck: String,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        TitleUi(
+            title = stringResource(id = R.string.signup_text),
+            description = stringResource(id = R.string.signup_explain)
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+
+        TextFieldUi(value = email,
+            onValueChange = {},
+            label = { Text(text = stringResource(id = R.string.email_field)) })
+        Spacer(modifier = Modifier.height(25.dp))
+
+        TextFieldUi(value = nickname,
+            onValueChange = {},
+            label = { Text(text = stringResource(id = R.string.nickname)) })
+        TextUi(textId = R.string.nickname)
+
+        TextFieldUi(value = password,
+            onValueChange = {},
+            label = { Text(text = stringResource(id = R.string.password_field)) })
+        TextUi(textId = R.string.password_field)
+
+        TextFieldUi(value = passwordCheck,
+            onValueChange = {},
+            label = { Text(text = stringResource(id = R.string.password_check_field)) })
+        TextUi(textId = R.string.password_field)
+
+        ButtonUi(
+            text = stringResource(id = R.string.signup), onClick = { /*TODO*/ },
+        )
+    }
+}
+
+
+
