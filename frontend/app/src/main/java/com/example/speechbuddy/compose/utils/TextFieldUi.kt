@@ -25,6 +25,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
  * @param modifier the Modifier to be applied to this text field
  * @param label the optional label to be displayed inside the text field container
  * @param supportingText the optional supporting text to be displayed below the text field
+ * @param supportingButton the optional supporting button to be displayed on the right side of the text field. Using ButtonUi with ButtonLevel.TERTIARY is highly recommended
  * @param isError indicates if the text field's current value is in error. If set to true, the style of this text field by default will be displayed in error color
  * @param isValid indicates if the text field's current value is valid. If set to true, the style of this text field by default will be displayed in primary color
  * @param isHidden controls the visual transformation of the text field's current value. If set to true, the value of this text field will be displayed as a series of dots
@@ -36,6 +37,7 @@ fun TextFieldUi(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
+    supportingButton: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     isValid: Boolean = false,
@@ -49,6 +51,7 @@ fun TextFieldUi(
             .defaultMinSize(minHeight = 48.dp),
         textStyle = MaterialTheme.typography.bodyMedium,
         label = label,
+        trailingIcon = supportingButton,
         supportingText = supportingText,
         isError = isError,
         visualTransformation = if (isHidden) {
@@ -92,13 +95,21 @@ private fun getTextFieldColors(isValid: Boolean): TextFieldColors {
 fun TextFieldUiPreview() {
     SpeechBuddyTheme {
         TextFieldUi(
-            value = "12345678",
+            value = "wrongaddress@email.com",
             onValueChange = {},
-            label = { Text("비밀번호") },
-            supportingText = { Text("비밀번호가 일치하지 않습니다") },
+            label = { Text("이메일") },
+            supportingButton = {
+                ButtonUi(
+                    text = "인증번호 발송",
+                    onClick = {},
+                    isError = true,
+                    level = ButtonLevel.TERTIARY
+                )
+            },
+            supportingText = { Text("잘못된 이메일 주소입니다.") },
             isError = true,
             isValid = false,
-            isHidden = true,
+            isHidden = false,
         )
     }
 }
