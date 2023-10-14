@@ -35,9 +35,9 @@ class SettingBackupView(APIView):
                 "display_mode": 0,
                 "default_menu": 0
             }
-            return Response(response_data, status=status.HTTP_200_OK)
         else:
             curr_setting = Setting.objects.get(user=user)
             response_data = SettingBackupSerializer(curr_setting).data
-            return Response(response_data, status=status.HTTP_200_OK)
+
+        return Response(response_data, status=status.HTTP_200_OK)
 

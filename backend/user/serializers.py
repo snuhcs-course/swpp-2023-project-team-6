@@ -102,7 +102,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'id',
             'email',
             'nickname',
-            'email_verified',
             'updated_at',
         )
 
