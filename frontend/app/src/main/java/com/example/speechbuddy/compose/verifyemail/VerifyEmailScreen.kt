@@ -92,6 +92,8 @@ fun VerifyEmailColumn(
             supportingText = { Text(verifyEmailViewModel.warnVerifyNumberMessage()) }
         )
 
+        Spacer(modifier = Modifier.height(15.dp))
+
         ButtonUi(
             text = stringResource(id = R.string.next), onClick = { /*TODO*/ },
         )
