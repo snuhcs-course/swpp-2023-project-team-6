@@ -72,7 +72,7 @@ fun ResetPasswordCheck(
                     supportingButton = {
                         ButtonUi(
                             text = stringResource(id = R.string.reset_password_send_validationNumber),
-                            onClick = { /*TODO*/ },
+                            onClick = onSubmitClick,
                             isError = false,
                             level = ButtonLevel.TERTIARY
                         )
@@ -110,7 +110,11 @@ fun ResetPasswordCheck(
 @Composable
 private fun LoginScreenPreview() {
     SpeechBuddyTheme {
-        ResetPasswordCheck(onLoginClick = {}, onNextClick = {})
+        ResetPasswordCheck(
+            onNextClick = {},
+            onBackClick =  {},
+            onSubmitClick = {}
+        )
     }
 }
 
