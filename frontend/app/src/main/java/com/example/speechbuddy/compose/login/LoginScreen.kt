@@ -31,22 +31,23 @@ import com.example.speechbuddy.viewmodels.LoginViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onSignupClick: () -> Unit,
+    modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
+    onLoginClick: () -> Unit,
     onResetPasswordClick: () -> Unit,
-    onLoginClick: () -> Unit
+    onSignupClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
 
         Scaffold(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize(),
             topBar = {
                 TopAppBarUi(
-                    onBackClick = { onBackClick() }
+                    onBackClick = onBackClick
                 )
             }
         ) {
