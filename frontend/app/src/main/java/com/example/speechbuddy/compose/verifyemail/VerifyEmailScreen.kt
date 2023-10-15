@@ -68,6 +68,7 @@ fun VerifyEmailColumn(
             title = stringResource(id = R.string.verify_email_field),
             description = stringResource(id = R.string.verify_email_explain)
         )
+        
         Spacer(modifier = Modifier.height(15.dp))
 
         TextFieldUi(value = verifyEmailViewModel.getEmail(),
