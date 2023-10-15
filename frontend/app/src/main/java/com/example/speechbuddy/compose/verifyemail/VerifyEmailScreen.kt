@@ -31,7 +31,10 @@ import com.example.speechbuddy.viewmodels.VerifyEmailViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyEmailScreen(
-    onPreviousClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onSubmitClick: () -> Unit,
+    onNextClick: () -> Unit,
     verifyEmailViewModel: VerifyEmailViewModel = viewModel()
 ) {
     Surface(
