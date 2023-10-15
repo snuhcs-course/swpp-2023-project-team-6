@@ -106,6 +106,8 @@ fun SignupColumn(
             supportingText = { Text(stringResource(id = R.string.password_field)) }
         )
 
+        Spacer(modifier = Modifier.height(15.dp))
+        
         ButtonUi(
             text = stringResource(id = R.string.signup),
             onClick = onSignupClick,
