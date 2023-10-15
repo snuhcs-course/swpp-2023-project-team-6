@@ -32,8 +32,9 @@ import com.example.speechbuddy.viewmodels.LoginViewModel
 @Composable
 fun LoginScreen(
     onSignupClick: () -> Unit,
-    onLandingClick: () -> Unit,
-    onResetPasswordClick: () -> Unit
+    onBackClick: () -> Unit,
+    onResetPasswordClick: () -> Unit,
+    onLoginClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -45,7 +46,7 @@ fun LoginScreen(
                 .fillMaxSize(),
             topBar = {
                 TopAppBarUi(
-                    onBackClick = { onLandingClick() }
+                    onBackClick = { onBackClick() }
                 )
             }
         ) {
@@ -102,7 +103,7 @@ fun LoginScreen(
                 // Login Button
                 ButtonUi(
                     text = stringResource(id = R.string.login_text),
-                    onClick = { /* perform login */ },
+                    onClick = { onLoginClick() },
                     isError = false,
                     isEnabled = true,
                     level = ButtonLevel.PRIMARY
@@ -139,7 +140,11 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     SpeechBuddyTheme {
-        LoginScreen(onLandingClick = {}, onSignupClick = {}, onResetPasswordClick = {})
+        LoginScreen(
+            onBackClick = {},
+            onSignupClick = {},
+            onResetPasswordClick = {},
+            onLoginClick = {})
     }
 }
 
