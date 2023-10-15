@@ -9,7 +9,7 @@ import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPassword
 import com.example.speechbuddy.compose.resetpasswordcheck.ResetPasswordCheck
-import com.example.speechbuddy.viewmodels.LoginViewModel
+import com.example.speechbuddy.compose.signup.SignupScreen
 
 @Composable
 fun SpeechBuddyApp() {
@@ -46,9 +46,13 @@ fun SpeechBuddyNavHost(
             )
         }
         composable("signup") {
-            //SignupScreen()
+            SignupScreen(
+                onSignupClick = { /*TODO*/ },
+                onPreviousClick = { /*TODO*/ },
+                email = ""
+            )
         }
-        composable("resetpasswordcheck"){
+        composable("resetpasswordcheck") {
             ResetPasswordCheck(
                 onLoginClick = {
                     navController.navigate("login")
@@ -58,8 +62,8 @@ fun SpeechBuddyNavHost(
                 }
             )
         }
-        composable("resetpassword"){
-            ResetPassword (
+        composable("resetpassword") {
+            ResetPassword(
                 onResetClick = {
                     navController.navigate("resetpasswordcheck")
                 }
