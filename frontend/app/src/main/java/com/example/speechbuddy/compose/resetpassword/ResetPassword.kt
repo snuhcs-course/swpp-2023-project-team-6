@@ -45,8 +45,9 @@ fun ResetPassword(
                 )
             }
         ) {
-            var password = remember { mutableStateOf("") }
-            var passwordCheck = remember { mutableStateOf("") }
+            val password = remember { mutableStateOf("") }
+            val passwordCheck = remember { mutableStateOf("") }
+            
             Column(
                 modifier = Modifier
                     .padding(horizontal = 25.dp, vertical = 35.dp)
