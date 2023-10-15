@@ -51,10 +51,10 @@ fun ResetPassword(
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 25.dp, vertical = 35.dp)
+                    .padding(24.dp)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleUi(
                     title = stringResource(id = R.string.reset_passoword_title),
