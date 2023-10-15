@@ -95,6 +95,8 @@ fun LoginScreen(
                     isHidden = true
                 )
 
+    Spacer(modifier = Modifier.height(20.dp))
+
                 // Login Button
                 ButtonUi(
                     text = stringResource(id = R.string.login_text),
