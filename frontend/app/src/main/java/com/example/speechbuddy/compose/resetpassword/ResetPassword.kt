@@ -75,13 +75,13 @@ fun ResetPassword(
 
                 // Password Check Text Field
                 TextFieldUi(
-                    label = { Text(stringResource(id = R.string.new_password_check_field)) },
                     value = passwordCheck.value,
                     onValueChange = { passwordCheck.value = it },
+                    label = { Text(stringResource(id = R.string.new_password_check_field)) },
                     supportingText = { Text(stringResource(id = R.string.false_new_password_check)) },
                     isError = false,
                     isValid = false,
-                    isHidden = false,
+                    isHidden = true
                 )
 
                 // Set password Button
