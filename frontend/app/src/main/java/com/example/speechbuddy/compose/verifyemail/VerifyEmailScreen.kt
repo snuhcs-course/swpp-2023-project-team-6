@@ -60,9 +60,9 @@ fun VerifyEmailColumn(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TitleUi(
             title = stringResource(id = R.string.verify_email_field),
