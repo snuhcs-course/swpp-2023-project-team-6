@@ -34,14 +34,15 @@ fun SpeechBuddyNavHost(
         }
         composable("login") {
             LoginScreen(
-                onSignupClick = {
-                    navController.navigate("signup")
+                onBackClick = {
+                    navController.navigateUp()
                 },
-                onLandingClick = {
-                    navController.navigate("landing")
-                },
+                onLoginClick = {},
                 onResetPasswordClick = {
                     navController.navigate("resetpasswordcheck")
+                },
+                onSignupClick = {
+                    navController.navigate("signup")
                 }
             )
         }
