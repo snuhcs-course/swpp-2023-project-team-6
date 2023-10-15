@@ -113,5 +113,14 @@ fun SignupColumn(
     }
 }
 
-
-
+@Preview
+@Composable
+fun SignupScreenPreview() {
+    SpeechBuddyTheme {
+        SignupScreen(
+            onBackClick = {},
+            onSignupClick = {},
+            email = "asdf"
+        )
+    }
+}
