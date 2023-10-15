@@ -100,5 +100,14 @@ fun VerifyEmailColumn(
     }
 }
 
-
-
+@Preview
+@Composable
+fun VerifyEmailScreenPreview() {
+    SpeechBuddyTheme {
+        VerifyEmailScreen(
+            onBackClick = {},
+            onSubmitClick = {},
+            onNextClick = {}
+        )
+    }
+}
