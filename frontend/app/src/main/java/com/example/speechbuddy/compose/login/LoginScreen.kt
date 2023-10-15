@@ -89,13 +89,11 @@ fun LoginScreen(
                     supportingText = {
                         if (viewModel.getPasswordError()) {
                             Text(stringResource(id = R.string.false_password))
-                        } else {
-                            Text("")
                         }
                     },
                     isError = viewModel.getPasswordError(),
                     isValid = false,
-                    isHidden = true,
+                    isHidden = true
                 )
 
                 // Login Button
