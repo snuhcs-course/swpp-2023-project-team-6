@@ -118,10 +118,9 @@ fun LoginScreen(
                 // Signup Button
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
-                    onClick = { onSignupClick() },
-                    isError = false,
-                    isEnabled = true,
-                    level = ButtonLevel.PRIMARY
+                    onClick = onSignupClick,
+                    modifier = Modifier.offset(y = 160.dp),
+                    isError = false
                 )
             }
         }
