@@ -50,7 +50,8 @@ fun SignupScreen(
                 email = email,
                 nickname = nickname,
                 password = password,
-                passwordCheck = passwordCheck
+                passwordCheck = passwordCheck,
+                onSignupClick = onSignupClick
             )
         }
     }
