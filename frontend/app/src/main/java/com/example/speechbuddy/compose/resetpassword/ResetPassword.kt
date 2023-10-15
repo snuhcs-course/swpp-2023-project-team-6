@@ -31,6 +31,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResetPassword(
+    modifier : Modifier = Modifier,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
