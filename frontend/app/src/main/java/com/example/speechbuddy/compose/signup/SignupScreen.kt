@@ -39,7 +39,7 @@ fun SignupScreen(
     email: String
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = { TopAppBarUi(onBackClick = onPreviousClick) }) {
             var nickname by remember { mutableStateOf("") }
