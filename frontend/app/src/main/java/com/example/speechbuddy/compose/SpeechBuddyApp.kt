@@ -65,9 +65,10 @@ fun SpeechBuddyNavHost(
         }
         composable("resetpassword") {
             ResetPassword(
-                onResetClick = {
-                    navController.navigate("resetpasswordcheck")
-                }
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onNextClick = {}
             )
         }
     }
