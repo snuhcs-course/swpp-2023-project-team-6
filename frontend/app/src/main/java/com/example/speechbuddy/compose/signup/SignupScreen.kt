@@ -33,31 +33,27 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(
-    onSignupClick: () -> Unit, onBackClick: () -> Unit, email: String
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onSignupClick: () -> Unit,
+    email: String
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
-            var nickname by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
-            var passwordCheck by remember { mutableStateOf("") }
+            val nickname by remember { mutableStateOf("") }
+            val password by remember { mutableStateOf("") }
+            val passwordCheck by remember { mutableStateOf("") }
 
             SignupColumn(
                 email = email,
                 nickname = nickname,
                 password = password,
-                passwordCheck = passwordCheck
+                passwordCheck = passwordCheck,
+                onSignupClick = onSignupClick
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun SignupScreenPreview() {
-    SpeechBuddyTheme {
-        SignupScreen(onSignupClick = { /*TODO*/ }, onBackClick = { /*TODO*/ }, email = "asdf")
     }
 }
 
