@@ -57,7 +57,6 @@ fun SignupScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupColumn(
     email: String,
