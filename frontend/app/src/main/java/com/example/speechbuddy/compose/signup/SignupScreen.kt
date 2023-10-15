@@ -42,9 +42,9 @@ fun SignupScreen(
         modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
-            var nickname by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
-            var passwordCheck by remember { mutableStateOf("") }
+            val nickname by remember { mutableStateOf("") }
+            val password by remember { mutableStateOf("") }
+            val passwordCheck by remember { mutableStateOf("") }
 
             SignupColumn(
                 email = email,
