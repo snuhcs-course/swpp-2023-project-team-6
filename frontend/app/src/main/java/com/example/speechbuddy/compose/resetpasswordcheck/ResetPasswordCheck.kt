@@ -37,7 +37,7 @@ fun ResetPasswordCheck(
     onNextClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Scaffold(
