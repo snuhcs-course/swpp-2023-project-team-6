@@ -31,7 +31,9 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResetPasswordCheck(
-    onLoginClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onSubmitClick: () -> Unit,
     onNextClick: () -> Unit
 ) {
     Surface(
