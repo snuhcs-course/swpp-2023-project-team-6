@@ -57,14 +57,6 @@ fun SignupScreen(
     }
 }
 
-@Preview
-@Composable
-fun SignupScreenPreview() {
-    SpeechBuddyTheme {
-        SignupScreen(onSignupClick = { /*TODO*/ }, onPreviousClick = { /*TODO*/ }, email = "asdf")
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupColumn(
