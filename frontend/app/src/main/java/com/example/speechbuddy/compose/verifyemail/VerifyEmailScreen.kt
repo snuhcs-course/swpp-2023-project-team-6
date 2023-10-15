@@ -72,7 +72,7 @@ fun VerifyEmailColumn(
         Spacer(modifier = Modifier.height(15.dp))
 
         TextFieldUi(value = verifyEmailViewModel.getEmail(),
-            onValueChange = onEmailChanged,
+            onValueChange = { verifyEmailViewModel.updateEmail(it) },
             label = { Text(text = stringResource(id = R.string.email_field)) },
             supportingButton = {
                 ButtonUi(
@@ -81,15 +81,15 @@ fun VerifyEmailColumn(
                     level = ButtonLevel.TERTIARY
                 )
             },
-            isError = verifyEmailViewModel.warnEmail(),
-            supportingText = { Text(verifyEmailViewModel.warnEmailMessage()) }
+            supportingText = { Text(verifyEmailViewModel.warnEmailMessage()) },
+            isError = verifyEmailViewModel.warnEmail()
         )
 
         TextFieldUi(value = verifyEmailViewModel.getVerifyNumber(),
-            onValueChange = onVerifyNumberChanged,
+            onValueChange = { verifyEmailViewModel.updateVerifyNumber(it) },
             label = { Text(text = stringResource(id = R.string.validation_number)) },
-            isError = verifyEmailViewModel.warnVerifyNumber(),
-            supportingText = { Text(verifyEmailViewModel.warnVerifyNumberMessage()) }
+            supportingText = { Text(verifyEmailViewModel.warnVerifyNumberMessage()) },
+            isError = verifyEmailViewModel.warnVerifyNumber()
         )
 
         Spacer(modifier = Modifier.height(15.dp))
