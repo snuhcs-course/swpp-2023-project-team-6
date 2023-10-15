@@ -106,7 +106,7 @@ fun LoginScreen(
                     level = ButtonLevel.PRIMARY
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Forgot Password Button
                 ButtonUi(
