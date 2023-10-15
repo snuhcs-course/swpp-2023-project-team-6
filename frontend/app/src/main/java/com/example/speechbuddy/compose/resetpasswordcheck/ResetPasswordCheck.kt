@@ -43,7 +43,7 @@ fun ResetPasswordCheck(
         Scaffold(
             topBar = {
                 TopAppBarUi(
-                    onBackClick = { onLoginClick() }
+                    onBackClick = onBackClick
                 )
             }
         ) {
