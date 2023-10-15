@@ -64,6 +64,7 @@ fun SignupColumn(
     nickname: String,
     password: String,
     passwordCheck: String,
+    onSignupClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -76,6 +77,7 @@ fun SignupColumn(
             title = stringResource(id = R.string.signup_text),
             description = stringResource(id = R.string.signup_explain)
         )
+        
         Spacer(modifier = Modifier.height(15.dp))
 
         TextFieldUi(
