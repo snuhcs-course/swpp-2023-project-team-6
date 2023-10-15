@@ -77,7 +77,7 @@ fun VerifyEmailColumn(
             supportingButton = {
                 ButtonUi(
                     text = stringResource(id = R.string.send_validation_number),
-                    onClick = {/* TODO */ },
+                    onClick = onSubmitClick,
                     level = ButtonLevel.TERTIARY
                 )
             },
