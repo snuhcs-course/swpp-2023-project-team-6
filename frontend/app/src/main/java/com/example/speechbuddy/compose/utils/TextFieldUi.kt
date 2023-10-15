@@ -37,13 +37,13 @@ fun TextFieldUi(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    isEnabled:  Boolean = true,
     label: @Composable (() -> Unit)? = null,
     supportingButton: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     isValid: Boolean = false,
-    isHidden: Boolean = false,
-    isEnabled:  Boolean = true
+    isHidden: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
