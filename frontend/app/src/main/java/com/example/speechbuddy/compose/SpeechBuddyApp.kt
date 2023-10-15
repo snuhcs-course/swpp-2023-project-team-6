@@ -48,8 +48,10 @@ fun SpeechBuddyNavHost(
         }
         composable("signup") {
             SignupScreen(
-                onSignupClick = { /*TODO*/ },
-                onPreviousClick = { /*TODO*/ },
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onSignupClick = {},
                 email = ""
             )
         }
