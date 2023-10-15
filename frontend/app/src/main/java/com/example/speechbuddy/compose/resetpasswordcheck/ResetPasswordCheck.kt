@@ -96,10 +96,9 @@ fun ResetPasswordCheck(
                 // Next Button
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
-                    onClick = { onNextClick() },
-                    isError = false,
+                    onClick = onNextClick,
                     isEnabled = true,
-                    level = ButtonLevel.PRIMARY
+                    isError = false
                 )
             }
         }
