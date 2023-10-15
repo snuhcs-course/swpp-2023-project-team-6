@@ -51,6 +51,7 @@ fun TextFieldUi(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 48.dp),
+        enabled = isEnabled,
         textStyle = MaterialTheme.typography.bodyMedium,
         label = label,
         trailingIcon = supportingButton,
@@ -63,8 +64,7 @@ fun TextFieldUi(
         },
         singleLine = true,
         shape = RoundedCornerShape(10.dp),
-        colors = getTextFieldColors(isValid),
-        enabled = isEnabled
+        colors = getTextFieldColors(isValid)
     )
 }
 
