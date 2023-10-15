@@ -52,7 +52,7 @@ fun ResetPasswordCheck(
             
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 25.dp, vertical = 35.dp)
+                    .padding(24.dp)
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,                
                 horizontalAlignment = Alignment.CenterHorizontally
