@@ -12,10 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,9 +26,6 @@ import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.viewmodels.VerifyEmailViewModel
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.lifecycle.LiveData
-import com.example.speechbuddy.viewmodels.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,9 +40,9 @@ fun VerifyEmailScreen(
         Scaffold(topBar = { TopAppBarUi(onBackClick = onPreviousClick) }) {
             VerifyEmailColumn(
                 verifyEmailViewModel = verifyEmailViewModel,
-                onEmailChanged = {verifyEmailViewModel.updateEmail(it)},
-                onVerifyNumberChanged = {verifyEmailViewModel.updateVerifyNumber(it)}
-                )
+                onEmailChanged = { verifyEmailViewModel.updateEmail(it) },
+                onVerifyNumberChanged = { verifyEmailViewModel.updateVerifyNumber(it) }
+            )
         }
     }
 }

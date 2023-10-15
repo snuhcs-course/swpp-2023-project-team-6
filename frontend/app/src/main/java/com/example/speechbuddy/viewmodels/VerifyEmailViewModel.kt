@@ -52,7 +52,7 @@ class VerifyEmailViewModel() : ViewModel() {
 
     @Composable
     fun warnEmailMessage(): String {
-        if (email.value=="") {
+        if (email.value == "") {
             return ""
         }
         if (isInvalidVerifyNumber.value) {
@@ -66,7 +66,7 @@ class VerifyEmailViewModel() : ViewModel() {
 
     @Composable
     fun warnVerifyNumberMessage(): String {
-        if (verifyNumber.value==""){
+        if (verifyNumber.value == "") {
             return ""
         }
         if (isInvalidVerifyNumber.value) {
