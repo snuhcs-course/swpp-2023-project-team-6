@@ -108,7 +108,7 @@ fun SignupColumn(
 
         ButtonUi(
             text = stringResource(id = R.string.signup),
-            onClick = { /*TODO*/ },
+            onClick = onSignupClick,
         )
     }
 }
