@@ -33,7 +33,10 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(
-    onSignupClick: () -> Unit, onPreviousClick: () -> Unit, email: String
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onSignupClick: () -> Unit,
+    email: String
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()
