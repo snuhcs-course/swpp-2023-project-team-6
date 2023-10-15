@@ -52,7 +52,7 @@ fun ResetPasswordCheck(
             
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 25.dp, vertical = 35.dp)
+                    .padding(24.dp)
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,                
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -84,22 +84,20 @@ fun ResetPasswordCheck(
 
                 // Validation number Text Field
                 TextFieldUi(
-                    label = { Text(stringResource(id = R.string.validation_number_field)) },
                     value = validationNumber.value,
                     onValueChange = { validationNumber.value = it },
+                    label = { Text(stringResource(id = R.string.validation_number_field)) },                    
                     supportingText = { Text(stringResource(id = R.string.reset_password_false_validation_number)) },
                     isError = false,
-                    isValid = false,
-                    isHidden = false,
+                    isValid = false
                 )
 
                 // Next Button
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
-                    onClick = { onNextClick() },
-                    isError = false,
+                    onClick = onNextClick,
                     isEnabled = true,
-                    level = ButtonLevel.PRIMARY
+                    isError = false
                 )
             }
         }

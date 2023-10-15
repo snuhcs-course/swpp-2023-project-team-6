@@ -69,9 +69,9 @@ fun SignupColumn(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TitleUi(
             title = stringResource(id = R.string.signup_text),
@@ -86,6 +86,7 @@ fun SignupColumn(
             label = { Text(text = stringResource(id = R.string.email_field)) },
             isEnabled = false
         )
+        
         Spacer(modifier = Modifier.height(25.dp))
 
         TextFieldUi(value = nickname,
@@ -105,12 +106,23 @@ fun SignupColumn(
             supportingText = { Text(stringResource(id = R.string.password_field)) }
         )
 
+        Spacer(modifier = Modifier.height(15.dp))
+        
         ButtonUi(
             text = stringResource(id = R.string.signup),
-            onClick = { /*TODO*/ },
+            onClick = onSignupClick,
         )
     }
 }
 
-
-
+@Preview
+@Composable
+fun SignupScreenPreview() {
+    SpeechBuddyTheme {
+        SignupScreen(
+            onBackClick = {},
+            onSignupClick = {},
+            email = "asdf"
+        )
+    }
+}

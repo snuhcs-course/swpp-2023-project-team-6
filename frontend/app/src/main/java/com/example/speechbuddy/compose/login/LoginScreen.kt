@@ -54,7 +54,7 @@ fun LoginScreen(
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 25.dp, vertical = 35.dp)
+                    .padding(24.dp)
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -95,6 +95,8 @@ fun LoginScreen(
                     isHidden = true
                 )
 
+    Spacer(modifier = Modifier.height(20.dp))
+
                 // Login Button
                 ButtonUi(
                     text = stringResource(id = R.string.login_text),
@@ -104,7 +106,7 @@ fun LoginScreen(
                     level = ButtonLevel.PRIMARY
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Forgot Password Button
                 ButtonUi(
