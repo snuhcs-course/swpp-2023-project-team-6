@@ -69,19 +69,16 @@ fun LoginScreen(
 
                 // Email Text Field
                 TextFieldUi(
-                    label = { Text(stringResource(id = R.string.email_field)) },
                     value = viewModel.getEmail(),
                     onValueChange = { viewModel.validateEmail(it) },
+                    label = { Text(stringResource(id = R.string.email_field)) },
                     supportingText = {
                         if (viewModel.getEmailError()) {
                             Text(stringResource(id = R.string.false_email))
-                        } else {
-                            Text("")
                         }
                     },
                     isError = viewModel.getEmailError(),
-                    isValid = false,
-                    isHidden = false,
+                    isValid = false
                 )
 
                 // Password Text Field
