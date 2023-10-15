@@ -41,7 +41,7 @@ fun SignupScreen(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(topBar = { TopAppBarUi(onBackClick = onPreviousClick) }) {
+        Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
             var nickname by remember { mutableStateOf("") }
             var password by remember { mutableStateOf("") }
             var passwordCheck by remember { mutableStateOf("") }
