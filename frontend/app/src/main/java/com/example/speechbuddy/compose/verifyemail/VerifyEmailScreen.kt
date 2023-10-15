@@ -38,7 +38,7 @@ fun VerifyEmailScreen(
     verifyEmailViewModel: VerifyEmailViewModel = viewModel()
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = { TopAppBarUi(onBackClick = onPreviousClick) }) {
             VerifyEmailColumn(
