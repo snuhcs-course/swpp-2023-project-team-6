@@ -51,7 +51,7 @@ fun LoginScreen(
                 )
             }
         ) {
-            var viewModel = remember { LoginViewModel() }
+            val viewModel = remember { LoginViewModel() }
 
             Column(
                 modifier = Modifier
