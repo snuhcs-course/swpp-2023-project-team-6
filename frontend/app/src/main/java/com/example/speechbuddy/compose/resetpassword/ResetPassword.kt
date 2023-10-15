@@ -39,8 +39,6 @@ fun ResetPassword(
             .fillMaxSize()
     ) {
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize(),
             topBar = {
                 TopAppBarUi(
                     onBackClick = { onBackClick() }
