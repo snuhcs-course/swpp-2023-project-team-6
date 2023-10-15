@@ -31,7 +31,8 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResetPassword(
-    onResetClick: () -> Unit,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
 ) {
     Surface(
         modifier = Modifier
@@ -42,7 +43,7 @@ fun ResetPassword(
                 .fillMaxSize(),
             topBar = {
                 TopAppBarUi(
-                    onBackClick = { onResetClick() }
+                    onBackClick = { onBackClick() }
                 )
             }
         ) {
@@ -87,7 +88,7 @@ fun ResetPassword(
                 // Set password Button
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
-                    onClick = { /* perform login */ },
+                    onClick = { onNextClick() },
                     isError = false,
                     isEnabled = true,
                     level = ButtonLevel.PRIMARY
@@ -102,7 +103,7 @@ fun ResetPassword(
 @Composable
 private fun LoginScreenPreview() {
     SpeechBuddyTheme {
-        ResetPassword({})
+        ResetPassword(onBackClick = {}, onNextClick = {})
     }
 }
 
