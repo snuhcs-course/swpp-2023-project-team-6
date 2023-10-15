@@ -50,14 +50,6 @@ fun VerifyEmailScreen(
     }
 }
 
-@Preview
-@Composable
-fun VerifyEmailScreenPreview() {
-    SpeechBuddyTheme {
-        VerifyEmailScreen(onPreviousClick = { /*TODO*/ })
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyEmailColumn(
