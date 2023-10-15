@@ -110,10 +110,10 @@ fun LoginScreen(
                 // Forgot Password Button
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_passowrd),
-                    onClick = { onResetPasswordClick() },
-                    isError = false,
+                    onClick = onResetPasswordClick,
                     isEnabled = true,
-                    level = ButtonLevel.PRIMARY
+                    isError = false,
+                    level = ButtonLevel.SECONDARY
                 )
 
                 Spacer(modifier = Modifier.height(145.dp))
