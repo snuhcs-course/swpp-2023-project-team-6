@@ -50,7 +50,6 @@ fun VerifyEmailScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyEmailColumn(
     verifyEmailViewModel: VerifyEmailViewModel,
