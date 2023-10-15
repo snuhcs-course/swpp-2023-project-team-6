@@ -86,6 +86,7 @@ fun SignupColumn(
             label = { Text(text = stringResource(id = R.string.email_field)) },
             isEnabled = false
         )
+        
         Spacer(modifier = Modifier.height(25.dp))
 
         TextFieldUi(value = nickname,
