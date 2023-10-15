@@ -115,9 +115,6 @@ fun LoginScreen(
                     isError = false,
                     level = ButtonLevel.SECONDARY
                 )
-
-                Spacer(modifier = Modifier.height(145.dp))
-
                 // Signup Button
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
