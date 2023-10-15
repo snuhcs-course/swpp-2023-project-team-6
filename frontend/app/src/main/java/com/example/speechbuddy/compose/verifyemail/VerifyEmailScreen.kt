@@ -54,8 +54,8 @@ fun VerifyEmailScreen(
 @Composable
 fun VerifyEmailColumn(
     verifyEmailViewModel: VerifyEmailViewModel,
-    onEmailChanged: (String) -> Unit,
-    onVerifyNumberChanged: (String) -> Unit
+    onSubmitClick: () -> Unit,
+    onNextClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
