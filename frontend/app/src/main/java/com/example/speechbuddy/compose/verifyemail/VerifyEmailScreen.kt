@@ -43,8 +43,8 @@ fun VerifyEmailScreen(
         Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
             VerifyEmailColumn(
                 verifyEmailViewModel = verifyEmailViewModel,
-                onEmailChanged = { verifyEmailViewModel.updateEmail(it) },
-                onVerifyNumberChanged = { verifyEmailViewModel.updateVerifyNumber(it) }
+                onSubmitClick = onSubmitClick,
+                onNextClick = onNextClick
             )
         }
     }
