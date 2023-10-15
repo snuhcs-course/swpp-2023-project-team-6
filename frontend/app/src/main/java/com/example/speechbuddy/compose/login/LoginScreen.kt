@@ -44,8 +44,6 @@ fun LoginScreen(
     ) {
 
         Scaffold(
-            modifier = modifier
-                .fillMaxSize(),
             topBar = {
                 TopAppBarUi(
                     onBackClick = onBackClick

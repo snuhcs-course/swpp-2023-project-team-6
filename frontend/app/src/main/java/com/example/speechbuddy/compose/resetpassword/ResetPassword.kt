@@ -31,7 +31,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResetPassword(
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
@@ -42,13 +42,13 @@ fun ResetPassword(
         Scaffold(
             topBar = {
                 TopAppBarUi(
-                    onBackClick = { onBackClick() }
+                    onBackClick = onBackClick
                 )
             }
         ) {
             val password = remember { mutableStateOf("") }
             val passwordCheck = remember { mutableStateOf("") }
-            
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 25.dp, vertical = 35.dp)
@@ -88,7 +88,7 @@ fun ResetPassword(
                 // Set password Button
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
-                    onClick = { onNextClick() },
+                    onClick = onNextClick,
                     isError = false,
                     isEnabled = true,
                     level = ButtonLevel.PRIMARY
@@ -103,7 +103,10 @@ fun ResetPassword(
 @Composable
 private fun LoginScreenPreview() {
     SpeechBuddyTheme {
-        ResetPassword(onBackClick = {}, onNextClick = {})
+        ResetPassword(
+            onBackClick = {},
+            onNextClick = {}
+        )
     }
 }
 
