@@ -64,6 +64,7 @@ fun SignupColumn(
     nickname: String,
     password: String,
     passwordCheck: String,
+    onSignupClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
