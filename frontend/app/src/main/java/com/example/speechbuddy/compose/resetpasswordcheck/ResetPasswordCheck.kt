@@ -47,8 +47,9 @@ fun ResetPasswordCheck(
                 )
             }
         ) {
-            var email = remember { mutableStateOf("") }
-            var validationNumber = remember { mutableStateOf("") }
+            val email = remember { mutableStateOf("") }
+            val validationNumber = remember { mutableStateOf("") }
+            
             Column(
                 modifier = Modifier
                     .padding(horizontal = 25.dp, vertical = 35.dp)
