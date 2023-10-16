@@ -45,7 +45,7 @@ fun ButtonUi(
             modifier = modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            enabled = isEnabled || isError,
+            enabled = isEnabled && !isError,
             shape = RoundedCornerShape(10.dp),
             colors = if (isError) {
                 ButtonDefaults.buttonColors(

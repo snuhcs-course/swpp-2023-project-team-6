@@ -1,165 +1,127 @@
 package com.example.speechbuddy.compose.login
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
-
+import com.example.speechbuddy.compose.utils.TextFieldUi
+import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
+import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodels.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onSignupClick: () -> Unit,
-    onLandingClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onLoginClick: () -> Unit,
+    onResetPasswordClick: () -> Unit,
+    onSignupClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
+
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize(),
             topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Image(
-                            painter = painterResource(id = R.drawable.top_app_bar_ic),
-                            contentDescription = "app logo",
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier.size(148.dp)
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            /*TODO*/
-                            onLandingClick()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Go back to landing page"
-                            )
-                        }
-                    },
-//                    scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+                TopAppBarUi(
+                    onBackClick = onBackClick
                 )
             }
         ) {
-            var username = remember { mutableStateOf("") }
-            var password = remember { mutableStateOf("") }
+            val viewModel = remember { LoginViewModel() }
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 25.dp, vertical = 35.dp)
+                    .padding(24.dp)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    modifier = Modifier.align(Alignment.Start),
-                    text = stringResource(id = R.string.login_text),
-                    style = MaterialTheme.typography.displayMedium,
-                )
-
-                Text(
-                    modifier = Modifier.align(Alignment.Start),
-                    text = stringResource(id = R.string.login_explain),
-                    style = MaterialTheme.typography.bodyMedium,
+                TitleUi(
+                    title = stringResource(id = R.string.login_text),
+                    description = stringResource(id = R.string.login_explain)
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = username.value,
-                    onValueChange = { username.value = it },
+                // Email Text Field
+                TextFieldUi(
+                    value = viewModel.getEmail(),
+                    onValueChange = { viewModel.validateEmail(it) },
                     label = { Text(stringResource(id = R.string.email_field)) },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = MaterialTheme.colorScheme.error
-                    )
-//                keyboardOptions = Default.copy(imeAction = ImeAction.Next),
-//                keyboardActions = KeyboardActions(onNext = { /* focus next field */ })
+                    supportingText = {
+                        if (viewModel.getEmailError()) {
+                            Text(stringResource(id = R.string.false_email))
+                        }
+                    },
+                    isError = viewModel.getEmailError(),
+                    isValid = false
                 )
 
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .height(25.dp),
-                    text = stringResource(id = R.string.false_email),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = password.value,
-                    onValueChange = { password.value = it },
+                // Password Text Field
+                TextFieldUi(
                     label = { Text(stringResource(id = R.string.password_field)) },
-                    // when keyboard action
-//                keyboardOptions = Default.copy(imeAction = ImeAction.Done),
-//                keyboardActions = KeyboardActions(onDone = { /* perform login */ })
+                    value = viewModel.getPassword(),
+                    onValueChange = { viewModel.validatePassword(it) },
+                    supportingText = {
+                        if (viewModel.getPasswordError()) {
+                            Text(stringResource(id = R.string.false_password))
+                        }
+                    },
+                    isError = viewModel.getPasswordError(),
+                    isValid = false,
+                    isHidden = true
                 )
 
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .height(40.dp),
-                    text = stringResource(id = R.string.false_password),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Center,
-                )
+    Spacer(modifier = Modifier.height(20.dp))
 
+                // Login Button
                 ButtonUi(
                     text = stringResource(id = R.string.login_text),
-                    onClick = { /* perform login */ },
+                    onClick = { onLoginClick() },
+                    isError = false,
+                    isEnabled = true,
+                    level = ButtonLevel.PRIMARY
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
+                // Forgot Password Button
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_passowrd),
-                    onClick = { /*forgot password*/ },
+                    onClick = onResetPasswordClick,
+                    isEnabled = true,
+                    isError = false,
+                    level = ButtonLevel.SECONDARY
                 )
-
-                Spacer(modifier = Modifier.height(145.dp))
-
+                // Signup Button
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
-                    onClick = { /* sign up */ },
+                    onClick = onSignupClick,
+                    modifier = Modifier.offset(y = 160.dp),
+                    isError = false
                 )
             }
         }
@@ -170,6 +132,12 @@ fun LoginScreen(
 @Preview
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen(onLandingClick = {}, onSignupClick = {})
+    SpeechBuddyTheme {
+        LoginScreen(
+            onBackClick = {},
+            onSignupClick = {},
+            onResetPasswordClick = {},
+            onLoginClick = {})
+    }
 }
 
