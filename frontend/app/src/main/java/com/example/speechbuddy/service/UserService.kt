@@ -1,14 +1,22 @@
 package com.example.speechbuddy.service
 
-import com.example.speechbuddy.data.TokenResponse
+import com.example.speechbuddy.data.remote.models.AuthTokenDto
+import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
+import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.POST
-import retrofit2.http.Query
 
 interface UserService {
 
+    @POST("/user/signup")
+    suspend fun signup(
+        @Body signupRequest: AuthSignupRequest
+    ): Response<Void>
+
     @POST("/user/login")
     suspend fun login(
-        @Query("email") email: String, @Query("password") password: String
-    ): TokenResponse
+        @Body loginRequest: AuthLoginRequest
+    ): Response<AuthTokenDto>
 
 }
