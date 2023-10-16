@@ -37,13 +37,13 @@ fun TextFieldUi(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    isEnabled:  Boolean = true,
     label: @Composable (() -> Unit)? = null,
     supportingButton: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     isValid: Boolean = false,
-    isHidden: Boolean = false,
-    isEnabled:  Boolean = true
+    isHidden: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
@@ -51,6 +51,7 @@ fun TextFieldUi(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 48.dp),
+        enabled = isEnabled,
         textStyle = MaterialTheme.typography.bodyMedium,
         label = label,
         trailingIcon = supportingButton,
@@ -63,8 +64,7 @@ fun TextFieldUi(
         },
         singleLine = true,
         shape = RoundedCornerShape(10.dp),
-        colors = getTextFieldColors(isValid),
-        enabled = isEnabled
+        colors = getTextFieldColors(isValid)
     )
 }
 
