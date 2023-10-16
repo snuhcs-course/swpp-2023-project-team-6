@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -65,27 +67,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // Navigation
-    val navigationVersion = "2.7.4"
-    implementation("androidx.navigation:navigation-compose:$navigationVersion")
-    implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
-
-    // Hilt
-    val hiltVersion = "2.46.1"
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    implementation("com.google.dagger:hilt-compiler:$hiltVersion")
-
-    // RetroFit
-    val retrofitVersion = "2.9.0"
-    implementation("com.google.code.gson:gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
-
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
-
     // Lifecycle
     val lifecycleVersion = "2.6.2"
     implementation("androidx.lifecycle:lifecycle-common:$lifecycleVersion")
@@ -93,6 +74,40 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
 
+    // Coroutines
+    val coroutinesVersion = "1.8.1"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+
     // Preference
     implementation("androidx.preference:preference-ktx:1.2.1")
+
+    // Moshi
+    val moshiVersion = "1.10.0"
+    implementation("com.squareup.moshi:moshi:$moshiVersion")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
+
+    // RetroFit
+    val retrofitVersion = "2.9.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
+
+    // Room
+    val roomVersion = "2.5.2"
+    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+
+    // Navigation
+    val navigationVersion = "2.7.4"
+    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+    implementation("androidx.navigation:navigation-compose:$navigationVersion")
+    implementation("androidx.navigation:navigation-runtime-ktx:$navigationVersion")
+    implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
+
+    // Hilt
+    val hiltVersion = "2.46.1"
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    implementation("com.google.dagger:hilt-compiler:$hiltVersion")
 }
