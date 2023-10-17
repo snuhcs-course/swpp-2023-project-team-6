@@ -1,2 +1,67 @@
 package com.example.speechbuddy.repository
 
+import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
+import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
+import com.example.speechbuddy.domain.models.AuthToken
+import com.example.speechbuddy.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import org.json.JSONObject
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class UserRepository @Inject constructor(
+    private val authTokenRemoteSource: AuthTokenRemoteSource,
+    private val authTokenDtoMapper: AuthTokenDtoMapper
+) {
+
+    suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Resource<Void>> {
+        return authTokenRemoteSource.signupAuthToken(authSignupRequest).map { response ->
+            if (response.isSuccessful && response.code() == 201) {
+                Resource.success(null)
+            } else {
+                response.errorBody()?.let { responseBody ->
+                    val errorMessage =
+                        JSONObject(responseBody.charStream().readText()).getString("error")
+                    Resource.error(
+                        errorMessage,
+                        null
+                    )
+                } ?: Resource.error("Unknown Error", null)
+            }
+        }
+    }
+
+    suspend fun login(authLoginRequest: AuthLoginRequest): Flow<Resource<AuthToken>> {
+        return authTokenRemoteSource.loginAuthToken(authLoginRequest)
+            .map { response ->
+                if (response.isSuccessful && response.code() == 200) {
+                    response.body()?.let { authTokenDto ->
+                        authTokenDto.let {
+                            Resource.success(authTokenDtoMapper.mapToDomainModel(authTokenDto))
+                        }
+                    } ?: returnUnknownError()
+                } else {
+                    response.errorBody()?.let { responseBody ->
+                        val errorMessage =
+                            JSONObject(responseBody.charStream().readText()).getString("error")
+                        Resource.error(
+                            errorMessage,
+                            null
+                        )
+                    } ?: returnUnknownError()
+                }
+            }
+    }
+
+    private fun returnUnknownError(): Resource<AuthToken> {
+        return Resource.error(
+            "Unknown error",
+            null
+        )
+    }
+
+}
