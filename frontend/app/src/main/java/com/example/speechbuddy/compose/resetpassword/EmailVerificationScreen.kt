@@ -1,4 +1,4 @@
-package com.example.speechbuddy.compose.resetpasswordcheck
+package com.example.speechbuddy.compose.resetpassword
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -30,31 +30,28 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPasswordCheck(
+fun EmailVerificationScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onSubmitClick: () -> Unit,
     onNextClick: () -> Unit
 ) {
     Surface(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            topBar = {
-                TopAppBarUi(
-                    onBackClick = onBackClick
-                )
-            }
-        ) {
+        Scaffold(topBar = {
+            TopAppBarUi(
+                onBackClick = onBackClick
+            )
+        }) {
             val email = remember { mutableStateOf("") }
             val validationNumber = remember { mutableStateOf("") }
-            
+
             Column(
                 modifier = Modifier
                     .padding(24.dp)
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,                
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleUi(
@@ -63,6 +60,7 @@ fun ResetPasswordCheck(
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
+
                 // Email Text Field
                 TextFieldUi(
                     label = { Text(stringResource(id = R.string.email_field)) },
@@ -86,11 +84,13 @@ fun ResetPasswordCheck(
                 TextFieldUi(
                     value = validationNumber.value,
                     onValueChange = { validationNumber.value = it },
-                    label = { Text(stringResource(id = R.string.validation_number_field)) },                    
+                    label = { Text(stringResource(id = R.string.validation_number_field)) },
                     supportingText = { Text(stringResource(id = R.string.reset_password_false_validation_number)) },
                     isError = false,
                     isValid = false
                 )
+
+                Spacer(modifier = Modifier.height(15.dp))
 
                 // Next Button
                 ButtonUi(
@@ -106,13 +106,8 @@ fun ResetPasswordCheck(
 
 @Preview
 @Composable
-private fun LoginScreenPreview() {
+private fun EmailVerificationScreenPreview() {
     SpeechBuddyTheme {
-        ResetPasswordCheck(
-            onNextClick = {},
-            onBackClick =  {},
-            onSubmitClick = {}
-        )
+        EmailVerificationScreen(onNextClick = {}, onBackClick = {}, onSubmitClick = {})
     }
 }
-

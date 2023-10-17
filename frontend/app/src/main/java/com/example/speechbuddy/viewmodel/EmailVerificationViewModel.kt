@@ -1,4 +1,4 @@
-package com.example.speechbuddy.viewmodels
+package com.example.speechbuddy.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +6,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import com.example.speechbuddy.R
 
-class VerifyEmailViewModel() : ViewModel() {
+class EmailVerificationViewModel : ViewModel() {
     private var email = mutableStateOf("")
     private var verifyNumber = mutableStateOf("")
     private var isInvalidEmail = mutableStateOf(true)
@@ -74,5 +74,4 @@ class VerifyEmailViewModel() : ViewModel() {
         }
         return ""
     }
-
 }

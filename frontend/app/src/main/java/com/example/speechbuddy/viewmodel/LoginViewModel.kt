@@ -1,21 +1,17 @@
-package com.example.speechbuddy.viewmodels
+package com.example.speechbuddy.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
-class LoginViewModel() : ViewModel() {
+class LoginViewModel : ViewModel() {
     private var email = mutableStateOf("")
     private var password = mutableStateOf("")
     private var emailError = mutableStateOf(false)
     private var passwordError = mutableStateOf(false)
     fun validateEmail(input: String) {
-        var matchIndex = input.indexOf('@', 0)
+        val matchIndex = input.indexOf('@', 0)
         setEmail(input)
-        if (matchIndex == -1) {
-            emailError.value = true
-        } else {
-            emailError.value = false
-        }
+        emailError.value = (matchIndex == -1)
     }
 
     fun setEmail(input: String) {
@@ -32,11 +28,7 @@ class LoginViewModel() : ViewModel() {
 
     fun validatePassword(input: String) {
         setPassword(input)
-        if (password.value.length < 8){
-            passwordError.value = true
-        }else{
-            passwordError.value = false
-        }
+        passwordError.value = (password.value.length < 8)
     }
 
     fun setPassword(input: String) {

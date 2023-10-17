@@ -1,4 +1,4 @@
-package com.example.speechbuddy.compose.verifyemail
+package com.example.speechbuddy.compose.signup
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -25,17 +25,17 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.viewmodels.VerifyEmailViewModel
+import com.example.speechbuddy.viewmodel.EmailVerificationViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VerifyEmailScreen(
+fun EmailVerificationScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onSubmitClick: () -> Unit,
     onNextClick: () -> Unit,
-    verifyEmailViewModel: VerifyEmailViewModel = viewModel()
+    verifyEmailViewModel: EmailVerificationViewModel = viewModel()
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
@@ -52,7 +52,7 @@ fun VerifyEmailScreen(
 
 @Composable
 fun VerifyEmailColumn(
-    verifyEmailViewModel: VerifyEmailViewModel,
+    verifyEmailViewModel: EmailVerificationViewModel,
     onSubmitClick: () -> Unit,
     onNextClick: () -> Unit
 ) {
@@ -111,9 +111,9 @@ fun VerifyEmailColumn(
 
 @Preview
 @Composable
-fun VerifyEmailScreenPreview() {
+fun EmailVerificationScreenPreview() {
     SpeechBuddyTheme {
-        VerifyEmailScreen(
+        EmailVerificationScreen(
             onBackClick = {},
             onSubmitClick = {},
             onNextClick = {}

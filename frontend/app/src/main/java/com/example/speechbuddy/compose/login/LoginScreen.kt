@@ -26,7 +26,7 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.viewmodels.LoginViewModel
+import com.example.speechbuddy.viewmodel.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,7 +95,7 @@ fun LoginScreen(
                     isHidden = true
                 )
 
-    Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Login Button
                 ButtonUi(
@@ -116,6 +116,7 @@ fun LoginScreen(
                     isError = false,
                     level = ButtonLevel.SECONDARY
                 )
+
                 // Signup Button
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
@@ -128,7 +129,6 @@ fun LoginScreen(
     }
 }
 
-
 @Preview
 @Composable
 private fun LoginScreenPreview() {
@@ -140,4 +140,3 @@ private fun LoginScreenPreview() {
             onLoginClick = {})
     }
 }
-

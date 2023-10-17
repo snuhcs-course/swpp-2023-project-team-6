@@ -7,8 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
-import com.example.speechbuddy.compose.resetpassword.ResetPassword
-import com.example.speechbuddy.compose.resetpasswordcheck.ResetPasswordCheck
+import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
+import com.example.speechbuddy.compose.resetpassword.EmailVerificationScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
 
 @Composable
@@ -39,7 +39,7 @@ fun SpeechBuddyNavHost(
                 },
                 onLoginClick = {},
                 onResetPasswordClick = {
-                    navController.navigate("resetpasswordcheck")
+                    navController.navigate("email_verification/password")
                 },
                 onSignupClick = {
                     navController.navigate("signup")
@@ -55,20 +55,20 @@ fun SpeechBuddyNavHost(
                 email = ""
             )
         }
-        composable("resetpasswordcheck") {
-            ResetPasswordCheck(
+        composable("email_verification/password") {
+            EmailVerificationScreen(
                 onBackClick = {
                     navController.navigateUp()
                 },
                 onSubmitClick = {
                 },
                 onNextClick = {
-                    navController.navigate("resetpassword")
+                    navController.navigate("reset_password")
                 }
             )
         }
-        composable("resetpassword") {
-            ResetPassword(
+        composable("reset_password") {
+            ResetPasswordScreen(
                 onBackClick = {
                     navController.navigateUp()
                 },
