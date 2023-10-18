@@ -86,6 +86,7 @@ dependencies {
     // Moshi
     val moshiVersion = "1.10.0"
     implementation("com.squareup.moshi:moshi:$moshiVersion")
+    implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 
     // RetroFit
@@ -111,4 +112,6 @@ dependencies {
     val hiltVersion = "2.46.1"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }

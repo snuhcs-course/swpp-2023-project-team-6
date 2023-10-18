@@ -1,8 +1,10 @@
 package com.example.speechbuddy.di
 
+import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.service.UserService
 import com.example.speechbuddy.utils.Constants
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +26,7 @@ class NetworkModule {
 
         val client = OkHttpClient.Builder().addInterceptor(logger).build()
 
-        val moshi = Moshi.Builder().build()
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
         return Retrofit.Builder().baseUrl(Constants.BASE_URL).client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi)).build()
@@ -34,6 +36,12 @@ class NetworkModule {
     @Provides
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthTokenDtoMapper(): AuthTokenDtoMapper {
+        return AuthTokenDtoMapper()
     }
 
 }
