@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
@@ -27,7 +26,6 @@ import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.viewmodel.LoginViewModel
 
@@ -73,8 +71,8 @@ fun LoginScreen(
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = isEmailError,
-                    isValid = false
+                    isError = isEmailError || isPasswordError,
+                    isValid = uiState.isValidEmail,
                 )
 
                 // Password Text Field
@@ -87,8 +85,8 @@ fun LoginScreen(
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = isPasswordError,
-                    isValid = false,
+                    isError = isEmailError || isPasswordError,
+                    isValid = uiState.isValidPassword,
                     isHidden = true
                 )
 
@@ -98,9 +96,8 @@ fun LoginScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.login_text),
                     onClick = { viewModel.login() },
-                    isError = isEmailError || isPasswordError,
-                    isEnabled = true,
-                    level = ButtonLevel.PRIMARY
+                    isEnabled = !isEmailError && !isPasswordError,
+                    isError = isEmailError || isPasswordError
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -109,7 +106,6 @@ fun LoginScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_passowrd),
                     onClick = onResetPasswordClick,
-                    isEnabled = true,
                     isError = isEmailError || isPasswordError,
                     level = ButtonLevel.SECONDARY
                 )
@@ -119,20 +115,8 @@ fun LoginScreen(
                     text = stringResource(id = R.string.signup),
                     onClick = onSignupClick,
                     modifier = Modifier.offset(y = 160.dp),
-                    isError = false
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun LoginScreenPreview() {
-    SpeechBuddyTheme {
-        LoginScreen(
-            onBackClick = {},
-            onResetPasswordClick = {},
-            onSignupClick = {})
     }
 }

@@ -35,11 +35,18 @@ class LoginViewModel @Inject internal constructor(
         private set
 
     fun setEmail(input: String) {
+        if (_uiState.value.error?.type == LoginErrorType.EMAIL) validateEmail()
         emailInput = input
     }
 
     fun setPassword(input: String) {
+        if (_uiState.value.error?.type == LoginErrorType.PASSWORD) validatePassword()
         passwordInput = input
+    }
+
+    private fun clearInputs() {
+        emailInput = ""
+        passwordInput = ""
     }
 
     private fun isValidEmail(): Boolean {
@@ -48,6 +55,28 @@ class LoginViewModel @Inject internal constructor(
 
     private fun isValidPassword(): Boolean {
         return passwordInput.length >= MINIMUM_PASSWORD_LENGTH
+    }
+
+    private fun validateEmail() {
+        if (isValidEmail()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidEmail = true,
+                    error = null
+                )
+            }
+        }
+    }
+
+    private fun validatePassword() {
+        if (isValidPassword()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPassword = true,
+                    error = null
+                )
+            }
+        }
     }
 
     fun login() {
@@ -71,7 +100,7 @@ class LoginViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else
+        } else {
             viewModelScope.launch {
                 repository.login(
                     AuthLoginRequest(
@@ -82,6 +111,8 @@ class LoginViewModel @Inject internal constructor(
                     /*TODO*/
                 }
             }
+            clearInputs()
+        }
     }
 
     companion object {
