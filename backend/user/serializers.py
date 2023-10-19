@@ -44,6 +44,18 @@ class EmailCheckSerializer(serializers.Serializer):
         return data
 
 
+# Checks whether any user exists with a particular email
+class UserCheckSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True, max_length=50)
+
+    def validate(self, data):
+        email = normalize_email(data.get('email'))
+        if not User.objects.filter(email=email).exists():
+            raise ValidationError({"email": ["no such user w/ the email"]})
+
+        return data
+
+
 class CodeCheckSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True, max_length=50)
     code = serializers.CharField(required=True, max_length=6)
@@ -102,7 +114,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'id',
             'email',
             'nickname',
-            'email_verified',
             'updated_at',
         )
 
