@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
-import com.example.speechbuddy.repository.UserRepository
+import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.LoginUiState
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject internal constructor(
-    private val repository: UserRepository
+    private val repository: AuthRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())

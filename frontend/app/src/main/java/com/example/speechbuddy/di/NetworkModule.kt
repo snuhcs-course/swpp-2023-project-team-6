@@ -1,7 +1,7 @@
 package com.example.speechbuddy.di
 
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
-import com.example.speechbuddy.service.UserService
+import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -34,8 +34,8 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideUserService(retrofit: Retrofit): UserService {
-        return retrofit.create(UserService::class.java)
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
     }
 
     @Singleton
