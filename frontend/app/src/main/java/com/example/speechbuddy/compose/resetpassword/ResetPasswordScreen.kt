@@ -30,7 +30,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPassword(
+fun ResetPassWordScreen(
     onResetClick: () -> Unit,
 ) {
     Surface(
@@ -100,9 +100,9 @@ fun ResetPassword(
 
 @Preview
 @Composable
-private fun LoginScreenPreview() {
+private fun ResetPasswordScreenPreview() {
     SpeechBuddyTheme {
-        ResetPassword({})
+        ResetPassWordScreen({})
     }
 }
 
