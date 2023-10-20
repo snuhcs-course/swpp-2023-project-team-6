@@ -1,6 +1,5 @@
 package com.example.speechbuddy.viewmodel
 
-import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +11,8 @@ import com.example.speechbuddy.repository.UserRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.LoginUiState
+import com.example.speechbuddy.utils.isValidEmail
+import com.example.speechbuddy.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,16 +50,8 @@ class LoginViewModel @Inject internal constructor(
         passwordInput = ""
     }
 
-    private fun isValidEmail(): Boolean {
-        return emailInput.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(emailInput).matches()
-    }
-
-    private fun isValidPassword(): Boolean {
-        return passwordInput.length >= MINIMUM_PASSWORD_LENGTH
-    }
-
     private fun validateEmail() {
-        if (isValidEmail()) {
+        if (isValidEmail(emailInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidEmail = true,
@@ -69,7 +62,7 @@ class LoginViewModel @Inject internal constructor(
     }
 
     private fun validatePassword() {
-        if (isValidPassword()) {
+        if (isValidPassword(passwordInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPassword = true,
@@ -80,7 +73,7 @@ class LoginViewModel @Inject internal constructor(
     }
 
     fun login() {
-        if (!isValidEmail()) {
+        if (!isValidEmail(emailInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidEmail = false,
@@ -90,7 +83,7 @@ class LoginViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else if (!isValidPassword()) {
+        } else if (!isValidPassword(passwordInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPassword = false,
@@ -113,10 +106,6 @@ class LoginViewModel @Inject internal constructor(
             }
             clearInputs()
         }
-    }
-
-    companion object {
-        private const val MINIMUM_PASSWORD_LENGTH = 8
     }
 
 }
