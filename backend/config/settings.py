@@ -73,7 +73,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework.authtoken',
-    'user'
+    'user',
+    'entry',
+    'setup',
 ]
 
 MIDDLEWARE = [
@@ -109,7 +111,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Local DB setting
+# Local DB settings
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -117,7 +119,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 #     }
 # }
 
-# Remote DB setting
+# Remote DB settings
 # Add your own confidential.py
 import confidential
 DATABASES = confidential.DATABASES
