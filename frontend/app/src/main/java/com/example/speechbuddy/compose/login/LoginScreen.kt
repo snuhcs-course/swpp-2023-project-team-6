@@ -42,6 +42,7 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isEmailError = uiState.error?.type == LoginErrorType.EMAIL
     val isPasswordError = uiState.error?.type == LoginErrorType.PASSWORD
+    val isError = isEmailError || isPasswordError
 
     Surface(modifier = modifier.fillMaxSize()) {
         Scaffold(
@@ -71,8 +72,8 @@ fun LoginScreen(
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = isEmailError || isPasswordError,
-                    isValid = uiState.isValidEmail,
+                    isError = isError,
+                    isValid = uiState.isValidEmail
                 )
 
                 // Password Text Field
@@ -85,7 +86,7 @@ fun LoginScreen(
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = isEmailError || isPasswordError,
+                    isError = isError,
                     isValid = uiState.isValidPassword,
                     isHidden = true
                 )
@@ -96,8 +97,8 @@ fun LoginScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.login_text),
                     onClick = { viewModel.login() },
-                    isEnabled = !isEmailError && !isPasswordError,
-                    isError = isEmailError || isPasswordError
+                    isEnabled = !isError,
+                    isError = isError
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -106,7 +107,7 @@ fun LoginScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_passowrd),
                     onClick = onResetPasswordClick,
-                    isError = isEmailError || isPasswordError,
+                    isError = isError,
                     level = ButtonLevel.SECONDARY
                 )
 
