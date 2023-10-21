@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -76,7 +75,7 @@ fun SignupColumn(
             title = stringResource(id = R.string.signup_text),
             description = stringResource(id = R.string.signup_explain)
         )
-        
+
         Spacer(modifier = Modifier.height(15.dp))
 
         TextFieldUi(
@@ -85,8 +84,6 @@ fun SignupColumn(
             label = { Text(text = stringResource(id = R.string.email_field)) },
             isEnabled = false
         )
-        
-        Spacer(modifier = Modifier.height(25.dp))
 
         TextFieldUi(value = nickname,
             onValueChange = {},
@@ -106,7 +103,7 @@ fun SignupColumn(
         )
 
         Spacer(modifier = Modifier.height(15.dp))
-        
+
         ButtonUi(
             text = stringResource(id = R.string.signup),
             onClick = onSignupClick,

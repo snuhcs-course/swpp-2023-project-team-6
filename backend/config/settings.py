@@ -58,6 +58,7 @@ ALLOWED_HOSTS = [
     'ec2-54-180-112-72.ap-northeast-2.compute.amazonaws.com',
     '54.180.112.72',
     '127.0.0.1',
+    '10.0.2.2'
 ]
 
 # Application definition
@@ -122,6 +123,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Remote DB settings
 # Add your own confidential.py
 import confidential
+
 DATABASES = confidential.DATABASES
 
 # Password validation

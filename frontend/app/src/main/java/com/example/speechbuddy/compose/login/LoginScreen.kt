@@ -13,20 +13,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.viewmodels.LoginViewModel
+import com.example.speechbuddy.ui.models.LoginErrorType
+import com.example.speechbuddy.viewmodel.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,24 +35,19 @@ import com.example.speechbuddy.viewmodels.LoginViewModel
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onLoginClick: () -> Unit,
     onResetPasswordClick: () -> Unit,
-    onSignupClick: () -> Unit
+    onSignupClick: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
-    Surface(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
+    val uiState by viewModel.uiState.collectAsState()
+    val isEmailError = uiState.error?.type == LoginErrorType.EMAIL
+    val isPasswordError = uiState.error?.type == LoginErrorType.PASSWORD
+    val isError = isEmailError || isPasswordError
 
+    Surface(modifier = modifier.fillMaxSize()) {
         Scaffold(
-            topBar = {
-                TopAppBarUi(
-                    onBackClick = onBackClick
-                )
-            }
+            topBar = { TopAppBarUi(onBackClick = onBackClick) }
         ) {
-            val viewModel = remember { LoginViewModel() }
-
             Column(
                 modifier = Modifier
                     .padding(24.dp)
@@ -68,42 +64,41 @@ fun LoginScreen(
 
                 // Email Text Field
                 TextFieldUi(
-                    value = viewModel.getEmail(),
-                    onValueChange = { viewModel.validateEmail(it) },
+                    value = viewModel.emailInput,
+                    onValueChange = { viewModel.setEmail(it) },
                     label = { Text(stringResource(id = R.string.email_field)) },
                     supportingText = {
-                        if (viewModel.getEmailError()) {
-                            Text(stringResource(id = R.string.false_email))
+                        if (isEmailError) {
+                            Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = viewModel.getEmailError(),
-                    isValid = false
+                    isError = isError,
+                    isValid = uiState.isValidEmail
                 )
 
                 // Password Text Field
                 TextFieldUi(
+                    value = viewModel.passwordInput,
+                    onValueChange = { viewModel.setPassword(it) },
                     label = { Text(stringResource(id = R.string.password_field)) },
-                    value = viewModel.getPassword(),
-                    onValueChange = { viewModel.validatePassword(it) },
                     supportingText = {
-                        if (viewModel.getPasswordError()) {
-                            Text(stringResource(id = R.string.false_password))
+                        if (isPasswordError) {
+                            Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = viewModel.getPasswordError(),
-                    isValid = false,
+                    isError = isError,
+                    isValid = uiState.isValidPassword,
                     isHidden = true
                 )
 
-    Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Login Button
                 ButtonUi(
                     text = stringResource(id = R.string.login_text),
-                    onClick = { onLoginClick() },
-                    isError = false,
-                    isEnabled = true,
-                    level = ButtonLevel.PRIMARY
+                    onClick = { viewModel.login() },
+                    isEnabled = !isError,
+                    isError = isError
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -112,32 +107,17 @@ fun LoginScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_passowrd),
                     onClick = onResetPasswordClick,
-                    isEnabled = true,
-                    isError = false,
+                    isError = isError,
                     level = ButtonLevel.SECONDARY
                 )
+
                 // Signup Button
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
                     onClick = onSignupClick,
                     modifier = Modifier.offset(y = 160.dp),
-                    isError = false
                 )
             }
         }
     }
 }
-
-
-@Preview
-@Composable
-private fun LoginScreenPreview() {
-    SpeechBuddyTheme {
-        LoginScreen(
-            onBackClick = {},
-            onSignupClick = {},
-            onResetPasswordClick = {},
-            onLoginClick = {})
-    }
-}
-

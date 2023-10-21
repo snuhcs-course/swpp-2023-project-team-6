@@ -30,7 +30,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPassword(
+fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
@@ -85,6 +85,8 @@ fun ResetPassword(
                     isHidden = true
                 )
 
+                Spacer(modifier = Modifier.height(15.dp))
+
                 // Set password Button
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
@@ -101,12 +103,11 @@ fun ResetPassword(
 
 @Preview
 @Composable
-private fun LoginScreenPreview() {
+private fun ResetPasswordScreenPreview() {
     SpeechBuddyTheme {
-        ResetPassword(
+        ResetPasswordScreen(
             onBackClick = {},
             onNextClick = {}
         )
     }
 }
-
