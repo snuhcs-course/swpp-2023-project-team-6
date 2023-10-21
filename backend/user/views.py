@@ -167,3 +167,19 @@ class NicknameUpdateView(APIView):
         nickname_serializer.is_valid(raise_exception=True)
         nickname_serializer.save()
         return Response(status=status.HTTP_200_OK)
+
+
+class UserWithdrawView(APIView):
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def post(self, request):
+        # Don't know why, but if we attempt to delete the user after blacklisting the token,
+        # the blacklisting doesn't work properly as expected
+        request.user.delete()
+
+        serializer = UserLogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        refresh_token = RefreshToken(serializer.validated_data['refresh'])
+        refresh_token.blacklist()
+
+        return Response(status=status.HTTP_200_OK)
