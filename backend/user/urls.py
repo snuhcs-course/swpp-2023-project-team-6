@@ -17,4 +17,5 @@ urlpatterns = [
     path('profile/', views.UserProfileView.as_view(), name='get profile'),
     path('profile/nickname/', views.NicknameUpdateView.as_view(), name='change nickname'),
     path('profile/password/', views.PasswordUpdateView.as_view(), name='change password'),
+    path('withdraw/', views.UserWithdrawView.as_view(), name='withdraw')
 ]
