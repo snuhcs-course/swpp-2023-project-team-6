@@ -138,7 +138,7 @@ fun LoginScreen(
 
                 // Forgot Password Button
                 ButtonUi(
-                    text = stringResource(id = R.string.forgot_passowrd),
+                    text = stringResource(id = R.string.forgot_password),
                     onClick = onResetPasswordClick,
                     isError = isError,
                     level = ButtonLevel.SECONDARY
