@@ -1,83 +1,178 @@
 package com.example.speechbuddy.viewmodel
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
+import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
+import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
+import com.example.speechbuddy.repository.AuthRepository
+import com.example.speechbuddy.ui.models.EmailVerificationError
+import com.example.speechbuddy.ui.models.EmailVerificationErrorType
+import com.example.speechbuddy.ui.models.EmailVerificationUiState
+import com.example.speechbuddy.utils.isValidEmail
+import com.example.speechbuddy.utils.isValidVerifyNumber
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EmailVerificationViewModel : ViewModel() {
-    private var email = mutableStateOf("")
-    private var verifyNumber = mutableStateOf("")
-    private var isInvalidEmail = mutableStateOf(true)
-    private var isDuplicateEmail = mutableStateOf(false)
-    private var isInvalidVerifyNumber = mutableStateOf(true)
+@HiltViewModel
+class EmailVerificationViewModel @Inject internal constructor(
+    private val repository: AuthRepository
+): ViewModel() {
 
-    fun updateEmail(updatedEmail: String) {
-        email.value = updatedEmail
+    private val _uiState = MutableStateFlow(EmailVerificationUiState())
+    val uiState: StateFlow<EmailVerificationUiState> = _uiState.asStateFlow()
+
+    var emailInput by mutableStateOf("")
+        private set
+
+    var verifyNumberInput by mutableStateOf("")
+        private set
+
+    fun setEmail(input: String) {
+        emailInput = input
+        if (_uiState.value.error?.type == EmailVerificationErrorType.EMAIL) validateEmail()
     }
 
-    fun updateVerifyNumber(updatedNumber: String) {
-        verifyNumber.value = updatedNumber
+    fun setVerifyNumber(input: String) {
+        verifyNumberInput = input
+        if (_uiState.value.error?.type == EmailVerificationErrorType.VERIFY_NUMBER) validateVerifyNumber()
     }
 
-    fun getEmail(): String {
-        isInvalidEmail.value = !".+@.+\\..+".toRegex().matches(email.toString())
-        return email.value
+    private fun clearInputs() {
+        emailInput = ""
+        verifyNumberInput = ""
     }
 
-    fun getVerifyNumber(): String {
-        if (verifyNumber.value == "") {
-            isInvalidVerifyNumber.value = false
+    private fun validateEmail() {
+        if (isValidEmail(emailInput)) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidEmail = true,
+                    error = null
+                )
+            }
         }
-        return verifyNumber.value
     }
 
-    fun warnEmail(): Boolean {
-        if (email.value == "") {
-            return false
+    private fun validateVerifyNumber() {
+        if (isValidVerifyNumber(verifyNumberInput)) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidVerifyNumber = true,
+                    error = null
+                )
+            }
         }
-//        TODO
-//        회원가입시에는 isDuplicateEmail.value==TRUE일 때 에러 메시지
-//        비밀번호 재설정시에는 FALSE일 때 에러메시지 띄워야
-        if (isDuplicateEmail.value || isInvalidEmail.value) {
-            return true
-        }
-        return false
     }
 
-    fun warnVerifyNumber(): Boolean {
-        if (isInvalidVerifyNumber.value) {
-            return true
+    fun verifySendSignup() {
+        if (!isValidEmail(emailInput)){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidEmail = false,
+                    error = EmailVerificationError(
+                        type = EmailVerificationErrorType.EMAIL,
+                        messageId = R.string.false_email
+                    )
+                )
+            }
+        } else {
+            viewModelScope.launch {
+                repository.verifySendSignup(
+                    AuthVerifyEmailSendRequest(
+                        email = emailInput
+                    )
+                ).collect {
+                    /*TODO*/
+                }
+            }
         }
-        return false
     }
 
-    @Composable
-    fun warnEmailMessage(): String {
-        if (email.value == "") {
-            return ""
+    fun verifySendPW() {
+        if (!isValidEmail(emailInput)){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidEmail = false,
+                    error = EmailVerificationError(
+                        type = EmailVerificationErrorType.EMAIL,
+                        messageId = R.string.false_email
+                    )
+                )
+            }
+        } else {
+            viewModelScope.launch {
+                repository.verifySendPW(
+                    AuthVerifyEmailSendRequest(
+                        email = emailInput
+                    )
+                ).collect {
+                    /*TODO*/
+                }
+            }
         }
-        if (isInvalidEmail.value) {
-            return stringResource(id = R.string.false_email)
-        }
-//        TODO
-//        회원가입시에는 isDuplicateEmail.value==TRUE일 때 에러 메시지
-//        비밀번호 재설정시에는 FALSE일 때 에러메시지 띄워야
-        if (isDuplicateEmail.value) {
-            return stringResource(id = R.string.email_already_taken)
-        }
-        return ""
     }
 
-    @Composable
-    fun warnVerifyNumberMessage(): String {
-        if (verifyNumber.value == "") {
-            return ""
+    fun verifyAcceptSignup() {
+        if (!isValidVerifyNumber(verifyNumberInput)){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidVerifyNumber = false,
+                    error = EmailVerificationError(
+                        type = EmailVerificationErrorType.VERIFY_NUMBER,
+                        messageId = R.string.false_validation_number
+                    )
+                )
+            }
         }
-        if (isInvalidVerifyNumber.value) {
-            return stringResource(id = R.string.false_validation_number)
+        else {
+            viewModelScope.launch {
+                repository.verifyAcceptSignup(
+                    AuthVerifyEmailAcceptRequest(
+                        email = emailInput,
+                        code = verifyNumberInput
+                    )
+                ).collect {
+                    /*TODO*/
+                }
+            }
+            clearInputs()
         }
-        return ""
+    }
+
+    fun verifyAcceptPW() {
+        if (!isValidVerifyNumber(verifyNumberInput)){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidVerifyNumber = false,
+                    error = EmailVerificationError(
+                        type = EmailVerificationErrorType.VERIFY_NUMBER,
+                        messageId = R.string.false_validation_number
+                    )
+                )
+            }
+        }
+        else {
+            viewModelScope.launch {
+                repository.verifyAcceptPW(
+                    AuthVerifyEmailAcceptRequest(
+                        email = emailInput,
+                        code = verifyNumberInput
+                    )
+                ).collect {
+                    /*TODO*/
+                }
+            }
+            clearInputs()
+        }
     }
 }
+

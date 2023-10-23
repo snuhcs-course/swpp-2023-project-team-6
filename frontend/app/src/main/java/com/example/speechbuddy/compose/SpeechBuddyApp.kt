@@ -52,8 +52,6 @@ fun SpeechBuddyNavHost(
                 onBackClick = {
                     navController.navigateUp()
                 },
-                onSubmitClick = {
-                },
                 onNextClick = {
                     when (source) {
                         "reset_password" -> {

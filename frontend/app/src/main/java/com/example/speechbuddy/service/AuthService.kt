@@ -38,7 +38,7 @@ interface AuthService {
 
     @POST("/user/validateemail/pw/accept/")
     suspend fun verify_accept_pw(
-            @Body verifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest
-    ): Response<Void>
+        @Body verifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest
+    ): Response<AuthTokenDto>
 
 }

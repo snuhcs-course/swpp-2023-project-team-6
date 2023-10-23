@@ -43,7 +43,7 @@ class AuthTokenRemoteSource @Inject constructor(private val authService: AuthSer
             emit(result)
         }
 
-    suspend fun verifyAcceptPWAuthToken(authVerifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest): Flow<Response<Void>> =
+    suspend fun verifyAcceptPWAuthToken(authVerifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest): Flow<Response<AuthTokenDto>> =
         flow {
             val result = authService.verify_accept_pw(authVerifyEmailAcceptRequest)
             emit(result)

@@ -10,3 +10,7 @@ fun isValidEmail(input: String): Boolean {
 fun isValidPassword(input: String): Boolean {
     return input.length >= MINIMUM_PASSWORD_LENGTH
 }
+
+fun isValidVerifyNumber(input: String): Boolean{
+    return input.length == 6
+}
