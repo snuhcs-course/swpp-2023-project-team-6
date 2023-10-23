@@ -37,6 +37,9 @@ class EmailVerificationViewModel : ViewModel() {
         if (email.value == "") {
             return false
         }
+//        TODO
+//        회원가입시에는 isDuplicateEmail.value==TRUE일 때 에러 메시지
+//        비밀번호 재설정시에는 FALSE일 때 에러메시지 띄워야
         if (isDuplicateEmail.value || isInvalidEmail.value) {
             return true
         }
@@ -55,9 +58,12 @@ class EmailVerificationViewModel : ViewModel() {
         if (email.value == "") {
             return ""
         }
-        if (isInvalidVerifyNumber.value) {
+        if (isInvalidEmail.value) {
             return stringResource(id = R.string.false_email)
         }
+//        TODO
+//        회원가입시에는 isDuplicateEmail.value==TRUE일 때 에러 메시지
+//        비밀번호 재설정시에는 FALSE일 때 에러메시지 띄워야
         if (isDuplicateEmail.value) {
             return stringResource(id = R.string.email_already_taken)
         }
@@ -70,7 +76,7 @@ class EmailVerificationViewModel : ViewModel() {
             return ""
         }
         if (isInvalidVerifyNumber.value) {
-            return stringResource(id = R.string.reset_password_false_validation_number)
+            return stringResource(id = R.string.false_validation_number)
         }
         return ""
     }

@@ -1,4 +1,4 @@
-package com.example.speechbuddy.compose.signup
+package com.example.speechbuddy.compose.emailverification
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +31,7 @@ import com.example.speechbuddy.viewmodel.EmailVerificationViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmailVerificationScreen(
+    source: String?,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onSubmitClick: () -> Unit,
@@ -42,6 +43,7 @@ fun EmailVerificationScreen(
     ) {
         Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
             VerifyEmailColumn(
+                source = source,
                 verifyEmailViewModel = verifyEmailViewModel,
                 onSubmitClick = onSubmitClick,
                 onNextClick = onNextClick
@@ -52,6 +54,7 @@ fun EmailVerificationScreen(
 
 @Composable
 fun VerifyEmailColumn(
+    source: String?,
     verifyEmailViewModel: EmailVerificationViewModel,
     onSubmitClick: () -> Unit,
     onNextClick: () -> Unit
@@ -114,6 +117,7 @@ fun VerifyEmailColumn(
 fun EmailVerificationScreenPreview() {
     SpeechBuddyTheme {
         EmailVerificationScreen(
+            source = "reset_password",
             onBackClick = {},
             onSubmitClick = {},
             onNextClick = {}
