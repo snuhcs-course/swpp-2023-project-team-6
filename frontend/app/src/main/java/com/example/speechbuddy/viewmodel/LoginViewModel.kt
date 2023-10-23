@@ -36,13 +36,13 @@ class LoginViewModel @Inject internal constructor(
         private set
 
     fun setEmail(input: String) {
-        if (_uiState.value.error?.type == LoginErrorType.EMAIL) validateEmail()
         emailInput = input
+        if (_uiState.value.error?.type == LoginErrorType.EMAIL) validateEmail()
     }
 
     fun setPassword(input: String) {
-        if (_uiState.value.error?.type == LoginErrorType.PASSWORD) validatePassword()
         passwordInput = input
+        if (_uiState.value.error?.type == LoginErrorType.PASSWORD) validatePassword()
     }
 
     private fun clearInputs() {
