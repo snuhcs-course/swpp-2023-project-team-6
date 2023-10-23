@@ -36,4 +36,6 @@
     <string name="false_new_password_check">비밀번호가 일치하지 않습니다</string>
     <string name="email_already_taken">다른 사용자가 이미 사용하고 있는 이메일입니다</string>
     <string name="nicknaem_length_error">닉네임은 비어있을 수 없습니다</string>
+    <string name="alert_dialog_login_error">로그인 오류</string>
+    <string name="alert_dialog_signup_error">회원가입 오류</string>
 </resources>

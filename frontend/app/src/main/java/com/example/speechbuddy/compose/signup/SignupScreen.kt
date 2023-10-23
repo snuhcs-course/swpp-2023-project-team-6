@@ -1,19 +1,23 @@
 package com.example.speechbuddy.compose.signup
 
 import android.annotation.SuppressLint
+import com.example.speechbuddy.compose.utils.AlertDialogUi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,16 +26,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.SignupErrorType
+import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.viewmodel.SignupViewModel
 
 
@@ -49,7 +52,8 @@ fun SignupScreen(
     val isNicknameError = uiState.error?.type == SignupErrorType.NICKNAME
     val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORDCHECK
-    val isError = isPasswordError || isPasswordCheckError
+    val result: Map<String, Any?>? by viewModel.signupResult.observeAsState(null)
+    val openAlertDialog = remember { mutableStateOf(false) }
 
 
     Surface(modifier = modifier.fillMaxSize()) {
@@ -82,10 +86,12 @@ fun SignupScreen(
                     onValueChange = { viewModel.setNickname(it) },
                     label = { Text(text = stringResource(id = R.string.nickname)) },
                     supportingText = {
-                        if (isNicknameError){
+                        if (isNicknameError) {
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
-                    }
+                    },
+                    isError = isNicknameError,
+                    isValid = uiState.isValidNickname
                 )
 
                 // Password Text Field
@@ -94,10 +100,14 @@ fun SignupScreen(
                     onValueChange = { viewModel.setPassword(it) },
                     label = { Text(text = stringResource(id = R.string.password_field)) },
                     supportingText = {
-                        if (isPasswordError){
+                        if (isPasswordError) {
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
-                    }
+                    },
+                    isError = isPasswordError,
+                    isValid = uiState.isValidPassword,
+                    isHidden = true
+
                 )
 
                 // Password Check Text Field
@@ -106,87 +116,56 @@ fun SignupScreen(
                     onValueChange = { viewModel.setPasswordCheck(it) },
                     label = { Text(text = stringResource(id = R.string.password_check_field)) },
                     supportingText = {
-                        if (isPasswordCheckError){
+                        if (isPasswordCheckError) {
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
-                    }
+                    },
+                    isError = isPasswordCheckError,
+                    isValid = uiState.isValidPassword,
+                    isHidden = true
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
 
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
-                    onClick = {viewModel.signUp()},
+                    onClick = {
+                        viewModel.signUp()
+                        // error in response
+                        if (result?.get("status") == Resource(Status.ERROR, "", "").status) {
+                            openAlertDialog.value = true
+                        } else { // move to next screen
+                            onSignupClick()
+                        }
+                    },
                 )
             }
         }
     }
-}
 
-/*
-@Composable
-fun SignupColumn(
-    email: String,
-    nickname: String,
-    password: String,
-    passwordCheck: String,
-    signupViewModel: SignupViewModel,
-    onSignupClick: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TitleUi(
-            title = stringResource(id = R.string.signup_text),
-            description = stringResource(id = R.string.signup_explain)
-        )
+    // Pop up alert dialog
+    when {
+        openAlertDialog.value -> {
+            // For some reason first few result?.get("msg") returns null.
+            // Possible do to async?
+            // Workaround by comparing to null
+            val message: String
+            if (result?.get("msg") == null) {
+                message = ""
+            } else {
+                message = result?.get("msg").toString()
+            }
 
-        Spacer(modifier = Modifier.height(15.dp))
-
-        // Email Text Field
-        TextFieldUi(
-            value = email,
-            onValueChange = { view},
-            label = { Text(text = stringResource(id = R.string.email_field)) },
-            isEnabled = false
-        )
-
-        // Nickname Text Field
-        TextFieldUi(
-            value = nickname,
-            onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.nickname)) },
-            supportingText = { Text(text = stringResource(id = R.string.nickname)) }
-        )
-
-        // Password Text Field
-        TextFieldUi(value = password,
-            onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.password_field)) },
-            supportingText = { Text(text = stringResource(id = R.string.password_field)) }
-        )
-
-        // Password Check Text Field
-        TextFieldUi(
-            value = passwordCheck,
-            onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.password_check_field)) },
-            supportingText = { Text(stringResource(id = R.string.password_field)) }
-        )
-
-        Spacer(modifier = Modifier.height(15.dp))
-
-        ButtonUi(
-            text = stringResource(id = R.string.signup),
-            onClick = onSignupClick,
-        )
+            AlertDialogUi(
+                onConfirmation = {
+                    openAlertDialog.value = false
+                },
+                dialogTitle = stringResource(id = R.string.alert_dialog_signup_error),
+                dialogText = message,
+            )
+        }
     }
 }
- */
 
 @Preview
 @Composable

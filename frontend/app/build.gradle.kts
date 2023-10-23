@@ -74,6 +74,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     // Coroutines
     val coroutinesVersion = "1.7.1"
