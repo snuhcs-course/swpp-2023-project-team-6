@@ -17,12 +17,12 @@ class UserSignUpSerializer(serializers.Serializer):
     def validate(self, data):
         pw = data.get('password')
         if len(pw) < 8:
-            raise ValidationError({"password": ["password unavailable (short password)"]})
+            raise ValidationError({"short": ["password unavailable (short password)"]})
 
         email = data.get('email')
 
         if User.objects.filter(email=email).exists():
-            raise ValidationError({"email": ["email address unavailable (already taken)"]})
+            raise ValidationError({"already_taken": ["email address unavailable (already taken)"]})
         return data
 
     def create(self, validated_data):
@@ -39,7 +39,7 @@ class EmailCheckSerializer(serializers.Serializer):
     def validate(self, data):
         email = normalize_email(data.get('email'))
         if User.objects.filter(email=email).exists():
-            raise ValidationError({"email": ["email address unavailable (already taken)"]})
+            raise ValidationError({"already_taken": ["email address unavailable (already taken)"]})
 
         return data
 
@@ -51,7 +51,7 @@ class UserCheckSerializer(serializers.Serializer):
     def validate(self, data):
         email = normalize_email(data.get('email'))
         if not User.objects.filter(email=email).exists():
-            raise ValidationError({"email": ["no such user w/ the email"]})
+            raise ValidationError({"no_user": ["no such user w/ the email"]})
 
         return data
 
@@ -83,12 +83,12 @@ class UserLoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email', None)
         if not User.objects.filter(email=email).exists():
-            raise ValidationError({"email": ["wrong email address"]})
+            raise ValidationError({"wrong_email": ["wrong email address"]})
 
         password = data.get('password', None)
         user = authenticate(email=email, password=password)
         if user is None:
-            raise ValidationError({"password": ["wrong password"]})
+            raise ValidationError({"wrong_password": ["wrong password"]})
 
         token = TokenObtainPairSerializer.get_token(user)
         refresh = str(token)
@@ -124,7 +124,7 @@ class PasswordUpdateSerializer(serializers.Serializer):
     def validate(self, data):
         password = data.get('password')
         if len(password) < 8:
-            raise ValidationError({"password": ["short password"]})
+            raise ValidationError({"short": ["password unavailable (short password)"]})
         return data
 
     def update(self, user, validated_data):
@@ -141,7 +141,7 @@ class NicknameUpdateSerializer(serializers.Serializer):
         user = self.context['user']
         nickname = data.get('nickname')
         if user.nickname == nickname:
-            raise ValidationError({"nickname": ["The new nickname is the same as the original one"]})
+            raise ValidationError({"same": ["The new nickname is the same as the original one"]})
         return data
 
     def update(self, user, validated_data):
