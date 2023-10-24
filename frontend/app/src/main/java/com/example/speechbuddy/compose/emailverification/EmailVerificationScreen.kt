@@ -81,24 +81,21 @@ fun EmailVerificationScreen(
                     supportingButton = {
                         ButtonUi(
                             text = stringResource(id = R.string.send_validation_number),
-                            onClick = {
-                                when (source) {
-                                    "reset_password" -> viewModel.verifySendPW()
-                                    "signup" -> viewModel.verifySendSignup()
-                                    else -> viewModel.verifySendSignup()
-                                }
-                            },
-                            // 성공적으로 보내지면 TextFieldUi의 isEnalbed가 false가 돼야함
+                            onClick = { viewModel.verifySend(source) },
                             level = ButtonLevel.TERTIARY
                         )
                     },
                     supportingText = {
                         if (isEmailError) {
                             Text(stringResource(id = uiState.error!!.messageId))
+                        } else if(uiState.isSuccessfulSend) {
+                            Text(stringResource(id = R.string.verification_number_sent))
                         }
                     },
                     isError = isError,
-                    isValid = uiState.isValidEmail
+                    isValid = uiState.isValidEmail,
+                    // If verification email is sent successfully, a user cannot change one's email input
+                    isEnabled = !uiState.isSuccessfulSend
                 )
 
                 // Verify number(code) Text Field
@@ -113,6 +110,7 @@ fun EmailVerificationScreen(
                     },
                     isError = isError,
                     isValid = uiState.isValidVerifyNumber,
+                    isEnabled = uiState.isSuccessfulSend
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
@@ -126,6 +124,7 @@ fun EmailVerificationScreen(
                             else -> viewModel.verifyAcceptSignup()
                         }
                     },
+                    isEnabled = uiState.isSuccessfulSend
                 )
             }
         }

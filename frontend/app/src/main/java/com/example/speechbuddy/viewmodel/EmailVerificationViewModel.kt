@@ -1,5 +1,6 @@
 package com.example.speechbuddy.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +13,8 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationError
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.ui.models.EmailVerificationUiState
+import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
 import com.example.speechbuddy.utils.isValidVerifyNumber
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -73,7 +76,7 @@ class EmailVerificationViewModel @Inject internal constructor(
         }
     }
 
-    fun verifySendSignup() {
+    fun verifySend(source:String?) {
         if (!isValidEmail(emailInput)){
             _uiState.update { currentState ->
                 currentState.copy(
@@ -84,38 +87,70 @@ class EmailVerificationViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else {
+        } else if(source=="signup") {
             viewModelScope.launch {
                 repository.verifySendSignup(
                     AuthVerifyEmailSendRequest(
                         email = emailInput
                     )
-                ).collect {
-                    /*TODO*/
+                ).collect { result ->
+                    when(result.status){
+                        Status.SUCCESS-> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isSuccessfulSend = true,
+                                    error = null
+                                )
+                            }
+                        }
+                        Status.ERROR-> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidEmail = false,
+                                    error = EmailVerificationError(
+                                        type = EmailVerificationErrorType.EMAIL,
+                                        // 일단 임시적인 처리! 백의 응답에 따라 text가 달라지도록 수정해야 함
+                                        messageId = R.string.email_already_taken
+                                    )
+                                )
+                            }
+                        }
+                        Status.LOADING -> {
+                        }
+                    }
                 }
             }
-        }
-    }
-
-    fun verifySendPW() {
-        if (!isValidEmail(emailInput)){
-            _uiState.update { currentState ->
-                currentState.copy(
-                    isValidEmail = false,
-                    error = EmailVerificationError(
-                        type = EmailVerificationErrorType.EMAIL,
-                        messageId = R.string.false_email
-                    )
-                )
-            }
-        } else {
+        } else { // if it's for resetting password, 백의 에러메시지를 활용할 수 있도록 하면 코드의 중복을 더 줄일 수 있을듯
             viewModelScope.launch {
                 repository.verifySendPW(
                     AuthVerifyEmailSendRequest(
                         email = emailInput
                     )
-                ).collect {
-                    /*TODO*/
+                ).collect { result ->
+                    when(result.status){
+                        Status.SUCCESS-> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isSuccessfulSend = true,
+                                    error = null
+                                )
+                            }
+                        }
+                        Status.ERROR-> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidEmail = false,
+                                    error = EmailVerificationError(
+                                        type = EmailVerificationErrorType.EMAIL,
+                                        // 일단 임시적인 처리! 백의 응답에 따라 text가 달라지도록 수정해야 함
+                                        messageId = R.string.no_such_user
+                                    )
+                                )
+                            }
+                        }
+                        Status.LOADING -> {
+                        }
+                    }
                 }
             }
         }
