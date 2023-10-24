@@ -20,6 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
@@ -37,7 +39,7 @@ fun EmailVerificationScreen(
     source: String?,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    navController: NavHostController,
     viewModel: EmailVerificationViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -117,7 +119,7 @@ fun EmailVerificationScreen(
 
                 ButtonUi(
                     text = stringResource(id = R.string.next),
-                    onClick = { viewModel.verifyAccept(source, onNextClick) },
+                    onClick = { viewModel.verifyAccept(source, navController) },
                     isEnabled = uiState.isSuccessfulSend
                 )
             }
@@ -133,7 +135,7 @@ fun EmailVerificationScreenPreview() {
         EmailVerificationScreen(
             source = "reset_password",
             onBackClick = {},
-            onNextClick = {}
+            navController = rememberNavController()
         )
     }
 }

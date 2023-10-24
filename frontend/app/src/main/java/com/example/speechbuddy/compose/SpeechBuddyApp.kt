@@ -52,19 +52,11 @@ fun SpeechBuddyNavHost(
                 onBackClick = {
                     navController.navigateUp()
                 },
-                onNextClick = {
-                    when (source) {
-                        "reset_password" -> {
-                            navController.navigate("reset_password")
-                        }
-                        "signup" -> {
-                            navController.navigate("signup")
-                        }
-                    }
-                }
+                navController = navController,
             )
         }
-        composable("signup") {
+        composable("signup/{emailInput}") {backStackEntry ->
+            val emailInput = backStackEntry.arguments?.getString("emailInput")
             SignupScreen(
                 onBackClick = {
                     // has to re-verify one's email!
@@ -72,7 +64,7 @@ fun SpeechBuddyNavHost(
                 },
                 onSignupClick = {
                 },
-                email = ""
+                email = emailInput ?: ""
             )
         }
         composable("reset_password") {

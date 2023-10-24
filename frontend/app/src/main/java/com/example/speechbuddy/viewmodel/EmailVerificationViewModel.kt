@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
@@ -135,7 +136,13 @@ class EmailVerificationViewModel @Inject internal constructor(
         }
     }
 
-    fun verifyAccept(source: String?, onNextClick: () -> Unit) {
+    fun verifyAccept(source: String?, navController: NavHostController) {
+        val verifyAcceptFunction  = if (source=="signup"){
+            repository::verifyAcceptSignup
+        } else{ // source == "reset_password"
+            repository::verifyAcceptPW
+        }
+
         if (!isValidVerifyNumber(verifyNumberInput)){
             _uiState.update { currentState ->
                 currentState.copy(
@@ -147,66 +154,42 @@ class EmailVerificationViewModel @Inject internal constructor(
                 )
             }
         }
-        else if (source=="signup"){
-            viewModelScope.launch {
-                repository.verifyAcceptSignup(
-                    AuthVerifyEmailAcceptRequest(
-                        email = emailInput,
-                        code = verifyNumberInput
-                    )
-                ).collect { result ->
-                    when(result.status){
-                        Status.SUCCESS-> {
-                            onNextClick()
+
+        viewModelScope.launch {
+            verifyAcceptFunction(
+                AuthVerifyEmailAcceptRequest(
+                    email = emailInput,
+                    code = verifyNumberInput
+                )
+            ).collect { result ->
+                when(result.status){
+                    Status.SUCCESS-> {
+                        if (source=="signup"){
+                            navController.navigate("signup/$emailInput")
+                        } else {
+                            //result.data에 access token 저장돼있음
+                            navController.navigate("reset_password")
                         }
-                        Status.ERROR-> {
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isValidVerifyNumber = false,
-                                    error = EmailVerificationError(
-                                        type = EmailVerificationErrorType.VERIFY_NUMBER,
-                                        messageId = R.string.false_validation_number
-                                    )
+                    }
+                    Status.ERROR-> {
+                        // All error cases from this API call can
+                        // boil down to 'false_validation_number'
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidVerifyNumber = false,
+                                error = EmailVerificationError(
+                                    type = EmailVerificationErrorType.VERIFY_NUMBER,
+                                    messageId = R.string.false_validation_number
                                 )
-                            }
+                            )
                         }
-                        Status.LOADING -> {
-                        }
+                    }
+                    Status.LOADING -> {
                     }
                 }
             }
-            clearVerifyNumberInput()
-        } else {
-            viewModelScope.launch {
-                repository.verifyAcceptPW(
-                    AuthVerifyEmailAcceptRequest(
-                        email = emailInput,
-                        code = verifyNumberInput
-                    )
-                ).collect { result ->
-                    when(result.status){
-                        Status.SUCCESS-> {
-                            // access token 저장 후
-                            onNextClick()
-                        }
-                        Status.ERROR-> {
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isValidVerifyNumber = false,
-                                    error = EmailVerificationError(
-                                        type = EmailVerificationErrorType.VERIFY_NUMBER,
-                                        messageId = R.string.false_validation_number
-                                    )
-                                )
-                            }
-                        }
-                        Status.LOADING -> {
-                        }
-                    }
-                }
-            }
-            clearVerifyNumberInput()
         }
+        clearVerifyNumberInput()
     }
 }
 
