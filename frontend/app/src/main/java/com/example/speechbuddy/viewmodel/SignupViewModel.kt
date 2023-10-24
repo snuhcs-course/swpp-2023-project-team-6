@@ -110,7 +110,7 @@ class SignupViewModel @Inject internal constructor(
                     isValidNickname = false,
                     error = SignupError(
                         type = SignupErrorType.NICKNAME,
-                        messageId = R.string.nicknaem_length_error
+                        messageId = R.string.nickname_length_error
                     )
                 )
             }

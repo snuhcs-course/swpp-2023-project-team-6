@@ -1,6 +1,7 @@
 package com.example.speechbuddy.utils
 
 import android.util.Patterns
+import com.example.speechbuddy.utils.Constants.Companion.CODE_LENGTH
 import com.example.speechbuddy.utils.Constants.Companion.MINIMUM_PASSWORD_LENGTH
 
 fun isValidEmail(input: String): Boolean {
@@ -12,5 +13,5 @@ fun isValidPassword(input: String): Boolean {
 }
 
 fun isValidVerifyNumber(input: String): Boolean{
-    return input.length == 6
+    return input.length == CODE_LENGTH
 }
