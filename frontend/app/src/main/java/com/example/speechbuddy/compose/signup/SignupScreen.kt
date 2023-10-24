@@ -52,8 +52,6 @@ fun SignupScreen(
     val isNicknameError = uiState.error?.type == SignupErrorType.NICKNAME
     val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORDCHECK
-    val result: Map<String, Any?>? by viewModel.signupResult.observeAsState(null)
-    val openAlertDialog = remember { mutableStateOf(false) }
 
 
     Surface(modifier = modifier.fillMaxSize()) {
@@ -131,50 +129,9 @@ fun SignupScreen(
                     text = stringResource(id = R.string.signup),
                     onClick = {
                         viewModel.signUp()
-                        // error in response
-                        if (result?.get("status") == Resource(Status.ERROR, "", "").status) {
-                            openAlertDialog.value = true
-                        } else { // move to next screen
-                            onSignupClick()
-                        }
                     },
                 )
             }
         }
-    }
-
-    // Pop up alert dialog
-    when {
-        openAlertDialog.value -> {
-            // For some reason first few result?.get("msg") returns null.
-            // Possible do to async?
-            // Workaround by comparing to null
-            val message: String
-            if (result?.get("msg") == null) {
-                message = ""
-            } else {
-                message = result?.get("msg").toString()
-            }
-
-            AlertDialogUi(
-                onConfirmation = {
-                    openAlertDialog.value = false
-                },
-                dialogTitle = stringResource(id = R.string.alert_dialog_signup_error),
-                dialogText = message,
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun SignupScreenPreview() {
-    SpeechBuddyTheme {
-        SignupScreen(
-            onBackClick = {},
-            onSignupClick = {},
-            email = "asdf"
-        )
     }
 }

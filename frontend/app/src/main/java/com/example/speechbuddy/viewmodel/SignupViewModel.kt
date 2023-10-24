@@ -1,6 +1,5 @@
 package com.example.speechbuddy.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,8 +13,8 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.SignupError
 import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.ui.models.SignupUiState
+import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.Resource
-import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,8 +44,8 @@ class SignupViewModel @Inject internal constructor(
     var passwordCheckInput by mutableStateOf("")
         private set
 
-    private val _signupResult = MutableLiveData<Map<String, Any?>>()
-    val signupResult: LiveData<Map<String, Any?>> = _signupResult
+    private val _signupResult = MutableLiveData<Resource<Void>>()
+    val signupResult: LiveData<Resource<Void>> = _signupResult
 
     fun setNickname(input: String) {
         nicknameInput = input
@@ -64,7 +63,7 @@ class SignupViewModel @Inject internal constructor(
     }
 
     private fun validateNickname() {
-        if (nicknameInput.isNotEmpty()) {
+        if (nicknameInput.isNotEmpty() && nicknameInput.length <= Constants.MAXIMUM_NICKNAME_LENGTH) {
             _uiState.update { currentSate ->
                 currentSate.copy(
                     isValidNickname = true,
@@ -104,10 +103,8 @@ class SignupViewModel @Inject internal constructor(
         passwordCheckInput = ""
     }
 
-    fun signUp(){
-        var result : Map<String, Any?> = mapOf()
-
-        if (nicknameInput.isBlank()) { // Check nickname
+    fun signUp() {
+        if (nicknameInput.isBlank() || nicknameInput.length > Constants.MAXIMUM_NICKNAME_LENGTH) { // Check nickname
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidNickname = false,
@@ -146,21 +143,10 @@ class SignupViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect {
-                    if(it.status == Resource(Status.SUCCESS, "", "").status){ // 200
-                        result = mapOf("status" to it.status, "data" to it.data, "msg" to it.message)
-                        _signupResult.postValue(result)
-                    }else{ // status:error
-                        // get message from response
-                        val regex = "\\[(.*?)\\]".toRegex()
-                        val matchResult = it.message?.let { msg -> regex.find(msg) }  // Search for the pattern in the input string
-                        val message = matchResult?.groups?.get(1)?.value  // Extract the value between the brackets
-                        message?.replace("\"","")
-                        result = mapOf("status" to it.status, "data" to it.data, "msg" to message)
-                        _signupResult.postValue(result)
-                    }
+                    _signupResult.postValue(it)
                 }
             }
-            clearInputs()
+            //clearInputs()
         }
     }
 }

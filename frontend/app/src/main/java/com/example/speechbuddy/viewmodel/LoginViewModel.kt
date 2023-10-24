@@ -1,6 +1,5 @@
 package com.example.speechbuddy.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
@@ -40,8 +40,8 @@ class LoginViewModel @Inject internal constructor(
     var passwordInput by mutableStateOf("")
         private set
 
-    private var _loginResult = MutableLiveData<ResultType>()
-    val loginResult: LiveData<ResultType> = _loginResult
+    private var _loginResult = MutableLiveData<Resource<AuthToken>>()
+    val loginResult: LiveData<Resource<AuthToken>> = _loginResult
 
     fun setEmail(input: String) {
         emailInput = input
@@ -81,8 +81,6 @@ class LoginViewModel @Inject internal constructor(
     }
 
     fun login() {
-        var result: Map<String, Any?>
-
         if (!isValidEmail(emailInput) && emailInput.isEmpty()) {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -111,12 +109,8 @@ class LoginViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect {
-                    Log.d("test_msg", it.message.toString())
                     if (it.status == Resource(Status.SUCCESS, "", "").status) { // 200
-                        result =
-                            mapOf("status" to it.status, "data" to it.data, "msg" to it.message)
-//                        _signupResult.postValue(result)
-                        _loginResult.postValue(ResultType.Error(result))
+                        _loginResult.postValue(it)
                     } else { // status:error
                         // when password is wrong
                         if (it.message?.contains("password", ignoreCase = true) == true) {
@@ -129,10 +123,7 @@ class LoginViewModel @Inject internal constructor(
                                     )
                                 )
                             }
-                        } else if (it.message?.contains(
-                                "email",
-                                ignoreCase = true
-                            ) == true
+                        } else if (it.message?.contains("email", ignoreCase = true) == true
                         ) { // email is wrong
                             _uiState.update { currentState ->
                                 currentState.copy(
@@ -144,29 +135,11 @@ class LoginViewModel @Inject internal constructor(
                                 )
                             }
                         }
-
-                        // get message from response
-                        val regex = "\\[(.*?)\\]".toRegex()
-                        val matchResult =
-                            it.message?.let { msg -> regex.find(msg) }  // Search for the pattern in the input string
-                        val message =
-                            matchResult?.groups?.get(1)?.value  // Extract the value between the brackets
-                        message?.replace("\"", "")
-                        result =
-                            mapOf("status" to it.status, "data" to it.data, "msg" to message)
-//                        _signupResult.postValue(result)
-                        _loginResult.postValue(ResultType.Error(result))
-
+                        _loginResult.postValue(it)
                     }
                 }
             }
         }
-        clearInputs()
-        Log.d("test", "after login button: " + _loginResult.value .toString())
+        //clearInputs()
     }
-}
-
-sealed class ResultType {
-    data class Success(val result: Map<String, Any?>) : ResultType()
-    data class Error(val result: Map<String, Any?>) : ResultType()
 }
