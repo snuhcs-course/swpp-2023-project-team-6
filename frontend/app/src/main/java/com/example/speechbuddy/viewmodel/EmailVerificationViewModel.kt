@@ -49,8 +49,7 @@ class EmailVerificationViewModel @Inject internal constructor(
         if (_uiState.value.error?.type == EmailVerificationErrorType.VERIFY_NUMBER) validateVerifyNumber()
     }
 
-    private fun clearInputs() {
-        emailInput = ""
+    private fun clearVerifyNumberInput() {
         verifyNumberInput = ""
     }
 
@@ -156,7 +155,7 @@ class EmailVerificationViewModel @Inject internal constructor(
         }
     }
 
-    fun verifyAcceptSignup() {
+    fun verifyAccept(source: String?, onNextClick: () -> Unit) {
         if (!isValidVerifyNumber(verifyNumberInput)){
             _uiState.update { currentState ->
                 currentState.copy(
@@ -168,45 +167,65 @@ class EmailVerificationViewModel @Inject internal constructor(
                 )
             }
         }
-        else {
+        else if (source=="signup"){
             viewModelScope.launch {
                 repository.verifyAcceptSignup(
                     AuthVerifyEmailAcceptRequest(
                         email = emailInput,
                         code = verifyNumberInput
                     )
-                ).collect {
-                    /*TODO*/
+                ).collect { result ->
+                    when(result.status){
+                        Status.SUCCESS-> {
+                            onNextClick()
+                        }
+                        Status.ERROR-> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidVerifyNumber = false,
+                                    error = EmailVerificationError(
+                                        type = EmailVerificationErrorType.VERIFY_NUMBER,
+                                        messageId = R.string.false_validation_number
+                                    )
+                                )
+                            }
+                        }
+                        Status.LOADING -> {
+                        }
+                    }
                 }
             }
-            clearInputs()
-        }
-    }
-
-    fun verifyAcceptPW() {
-        if (!isValidVerifyNumber(verifyNumberInput)){
-            _uiState.update { currentState ->
-                currentState.copy(
-                    isValidVerifyNumber = false,
-                    error = EmailVerificationError(
-                        type = EmailVerificationErrorType.VERIFY_NUMBER,
-                        messageId = R.string.false_validation_number
-                    )
-                )
-            }
-        }
-        else {
+            clearVerifyNumberInput()
+        } else {
             viewModelScope.launch {
                 repository.verifyAcceptPW(
                     AuthVerifyEmailAcceptRequest(
                         email = emailInput,
                         code = verifyNumberInput
                     )
-                ).collect {
-                    /*TODO*/
+                ).collect { result ->
+                    when(result.status){
+                        Status.SUCCESS-> {
+                            // access token 저장 후
+                            onNextClick()
+                        }
+                        Status.ERROR-> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidVerifyNumber = false,
+                                    error = EmailVerificationError(
+                                        type = EmailVerificationErrorType.VERIFY_NUMBER,
+                                        messageId = R.string.false_validation_number
+                                    )
+                                )
+                            }
+                        }
+                        Status.LOADING -> {
+                        }
+                    }
                 }
             }
-            clearInputs()
+            clearVerifyNumberInput()
         }
     }
 }

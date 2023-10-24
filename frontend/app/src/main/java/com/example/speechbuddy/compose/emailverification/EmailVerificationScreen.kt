@@ -117,13 +117,7 @@ fun EmailVerificationScreen(
 
                 ButtonUi(
                     text = stringResource(id = R.string.next),
-                    onClick = {
-                        when (source) {
-                            "reset_password" -> viewModel.verifyAcceptPW()
-                            "signup" -> viewModel.verifyAcceptSignup()
-                            else -> viewModel.verifyAcceptSignup()
-                        }
-                    },
+                    onClick = { viewModel.verifyAccept(source, onNextClick) },
                     isEnabled = uiState.isSuccessfulSend
                 )
             }
