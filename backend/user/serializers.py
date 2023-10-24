@@ -17,7 +17,7 @@ class UserSignUpSerializer(serializers.Serializer):
     def validate(self, data):
         pw = data.get('password')
         if len(pw) < 8:
-            raise ValidationError({"short": ["password unavailable (short password)"]})
+            raise ValidationError({"short_pw": ["password unavailable (short password)"]})
 
         email = data.get('email')
 
@@ -124,7 +124,7 @@ class PasswordUpdateSerializer(serializers.Serializer):
     def validate(self, data):
         password = data.get('password')
         if len(password) < 8:
-            raise ValidationError({"short": ["password unavailable (short password)"]})
+            raise ValidationError({"short_pw": ["password unavailable (short password)"]})
         return data
 
     def update(self, user, validated_data):
