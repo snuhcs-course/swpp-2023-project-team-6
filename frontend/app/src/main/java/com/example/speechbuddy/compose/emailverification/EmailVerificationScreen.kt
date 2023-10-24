@@ -44,8 +44,8 @@ fun EmailVerificationScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isEmailError = uiState.error?.type == EmailVerificationErrorType.EMAIL
-    val isVerifyNumberError = uiState.error?.type == EmailVerificationErrorType.VERIFY_NUMBER
-    val isError = isEmailError || isVerifyNumberError
+    val isVerifyCodeError = uiState.error?.type == EmailVerificationErrorType.VERIFY_CODE
+    val isError = isEmailError || isVerifyCodeError
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -82,7 +82,7 @@ fun EmailVerificationScreen(
                     label = { Text(text = stringResource(id = R.string.email_field)) },
                     supportingButton = {
                         ButtonUi(
-                            text = stringResource(id = R.string.send_validation_number),
+                            text = stringResource(id = R.string.send_validation_code),
                             onClick = { viewModel.verifySend(source) },
                             level = ButtonLevel.TERTIARY
                         )
@@ -91,7 +91,7 @@ fun EmailVerificationScreen(
                         if (isEmailError) {
                             Text(stringResource(id = uiState.error!!.messageId))
                         } else if(uiState.isSuccessfulSend) {
-                            Text(stringResource(id = R.string.verification_number_sent))
+                            Text(stringResource(id = R.string.verification_code_sent))
                         }
                     },
                     isError = isError,
@@ -100,18 +100,18 @@ fun EmailVerificationScreen(
                     isEnabled = !uiState.isSuccessfulSend
                 )
 
-                // Verify number(code) Text Field
+                // Verify code Text Field
                 TextFieldUi(
-                    value = viewModel.verifyNumberInput,
-                    onValueChange = { viewModel.setVerifyNumber(it) },
-                    label = { Text(text = stringResource(id = R.string.validation_number)) },
+                    value = viewModel.verifyCodeInput,
+                    onValueChange = { viewModel.setVerifyCode(it) },
+                    label = { Text(text = stringResource(id = R.string.validation_code)) },
                     supportingText = {
-                        if (isVerifyNumberError) {
+                        if (isVerifyCodeError) {
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
                     isError = isError,
-                    isValid = uiState.isValidVerifyNumber,
+                    isValid = uiState.isValidVerifyCode,
                     isEnabled = uiState.isSuccessfulSend
                 )
 

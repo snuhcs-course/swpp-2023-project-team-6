@@ -17,7 +17,7 @@ import com.example.speechbuddy.ui.models.EmailVerificationUiState
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
-import com.example.speechbuddy.utils.isValidVerifyNumber
+import com.example.speechbuddy.utils.isValidVerifyCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +37,7 @@ class EmailVerificationViewModel @Inject internal constructor(
     var emailInput by mutableStateOf("")
         private set
 
-    var verifyNumberInput by mutableStateOf("")
+    var verifyCodeInput by mutableStateOf("")
         private set
 
     fun setEmail(input: String) {
@@ -45,13 +45,13 @@ class EmailVerificationViewModel @Inject internal constructor(
         if (_uiState.value.error?.type == EmailVerificationErrorType.EMAIL) validateEmail()
     }
 
-    fun setVerifyNumber(input: String) {
-        verifyNumberInput = input
-        if (_uiState.value.error?.type == EmailVerificationErrorType.VERIFY_NUMBER) validateVerifyNumber()
+    fun setVerifyCode(input: String) {
+        verifyCodeInput = input
+        if (_uiState.value.error?.type == EmailVerificationErrorType.VERIFY_CODE) validateVerifyCode()
     }
 
-    private fun clearVerifyNumberInput() {
-        verifyNumberInput = ""
+    private fun clearVerifyCodeInput() {
+        verifyCodeInput = ""
     }
 
     private fun validateEmail() {
@@ -65,11 +65,11 @@ class EmailVerificationViewModel @Inject internal constructor(
         }
     }
 
-    private fun validateVerifyNumber() {
-        if (isValidVerifyNumber(verifyNumberInput)) {
+    private fun validateVerifyCode() {
+        if (isValidVerifyCode(verifyCodeInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
-                    isValidVerifyNumber = true,
+                    isValidVerifyCode = true,
                     error = null
                 )
             }
@@ -143,13 +143,13 @@ class EmailVerificationViewModel @Inject internal constructor(
             repository::verifyAcceptPW
         }
 
-        if (!isValidVerifyNumber(verifyNumberInput)){
+        if (!isValidVerifyCode(verifyCodeInput)){
             _uiState.update { currentState ->
                 currentState.copy(
-                    isValidVerifyNumber = false,
+                    isValidVerifyCode = false,
                     error = EmailVerificationError(
-                        type = EmailVerificationErrorType.VERIFY_NUMBER,
-                        messageId = R.string.false_validation_number
+                        type = EmailVerificationErrorType.VERIFY_CODE,
+                        messageId = R.string.false_validation_code
                     )
                 )
             }
@@ -159,7 +159,7 @@ class EmailVerificationViewModel @Inject internal constructor(
             verifyAcceptFunction(
                 AuthVerifyEmailAcceptRequest(
                     email = emailInput,
-                    code = verifyNumberInput
+                    code = verifyCodeInput
                 )
             ).collect { result ->
                 when(result.status){
@@ -173,13 +173,13 @@ class EmailVerificationViewModel @Inject internal constructor(
                     }
                     Status.ERROR-> {
                         // All error cases from this API call can
-                        // boil down to 'false_validation_number'
+                        // boil down to 'false_validation_code'
                         _uiState.update { currentState ->
                             currentState.copy(
-                                isValidVerifyNumber = false,
+                                isValidVerifyCode = false,
                                 error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.VERIFY_NUMBER,
-                                    messageId = R.string.false_validation_number
+                                    type = EmailVerificationErrorType.VERIFY_CODE,
+                                    messageId = R.string.false_validation_code
                                 )
                             )
                         }
@@ -189,7 +189,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                 }
             }
         }
-        clearVerifyNumberInput()
+        clearVerifyCodeInput()
     }
 }
 

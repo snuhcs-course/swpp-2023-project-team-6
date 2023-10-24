@@ -12,6 +12,6 @@ fun isValidPassword(input: String): Boolean {
     return input.length >= MINIMUM_PASSWORD_LENGTH
 }
 
-fun isValidVerifyNumber(input: String): Boolean{
+fun isValidVerifyCode(input: String): Boolean{
     return input.length == CODE_LENGTH
 }
