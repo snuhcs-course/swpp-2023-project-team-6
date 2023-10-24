@@ -76,6 +76,14 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     fun verifySend(source:String?) {
+        // What function(ultimately, API call) to use
+        val verifySendFunction  = if (source=="signup"){
+            repository::verifySendSignup
+        } else{ // source == "reset_password"
+            repository::verifySendPW
+        }
+
+        // Prior validation of email input
         if (!isValidEmail(emailInput)){
             _uiState.update { currentState ->
                 currentState.copy(
@@ -86,69 +94,41 @@ class EmailVerificationViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else if(source=="signup") {
-            viewModelScope.launch {
-                repository.verifySendSignup(
-                    AuthVerifyEmailSendRequest(
-                        email = emailInput
-                    )
-                ).collect { result ->
-                    when(result.status){
-                        Status.SUCCESS-> {
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isSuccessfulSend = true,
-                                    error = null
-                                )
-                            }
-                        }
-                        Status.ERROR-> {
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isValidEmail = false,
-                                    error = EmailVerificationError(
-                                        type = EmailVerificationErrorType.EMAIL,
-                                        // 일단 임시적인 처리! 백의 응답에 따라 text가 달라지도록 수정해야 함
-                                        messageId = R.string.email_already_taken
-                                    )
-                                )
-                            }
-                        }
-                        Status.LOADING -> {
+        }
+
+        viewModelScope.launch {
+            verifySendFunction(
+                AuthVerifyEmailSendRequest(
+                    email = emailInput
+                )
+            ).collect { result ->
+                when(result.status){
+                    Status.SUCCESS-> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isSuccessfulSend = true,
+                                error = null
+                            )
                         }
                     }
-                }
-            }
-        } else { // if it's for resetting password, 백의 에러메시지를 활용할 수 있도록 하면 코드의 중복을 더 줄일 수 있을듯
-            viewModelScope.launch {
-                repository.verifySendPW(
-                    AuthVerifyEmailSendRequest(
-                        email = emailInput
-                    )
-                ).collect { result ->
-                    when(result.status){
-                        Status.SUCCESS-> {
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isSuccessfulSend = true,
-                                    error = null
+                    Status.ERROR-> {
+                        val messageId = when(result.message) {
+                            "email"-> R.string.false_email
+                            "already_taken"-> R.string.email_already_taken
+                            "no_user" -> R.string.no_such_user
+                            else -> R.string.false_email
+                        }
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidEmail = false,
+                                error = EmailVerificationError(
+                                    type = EmailVerificationErrorType.EMAIL,
+                                    messageId = messageId
                                 )
-                            }
+                            )
                         }
-                        Status.ERROR-> {
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isValidEmail = false,
-                                    error = EmailVerificationError(
-                                        type = EmailVerificationErrorType.EMAIL,
-                                        // 일단 임시적인 처리! 백의 응답에 따라 text가 달라지도록 수정해야 함
-                                        messageId = R.string.no_such_user
-                                    )
-                                )
-                            }
-                        }
-                        Status.LOADING -> {
-                        }
+                    }
+                    Status.LOADING -> {
                     }
                 }
             }
