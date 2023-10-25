@@ -117,7 +117,7 @@ fun LoginScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
                     onClick = onSignupClick,
-                    modifier = Modifier.offset(y = 130.dp),
+                    modifier = Modifier.offset(y = 160.dp),
                 )
             }
         }
