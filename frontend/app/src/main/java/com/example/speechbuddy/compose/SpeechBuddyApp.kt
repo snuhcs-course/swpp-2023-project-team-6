@@ -61,8 +61,6 @@ fun SpeechBuddyNavHost(
                 onBackClick = {
                     navController.navigateUp()
                 },
-                onSignupClick = {
-                },
                 email = emailInput ?: ""
             )
         }
