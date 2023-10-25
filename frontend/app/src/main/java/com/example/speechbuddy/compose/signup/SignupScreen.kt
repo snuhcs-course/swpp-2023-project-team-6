@@ -118,7 +118,7 @@ fun SignupScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
                     onClick = {
-                        viewModel.signUp()
+                        viewModel.signup(email)
                     },
                 )
             }

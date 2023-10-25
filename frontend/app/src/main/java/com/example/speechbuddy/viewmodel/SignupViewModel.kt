@@ -32,9 +32,6 @@ class SignupViewModel @Inject internal constructor(
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> = _uiState.asStateFlow()
 
-    var emailInput by mutableStateOf("")
-        private set
-
     var nicknameInput by mutableStateOf("")
         private set
 
@@ -103,7 +100,7 @@ class SignupViewModel @Inject internal constructor(
         passwordCheckInput = ""
     }
 
-    fun signUp() {
+    fun signup(emailInput: String) {
         if (nicknameInput.isBlank() || nicknameInput.length > Constants.MAXIMUM_NICKNAME_LENGTH) { // Check nickname
             _uiState.update { currentState ->
                 currentState.copy(
