@@ -34,7 +34,6 @@ import com.example.speechbuddy.viewmodel.SignupViewModel
 fun SignupScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onSignupClick: () -> Unit,
     email: String,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
