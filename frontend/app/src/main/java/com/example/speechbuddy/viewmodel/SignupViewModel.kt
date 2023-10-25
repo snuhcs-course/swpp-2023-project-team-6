@@ -59,7 +59,7 @@ class SignupViewModel @Inject internal constructor(
 
     fun setPasswordCheck(input: String) {
         passwordCheckInput = input
-        if (_uiState.value.error?.type == SignupErrorType.PASSWORDCHECK) validatePasswordCheck()
+        if (_uiState.value.error?.type == SignupErrorType.PASSWORD_CHECK) validatePasswordCheck()
     }
 
     private fun validateNickname() {
