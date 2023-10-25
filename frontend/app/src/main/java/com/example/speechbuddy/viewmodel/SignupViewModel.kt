@@ -129,7 +129,7 @@ class SignupViewModel @Inject internal constructor(
                 currentState.copy(
                     isValidEmail = false,
                     error = SignupError(
-                        type = SignupErrorType.PASSWORDCHECK,
+                        type = SignupErrorType.PASSWORD_CHECK,
                         messageId = R.string.false_new_password_check
                     )
                 )
