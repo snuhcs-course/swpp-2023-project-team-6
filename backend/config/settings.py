@@ -128,9 +128,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Remote DB settings
 # Add your own confidential.py
-import confidential
+if not ("GITHUB_ACTIONS" in os.environ):
+    import confidential
+    DATABASES = confidential.DATABASES
 
-DATABASES = confidential.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
