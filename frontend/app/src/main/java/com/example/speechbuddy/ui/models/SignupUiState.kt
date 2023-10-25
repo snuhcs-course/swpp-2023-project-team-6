@@ -15,5 +15,5 @@ data class SignupError(
 enum class SignupErrorType {
     NICKNAME,
     PASSWORD,
-    PASSWORDCHECK
+    PASSWORD_CHECK
 }
