@@ -7,9 +7,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.speechbuddy.MainApplication.Companion.token_prefs
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
+import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationError
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
@@ -167,7 +169,8 @@ class EmailVerificationViewModel @Inject internal constructor(
                         if (source=="signup"){
                             navController.navigate("signup/$emailInput")
                         } else {
-                            //result.data에 access token 저장돼있음
+                            val authToken = result.data as AuthToken
+                            token_prefs.setAccessToken(authToken.accessToken!!)
                             navController.navigate("reset_password")
                         }
                     }

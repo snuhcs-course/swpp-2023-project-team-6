@@ -133,7 +133,6 @@ class AuthRepository @Inject constructor(
                     } ?: returnUnknownError()
                 }
             }
-
     }
 
     private fun returnUnknownError(): Resource<AuthToken> {
