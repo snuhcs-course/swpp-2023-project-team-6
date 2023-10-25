@@ -59,8 +59,7 @@ fun SpeechBuddyNavHost(
             val emailInput = backStackEntry.arguments?.getString("emailInput")
             SignupScreen(
                 onBackClick = {
-                    // has to re-verify one's email!
-                    navController.navigate("login")
+                    navController.navigateUp()
                 },
                 onSignupClick = {
                 },
