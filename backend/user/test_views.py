@@ -34,3 +34,23 @@ class TestUserLoginView(TestCase):
 class TestUserLogoutView(TestCase):
     def test_post(self):
         self.fail()
+
+
+class TestUserProfileView(TestCase):
+    def test_get(self):
+        self.fail()
+
+
+class TestPasswordUpdateView(TestCase):
+    def test_patch(self):
+        self.fail()
+
+
+class TestNicknameUpdateView(TestCase):
+    def test_patch(self):
+        self.fail()
+
+
+class TestUserWithdrawView(TestCase):
+    def test_post(self):
+        self.fail()
