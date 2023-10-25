@@ -2,7 +2,7 @@ name: SpeechBuddy Backend CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feat/CICD-backend" ]
 
 jobs:
   deploy:
