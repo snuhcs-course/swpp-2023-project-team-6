@@ -22,22 +22,22 @@ interface AuthService {
     ): Response<AuthTokenDto>
 
     @POST("/user/validateemail/signup/send/")
-    suspend fun verify_send_signup(
+    suspend fun verifySendSignup(
         @Body verifyEmailSendRequest: AuthVerifyEmailSendRequest
     ): Response<Void>
 
     @POST("/user/validateemail/pw/send/")
-    suspend fun verify_send_pw(
+    suspend fun verifySendPW(
         @Body verifyEmailSendRequest: AuthVerifyEmailSendRequest
     ): Response<Void>
 
     @POST("/user/validateemail/signup/accept/")
-    suspend fun verify_accept_signup(
+    suspend fun verifyAcceptSignup(
         @Body verifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest
     ): Response<Void>
 
     @POST("/user/validateemail/pw/accept/")
-    suspend fun verify_accept_pw(
+    suspend fun verifyAcceptPW(
         @Body verifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest
     ): Response<AuthTokenDto>
 
