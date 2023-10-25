@@ -27,25 +27,25 @@ class AuthTokenRemoteSource @Inject constructor(private val authService: AuthSer
 
     suspend fun verifySendSignupAuthToken(authVerifyEmailSendRequest: AuthVerifyEmailSendRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.verify_send_signup(authVerifyEmailSendRequest)
+            val result = authService.verifySendSignup(authVerifyEmailSendRequest)
             emit(result)
         }
 
     suspend fun verifySendPWAuthToken(authVerifyEmailSendRequest: AuthVerifyEmailSendRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.verify_send_pw(authVerifyEmailSendRequest)
+            val result = authService.verifySendPW(authVerifyEmailSendRequest)
             emit(result)
         }
 
     suspend fun verifyAcceptSignupAuthToken(authVerifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.verify_accept_signup(authVerifyEmailAcceptRequest)
+            val result = authService.verifyAcceptSignup(authVerifyEmailAcceptRequest)
             emit(result)
         }
 
     suspend fun verifyAcceptPWAuthToken(authVerifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest): Flow<Response<AuthTokenDto>> =
         flow {
-            val result = authService.verify_accept_pw(authVerifyEmailAcceptRequest)
+            val result = authService.verifyAcceptPW(authVerifyEmailAcceptRequest)
             emit(result)
         }
 
