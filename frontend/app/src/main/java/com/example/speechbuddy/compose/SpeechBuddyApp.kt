@@ -67,8 +67,7 @@ fun SpeechBuddyNavHost(
         composable("reset_password") {
             ResetPasswordScreen(
                 onBackClick = {
-                    // has to re-verify one's email!
-                    navController.navigate("login")
+                    navController.navigateUp()
                 },
                 onNextClick = {}
             )
