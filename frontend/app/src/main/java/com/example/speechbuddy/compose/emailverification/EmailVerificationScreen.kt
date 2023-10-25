@@ -126,16 +126,3 @@ fun EmailVerificationScreen(
         }
     }
 }
-
-
-@Preview
-@Composable
-fun EmailVerificationScreenPreview() {
-    SpeechBuddyTheme {
-        EmailVerificationScreen(
-            source = "reset_password",
-            onBackClick = {},
-            navController = rememberNavController()
-        )
-    }
-}
