@@ -29,3 +29,8 @@ class TestPasswordEmailVerifyAcceptView(TestCase):
 class TestUserLoginView(TestCase):
     def test_post(self):
         self.fail()
+
+
+class TestUserLogoutView(TestCase):
+    def test_post(self):
+        self.fail()
