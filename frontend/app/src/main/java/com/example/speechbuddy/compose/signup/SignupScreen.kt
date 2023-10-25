@@ -51,7 +51,7 @@ fun SignupScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isNicknameError = uiState.error?.type == SignupErrorType.NICKNAME
     val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
-    val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORDCHECK
+    val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORD_CHECK
 
 
     Surface(modifier = modifier.fillMaxSize()) {
