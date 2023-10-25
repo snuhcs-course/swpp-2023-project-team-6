@@ -1,4 +1,4 @@
-package com.example.speechbuddy.data.domain
+package com.example.speechbuddy.domain.utils
 
 import android.content.Context
 

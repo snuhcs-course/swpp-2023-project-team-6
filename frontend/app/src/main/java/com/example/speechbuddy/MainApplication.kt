@@ -1,7 +1,7 @@
 package com.example.speechbuddy
 
 import android.app.Application
-import com.example.speechbuddy.data.domain.TokenSharedPreferences
+import com.example.speechbuddy.domain.utils.TokenSharedPreferences
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
