@@ -22,7 +22,7 @@ import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
-import com.example.speechbuddy.compose.tts.TextToSpeechScreen
+import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

@@ -1,14 +1,16 @@
-package com.example.speechbuddy.compose.tts
+package com.example.speechbuddy.compose.texttospeech
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -34,18 +36,15 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextToSpeechScreen(
-
+    modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    Surface(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .padding(25.dp)
+                .padding(24.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleUi(
                 title = stringResource(id = R.string.tts_text),
@@ -59,7 +58,7 @@ fun TextToSpeechScreen(
                 onValueChange = {},
                 modifier = Modifier
                     .fillMaxWidth()
-                    .defaultMinSize(minHeight = 300.dp),
+                    .sizeIn(minHeight = 300.dp, maxHeight = 500.dp),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 shape = RoundedCornerShape(10.dp)
             )
@@ -71,17 +70,24 @@ fun TextToSpeechScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.onBackground
-                )
+                ),
+                contentPadding = PaddingValues(0.dp)
             ) {
-                Text(
-                    style = MaterialTheme.typography.headlineMedium,
-                    text = stringResource(id = R.string.play_text)
-                )
-                Icon(
-                    Icons.Filled.PlayArrow,
-                    contentDescription = stringResource(id = R.string.play_text),
-                    modifier = Modifier.size(36.dp)
-                )
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val textStyle = MaterialTheme.typography.headlineMedium
+                    Text(
+                        text = stringResource(id = R.string.play_text),
+                        style = textStyle
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.PlayArrow,
+                        contentDescription = stringResource(id = R.string.play_text),
+                        modifier = Modifier.size(textStyle.lineHeight.value.dp)
+                    )
+                }
             }
         }
     }
@@ -89,7 +95,7 @@ fun TextToSpeechScreen(
 
 @Preview
 @Composable
-private fun TtsScreenPreview() {
+private fun TextToSpeechScreenPreview() {
     SpeechBuddyTheme {
         TextToSpeechScreen()
     }
