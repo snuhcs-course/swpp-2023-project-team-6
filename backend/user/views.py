@@ -1,15 +1,19 @@
+from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from config.utils import AccessToken
 from .models import EmailVerification
 
 from .serializers import UserSignUpSerializer, UserLoginSerializer, UserLogoutSerializer, EmailCheckSerializer, \
-    UserProfileSerializer, PasswordUpdateSerializer, NicknameUpdateSerializer, CodeCheckSerializer
+    UserProfileSerializer, PasswordUpdateSerializer, NicknameUpdateSerializer, CodeCheckSerializer, UserCheckSerializer
 from .utils import generate_code, message
+
+User = get_user_model()
 
 
 class UserSignUpView(APIView):
@@ -23,7 +27,7 @@ class UserSignUpView(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class EmailVerifySendView(APIView):
+class SignUpEmailVerifySendView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
@@ -47,13 +51,62 @@ class EmailVerifySendView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class EmailVerifyAcceptView(APIView):
+# Would it be better to reduce duplication with the View above?
+class PasswordEmailVerifySendView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = UserCheckSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+        code = generate_code()
+        message_data = message(code)
+
+        mail_title = "Speech Buddy 비밀번호 재설정 메일입니다."
+        mail_to = email
+        EmailMessage(mail_title, message_data, to=[mail_to]).send()
+
+        if not EmailVerification.objects.filter(email=email).exists():
+            EmailVerification.objects.create(email=email, code=code)
+        else:
+            verification = EmailVerification.objects.get(email=email)
+            verification.code = code
+            verification.save()
+
+        return Response(status=status.HTTP_200_OK)
+
+
+class SignUpEmailVerifyAcceptView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         serializer = CodeCheckSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(status=status.HTTP_200_OK)
+
+
+class PasswordEmailVerifyAcceptView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = CodeCheckSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data.get('email')
+        user = User.objects.get(email=email)
+        token = TokenObtainPairSerializer.get_token(user)
+        refresh = RefreshToken(str(token))
+        access = str(token.access_token)
+
+        # Blacklist refresh token
+        # That is, the user only gets access token (it means temporary-login so as to utilize password-update-view)
+        refresh.blacklist()
+
+        access_token = {
+            'access': access
+        }
+
+        return Response(access_token, status=status.HTTP_200_OK)
 
 
 class UserLoginView(APIView):

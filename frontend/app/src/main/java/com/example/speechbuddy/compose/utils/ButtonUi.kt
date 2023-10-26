@@ -45,7 +45,7 @@ fun ButtonUi(
             modifier = modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            enabled = isEnabled || isError,
+            enabled = isEnabled,
             shape = RoundedCornerShape(10.dp),
             colors = if (isError) {
                 ButtonDefaults.buttonColors(
@@ -67,7 +67,7 @@ fun ButtonUi(
             modifier = modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            enabled = isEnabled || isError,
+            enabled = isEnabled,
             shape = RoundedCornerShape(10.dp),
             colors = if (isError) {
                 ButtonDefaults.buttonColors(
@@ -91,7 +91,7 @@ fun ButtonUi(
                     minWidth = ButtonDefaults.MinWidth, minHeight = 32.dp
                 )
                 .padding(horizontal = 8.dp, vertical = 0.dp),
-            enabled = isEnabled || isError,
+            enabled = isEnabled,
             shape = RoundedCornerShape(5.dp),
             colors = if (isError) {
                 ButtonDefaults.buttonColors(

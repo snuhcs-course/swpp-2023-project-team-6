@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,53 +32,50 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(
-    onSignupClick: () -> Unit, onPreviousClick: () -> Unit, email: String
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onSignupClick: () -> Unit,
+    email: String
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(topBar = { TopAppBarUi(onBackClick = onPreviousClick) }) {
-            var nickname by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
-            var passwordCheck by remember { mutableStateOf("") }
+        Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
+            val nickname by remember { mutableStateOf("") }
+            val password by remember { mutableStateOf("") }
+            val passwordCheck by remember { mutableStateOf("") }
 
             SignupColumn(
                 email = email,
                 nickname = nickname,
                 password = password,
-                passwordCheck = passwordCheck
+                passwordCheck = passwordCheck,
+                onSignupClick = onSignupClick
             )
         }
     }
 }
 
-@Preview
-@Composable
-fun SignupScreenPreview() {
-    SpeechBuddyTheme {
-        SignupScreen(onSignupClick = { /*TODO*/ }, onPreviousClick = { /*TODO*/ }, email = "asdf")
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupColumn(
     email: String,
     nickname: String,
     password: String,
     passwordCheck: String,
+    onSignupClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TitleUi(
             title = stringResource(id = R.string.signup_text),
             description = stringResource(id = R.string.signup_explain)
         )
+
         Spacer(modifier = Modifier.height(15.dp))
 
         TextFieldUi(
@@ -88,7 +84,6 @@ fun SignupColumn(
             label = { Text(text = stringResource(id = R.string.email_field)) },
             isEnabled = false
         )
-        Spacer(modifier = Modifier.height(25.dp))
 
         TextFieldUi(value = nickname,
             onValueChange = {},
@@ -107,12 +102,23 @@ fun SignupColumn(
             supportingText = { Text(stringResource(id = R.string.password_field)) }
         )
 
+        Spacer(modifier = Modifier.height(15.dp))
+
         ButtonUi(
             text = stringResource(id = R.string.signup),
-            onClick = { /*TODO*/ },
+            onClick = onSignupClick,
         )
     }
 }
 
-
-
+@Preview
+@Composable
+fun SignupScreenPreview() {
+    SpeechBuddyTheme {
+        SignupScreen(
+            onBackClick = {},
+            onSignupClick = {},
+            email = "asdf"
+        )
+    }
+}

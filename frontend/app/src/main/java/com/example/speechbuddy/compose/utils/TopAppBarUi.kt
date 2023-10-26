@@ -57,4 +57,3 @@ fun TopAppBarUiPreview() {
         TopAppBarUi(onBackClick = {})
     }
 }
-

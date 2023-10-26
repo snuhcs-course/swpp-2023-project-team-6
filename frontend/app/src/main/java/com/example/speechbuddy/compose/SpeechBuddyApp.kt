@@ -17,11 +17,13 @@ import com.example.speechbuddy.compose.addsymbol.AddSymbolScreen
 import com.example.speechbuddy.compose.home.BottomNavigationBar
 import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
-import com.example.speechbuddy.compose.resetpassword.ResetPassWordScreen
-import com.example.speechbuddy.compose.resetpasswordcheck.ResetPasswordCheck
+import com.example.speechbuddy.compose.resetpassword.EmailVerificationScreen
+import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.settings.SettingsScreen
+import com.example.speechbuddy.compose.signup.SignupScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.tts.TextToSpeechScreen
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,8 +35,8 @@ fun SpeechBuddyApp() {
             BottomNavigationBar(
                 items = listOf(
                     BottomNavItem(
-                        "TalkWithSymbol",
-                        "talkwithsymbol",
+                        "SymbolSelection",
+                        "symbolselection",
                         R.drawable.outline_touch_app_24
                     ),
                     BottomNavItem("TTS", "tts", R.drawable.outline_volume_up_24),
@@ -67,7 +69,7 @@ fun SpeechBuddyNavHost(
     navController: NavHostController
 ) {
     // val activity = (LocalContext.current as Activity)
-    NavHost(navController = navController, startDestination = "talkwithsymbol") {
+    NavHost(navController = navController, startDestination = "symbolselection") {
         composable("landing") {
             LandingScreen(
                 onLoginClick = {
@@ -77,38 +79,55 @@ fun SpeechBuddyNavHost(
         }
         composable("login") {
             LoginScreen(
-                onSignupClick = {
-                    navController.navigate("signup")
-                },
-                onLandingClick = {
-                    navController.navigate("landing")
+                onBackClick = {
+                    navController.navigateUp()
                 },
                 onResetPasswordClick = {
-                    navController.navigate("resetpasswordcheck")
+                    navController.navigate("email_verification/password")
+                },
+                onSignupClick = {
+                    navController.navigate("signup")
                 }
             )
         }
         composable("signup") {
-            //SignupScreen()
+            SignupScreen(
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onSignupClick = {},
+                email = ""
+            )
         }
-        composable("resetpasswordcheck") {
-            ResetPasswordCheck(
-                onLoginClick = {
-                    navController.navigate("login")
+
+//        composable("resetpasswordcheck") {
+//            ResetPasswordCheck(
+//                onLoginClick = {
+//                    navController.navigate("login")
+
+        composable("email_verification/password") {
+            EmailVerificationScreen(
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onSubmitClick = {
                 },
                 onNextClick = {
-                    navController.navigate("resetpassword")
+                    navController.navigate("reset_password")
                 }
             )
         }
-        composable("resetpassword") {
-            ResetPassWordScreen(
-                onResetClick = {
-                    navController.navigate("resetpasswordcheck")
-                }
+
+        composable("reset_password") {
+            ResetPasswordScreen(
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onNextClick = {}
+
             )
         }
-        composable("talkwithsymbol") {
+        composable("symbolselection") {
             SymbolSelectionScreen()
         }
         composable("tts") {

@@ -30,30 +30,32 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPassWordScreen(
-    onResetClick: () -> Unit,
+
+fun ResetPasswordScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
 ) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize(),
             topBar = {
                 TopAppBarUi(
-                    onBackClick = { onResetClick() }
+                    onBackClick = onBackClick
                 )
             }
         ) {
-            var password = remember { mutableStateOf("") }
-            var passwordCheck = remember { mutableStateOf("") }
+            val password = remember { mutableStateOf("") }
+            val passwordCheck = remember { mutableStateOf("") }
+
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 25.dp, vertical = 35.dp)
+                    .padding(24.dp)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleUi(
                     title = stringResource(id = R.string.reset_passoword_title),
@@ -64,30 +66,32 @@ fun ResetPassWordScreen(
 
                 // Password Text Field
                 TextFieldUi(
-                    label = { Text(stringResource(id = R.string.new_password_field)) },
                     value = password.value,
                     onValueChange = { password.value = it },
+                    label = { Text(stringResource(id = R.string.new_password_field)) },
                     supportingText = { Text(stringResource(id = R.string.false_new_password)) },
                     isError = false,
                     isValid = false,
-                    isHidden = false,
+                    isHidden = true
                 )
 
                 // Password Check Text Field
                 TextFieldUi(
-                    label = { Text(stringResource(id = R.string.new_password_check_field)) },
                     value = passwordCheck.value,
                     onValueChange = { passwordCheck.value = it },
+                    label = { Text(stringResource(id = R.string.new_password_check_field)) },
                     supportingText = { Text(stringResource(id = R.string.false_new_password_check)) },
                     isError = false,
                     isValid = false,
-                    isHidden = false,
+                    isHidden = true
                 )
+
+                Spacer(modifier = Modifier.height(15.dp))
 
                 // Set password Button
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
-                    onClick = { /* perform login */ },
+                    onClick = onNextClick,
                     isError = false,
                     isEnabled = true,
                     level = ButtonLevel.PRIMARY
@@ -102,7 +106,9 @@ fun ResetPassWordScreen(
 @Composable
 private fun ResetPasswordScreenPreview() {
     SpeechBuddyTheme {
-        ResetPassWordScreen({})
+        ResetPasswordScreen(
+            onBackClick = {},
+            onNextClick = {}
+        )
     }
 }
-

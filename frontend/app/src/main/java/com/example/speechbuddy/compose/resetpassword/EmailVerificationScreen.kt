@@ -1,4 +1,4 @@
-package com.example.speechbuddy.compose.resetpasswordcheck
+package com.example.speechbuddy.compose.resetpassword
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -30,31 +30,29 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPasswordCheck(
-    onLoginClick: () -> Unit,
+fun EmailVerificationScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onSubmitClick: () -> Unit,
     onNextClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize(),
-            topBar = {
-                TopAppBarUi(
-                    onBackClick = { onLoginClick() }
-                )
-            }
-        ) {
-            var email = remember { mutableStateOf("") }
-            var validationNumber = remember { mutableStateOf("") }
+        Scaffold(topBar = {
+            TopAppBarUi(
+                onBackClick = onBackClick
+            )
+        }) {
+            val email = remember { mutableStateOf("") }
+            val validationNumber = remember { mutableStateOf("") }
+
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 25.dp, vertical = 35.dp)
+                    .padding(24.dp)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleUi(
                     title = stringResource(id = R.string.reset_passoword_title),
@@ -62,6 +60,7 @@ fun ResetPasswordCheck(
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
+
                 // Email Text Field
                 TextFieldUi(
                     label = { Text(stringResource(id = R.string.email_field)) },
@@ -71,7 +70,7 @@ fun ResetPasswordCheck(
                     supportingButton = {
                         ButtonUi(
                             text = stringResource(id = R.string.reset_password_send_validationNumber),
-                            onClick = { /*TODO*/ },
+                            onClick = onSubmitClick,
                             isError = false,
                             level = ButtonLevel.TERTIARY
                         )
@@ -83,22 +82,22 @@ fun ResetPasswordCheck(
 
                 // Validation number Text Field
                 TextFieldUi(
-                    label = { Text(stringResource(id = R.string.validation_number_field)) },
                     value = validationNumber.value,
                     onValueChange = { validationNumber.value = it },
+                    label = { Text(stringResource(id = R.string.validation_number_field)) },
                     supportingText = { Text(stringResource(id = R.string.reset_password_false_validation_number)) },
                     isError = false,
-                    isValid = false,
-                    isHidden = false,
+                    isValid = false
                 )
+
+                Spacer(modifier = Modifier.height(15.dp))
 
                 // Next Button
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
-                    onClick = { onNextClick() },
-                    isError = false,
+                    onClick = onNextClick,
                     isEnabled = true,
-                    level = ButtonLevel.PRIMARY
+                    isError = false
                 )
             }
         }
@@ -107,9 +106,8 @@ fun ResetPasswordCheck(
 
 @Preview
 @Composable
-private fun LoginScreenPreview() {
+private fun EmailVerificationScreenPreview() {
     SpeechBuddyTheme {
-        ResetPasswordCheck(onLoginClick = {}, onNextClick = {})
+        EmailVerificationScreen(onNextClick = {}, onBackClick = {}, onSubmitClick = {})
     }
 }
-

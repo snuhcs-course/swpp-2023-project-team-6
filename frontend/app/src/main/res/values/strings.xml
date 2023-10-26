@@ -41,4 +41,5 @@
     <string name="menu_tts">음성으로 말하기</string>
     <string name="menu_add_symbol">새 상징 만들기</string>
     <string name="menu_settings">설정</string>
+    <string name="email_already_taken">다른 사용자가 이미 사용하고 있는 이메일입니다</string>
 </resources>
