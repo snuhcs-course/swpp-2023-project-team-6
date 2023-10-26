@@ -12,20 +12,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.ui.models.SignupErrorType
+import com.example.speechbuddy.viewmodel.SignupViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -34,91 +34,93 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 fun SignupScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onSignupClick: () -> Unit,
-    email: String
-) {
-    Surface(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
-            val nickname by remember { mutableStateOf("") }
-            val password by remember { mutableStateOf("") }
-            val passwordCheck by remember { mutableStateOf("") }
-
-            SignupColumn(
-                email = email,
-                nickname = nickname,
-                password = password,
-                passwordCheck = passwordCheck,
-                onSignupClick = onSignupClick
-            )
-        }
-    }
-}
-
-@Composable
-fun SignupColumn(
     email: String,
-    nickname: String,
-    password: String,
-    passwordCheck: String,
-    onSignupClick: () -> Unit
+    viewModel: SignupViewModel = hiltViewModel()
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TitleUi(
-            title = stringResource(id = R.string.signup_text),
-            description = stringResource(id = R.string.signup_explain)
-        )
+    val uiState by viewModel.uiState.collectAsState()
+    val isNicknameError = uiState.error?.type == SignupErrorType.NICKNAME
+    val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
+    val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORD_CHECK
 
-        Spacer(modifier = Modifier.height(15.dp))
 
-        TextFieldUi(
-            value = email,
-            onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.email_field)) },
-            isEnabled = false
-        )
+    Surface(modifier = modifier.fillMaxSize()) {
+        Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TitleUi(
+                    title = stringResource(id = R.string.signup_text),
+                    description = stringResource(id = R.string.signup_explain)
+                )
 
-        TextFieldUi(value = nickname,
-            onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.nickname)) },
-            supportingText = { Text(text = stringResource(id = R.string.nickname)) })
+                Spacer(modifier = Modifier.height(15.dp))
 
-        TextFieldUi(value = password,
-            onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.password_field)) },
-            supportingText = { Text(text = stringResource(id = R.string.password_field)) })
+                // Email Text Field
+                TextFieldUi(
+                    value = email,
+                    onValueChange = {},
+                    label = { Text(text = stringResource(id = R.string.email_field)) },
+                    isEnabled = false
+                )
 
-        TextFieldUi(
-            value = passwordCheck,
-            onValueChange = {},
-            label = { Text(text = stringResource(id = R.string.password_check_field)) },
-            supportingText = { Text(stringResource(id = R.string.password_field)) }
-        )
+                // Nickname Text Field
+                TextFieldUi(
+                    value = viewModel.nicknameInput,
+                    onValueChange = { viewModel.setNickname(it) },
+                    label = { Text(text = stringResource(id = R.string.nickname)) },
+                    supportingText = {
+                        if (isNicknameError) {
+                            Text(stringResource(id = uiState.error!!.messageId))
+                        }
+                    },
+                    isError = isNicknameError,
+                    isValid = uiState.isValidNickname
+                )
 
-        Spacer(modifier = Modifier.height(15.dp))
+                // Password Text Field
+                TextFieldUi(
+                    value = viewModel.passwordInput,
+                    onValueChange = { viewModel.setPassword(it) },
+                    label = { Text(text = stringResource(id = R.string.password_field)) },
+                    supportingText = {
+                        if (isPasswordError) {
+                            Text(stringResource(id = uiState.error!!.messageId))
+                        }
+                    },
+                    isError = isPasswordError,
+                    isValid = uiState.isValidPassword,
+                    isHidden = true
 
-        ButtonUi(
-            text = stringResource(id = R.string.signup),
-            onClick = onSignupClick,
-        )
-    }
-}
+                )
 
-@Preview
-@Composable
-fun SignupScreenPreview() {
-    SpeechBuddyTheme {
-        SignupScreen(
-            onBackClick = {},
-            onSignupClick = {},
-            email = "asdf"
-        )
+                // Password Check Text Field
+                TextFieldUi(
+                    value = viewModel.passwordCheckInput,
+                    onValueChange = { viewModel.setPasswordCheck(it) },
+                    label = { Text(text = stringResource(id = R.string.password_check_field)) },
+                    supportingText = {
+                        if (isPasswordCheckError) {
+                            Text(stringResource(id = uiState.error!!.messageId))
+                        }
+                    },
+                    isError = isPasswordCheckError,
+                    isValid = uiState.isValidPassword,
+                    isHidden = true
+                )
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                ButtonUi(
+                    text = stringResource(id = R.string.signup),
+                    onClick = {
+                        viewModel.signup(email)
+                    },
+                )
+            }
+        }
     }
 }

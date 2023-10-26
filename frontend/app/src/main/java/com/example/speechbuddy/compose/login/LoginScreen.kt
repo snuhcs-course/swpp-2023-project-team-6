@@ -96,7 +96,9 @@ fun LoginScreen(
                 // Login Button
                 ButtonUi(
                     text = stringResource(id = R.string.login_text),
-                    onClick = { viewModel.login() },
+                    onClick = {
+                        viewModel.login()
+                    },
                     isEnabled = !isError,
                     isError = isError
                 )
@@ -105,7 +107,7 @@ fun LoginScreen(
 
                 // Forgot Password Button
                 ButtonUi(
-                    text = stringResource(id = R.string.forgot_passowrd),
+                    text = stringResource(id = R.string.forgot_password),
                     onClick = onResetPasswordClick,
                     isError = isError,
                     level = ButtonLevel.SECONDARY
@@ -121,3 +123,4 @@ fun LoginScreen(
         }
     }
 }
+
