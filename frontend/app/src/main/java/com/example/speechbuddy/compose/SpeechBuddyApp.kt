@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -19,6 +23,7 @@ import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.resetpassword.EmailVerificationScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
+import com.example.speechbuddy.compose.settings.AccountScreen
 import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
@@ -138,12 +143,29 @@ fun SpeechBuddyNavHost(
         }
         composable("settings") {
             SettingsScreen(
-                onAccountClick = {},
+                onAccountClick = { navController.navigate("settings_account") },
                 onBackupClick = {},
                 onDisplayClick = {},
                 onManageSymbolClick = {},
                 onVersionInfoClick = {},
                 onDeveloperInfoClick = {}
+            )
+        }
+        composable("settings_account") {
+            var showLogoutDialog by remember { mutableStateOf(false) }
+            var showWithdrawalDialog by remember { mutableStateOf(false) }
+            var showSecondWithdrawalDialog by remember { mutableStateOf(false) }
+            AccountScreen(
+                showLogoutDialog = showLogoutDialog,
+                onShowLogoutDialog = { showLogoutDialog = true },
+                onHideLogoutDialog = { showLogoutDialog = false },
+                showWithdrawalDialog = showWithdrawalDialog,
+                onShowWithdrawalDialog = { showWithdrawalDialog = true },
+                onHideWithdrawalDialog = { showWithdrawalDialog = false },
+                showSecondWithdrawalDialog = showSecondWithdrawalDialog,
+                onShowSecondWithdrawalDialog = { showSecondWithdrawalDialog = true },
+                onHideSecondWithdrawalDialog = { showSecondWithdrawalDialog = false },
+                onBackClick = { navController.navigate("settings") }
             )
         }
     }

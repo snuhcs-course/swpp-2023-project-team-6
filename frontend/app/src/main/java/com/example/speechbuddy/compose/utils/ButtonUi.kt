@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 enum class ButtonLevel {
-    PRIMARY, SECONDARY, TERTIARY
+    PRIMARY, SECONDARY, INVERSESURFACE, TERTIARY
 }
 
 /**
@@ -79,6 +79,21 @@ fun ButtonUi(
             } else ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            )
+        ) {
+            Text(text = text, style = MaterialTheme.typography.titleMedium)
+        }
+
+        ButtonLevel.INVERSESURFACE -> Button(
+            onClick = onClick,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            enabled = isEnabled,
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface
             )
         ) {
             Text(text = text, style = MaterialTheme.typography.titleMedium)
