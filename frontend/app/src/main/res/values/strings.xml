@@ -48,4 +48,12 @@
     <string name="settings_manage_symbol_button">상징 목록 관리</string>
     <string name="settings_versioninfo_button">버전 정보</string>
     <string name="settings_developerinfo_button">개발자 정보</string>
+    <string name="last_backup_date">마지막 백업 날짜</string>
+    <string name="automatic_backup_enable">자동 백업 활성화</string>
+    <string name="backup_now">지금 백업하기</string>
+    <string name="display_setting">디스플레이 설정</string>
+    <string name="dark_mode">다크 모드</string>
+    <string name="initial_page">시작 페이지</string>
+    <string name="tts_page">TTS 페이지</string>
+    <string name="symbol_page">상징 페이지</string>
 </resources>

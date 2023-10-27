@@ -1,5 +1,6 @@
 package com.example.speechbuddy.compose.settings
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,7 +17,7 @@ fun SettingsTitleUi(
     Text(
         modifier = Modifier.fillMaxWidth(),
         text = title,
-        style = MaterialTheme.typography.displayMedium,
+        style = MaterialTheme.typography.displaySmall,
     )
 }
 
