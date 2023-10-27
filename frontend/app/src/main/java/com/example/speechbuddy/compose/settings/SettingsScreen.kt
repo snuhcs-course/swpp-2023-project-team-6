@@ -23,8 +23,7 @@ fun SettingsScreen(
     onDisplayClick: () -> Unit,
     onManageSymbolClick: () -> Unit,
     onVersionInfoClick: () -> Unit,
-    onDeveloperInfoClick: () -> Unit,
-    onBackClick: () -> Unit
+    onDeveloperInfoClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -75,8 +74,7 @@ private fun SettingsScreenPreview() {
             onDisplayClick = {},
             onManageSymbolClick = {},
             onVersionInfoClick = {},
-            onDeveloperInfoClick = {},
-            onBackClick = {}
+            onDeveloperInfoClick = {}
         )
     }
 }

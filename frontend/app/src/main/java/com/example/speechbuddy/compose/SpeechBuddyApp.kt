@@ -143,8 +143,7 @@ fun SpeechBuddyNavHost(
                 onDisplayClick = {},
                 onManageSymbolClick = {},
                 onVersionInfoClick = {},
-                onDeveloperInfoClick = {},
-                onBackClick = {}
+                onDeveloperInfoClick = {}
             )
         }
     }
