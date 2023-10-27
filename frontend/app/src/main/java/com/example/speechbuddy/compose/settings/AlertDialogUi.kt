@@ -3,7 +3,6 @@ package com.example.speechbuddy.compose.settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,8 +17,8 @@ fun AlertDialogUi(
     onDismissButtonClick: () -> Unit,
     title: String,
     content: String,
-    confirmButtonString: String,
-    dismissButtonString: String
+    confirmButtonText: String,
+    dismissButtonText: String
 ){
     AlertDialog(
         title = {
@@ -39,7 +38,7 @@ fun AlertDialogUi(
                     contentColor = MaterialTheme.colorScheme.onError,
                 )
             ) {
-                Text(confirmButtonString)
+                Text(confirmButtonText)
             }
         },
         dismissButton = {
@@ -50,7 +49,7 @@ fun AlertDialogUi(
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             ) {
-                Text(dismissButtonString)
+                Text(dismissButtonText)
             }
         },
         containerColor = MaterialTheme.colorScheme.errorContainer
@@ -67,8 +66,8 @@ fun AlertDialogUiPreview(){
             onDismissButtonClick = { /*TODO*/ },
             title = "title",
             content = "content",
-            confirmButtonString = "confirm",
-            dismissButtonString = "dismiss"
+            confirmButtonText = "confirm",
+            dismissButtonText = "dismiss"
         )
     }
 }

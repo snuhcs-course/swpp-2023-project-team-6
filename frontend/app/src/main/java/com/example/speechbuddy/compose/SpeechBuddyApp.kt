@@ -137,7 +137,15 @@ fun SpeechBuddyNavHost(
             AddSymbolScreen()
         }
         composable("settings") {
-            SettingsScreen()
+            SettingsScreen(
+                onAccountClick = {},
+                onBackupClick = {},
+                onDisplayClick = {},
+                onManageSymbolClick = {},
+                onVersionInfoClick = {},
+                onDeveloperInfoClick = {},
+                onBackClick = {}
+            )
         }
     }
 }
