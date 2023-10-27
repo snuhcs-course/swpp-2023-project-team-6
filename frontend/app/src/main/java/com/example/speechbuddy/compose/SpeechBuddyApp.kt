@@ -24,7 +24,12 @@ import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.resetpassword.EmailVerificationScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.settings.AccountScreen
+import com.example.speechbuddy.compose.settings.BackupScreen
+import com.example.speechbuddy.compose.settings.DeveloperInfoScreen
+import com.example.speechbuddy.compose.settings.DisplayScreen
+import com.example.speechbuddy.compose.settings.ManageSymbolScreen
 import com.example.speechbuddy.compose.settings.SettingsScreen
+import com.example.speechbuddy.compose.settings.VersionInfoScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.tts.TextToSpeechScreen
@@ -144,11 +149,11 @@ fun SpeechBuddyNavHost(
         composable("settings") {
             SettingsScreen(
                 onAccountClick = { navController.navigate("settings_account") },
-                onBackupClick = {},
-                onDisplayClick = {},
-                onManageSymbolClick = {},
-                onVersionInfoClick = {},
-                onDeveloperInfoClick = {}
+                onBackupClick = { navController.navigate("settings_backup") },
+                onDisplayClick = { navController.navigate("settings_display") },
+                onManageSymbolClick = { navController.navigate("settings_managesymbol") },
+                onVersionInfoClick = { navController.navigate("settings_versioninfo") },
+                onDeveloperInfoClick = { navController.navigate("settings_developerinfo") }
             )
         }
         composable("settings_account") {
@@ -165,6 +170,41 @@ fun SpeechBuddyNavHost(
                 showSecondWithdrawalDialog = showSecondWithdrawalDialog,
                 onShowSecondWithdrawalDialog = { showSecondWithdrawalDialog = true },
                 onHideSecondWithdrawalDialog = { showSecondWithdrawalDialog = false },
+                onBackClick = { navController.navigate("settings") }
+            )
+        }
+        composable("settings_backup") {
+            BackupScreen(
+                modifier = Modifier,
+                onBackClick = { navController.navigate("settings") },
+                onBackupClick = {},
+                lastBackupDate = "blabla",
+                automaticBackupChecked = false,
+                onAutomaticBackupCheckedChange = {}
+            )
+        }
+        composable("settings_display") {
+            var darkModeChecked by remember { mutableStateOf(false) }
+            DisplayScreen(
+                modifier = Modifier,
+                onBackClick = { navController.navigate("settings") },
+                darkModeChecked = darkModeChecked,
+                onDarkModeCheckedChange = { darkModeChecked = true }
+            )
+        }
+        composable("settings_managesymbol") {
+            ManageSymbolScreen()
+        }
+        composable("settings_versioninfo") {
+            VersionInfoScreen(
+                modifier = Modifier,
+                onBackClick = { navController.navigate("settings") },
+                versionText = "blabla"
+            )
+        }
+        composable("settings_developerinfo") {
+            DeveloperInfoScreen(
+                modifier = Modifier,
                 onBackClick = { navController.navigate("settings") }
             )
         }
