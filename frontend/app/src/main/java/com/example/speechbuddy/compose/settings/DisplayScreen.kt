@@ -1,6 +1,6 @@
 package com.example.speechbuddy.compose.settings
 
-import androidx.compose.foundation.layout.Arrangement
+import SettingsTextUi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
@@ -35,28 +34,30 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 fun DisplayScreen(
     modifier: Modifier,
     onBackClick: () -> Unit,
-    onBackupClick: () -> Unit,
-    lastBackupDate: String,
     darkModeChecked: Boolean,
     onDarkModeCheckedChange: (Boolean) -> Unit
-){
-    val radioOptions = listOf(stringResource(id = R.string.tts_page), stringResource(id = R.string.symbol_page))
-    var selectedItem by remember{mutableStateOf(radioOptions[0])}
-    
+) {
+    val radioOptions =
+        listOf(stringResource(id = R.string.tts_page), stringResource(id = R.string.symbol_page))
+    var selectedItem by remember { mutableStateOf(radioOptions[0]) }
+
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Column (
+        Column(
             modifier = modifier.padding(start = 30.dp, end = 30.dp, top = 10.dp)
-        ){
+        ) {
             BackButtonUi(onBackClick = onBackClick)
             Spacer(modifier = modifier.height(136.dp))
-            SettingsTitleUi(modifier = modifier, title = stringResource(id = R.string.display_setting))
+            SettingsTitleUi(
+                modifier = modifier,
+                title = stringResource(id = R.string.display_setting)
+            )
             Spacer(modifier = modifier.height(15.dp))
-            Row (
+            Row(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 SettingsTextUi(modifier = modifier, text = stringResource(id = R.string.dark_mode))
                 Spacer(modifier.weight(1f))
                 Switch(
@@ -65,20 +66,23 @@ fun DisplayScreen(
                 )
             }
             Spacer(modifier = modifier.height(15.dp))
-            Row (
+            Row(
                 modifier = modifier.fillMaxWidth()
-            ){
-                SettingsTextUi(modifier = modifier, text = stringResource(id = R.string.initial_page))
+            ) {
+                SettingsTextUi(
+                    modifier = modifier,
+                    text = stringResource(id = R.string.initial_page)
+                )
                 Spacer(modifier.weight(1f))
-                Column(modifier = modifier.selectableGroup()){
-                    radioOptions.forEach{ label ->
+                Column(modifier = modifier.selectableGroup()) {
+                    radioOptions.forEach { label ->
                         Row(
                             modifier = modifier.selectable(
                                 selected = (selectedItem == label),
-                                onClick = {selectedItem = label},
+                                onClick = { selectedItem = label },
                                 role = Role.RadioButton
                             )
-                        ){
+                        ) {
                             Text(text = label, style = MaterialTheme.typography.bodyMedium)
                             RadioButton(
                                 selected = (selectedItem == label),
@@ -89,16 +93,18 @@ fun DisplayScreen(
                     }
                 }
             }
-            Spacer(modifier = modifier.height(165.dp))
-            ButtonUi(modifier = modifier, text = stringResource(id = R.string.backup_now), onClick = onBackupClick)
         }
     }
 }
 
 @Preview
 @Composable
-fun DisplayScreenPreview(){
+fun DisplayScreenPreview() {
     SpeechBuddyTheme {
-        DisplayScreen(modifier = Modifier, onBackClick = {}, onBackupClick = {}, lastBackupDate = "2023.10.27", darkModeChecked = true, onDarkModeCheckedChange = {})
+        DisplayScreen(
+            modifier = Modifier,
+            onBackClick = {},
+            darkModeChecked = true,
+            onDarkModeCheckedChange = {})
     }
 }

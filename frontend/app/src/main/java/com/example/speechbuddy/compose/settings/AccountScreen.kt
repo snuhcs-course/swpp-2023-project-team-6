@@ -1,5 +1,6 @@
 package com.example.speechbuddy.compose.settings
 
+import SettingsTextUi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
