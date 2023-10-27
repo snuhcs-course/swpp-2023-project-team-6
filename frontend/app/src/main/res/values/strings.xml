@@ -48,4 +48,15 @@
     <string name="settings_manage_symbol_button">상징 목록 관리</string>
     <string name="settings_versioninfo_button">버전 정보</string>
     <string name="settings_developerinfo_button">개발자 정보</string>
+    <string name="settings_account_logout">로그아웃</string>
+    <string name="settings_account_withdrawal">회원탈퇴</string>
+    <string name="logout_warning">정말로 로그아웃하시겠습니까?</string>
+    <string name="logout_confirm">로그아웃</string>
+    <string name="logout_dismiss">취소</string>
+    <string name="withdrawal_warning">회원탈퇴를 하면 지금까지의 이용 기록, 즐겨찾기, 새롭게 등록한 상징이 모두 사라지며 복구할 수 없습니다. SpeechBuddy를 다시 이용하시려면 게스트 모드를 이용하시거나 회원가입을 새로 해주셔야 합니다. 탈퇴하시겠습니까?</string>
+    <string name="withdrawal_confirm">회원탈퇴</string>
+    <string name="withdrawal_dismiss">취소</string>
+    <string name="withdrawal_second_warning">정말로 탈퇴하시겠습니까? 이 동작은 취소할 수 없습니다.</string>
+    <string name="withdrawal_second_confirm">회원탈퇴</string>
+    <string name="withdrawal_second_dismiss">취소</string>
 </resources>

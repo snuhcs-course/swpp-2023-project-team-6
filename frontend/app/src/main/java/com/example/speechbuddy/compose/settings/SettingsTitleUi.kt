@@ -16,7 +16,7 @@ fun SettingsTitleUi(
     Text(
         modifier = Modifier.fillMaxWidth(),
         text = title,
-        style = MaterialTheme.typography.displayMedium,
+        style = MaterialTheme.typography.displaySmall,
     )
 }
 
