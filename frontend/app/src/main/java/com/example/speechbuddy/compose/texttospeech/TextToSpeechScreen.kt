@@ -1,9 +1,8 @@
-package com.example.speechbuddy.compose.texttospeach
+package com.example.speechbuddy.compose.texttospeech
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.ui.models.ButtonStatusType
 import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
 
 
@@ -74,56 +75,57 @@ fun TextToSpeechScreen(
                     .verticalScroll(rememberScrollState())
                     .height(300.dp),
                 textStyle = MaterialTheme.typography.bodyMedium,
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                )
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Play button
-            Button(
-                onClick = {
-                    viewModel.ttsStart(context)
-                },
-                enabled = uiState.isPlayEnabled,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.onBackground
-                )
-            ) {
-                Text(
-                    style = MaterialTheme.typography.headlineMedium,
-                    text = stringResource(id = R.string.play_text)
-                )
-                Icon(
-                    Icons.Filled.PlayArrow,
-                    contentDescription = stringResource(id = R.string.play_text),
-                    modifier = Modifier.size(36.dp)
-                )
-            }
-
-            // Stop button
-            Button(
-                onClick = {
-                    viewModel.ttsStop()
-                },
-                enabled = uiState.isStopEnabled,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.onBackground
-                )
-            ) {
-                Text(
-                    style = MaterialTheme.typography.headlineMedium,
-                    text = stringResource(id = R.string.stop_text)
-                )
-                Icon(
-                    painterResource(R.drawable.stop_icon),
-                    contentDescription = stringResource(id = R.string.pause_text),
-                    modifier = Modifier.size(36.dp)
-                )
+            // show PLAY/STOP depending on tts speaking
+            if (uiState.isButtonEnabled == ButtonStatusType.PLAY) {
+                Button(
+                    onClick = {
+                        viewModel.ttsStart(context)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    )
+                ) {
+                    Text(
+                        style = MaterialTheme.typography.headlineMedium,
+                        text = stringResource(id = R.string.play_text)
+                    )
+                    Icon(
+                        Icons.Filled.PlayArrow,
+                        contentDescription = stringResource(id = R.string.play_text),
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+            } else {
+                Button(
+                    onClick = {
+                        viewModel.ttsStop()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    )
+                ) {
+                    Text(
+                        style = MaterialTheme.typography.headlineMedium,
+                        text = stringResource(id = R.string.stop_text)
+                    )
+                    Icon(
+                        painterResource(R.drawable.stop_icon),
+                        contentDescription = stringResource(id = R.string.pause_text),
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
             }
         }
-
     }
-
 }

@@ -10,7 +10,7 @@ import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.emailverification.EmailVerificationScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
-import com.example.speechbuddy.compose.texttospeach.TextToSpeechScreen
+import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
 
 @Composable
 fun SpeechBuddyApp() {
