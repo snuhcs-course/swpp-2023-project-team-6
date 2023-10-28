@@ -48,6 +48,7 @@ class FavoriteBackupView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
 
+# Backup user-created-symbol
 class MySymbolBackupView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -66,20 +67,24 @@ class MySymbolBackupView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
 
+# Get information about user-created-symbol
 class MySymbolRetrieveView(APIView):
     def get(self, request, pk=None):
         user = request.user
 
         if pk is not None:
             symbol = Symbol.objects.get(id=pk)
-            if user!=symbol.created_by:
+            if user != symbol.created_by:
                 raise ValidationError({"not_mine": ["the requested symbol is created by another user"]})
+            if symbol.is_valid == False:
+                raise ValidationError({"invalid": ["the symbol is not valid yet"]})
             serialized_symbol = MySymbolBackupSerializer(symbol).data
             response_data = {"my_symbol": serialized_symbol}
         else:
-            symbols = Symbol.objects.filter(created_by=user)
+            symbols = Symbol.objects.filter(created_by=user, is_valid=True)
             serialized_symbols = MySymbolBackupSerializer(symbols, many=True).data
             response_data = {"my_symbols": serialized_symbols}
 
         return Response(response_data, status=status.HTTP_200_OK)
 
+# Backup whether
