@@ -1,5 +1,6 @@
 from rest_framework import permissions, status
 from rest_framework.response import Response
+from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 
@@ -12,7 +13,8 @@ class FavoriteBackupView(APIView):
 
     def post(self, request):
         user = request.user
-        data = request.data
+        symbol_ids = request.query_params.getlist('id')
+        data = [{'id': int(id)} for id in symbol_ids]
 
         serializer = FavoriteBackupSerializer(data=data, context={'user': user}, many=True)
         serializer.is_valid(raise_exception=True)
@@ -55,6 +57,8 @@ class MySymbolBackupView(APIView):
     def post(self, request):
         user = request.user
         data = request.data
+        # text, category를 key 값이 content인 json으로 받아올 때면
+        # json.loads(request.POST.get('content')) 이런 식으로 사용하면 됨
 
         serializer = MySymbolBackupSerializer(data=data, context={'user': user})
         serializer.is_valid(raise_exception=True)
