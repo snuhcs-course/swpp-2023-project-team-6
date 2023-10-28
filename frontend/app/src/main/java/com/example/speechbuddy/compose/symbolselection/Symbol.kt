@@ -50,7 +50,6 @@ fun Symbol(
                 .align(Alignment.Start)
                 .size(16.dp),
             contentDescription = "favorite star",
-            colorFilter = ColorFilter.tint(Color.Red)
         )
 
         OutlinedCard(
