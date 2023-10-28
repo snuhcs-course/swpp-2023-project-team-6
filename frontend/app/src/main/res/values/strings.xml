@@ -38,4 +38,9 @@
     <string name="nickname_length_error">닉네임을 입력해주세요</string>
     <string name="alert_dialog_login_error">로그인 오류</string>
     <string name="alert_dialog_signup_error">회원가입 오류</string>
+    <string name="tts_text">소리로 말해보아요</string>
+    <string name="tts_explain">키보드로 텍스트를 입력해주세요</string>
+    <string name="play_text">재생하기</string>
+    <string name="pause_text">일시정지</string>
+    <string name="stop_text">정지</string>
 </resources>

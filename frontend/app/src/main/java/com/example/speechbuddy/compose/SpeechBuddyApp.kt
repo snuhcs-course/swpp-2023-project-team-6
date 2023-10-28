@@ -10,6 +10,7 @@ import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.emailverification.EmailVerificationScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
+import com.example.speechbuddy.compose.texttospeach.TextToSpeechScreen
 
 @Composable
 fun SpeechBuddyApp() {
@@ -29,6 +30,9 @@ fun SpeechBuddyNavHost(
             LandingScreen(
                 onLoginClick = {
                     navController.navigate("login")
+                },
+                onGuestClick = {
+                    navController.navigate("texttospeech")
                 }
             )
         }
@@ -71,6 +75,9 @@ fun SpeechBuddyNavHost(
                 },
                 onNextClick = {}
             )
+        }
+        composable("texttospeech"){
+            TextToSpeechScreen()
         }
     }
 }

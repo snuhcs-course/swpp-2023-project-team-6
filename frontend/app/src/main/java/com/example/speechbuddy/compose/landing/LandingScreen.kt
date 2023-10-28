@@ -22,6 +22,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @Composable
 fun LandingScreen(
     modifier: Modifier = Modifier,
+    onGuestClick: () -> Unit,
     onLoginClick: () -> Unit,
 ) {
     Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primaryContainer) {
@@ -38,7 +39,8 @@ fun LandingScreen(
             ) {
                 ButtonUi(
                     text = stringResource(id = R.string.guess_mode_action),
-                    onClick = { /*TODO*/ })
+                    onClick = onGuestClick
+                )
                 ButtonUi(text = stringResource(id = R.string.login_action), onClick = onLoginClick)
             }
         }
@@ -49,6 +51,6 @@ fun LandingScreen(
 @Composable
 private fun LandingScreenPreview() {
     SpeechBuddyTheme {
-        LandingScreen(onLoginClick = {})
+        LandingScreen(onLoginClick = {}, onGuestClick = {})
     }
 }
