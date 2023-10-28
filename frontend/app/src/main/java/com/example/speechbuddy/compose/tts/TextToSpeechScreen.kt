@@ -44,8 +44,8 @@ fun TextToSpeechScreen(
             modifier = Modifier
                 .padding(25.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleUi(
                 title = stringResource(id = R.string.tts_text),
@@ -74,8 +74,8 @@ fun TextToSpeechScreen(
                 )
             ) {
                 Text(
-                    style = MaterialTheme.typography.headlineMedium,
-                    text = stringResource(id = R.string.play_text)
+                    text = stringResource(id = R.string.play_text),
+                    style = MaterialTheme.typography.headlineMedium
                 )
                 Icon(
                     Icons.Filled.PlayArrow,

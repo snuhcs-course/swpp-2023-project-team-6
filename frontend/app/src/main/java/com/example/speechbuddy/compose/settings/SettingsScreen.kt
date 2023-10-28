@@ -34,8 +34,8 @@ fun SettingsScreen(
             modifier = Modifier
                 .padding(25.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleUi(
                 title = "설정",

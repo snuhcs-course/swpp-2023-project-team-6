@@ -68,9 +68,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    implementation("androidx.compose.material:material:1.4.2")
-
-
     // Lifecycle
     val lifecycleVersion = "2.6.2"
     implementation("androidx.lifecycle:lifecycle-common:$lifecycleVersion")
