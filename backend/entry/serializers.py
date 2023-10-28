@@ -13,7 +13,7 @@ class FavoriteBackupSerializer(serializers.Serializer):
         # Symbol table에 저장된 마지막 symbol의 id
         last_symbol_id = Symbol.objects.latest('id').id
 
-        if id not in list(range(1, last_symbol_id+1)):
+        if id not in list(range(1, last_symbol_id + 1)):
             raise ValidationError({"id": ["Invalid symbol (no such symbol)"]})
 
         return data
@@ -28,3 +28,31 @@ class FavoriteBackupSerializer(serializers.Serializer):
             FavoriteSymbol.objects.create(user=user, symbol=symbol)
 
 
+class MySymbolBackupSerializer(serializers.Serializer):
+    text = serializers.CharField(required=True)
+    category = serializers.IntegerField(required=True)
+    image = serializers.ImageField(required=True)
+
+    def validate(self, data):
+        text = data.get('text')
+        category = data.get('category')
+
+        # To send custom error message
+        if len(text) > 20:
+            raise ValidationError({"long_text": ["word text is too long"]})
+
+        if not (0 <= category <= 23):
+            raise ValidationError({"category": ["No such category"]})
+
+        return data
+
+    def create(self, validated_data):
+        user = self.context['user']
+
+        text = validated_data['text']
+        category = validated_data['category']
+        image = validated_data['image']
+
+        symbol = Symbol.objects.create(text=text, category=category, image=image, created_by=user)
+
+        return symbol

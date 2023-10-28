@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from entry.models import FavoriteSymbol, Symbol
-from entry.serializers import FavoriteBackupSerializer
+from entry.serializers import FavoriteBackupSerializer, MySymbolBackupSerializer
 
 
 class FavoriteBackupView(APIView):
@@ -44,4 +44,22 @@ class FavoriteBackupView(APIView):
         response_data = {
             "results": response_data
         }
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
+class MySymbolBackupView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        user = request.user
+        data = request.data
+
+        serializer = MySymbolBackupSerializer(data=data, context={'user': user})
+        serializer.is_valid(raise_exception=True)
+        my_symbol = serializer.save()
+
+        response_data = {
+            "id": my_symbol.id
+        }
+
         return Response(response_data, status=status.HTTP_200_OK)

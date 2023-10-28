@@ -19,7 +19,7 @@ def img_upload_func(instance, filename):
 
 
 class Symbol(models.Model):
-    text = models.CharField(max_length=15, null=False, blank=False)
+    text = models.CharField(max_length=20, null=False, blank=False)
     category = models.IntegerField(null=False, blank=False)
     image = models.ImageField(blank=True, upload_to=img_upload_func)
     created_by = models.ForeignKey('user.User', related_name='symbols', on_delete=models.CASCADE)
