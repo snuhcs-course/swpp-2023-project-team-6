@@ -32,6 +32,8 @@ class MySymbolBackupSerializer(serializers.Serializer):
     text = serializers.CharField(required=True)
     category = serializers.IntegerField(required=True)
     image = serializers.ImageField(required=True)
+    is_valid = serializers.BooleanField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
 
     def validate(self, data):
         text = data.get('text')
