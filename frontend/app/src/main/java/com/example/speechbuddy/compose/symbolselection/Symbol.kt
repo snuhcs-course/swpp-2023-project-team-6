@@ -2,14 +2,14 @@ package com.example.speechbuddy.compose.symbolselection
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -17,11 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +26,8 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
 fun Symbol(
-
+    modifier: Modifier = Modifier,
+    isFavorite: Boolean = false
 ) {
     OutlinedCard(
         modifier = Modifier
@@ -39,14 +35,17 @@ fun Symbol(
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            ),
+        ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimaryContainer),
-
     ) {
         Image(
-            painter = painterResource(id = R.drawable.fav_star),
+            painter = if (isFavorite) {
+                painterResource(id = R.drawable.fav_star_selected)
+            } else {
+                painterResource(id = R.drawable.fav_star)
+            },
             modifier = Modifier
-                .padding(start=4.dp, top = 4.dp)
+                .padding(start = 4.dp, top = 4.dp)
                 .align(Alignment.Start)
                 .size(16.dp),
             contentDescription = "favorite star",
@@ -55,31 +54,37 @@ fun Symbol(
         OutlinedCard(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .size(width = 96.dp, height = 96.dp),
+                .size(width = 100.dp, height = 80.dp),
             shape = RoundedCornerShape(10.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background
             ),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimaryContainer),
-            ){
+        ) {
             Image(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .size(96.dp),
+                    .size(80.dp),
                 imageVector = Icons.Default.DateRange,
-                contentDescription ="symbol image",
-                )
+                contentDescription = "symbol image",
+            )
         }
 
-        Text(
-            text = "Outlined",
+        Box(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-
+                .padding(horizontal = 2.dp)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "119에 전화를 걸어주시기 바랍니다. ",
+                modifier = Modifier
+                    .fillMaxWidth(),
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -89,7 +94,7 @@ fun Symbol(
 fun SymbolPreview() {
     SpeechBuddyTheme {
         Symbol(
-
+            isFavorite = true
         )
     }
 }
