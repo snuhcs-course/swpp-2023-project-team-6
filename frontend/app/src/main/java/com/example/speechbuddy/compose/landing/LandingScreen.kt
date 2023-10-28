@@ -51,6 +51,6 @@ fun LandingScreen(
 @Composable
 private fun LandingScreenPreview() {
     SpeechBuddyTheme {
-        LandingScreen(onLoginClick = {}, onGuestClick = {})
+        LandingScreen(onGuestClick = {}, onLoginClick = {})
     }
 }

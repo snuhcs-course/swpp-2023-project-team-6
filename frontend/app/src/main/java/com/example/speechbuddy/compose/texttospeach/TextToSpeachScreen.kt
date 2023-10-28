@@ -1,6 +1,5 @@
 package com.example.speechbuddy.compose.texttospeach
 
-import android.text.method.ScrollingMovementMethod
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -53,7 +52,7 @@ fun TextToSpeechScreen(
     ) {
         Column(
             modifier = Modifier
-                .padding(25.dp)
+                .padding(24.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -72,7 +71,6 @@ fun TextToSpeechScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .defaultMinSize(minHeight = 300.dp)
                     .verticalScroll(rememberScrollState())
                     .height(300.dp),
                 textStyle = MaterialTheme.typography.bodyMedium,

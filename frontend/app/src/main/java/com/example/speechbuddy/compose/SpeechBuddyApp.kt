@@ -32,7 +32,7 @@ fun SpeechBuddyNavHost(
                     navController.navigate("login")
                 },
                 onGuestClick = {
-                    navController.navigate("texttospeech")
+                    navController.navigate("text_to_speech")
                 }
             )
         }
@@ -76,7 +76,7 @@ fun SpeechBuddyNavHost(
                 onNextClick = {}
             )
         }
-        composable("texttospeech"){
+        composable("text_to_speech"){
             TextToSpeechScreen()
         }
     }
