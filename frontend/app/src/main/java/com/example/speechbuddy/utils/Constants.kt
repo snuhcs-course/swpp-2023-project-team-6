@@ -6,5 +6,6 @@ class Constants {
         const val MINIMUM_PASSWORD_LENGTH = 8
         const val MAXIMUM_NICKNAME_LENGTH = 15
         const val CODE_LENGTH = 6
+        const val MAXIMUM_LINES_FOR_SYMBOL_TEXT = 2
     }
 }

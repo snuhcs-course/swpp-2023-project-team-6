@@ -39,4 +39,5 @@
     <string name="alert_dialog_login_error">로그인 오류</string>
     <string name="alert_dialog_signup_error">회원가입 오류</string>
     <string name="search_box_placeholder">검색어를 입력하세요</string>
+    <string name="favorite">즐겨찾기</string>
 </resources>
