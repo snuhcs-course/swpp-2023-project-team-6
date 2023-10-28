@@ -25,7 +25,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
-import com.example.speechbuddy.compose.tts.TextToSpeechScreen
+import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 data class BottomNavItem(
