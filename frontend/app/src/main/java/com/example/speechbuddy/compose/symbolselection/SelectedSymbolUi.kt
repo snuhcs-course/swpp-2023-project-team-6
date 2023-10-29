@@ -39,7 +39,7 @@ import com.example.speechbuddy.utils.Constants
 fun SelectedSymbolUi(
     symbol: Symbol,
     modifier: Modifier = Modifier,
-    onDelete: () -> Unit
+    onClear: () -> Unit
 ) {
     Card(
         modifier = modifier.size(100.dp),
@@ -51,7 +51,7 @@ fun SelectedSymbolUi(
     ) {
         Box(contentAlignment = Alignment.TopEnd) {
             IconButton(
-                onClick = onDelete,
+                onClick = onClear,
                 modifier = Modifier
                     .size(22.dp)
                     .padding(5.dp)
@@ -107,6 +107,6 @@ fun SelectedSymbolUiPreview() {
     )
 
     SpeechBuddyTheme {
-        SelectedSymbolUi(symbol = previewSymbol, onDelete = {})
+        SelectedSymbolUi(symbol = previewSymbol, onClear = {})
     }
 }

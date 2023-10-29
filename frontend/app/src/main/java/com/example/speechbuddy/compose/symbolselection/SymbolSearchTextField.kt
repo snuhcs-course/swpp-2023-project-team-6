@@ -21,7 +21,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SymbolSearchBox(
+fun SymbolSearchTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -46,16 +46,16 @@ fun SymbolSearchBox(
             textColor = MaterialTheme.colorScheme.onSurface,
             containerColor = MaterialTheme.colorScheme.surface,
             focusedBorderColor = MaterialTheme.colorScheme.tertiary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant
         )
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun SymbolSearchBoxPreview() {
+fun SymbolSearchTextFieldPreview() {
     SpeechBuddyTheme {
-        SymbolSearchBox(
+        SymbolSearchTextField(
             value = "검색어",
             onValueChange = {},
         )
