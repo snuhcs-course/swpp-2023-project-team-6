@@ -2,16 +2,15 @@ package com.example.speechbuddy.compose.texttospeech
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
@@ -22,29 +21,41 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.ui.models.ButtonStatusType
+import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextToSpeechScreen(
-    modifier: Modifier = Modifier
+    viewModel: TextToSpeechViewModel = hiltViewModel()
 ) {
-    Surface(modifier = modifier.fillMaxSize()) {
+    val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         Column(
             modifier = Modifier
                 .padding(24.dp)
                 .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleUi(
                 title = stringResource(id = R.string.tts_text),
@@ -54,49 +65,73 @@ fun TextToSpeechScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = viewModel.textInput,
+                onValueChange = {
+                    viewModel.setText(it)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .sizeIn(minHeight = 300.dp, maxHeight = 500.dp),
+                    .verticalScroll(rememberScrollState())
+                    .height(300.dp),
                 textStyle = MaterialTheme.typography.bodyMedium,
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                )
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Button(
-                onClick = {},
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.onBackground
-                ),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val textStyle = MaterialTheme.typography.headlineMedium
-                    Text(
-                        text = stringResource(id = R.string.play_text),
-                        style = textStyle
-                    )
-                    Icon(
-                        imageVector = Icons.Filled.PlayArrow,
-                        contentDescription = stringResource(id = R.string.play_text),
-                        modifier = Modifier.size(textStyle.lineHeight.value.dp)
-                    )
-                }
-            }
+            TextToSpeechButton(
+                buttonStatus = uiState.buttonStatus,
+                onPlay = { viewModel.ttsStart(context) },
+                onStop = { viewModel.ttsStop() }
+            )
         }
     }
 }
 
-@Preview
 @Composable
-private fun TextToSpeechScreenPreview() {
-    SpeechBuddyTheme {
-        TextToSpeechScreen()
+private fun TextToSpeechButton(
+    buttonStatus: ButtonStatusType,
+    onPlay: () -> Unit,
+    onStop: () -> Unit
+) {
+    val textToSpeechButtonColors = ButtonDefaults.buttonColors(
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground
+    )
+
+    when (buttonStatus) {
+        ButtonStatusType.PLAY -> Button(
+            onClick = onPlay,
+            colors = textToSpeechButtonColors
+        ) {
+            Text(
+                style = MaterialTheme.typography.headlineMedium,
+                text = stringResource(id = R.string.play_text)
+            )
+            Icon(
+                Icons.Filled.PlayArrow,
+                contentDescription = stringResource(id = R.string.play_text),
+                modifier = Modifier.size(36.dp)
+            )
+        }
+
+        ButtonStatusType.STOP -> Button(
+            onClick = onStop,
+            colors = textToSpeechButtonColors
+        ) {
+            Text(
+                style = MaterialTheme.typography.headlineMedium,
+                text = stringResource(id = R.string.stop_text)
+            )
+            Icon(
+                painterResource(R.drawable.stop_icon),
+                contentDescription = stringResource(id = R.string.stop_text),
+                modifier = Modifier.size(36.dp)
+            )
+        }
     }
 }
