@@ -69,7 +69,8 @@ fun SpeechBuddyNavHost(
                 onBackClick = {
                     navController.navigateUp()
                 },
-                onNextClick = {}
+                onNextClick = {},
+                navController = navController
             )
         }
     }

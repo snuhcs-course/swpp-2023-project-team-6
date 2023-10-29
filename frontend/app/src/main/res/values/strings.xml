@@ -38,4 +38,5 @@
     <string name="nickname_length_error">닉네임을 입력해주세요</string>
     <string name="alert_dialog_login_error">로그인 오류</string>
     <string name="alert_dialog_signup_error">회원가입 오류</string>
+    <string name="resset_password_error">비밀번호 길이 및 재대로 입력했는지 확인해주세요</string>
 </resources>

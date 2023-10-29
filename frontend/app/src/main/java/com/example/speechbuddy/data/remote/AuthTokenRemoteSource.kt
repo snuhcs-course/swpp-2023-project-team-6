@@ -2,6 +2,7 @@ package com.example.speechbuddy.data.remote
 
 import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
@@ -49,4 +50,12 @@ class AuthTokenRemoteSource @Inject constructor(private val authService: AuthSer
             emit(result)
         }
 
+    suspend fun resetPasswordAuthToken(
+        accessToken: String,
+        authResetPasswordRequest: AuthResetPasswordRequest
+    ): Flow<Response<Void>> =
+        flow {
+            val result = authService.resetPassword(accessToken, authResetPasswordRequest)
+            emit(result)
+        }
 }
