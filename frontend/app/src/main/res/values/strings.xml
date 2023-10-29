@@ -33,6 +33,10 @@
     <string name="new_password_check_field">새 비밀번호 확인</string>
     <string name="false_new_password">8자 이상 입력해주세요</string>
     <string name="false_new_password_check">비밀번호가 일치하지 않습니다</string>
+    <string name="symbol_selection">상징으로 말하기</string>
+    <string name="text_to_speech">음성으로 말하기</string>
+    <string name="symbol_creation">새 상징 만들기</string>
+    <string name="settings">설정</string>
     <string name="email_already_taken">다른 사용자가 이미 사용하고 있는 이메일입니다</string>
     <string name="no_such_user">해당 이메일로 가입된 계정이 없습니다</string>
     <string name="nickname_length_error">닉네임을 입력해주세요</string>
@@ -42,4 +46,8 @@
     <string name="favorite">즐겨찾기</string>
     <string name="symbol_unselect">상징 선택 취소</string>
     <string name="clear_all">전체 삭제</string>
+    <string name="tts_text">소리로 말해보아요</string>
+    <string name="tts_explain">키보드로 텍스트를 입력해주세요</string>
+    <string name="play_text">재생하기</string>
+    <string name="stop_text">정지</string>
 </resources>
