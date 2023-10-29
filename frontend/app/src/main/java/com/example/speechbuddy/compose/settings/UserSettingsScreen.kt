@@ -17,10 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodel.AccountScreenViewModel
+import com.example.speechbuddy.viewmodel.LoginViewModel
 
 @Composable
 fun AccountScreen(
@@ -36,7 +39,8 @@ fun AccountScreen(
     onHideSecondWithdrawalDialog: () -> Unit,
     onBackClick: () -> Unit,
     email: String,
-    nickname: String
+    nickname: String,
+    viewModel: AccountScreenViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier
@@ -104,7 +108,7 @@ fun AccountScreen(
     if (showLogoutDialog) {
         AlertDialogUi(
             modifier = modifier,
-            onConfirmButtonClick = {},
+            onConfirmButtonClick = { viewModel.logout() },
             onDismissButtonClick = { onHideLogoutDialog() },
             title = stringResource(id = R.string.settings_account_logout),
             content = stringResource(id = R.string.logout_warning),
