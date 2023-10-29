@@ -1,5 +1,6 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.utils import json
 
 from user.models import User
 
@@ -80,3 +81,17 @@ class UserTest(TestCase):
         }
         response = self.client.post('/user/withdraw/', data, **headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_change_nickname_success(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        data = {
+            'nickname': 'changed_name'
+        }
+        response = self.client.patch('/user/profile/nickname/', data, content_type='application/json', **headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Call get-profile API to check whether the value change is applied
+        response = self.client.get('/user/profile/', **headers)
+        self.assertEqual(data['nickname'], response.json()['user']['nickname'])
