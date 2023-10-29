@@ -21,3 +21,12 @@ class UserTest(TestCase):
         }
         response = self.client.post('/user/signup/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_login_success(self):
+        data = {
+            'email': 'test_email@gmail.com',
+            'password': 'test_password',
+        }
+        response = self.client.post('/user/login/', data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_token = response.json()['access']
