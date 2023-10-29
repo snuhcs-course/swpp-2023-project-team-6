@@ -26,11 +26,11 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.utils.Constants
 
 /**
- * Custom UI designed for Symbol
+ * Custom UI designed for Category
  *
  * @param category data class Category to be passed to the UI
- * @param modifier the Modifier to be applied to this text field
- * @param onSelect called when this Symbol is clicked
+ * @param modifier the Modifier to be applied to this outlined card
+ * @param onSelect called when this Category is clicked
  */
 @ExperimentalMaterial3Api
 @Composable

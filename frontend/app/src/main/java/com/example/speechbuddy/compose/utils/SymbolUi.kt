@@ -31,7 +31,7 @@ import com.example.speechbuddy.utils.Constants.Companion.MAXIMUM_LINES_FOR_SYMBO
  * Custom UI designed for Symbol
  *
  * @param symbol data class Symbol to be passed to the UI
- * @param modifier the Modifier to be applied to this text field
+ * @param modifier the Modifier to be applied to this outlined card
  * @param onSelect called when this Symbol is clicked
  * @param onToggle called when the upper left start of this Symbol is clicked
  */
