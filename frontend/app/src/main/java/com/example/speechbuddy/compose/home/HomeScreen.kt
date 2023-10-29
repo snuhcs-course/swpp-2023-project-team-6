@@ -2,7 +2,6 @@ package com.example.speechbuddy.compose.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -29,9 +29,9 @@ import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 data class BottomNavItem(
-    val name: String,
     val route: String,
-    val icon: Int
+    val nameResId: Int,
+    val iconResId: Int
 )
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -41,34 +41,35 @@ fun HomeScreen(
 
 ) {
     val navController = rememberNavController()
+    val navItems = listOf(
+        BottomNavItem(
+            "symbol_selection",
+            R.string.symbol_selection,
+            R.drawable.outline_touch_app_24
+        ),
+        BottomNavItem(
+            "text_to_speech",
+            R.string.text_to_speech,
+            R.drawable.outline_volume_up_24
+        ),
+        BottomNavItem(
+            "symbol_creation",
+            R.string.symbol_creation,
+            R.drawable.outline_add_a_photo_24
+        ),
+        BottomNavItem(
+            "settings",
+            R.string.settings,
+            R.drawable.outline_settings_24
+        )
+    )
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
-                items = listOf(
-                    BottomNavItem(
-                        "SymbolSelection",
-                        "symbolselection",
-                        R.drawable.outline_touch_app_24
-                    ),
-                    BottomNavItem(
-                        "TTS",
-                        "tts",
-                        R.drawable.outline_volume_up_24
-                    ),
-                    BottomNavItem(
-                        "CreateSymbol",
-                        "createsymbol",
-                        R.drawable.outline_add_a_photo_24
-                    ),
-                    BottomNavItem(
-                        "Settings",
-                        "settings",
-                        R.drawable.outline_settings_24
-                    )
-                ),
+                items = navItems,
                 navController = navController,
                 modifier = Modifier
-                    .padding(horizontal = 0.dp, vertical = 10.dp)
                     .height(100.dp),
                 onItemClick = {
                     navController.navigate(it.route)
@@ -83,17 +84,17 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeScreenNavHost(
+private fun HomeScreenNavHost(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "symbolselection") {
-        composable("symbolselection") {
+    NavHost(navController = navController, startDestination = "symbol_selection") {
+        composable("symbol_selection") {
             SymbolSelectionScreen()
         }
-        composable("tts") {
+        composable("text_to_speech") {
             TextToSpeechScreen()
         }
-        composable("createsymbol") {
+        composable("symbol_creation") {
             SymbolCreationScreen()
         }
         composable("settings") {
@@ -103,13 +104,14 @@ fun HomeScreenNavHost(
 }
 
 @Composable
-fun BottomNavigationBar(
+private fun BottomNavigationBar(
     items: List<BottomNavItem>,
     navController: NavController,
     modifier: Modifier = Modifier,
     onItemClick: (BottomNavItem) -> Unit
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
+
     NavigationBar(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.secondaryContainer
@@ -121,13 +123,13 @@ fun BottomNavigationBar(
                 onClick = { onItemClick(item) },
                 icon = {
                     Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = null
+                        painter = painterResource(id = item.iconResId),
+                        contentDescription = stringResource(id = item.nameResId)
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    unselectedIconColor = MaterialTheme.colorScheme.secondary
+                    unselectedIconColor = MaterialTheme.colorScheme.outline
                 )
             )
         }
