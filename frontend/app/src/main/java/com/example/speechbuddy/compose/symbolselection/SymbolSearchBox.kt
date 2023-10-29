@@ -19,13 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
-/**
- * Custom UI designed for SymbolSearchBox
- *
- * @param value the input text to be shown in the text field
- * @param onValueChange the callback that is triggered when the input service updates the text. An updated text comes as a parameter of the callback
- * @param modifier the Modifier to be applied to this text field
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SymbolSearchBox(

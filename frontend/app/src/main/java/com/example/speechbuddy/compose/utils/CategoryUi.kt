@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.utils.Constants
 
 /**
  * Custom UI designed for Category

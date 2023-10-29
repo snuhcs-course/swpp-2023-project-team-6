@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
-import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.utils.Constants.Companion.MAXIMUM_LINES_FOR_SYMBOL_TEXT

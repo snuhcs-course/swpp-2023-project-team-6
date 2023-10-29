@@ -30,19 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
-import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.utils.Constants
 
-
-/**
- * Custom UI designed for SymbolSearchBox
- *
- * @param symbol data class Symbol to be passed to the UI
- * @param modifier the Modifier to be applied to this text field
- * @param onDelete called when the upper left icon of this Symbol is clicked
- */
 @ExperimentalMaterial3Api
 @Composable
 fun SelectedSymbolUi(
