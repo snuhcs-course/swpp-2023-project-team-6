@@ -1,21 +1,24 @@
 package com.example.speechbuddy.compose.utils
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,66 +38,53 @@ import com.example.speechbuddy.utils.Constants
 @ExperimentalMaterial3Api
 @Composable
 fun CategoryUi(
-    category: Category,
-    modifier: Modifier = Modifier,
-    onSelect: () -> Unit,
+    category: Category, modifier: Modifier = Modifier, onSelect: () -> Unit
 ) {
-    OutlinedCard(
+    Card(
         onClick = onSelect,
         modifier = modifier.size(140.dp),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimaryContainer)
+            containerColor = MaterialTheme.colorScheme.background
+        )
     ) {
-        Spacer(modifier = Modifier.size(20.dp))
+        Box {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = category.imageResId),
+                    contentDescription = category.text,
+                    modifier = Modifier.height(95.dp),
+                    contentScale = ContentScale.FillHeight
+                )
 
-        OutlinedCard(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .size(width = 100.dp, height = 80.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.onBackground
-            ),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
-        ) {
-            Image(
-                painter = painterResource(id = category.imageResId),
-                contentDescription = category.text,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .size(80.dp)
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = category.text,
-                textAlign = TextAlign.Center,
-                maxLines = Constants.MAXIMUM_LINES_FOR_SYMBOL_TEXT,
-                style = MaterialTheme.typography.bodySmall
-            )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp)
+                        .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+                        .padding(horizontal = 10.dp), contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = category.text,
+                        textAlign = TextAlign.Center,
+                        maxLines = Constants.MAXIMUM_LINES_FOR_SYMBOL_TEXT,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0)
 @ExperimentalMaterial3Api
 @Composable
-fun CategoryPreview() {
+fun CategoryUiPreview() {
     val previewCategory = Category(
-        id = 0,
-        text = "앵무새",
-        imageResId = R.drawable.top_app_bar_ic,
+        id = 0, text = "인사사회어", imageResId = R.drawable.category_0
     )
 
     SpeechBuddyTheme {

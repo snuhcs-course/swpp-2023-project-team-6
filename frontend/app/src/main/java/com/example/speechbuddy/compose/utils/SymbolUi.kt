@@ -1,21 +1,30 @@
 package com.example.speechbuddy.compose.utils
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -33,7 +42,7 @@ import com.example.speechbuddy.utils.Constants.Companion.MAXIMUM_LINES_FOR_SYMBO
  * @param symbol data class Symbol to be passed to the UI
  * @param modifier the Modifier to be applied to this outlined card
  * @param onSelect called when this Symbol is clicked
- * @param onToggle called when the upper left start of this Symbol is clicked
+ * @param onFavoriteChange called when the upper left icon of this Symbol is clicked
  */
 @ExperimentalMaterial3Api
 @Composable
@@ -41,87 +50,86 @@ fun SymbolUi(
     symbol: Symbol,
     modifier: Modifier = Modifier,
     onSelect: () -> Unit,
-    onToggle: () -> Unit
+    onFavoriteChange: () -> Unit
 ) {
-    OutlinedCard(
+    Card(
         onClick = onSelect,
         modifier = modifier.size(140.dp),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimaryContainer)
+            containerColor = MaterialTheme.colorScheme.background
+        )
     ) {
-        IconButton(
-            onClick = onToggle,
-            modifier = Modifier
-                .padding(start = 4.dp, top = 4.dp)
-                .size(16.dp)
-        ) {
-            Image(
-                painter = when (symbol.isFavorite) {
-                    true -> painterResource(id = R.drawable.fav_star_selected)
-                    false -> painterResource(id = R.drawable.fav_star)
-                },
-                contentDescription = stringResource(id = R.string.favorite)
-            )
-        }
-
-        OutlinedCard(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .size(width = 100.dp, height = 80.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.onBackground
-            ),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
-        ) {
-            Image(
-                painter = painterResource(id = symbol.imageResId),
-                contentDescription = symbol.text,
+        Box(contentAlignment = Alignment.TopEnd) {
+            IconToggleButton(
+                checked = symbol.isFavorite,
+                onCheckedChange = { onFavoriteChange() },
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .size(80.dp)
-            )
-        }
+                    .size(24.dp)
+                    .padding(4.dp),
+                colors = IconButtonDefaults.iconToggleButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    checkedContentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Icon(
+                    imageVector = when (symbol.isFavorite) {
+                        true -> Icons.Default.Favorite
+                        false -> Icons.Default.FavoriteBorder
+                    },
+                    contentDescription = stringResource(id = R.string.favorite)
+                )
+            }
 
-        Box(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = symbol.text,
-                textAlign = TextAlign.Center,
-                maxLines = MAXIMUM_LINES_FOR_SYMBOL_TEXT,
-                style = MaterialTheme.typography.bodySmall
-            )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = symbol.imageResId),
+                    contentDescription = symbol.text,
+                    modifier = Modifier.height(95.dp),
+                    contentScale = ContentScale.FillHeight
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp)
+                        .background(color = MaterialTheme.colorScheme.secondaryContainer)
+                        .padding(horizontal = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = symbol.text,
+                        textAlign = TextAlign.Center,
+                        maxLines = MAXIMUM_LINES_FOR_SYMBOL_TEXT,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0)
 @ExperimentalMaterial3Api
 @Composable
-fun SymbolPreview() {
+fun SymbolUiPreview() {
     val previewSymbol = Symbol(
         id = 0,
-        text = "앵무새",
-        imageResId = R.drawable.top_app_bar_ic,
+        text = "119에 전화해주세요",
+        imageResId = R.drawable.symbol_0,
         category = Category(
             id = 0,
-            text = "동물",
-            imageResId = R.drawable.top_app_bar_ic
+            text = "인사사회어",
+            imageResId = R.drawable.category_0
         ),
         isFavorite = true,
         isMine = false
     )
 
     SpeechBuddyTheme {
-        SymbolUi(symbol = previewSymbol, onSelect = {}, onToggle = {})
+        SymbolUi(symbol = previewSymbol, onSelect = {}, onFavoriteChange = {})
     }
 }
