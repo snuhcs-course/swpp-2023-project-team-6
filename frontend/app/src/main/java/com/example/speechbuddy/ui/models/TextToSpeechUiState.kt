@@ -1,7 +1,7 @@
 package com.example.speechbuddy.ui.models
 
 data class TextToSpeechUiState(
-    val isButtonEnabled: ButtonStatusType = ButtonStatusType.PLAY
+    val buttonStatus: ButtonStatusType = ButtonStatusType.PLAY
 )
 
 enum class ButtonStatusType {

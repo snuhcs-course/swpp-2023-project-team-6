@@ -84,48 +84,55 @@ fun TextToSpeechScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // show PLAY/STOP depending on tts speaking
-            if (uiState.isButtonEnabled == ButtonStatusType.PLAY) {
-                Button(
-                    onClick = {
-                        viewModel.ttsStart(context)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = MaterialTheme.colorScheme.onBackground
-                    )
-                ) {
-                    Text(
-                        style = MaterialTheme.typography.headlineMedium,
-                        text = stringResource(id = R.string.play_text)
-                    )
-                    Icon(
-                        Icons.Filled.PlayArrow,
-                        contentDescription = stringResource(id = R.string.play_text),
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
-            } else {
-                Button(
-                    onClick = {
-                        viewModel.ttsStop()
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = MaterialTheme.colorScheme.onBackground
-                    )
-                ) {
-                    Text(
-                        style = MaterialTheme.typography.headlineMedium,
-                        text = stringResource(id = R.string.stop_text)
-                    )
-                    Icon(
-                        painterResource(R.drawable.stop_icon),
-                        contentDescription = stringResource(id = R.string.pause_text),
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
-            }
+            TextToSpeechButton(
+                buttonStatus = uiState.buttonStatus,
+                onPlay = { viewModel.ttsStart(context) },
+                onStop = { viewModel.ttsStop() }
+            )
+        }
+    }
+}
+
+@Composable
+private fun TextToSpeechButton(
+    buttonStatus: ButtonStatusType,
+    onPlay: () -> Unit,
+    onStop: () -> Unit
+) {
+    val textToSpeechButtonColors = ButtonDefaults.buttonColors(
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground
+    )
+
+    when (buttonStatus) {
+        ButtonStatusType.PLAY -> Button(
+            onClick = onPlay,
+            colors = textToSpeechButtonColors
+        ) {
+            Text(
+                style = MaterialTheme.typography.headlineMedium,
+                text = stringResource(id = R.string.play_text)
+            )
+            Icon(
+                Icons.Filled.PlayArrow,
+                contentDescription = stringResource(id = R.string.play_text),
+                modifier = Modifier.size(36.dp)
+            )
+        }
+
+        ButtonStatusType.STOP -> Button(
+            onClick = onStop,
+            colors = textToSpeechButtonColors
+        ) {
+            Text(
+                style = MaterialTheme.typography.headlineMedium,
+                text = stringResource(id = R.string.stop_text)
+            )
+            Icon(
+                painterResource(R.drawable.stop_icon),
+                contentDescription = stringResource(id = R.string.stop_text),
+                modifier = Modifier.size(36.dp)
+            )
         }
     }
 }

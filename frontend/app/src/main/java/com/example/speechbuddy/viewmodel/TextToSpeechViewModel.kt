@@ -34,6 +34,10 @@ class TextToSpeechViewModel @Inject internal constructor(
         textInput = input
     }
 
+private fun clearText() {
+    textInput = ""
+}
+
     fun ttsStop() {
         textToSpeech?.stop()
     }
@@ -42,7 +46,7 @@ class TextToSpeechViewModel @Inject internal constructor(
         // disable button
         _uiState.update { currentState ->
             currentState.copy(
-                isButtonEnabled = ButtonStatusType.STOP
+                buttonStatus = ButtonStatusType.STOP
             )
         }
 
@@ -63,7 +67,7 @@ class TextToSpeechViewModel @Inject internal constructor(
                         override fun onStop(utteranceId: String?, interrupted: Boolean) {
                             _uiState.update { currentState ->
                                 currentState.copy(
-                                    isButtonEnabled = ButtonStatusType.PLAY
+                                    buttonStatus = ButtonStatusType.PLAY
                                 )
                             }
                         }
@@ -72,9 +76,10 @@ class TextToSpeechViewModel @Inject internal constructor(
                             // Speech has finished, re-enable the button
                             _uiState.update { currentState ->
                                 currentState.copy(
-                                    isButtonEnabled = ButtonStatusType.PLAY
+                                    buttonStatus = ButtonStatusType.PLAY
                                 )
                             }
+                            clearText()
                         }
 
                         @Deprecated("Deprecated in Java")
@@ -82,7 +87,7 @@ class TextToSpeechViewModel @Inject internal constructor(
                             // There was an error, re-enable the button
                             _uiState.update { currentState ->
                                 currentState.copy(
-                                    isButtonEnabled = ButtonStatusType.PLAY
+                                    buttonStatus = ButtonStatusType.PLAY
                                 )
                             }
                         }
@@ -99,7 +104,7 @@ class TextToSpeechViewModel @Inject internal constructor(
                 // Initialization failed, re-enable the button
                 _uiState.update { currentState ->
                     currentState.copy(
-                        isButtonEnabled = ButtonStatusType.PLAY
+                        buttonStatus = ButtonStatusType.PLAY
                     )
                 }
             }
