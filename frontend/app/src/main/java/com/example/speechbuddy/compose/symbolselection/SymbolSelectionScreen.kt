@@ -41,9 +41,8 @@ fun SymbolSelectionScreen(
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .padding(24.dp)
-                .fillMaxSize()
-                .padding(top = 60.dp),
+                .padding(start = 24.dp, top = 80.dp, end = 24.dp, bottom = 80.dp)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             /* TODO: ViewModel 연결 */
@@ -56,7 +55,7 @@ fun SymbolSelectionScreen(
                     .fillMaxSize()
                     .background(
                         color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(20.dp)
+                        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                     )
                     .padding(16.dp)
             ) {

@@ -1,7 +1,9 @@
 package com.example.speechbuddy.compose.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +28,7 @@ import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 data class BottomNavItem(
@@ -65,12 +68,14 @@ fun HomeScreen(
     )
 
     Scaffold(
+        topBar = {
+            /* TODO: TopAppBar for HomeScreen */
+            TopAppBarUi(onBackClick = { navController.navigateUp() })
+        },
         bottomBar = {
             BottomNavigationBar(
                 items = navItems,
                 navController = navController,
-                modifier = Modifier
-                    .height(100.dp),
                 onItemClick = {
                     navController.navigate(it.route)
                 }
@@ -87,14 +92,14 @@ fun HomeScreen(
 private fun BottomNavigationBar(
     items: List<BottomNavItem>,
     navController: NavController,
-    modifier: Modifier = Modifier,
     onItemClick: (BottomNavItem) -> Unit
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
 
     NavigationBar(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.secondaryContainer
+        modifier = Modifier.height(80.dp),
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        windowInsets = WindowInsets(top = 20.dp)
     ) {
         items.forEach { item ->
             val selected = item.route == backStackEntry.value?.destination?.route
@@ -107,6 +112,7 @@ private fun BottomNavigationBar(
                         contentDescription = stringResource(id = item.nameResId)
                     )
                 },
+                modifier = Modifier.size(40.dp),
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     unselectedIconColor = MaterialTheme.colorScheme.outline
