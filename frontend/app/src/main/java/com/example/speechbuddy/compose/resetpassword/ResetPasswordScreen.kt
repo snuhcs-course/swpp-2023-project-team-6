@@ -37,7 +37,6 @@ import com.example.speechbuddy.viewmodel.ResetPasswordViewModel
 fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
     navController: NavHostController,
 
     viewModel: ResetPasswordViewModel = hiltViewModel()
