@@ -70,7 +70,6 @@ fun CategoryUi(
                     Text(
                         text = category.text,
                         textAlign = TextAlign.Center,
-                        maxLines = Constants.MAXIMUM_LINES_FOR_SYMBOL_TEXT,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
