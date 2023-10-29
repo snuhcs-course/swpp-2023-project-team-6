@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.utils import json
 
-from user.models import User
+from user.models import User, EmailVerification
 
 
 class UserTest(TestCase):
@@ -111,4 +111,24 @@ class UserTest(TestCase):
         }
         response = self.client.post('/user/login/', new_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_email_verification_signup_success(self):
+        data = {
+            'email': 'haha@gmail.com'
+        }
+        # Sending
+        response = self.client.post('/user/validateemail/signup/send/', data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Accepting
+        email_veri = EmailVerification.objects.get(email=data['email'])
+        verify_data = {
+            'email': 'haha@gmail.com',
+            'code': email_veri.code
+        }
+        response = self.client.post('/user/validateemail/signup/accept/', verify_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+
 
