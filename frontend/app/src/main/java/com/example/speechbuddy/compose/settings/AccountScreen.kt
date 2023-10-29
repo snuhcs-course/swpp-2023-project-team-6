@@ -3,12 +3,16 @@ package com.example.speechbuddy.compose.settings
 import SettingsTextUi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,22 +34,25 @@ fun AccountScreen(
     showSecondWithdrawalDialog: Boolean,
     onShowSecondWithdrawalDialog: () -> Unit,
     onHideSecondWithdrawalDialog: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    email: String,
+    nickname: String
 ) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
     ) {
         Column(
-            modifier = Modifier
-                .padding(start = 30.dp, end = 30.dp, top = 30.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top
-        ) {
+            modifier = modifier.padding(vertical = 30.dp, horizontal = 15.dp)
+        ){
             BackButtonUi(onBackClick = onBackClick)
-
-            Spacer(modifier = Modifier.height(136.dp))
-
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 30.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+        ) {
             SettingsTitleUi(
                 modifier = modifier,
                 title = stringResource(id = R.string.settings_account_button)
@@ -53,19 +60,31 @@ fun AccountScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            SettingsTextUi(
-                modifier = modifier,
-                text = stringResource(id = R.string.nickname)
-            )
+            Row(
+                modifier = modifier.fillMaxWidth(),
+            ) {
+                SettingsTextUi(
+                    modifier = modifier,
+                    text = stringResource(id = R.string.email_field)
+                )
+                Spacer(modifier.weight(1f))
+                SettingsTextUi(modifier = modifier, text = email)
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            SettingsTextUi(
-                modifier = modifier,
-                text = stringResource(id = R.string.email_field)
-            )
+            Row(
+                modifier = modifier.fillMaxWidth(),
+            ) {
+                SettingsTextUi(
+                    modifier = modifier,
+                    text = stringResource(id = R.string.nickname)
+                )
+                Spacer(modifier.weight(1f))
+                SettingsTextUi(modifier = modifier, text = nickname)
+            }
 
-            Spacer(modifier = Modifier.height(165.dp))
+            Spacer(modifier = Modifier.height(130.dp))
 
             ButtonUi(
                 text = stringResource(id = R.string.settings_account_logout),
@@ -138,7 +157,9 @@ private fun AccountScreenPreview() {
             showSecondWithdrawalDialog = false,
             onShowSecondWithdrawalDialog = {},
             onHideSecondWithdrawalDialog = {},
-            onBackClick = {}
+            onBackClick = {},
+            email = "id",
+            nickname = "nickname"
         )
     }
 }

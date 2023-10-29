@@ -31,10 +31,9 @@ fun SettingsScreen(
     ) {
         Column(
             modifier = Modifier
-                .padding(25.dp)
+                .padding(horizontal = 30.dp, vertical = 50.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
         ) {
             SettingsTextButtonUi(
                 text = stringResource(id = R.string.settings_account_button),

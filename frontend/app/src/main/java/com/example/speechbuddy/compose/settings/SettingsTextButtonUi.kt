@@ -58,7 +58,7 @@ fun SettingsTextButtonUi(
         ) {
             Text(
                 text,
-                style = MaterialTheme.typography.displaySmall,
+                style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
         }

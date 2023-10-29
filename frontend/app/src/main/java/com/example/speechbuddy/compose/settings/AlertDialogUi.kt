@@ -1,5 +1,6 @@
 package com.example.speechbuddy.compose.settings
 
+import android.widget.CheckBox
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -45,14 +46,14 @@ fun AlertDialogUi(
             Button(
                 onClick = onDismissButtonClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             ) {
                 Text(dismissButtonText)
             }
         },
-        containerColor = MaterialTheme.colorScheme.errorContainer
+        containerColor = MaterialTheme.colorScheme.inverseOnSurface
     )
 }
 

@@ -170,7 +170,9 @@ fun SpeechBuddyNavHost(
                 showSecondWithdrawalDialog = showSecondWithdrawalDialog,
                 onShowSecondWithdrawalDialog = { showSecondWithdrawalDialog = true },
                 onHideSecondWithdrawalDialog = { showSecondWithdrawalDialog = false },
-                onBackClick = { navController.navigate("settings") }
+                onBackClick = { navController.navigate("settings") },
+                email = "",
+                nickname = ""
             )
         }
         composable("settings_backup") {

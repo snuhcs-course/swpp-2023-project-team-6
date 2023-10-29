@@ -1,6 +1,7 @@
 package com.example.speechbuddy.compose.settings
 
 import SettingsTextUi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,10 +28,16 @@ fun VersionInfoScreen(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
-            modifier = modifier.padding(start = 30.dp, end = 30.dp, top = 10.dp)
-        ) {
+            modifier = modifier.padding(vertical = 30.dp, horizontal = 15.dp)
+        ){
             BackButtonUi(onBackClick = onBackClick)
-            Spacer(modifier = modifier.height(136.dp))
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 30.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+        ){
             SettingsTitleUi(
                 modifier = modifier,
                 title = stringResource(id = R.string.settings_versioninfo_button)
