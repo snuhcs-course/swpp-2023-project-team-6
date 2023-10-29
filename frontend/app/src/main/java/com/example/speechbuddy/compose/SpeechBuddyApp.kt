@@ -5,12 +5,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.speechbuddy.compose.emailverification.EmailVerificationScreen
+import com.example.speechbuddy.compose.home.HomeScreen
 import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
-import com.example.speechbuddy.compose.emailverification.EmailVerificationScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
-import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
 
 @Composable
 fun SpeechBuddyApp() {
@@ -25,7 +25,7 @@ fun SpeechBuddyNavHost(
     navController: NavHostController
 ) {
     // val activity = (LocalContext.current as Activity)
-    NavHost(navController = navController, startDestination = "landing") {
+    NavHost(navController = navController, startDestination = "home") {
         composable("landing") {
             LandingScreen(
                 onLoginClick = {
@@ -59,7 +59,7 @@ fun SpeechBuddyNavHost(
                 navController = navController,
             )
         }
-        composable("signup/{emailInput}") {backStackEntry ->
+        composable("signup/{emailInput}") { backStackEntry ->
             val emailInput = backStackEntry.arguments?.getString("emailInput")
             SignupScreen(
                 onBackClick = {
@@ -74,10 +74,11 @@ fun SpeechBuddyNavHost(
                     navController.navigateUp()
                 },
                 onNextClick = {}
+
             )
         }
-        composable("text_to_speech"){
-            TextToSpeechScreen()
+        composable("home") {
+            HomeScreen()
         }
     }
 }
