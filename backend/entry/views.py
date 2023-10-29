@@ -81,6 +81,10 @@ class MySymbolRetrieveView(APIView):
         user = request.user
 
         if pk is not None:
+            all_symbols = list(Symbol.objects.values_list('id', flat=True))
+            if pk not in all_symbols:
+                raise ValidationError({"pk": ["invalid symbol (no such symbol)"]})
+
             symbol = Symbol.objects.get(id=pk)
             if user != symbol.created_by:
                 raise ValidationError({"not_mine": ["the requested symbol is created by another user"]})
