@@ -95,3 +95,20 @@ class UserTest(TestCase):
         # Call get-profile API to check whether the value change is applied
         response = self.client.get('/user/profile/', **headers)
         self.assertEqual(data['nickname'], response.json()['user']['nickname'])
+
+    def test_change_password_success(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        data = {
+            'password': 'changed_pw'
+        }
+        self.client.patch('/user/profile/password/', data, content_type='application/json', **headers)
+
+        new_data = {
+            'email': 'test_email@gmail.com',
+            'password': data['password'],
+        }
+        response = self.client.post('/user/login/', new_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
