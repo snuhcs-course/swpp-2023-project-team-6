@@ -70,3 +70,13 @@ class UserTest(TestCase):
         }
         response = self.client.post('/user/refresh/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_withdraw_success(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        data = {
+            'refresh': self.refresh_token
+        }
+        response = self.client.post('/user/withdraw/', data, **headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
