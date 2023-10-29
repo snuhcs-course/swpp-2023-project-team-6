@@ -1,55 +1,23 @@
-from unittest import TestCase
+from django.test import TestCase
+from rest_framework import status
+
+from user.models import User
 
 
-class TestUserSignUpView(TestCase):
-    def test_post(self):
-        self.assertEqual(1, 1)
+class UserTest(TestCase):
 
-# class TestSignUpEmailVerifySendView(TestCase):
-#     def test_post(self):
-#         self.fail()
-#
-#
-# class TestPasswordEmailVerifySendView(TestCase):
-#     def test_post(self):
-#         self.fail()
-#
-#
-# class TestSignUpEmailVerifyAcceptView(TestCase):
-#     def test_post(self):
-#         self.fail()
-#
-#
-# class TestPasswordEmailVerifyAcceptView(TestCase):
-#     def test_post(self):
-#         self.fail()
-#
-#
-# class TestUserLoginView(TestCase):
-#     def test_post(self):
-#         self.fail()
-#
-#
-# class TestUserLogoutView(TestCase):
-#     def test_post(self):
-#         self.fail()
-#
-#
-# class TestUserProfileView(TestCase):
-#     def test_get(self):
-#         self.fail()
-#
-#
-# class TestPasswordUpdateView(TestCase):
-#     def test_patch(self):
-#         self.fail()
-#
-#
-# class TestNicknameUpdateView(TestCase):
-#     def test_patch(self):
-#         self.fail()
-#
-#
-# class TestUserWithdrawView(TestCase):
-#     def test_post(self):
-#         self.fail()
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='test_email@gmail.com',
+            password='test_password',
+            nickname='test_nickname'
+        )
+
+    def test_signup_success(self):
+        data = {
+            'email': 'this_is_test@gmail.com',
+            'password': 'this_is_test',
+            'nickname': 'this_is_test'
+        }
+        response = self.client.post('/user/signup/', data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
