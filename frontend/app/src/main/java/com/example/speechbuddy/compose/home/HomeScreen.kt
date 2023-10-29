@@ -84,26 +84,6 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeScreenNavHost(
-    navController: NavHostController
-) {
-    NavHost(navController = navController, startDestination = "symbol_selection") {
-        composable("symbol_selection") {
-            SymbolSelectionScreen()
-        }
-        composable("text_to_speech") {
-            TextToSpeechScreen()
-        }
-        composable("symbol_creation") {
-            SymbolCreationScreen()
-        }
-        composable("settings") {
-            SettingsScreen()
-        }
-    }
-}
-
-@Composable
 private fun BottomNavigationBar(
     items: List<BottomNavItem>,
     navController: NavController,
@@ -132,6 +112,26 @@ private fun BottomNavigationBar(
                     unselectedIconColor = MaterialTheme.colorScheme.outline
                 )
             )
+        }
+    }
+}
+
+@Composable
+private fun HomeScreenNavHost(
+    navController: NavHostController
+) {
+    NavHost(navController = navController, startDestination = "symbol_selection") {
+        composable("symbol_selection") {
+            SymbolSelectionScreen()
+        }
+        composable("text_to_speech") {
+            TextToSpeechScreen()
+        }
+        composable("symbol_creation") {
+            SymbolCreationScreen()
+        }
+        composable("settings") {
+            SettingsScreen()
         }
     }
 }
