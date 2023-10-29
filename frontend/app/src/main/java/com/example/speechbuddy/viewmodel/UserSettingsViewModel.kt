@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserSettingsScreenViewModel @Inject internal constructor(
+class UserSettingsViewModel @Inject internal constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 

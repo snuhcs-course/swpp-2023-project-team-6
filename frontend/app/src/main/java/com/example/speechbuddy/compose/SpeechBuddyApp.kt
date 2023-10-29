@@ -23,16 +23,18 @@ import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.resetpassword.EmailVerificationScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
-import com.example.speechbuddy.compose.settings.AccountScreen
 import com.example.speechbuddy.compose.settings.BackupScreen
 import com.example.speechbuddy.compose.settings.DeveloperInfoScreen
 import com.example.speechbuddy.compose.settings.DisplayScreen
 import com.example.speechbuddy.compose.settings.ManageSymbolScreen
 import com.example.speechbuddy.compose.settings.SettingsScreen
+import com.example.speechbuddy.compose.settings.UserSettingsScreen
 import com.example.speechbuddy.compose.settings.VersionInfoScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.tts.TextToSpeechScreen
+import com.example.speechbuddy.repository.AuthRepository
+import com.example.speechbuddy.viewmodel.UserSettingsViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -148,7 +150,7 @@ fun SpeechBuddyNavHost(
         }
         composable("settings") {
             SettingsScreen(
-                onAccountClick = { navController.navigate("settings_account") },
+                onUserSettingsClick = { navController.navigate("settings_usersettings") },
                 onBackupClick = { navController.navigate("settings_backup") },
                 onDisplayClick = { navController.navigate("settings_display") },
                 onManageSymbolClick = { navController.navigate("settings_managesymbol") },
@@ -156,54 +158,39 @@ fun SpeechBuddyNavHost(
                 onDeveloperInfoClick = { navController.navigate("settings_developerinfo") }
             )
         }
-        composable("settings_account") {
-            var showLogoutDialog by remember { mutableStateOf(false) }
-            var showWithdrawalDialog by remember { mutableStateOf(false) }
-            var showSecondWithdrawalDialog by remember { mutableStateOf(false) }
-            AccountScreen(
-                showLogoutDialog = showLogoutDialog,
-                onShowLogoutDialog = { showLogoutDialog = true },
-                onHideLogoutDialog = { showLogoutDialog = false },
-                showWithdrawalDialog = showWithdrawalDialog,
-                onShowWithdrawalDialog = { showWithdrawalDialog = true },
-                onHideWithdrawalDialog = { showWithdrawalDialog = false },
-                showSecondWithdrawalDialog = showSecondWithdrawalDialog,
-                onShowSecondWithdrawalDialog = { showSecondWithdrawalDialog = true },
-                onHideSecondWithdrawalDialog = { showSecondWithdrawalDialog = false },
+        composable("settings_usersettings") {
+            UserSettingsScreen(
                 onBackClick = { navController.navigate("settings") },
-                email = "",
-                nickname = ""
+                email = "example@example.com",
+                nickname = "example",
             )
         }
         composable("settings_backup") {
             BackupScreen(
                 modifier = Modifier,
                 onBackClick = { navController.navigate("settings") },
-                onBackupClick = {},
-                lastBackupDate = "blabla",
-                automaticBackupChecked = false,
-                onAutomaticBackupCheckedChange = {}
+                lastBackupDate = "2023.10.29.",
             )
         }
         composable("settings_display") {
-            var darkModeChecked by remember { mutableStateOf(false) }
             DisplayScreen(
                 modifier = Modifier,
                 onBackClick = { navController.navigate("settings") },
-                darkModeChecked = darkModeChecked,
-                onDarkModeCheckedChange = { darkModeChecked = true }
             )
         }
+
         composable("settings_managesymbol") {
             ManageSymbolScreen()
         }
+
         composable("settings_versioninfo") {
             VersionInfoScreen(
                 modifier = Modifier,
                 onBackClick = { navController.navigate("settings") },
-                versionText = "blabla"
+                versionText = "1.0.0"
             )
         }
+
         composable("settings_developerinfo") {
             DeveloperInfoScreen(
                 modifier = Modifier,

@@ -8,7 +8,6 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
 fun SettingsTextUi(
-    modifier: Modifier,
     text: String
 ) {
     Text(
@@ -21,6 +20,6 @@ fun SettingsTextUi(
 @Composable
 fun SettingsTextUiPreview(){
     SpeechBuddyTheme{
-        SettingsTextUi(modifier = Modifier, text = "content")
+        SettingsTextUi(text = "content")
     }
 }

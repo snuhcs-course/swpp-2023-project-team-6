@@ -1,6 +1,5 @@
 package com.example.speechbuddy.compose.settings
 
-import android.widget.CheckBox
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -13,14 +12,13 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
 fun AlertDialogUi(
-    modifier: Modifier,
     onConfirmButtonClick: () -> Unit,
     onDismissButtonClick: () -> Unit,
     title: String,
     content: String,
     confirmButtonText: String,
     dismissButtonText: String
-){
+) {
     AlertDialog(
         title = {
             Text(text = title)
@@ -59,10 +57,9 @@ fun AlertDialogUi(
 
 @Preview
 @Composable
-fun AlertDialogUiPreview(){
+fun AlertDialogUiPreview() {
     SpeechBuddyTheme {
         AlertDialogUi(
-            modifier = Modifier,
             onConfirmButtonClick = { /*TODO*/ },
             onDismissButtonClick = { /*TODO*/ },
             title = "title",

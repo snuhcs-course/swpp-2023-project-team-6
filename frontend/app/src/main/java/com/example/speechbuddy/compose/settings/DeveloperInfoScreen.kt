@@ -28,37 +28,38 @@ fun DeveloperInfoScreen(
     ) {
         Column(
             modifier = modifier.padding(vertical = 30.dp, horizontal = 15.dp)
-        ){
+        ) {
             BackButtonUi(onBackClick = onBackClick)
         }
+
         Column(
             modifier = Modifier
                 .padding(horizontal = 30.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-        ){
-            SettingsTitleUi(
-                modifier = modifier,
-                title = stringResource(id = R.string.settings_developerinfo_button)
-            )
+        ) {
+            SettingsTitleUi(title = stringResource(id = R.string.settings_developerinfo_button))
+
             Spacer(modifier = modifier.height(20.dp))
+
             Text(
                 modifier = modifier,
                 text = "서울대학교 소개원실 team6",
                 style = MaterialTheme.typography.bodyLarge
             )
+
             Spacer(modifier = modifier.height(20.dp))
-            SettingsTextUi(modifier = modifier, text = "김연정")
+            SettingsTextUi(text = "김연정")
             Spacer(modifier = modifier.height(20.dp))
-            SettingsTextUi(modifier = modifier, text = "류명현")
+            SettingsTextUi(text = "류명현")
             Spacer(modifier = modifier.height(20.dp))
-            SettingsTextUi(modifier = modifier, text = "오준형")
+            SettingsTextUi(text = "오준형")
             Spacer(modifier = modifier.height(20.dp))
-            SettingsTextUi(modifier = modifier, text = "이민영")
+            SettingsTextUi(text = "이민영")
             Spacer(modifier = modifier.height(20.dp))
-            SettingsTextUi(modifier = modifier, text = "이석찬")
+            SettingsTextUi(text = "이석찬")
             Spacer(modifier = modifier.height(20.dp))
-            SettingsTextUi(modifier = modifier, text = "주승민")
+            SettingsTextUi(text = "주승민")
         }
     }
 }

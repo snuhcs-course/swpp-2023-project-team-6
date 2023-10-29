@@ -11,7 +11,6 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
 fun SettingsTitleUi(
-    modifier: Modifier,
     title: String
 ) {
     Text(
@@ -25,6 +24,6 @@ fun SettingsTitleUi(
 @Composable
 fun SettingsTitleUiPreview(){
     SpeechBuddyTheme{
-        SettingsTitleUi(modifier = Modifier, title = "title")
+        SettingsTitleUi(title = "title")
     }
 }

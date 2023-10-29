@@ -17,68 +17,70 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodel.BackupViewModel
 
 @Composable
 fun BackupScreen(
     modifier: Modifier,
     onBackClick: () -> Unit,
-    onBackupClick: () -> Unit,
     lastBackupDate: String,
-    automaticBackupChecked: Boolean,
-    onAutomaticBackupCheckedChange: (Boolean) -> Unit
+    viewModel: BackupViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = modifier.padding(vertical = 30.dp, horizontal = 15.dp)
-        ){
+        ) {
             BackButtonUi(onBackClick = onBackClick)
         }
+
         Column(
             modifier = Modifier
                 .padding(horizontal = 30.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
         ) {
-            SettingsTitleUi(
-                modifier = modifier,
-                title = stringResource(id = R.string.settings_backup_button)
-            )
+            SettingsTitleUi(title = stringResource(id = R.string.settings_backup_button))
+
             Spacer(modifier = modifier.height(20.dp))
+
             Row(
                 modifier = modifier.fillMaxWidth()
             ) {
-                SettingsTextUi(
-                    modifier = modifier,
-                    text = stringResource(id = R.string.last_backup_date)
-                )
+                SettingsTextUi(text = stringResource(id = R.string.last_backup_date))
+
                 Spacer(modifier.weight(1f))
-                SettingsTextUi(modifier = modifier, text = lastBackupDate)
+
+                SettingsTextUi(text = lastBackupDate)
             }
+
             Spacer(modifier = modifier.height(10.dp))
+
             Row(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                SettingsTextUi(
-                    modifier = modifier,
-                    text = stringResource(id = R.string.automatic_backup_enable)
-                )
+                SettingsTextUi(text = stringResource(id = R.string.automatic_backup_enable))
+
                 Spacer(modifier.weight(1f))
+
                 Switch(
-                    checked = automaticBackupChecked,
-                    onCheckedChange = onAutomaticBackupCheckedChange
+                    checked = viewModel.automaticBackupChecked,
+                    onCheckedChange = { viewModel.onAutomaticBackupCheckedChange() }
                 )
             }
+
             Spacer(modifier = modifier.height(165.dp))
+
             ButtonUi(
                 modifier = modifier,
                 text = stringResource(id = R.string.backup_now),
-                onClick = onBackupClick
+                onClick = { viewModel.backup() }
             )
         }
     }
@@ -91,9 +93,7 @@ fun BackupScreenPreview() {
         BackupScreen(
             modifier = Modifier,
             onBackClick = {},
-            onBackupClick = {},
-            lastBackupDate = "2023.10.27",
-            automaticBackupChecked = true,
-            onAutomaticBackupCheckedChange = {})
+            lastBackupDate = "2023.10.27"
+        )
     }
 }

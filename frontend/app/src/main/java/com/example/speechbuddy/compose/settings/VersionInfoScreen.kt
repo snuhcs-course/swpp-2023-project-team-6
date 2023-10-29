@@ -29,40 +29,36 @@ fun VersionInfoScreen(
     ) {
         Column(
             modifier = modifier.padding(vertical = 30.dp, horizontal = 15.dp)
-        ){
+        ) {
             BackButtonUi(onBackClick = onBackClick)
         }
+
         Column(
             modifier = Modifier
                 .padding(horizontal = 30.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-        ){
-            SettingsTitleUi(
-                modifier = modifier,
-                title = stringResource(id = R.string.settings_versioninfo_button)
-            )
+        ) {
+            SettingsTitleUi(title = stringResource(id = R.string.settings_versioninfo_button))
+
             Spacer(modifier = modifier.height(20.dp))
+
             Row(
                 modifier = modifier.fillMaxWidth()
             ) {
-                SettingsTextUi(modifier = modifier, text = stringResource(id = R.string.version))
+                SettingsTextUi(text = stringResource(id = R.string.version))
                 Spacer(modifier.weight(1f))
-                SettingsTextUi(modifier = modifier, text = versionText)
+                SettingsTextUi(text = versionText)
             }
+
             Spacer(modifier = modifier.height(20.dp))
+
             Row(
                 modifier = modifier.fillMaxWidth(),
             ) {
-                SettingsTextUi(
-                    modifier = modifier,
-                    text = stringResource(id = R.string.email_field)
-                )
+                SettingsTextUi(text = stringResource(id = R.string.email_field))
                 Spacer(modifier.weight(1f))
-                SettingsTextUi(
-                    modifier = modifier,
-                    text = stringResource(id = R.string.developer_email)
-                )
+                SettingsTextUi(text = stringResource(id = R.string.developer_email))
             }
         }
     }
