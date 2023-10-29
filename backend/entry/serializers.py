@@ -10,11 +10,17 @@ class FavoriteBackupSerializer(serializers.Serializer):
 
     def validate(self, data):
         id = data.get('symbol_id')
-        # Symbol table에 저장된 마지막 symbol의 id
-        last_symbol_id = Symbol.objects.latest('id').id
+        user = self.context['user']
 
-        if id not in list(range(1, last_symbol_id + 1)):
+        all_symbols = list(Symbol.objects.values_list('id', flat=True))
+        if id not in all_symbols:
             raise ValidationError({"id": ["Invalid symbol (no such symbol)"]})
+
+        # Default symbol이 아니라면
+        if id > 500:
+            symbol = Symbol.objects.get(id=id)
+            if symbol.created_by != user:
+                raise ValidationError({"not_mine": ["the requested symbol is created by another user"]})
 
         return data
 
@@ -29,10 +35,10 @@ class FavoriteBackupSerializer(serializers.Serializer):
 
 
 class MySymbolBackupSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     text = serializers.CharField(required=True)
     category = serializers.IntegerField(required=True)
     image = serializers.ImageField(required=True)
-    is_valid = serializers.BooleanField(read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
 
     def validate(self, data):
@@ -58,3 +64,25 @@ class MySymbolBackupSerializer(serializers.Serializer):
         symbol = Symbol.objects.create(text=text, category=category, image=image, created_by=user)
 
         return symbol
+
+
+class MySymbolEnableSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+
+    def validate(self, data):
+        id = data.get('id')
+        user = self.context['user']
+
+        all_symbols = list(Symbol.objects.values_list('id', flat=True))
+        if id not in all_symbols:
+            raise ValidationError({"id": ["Invalid symbol (no such symbol)"]})
+
+        if id <= 500:
+            raise ValidationError({"id": ["Default symbol"]})
+
+        # Default symbol이 아닌 경우
+        symbol = Symbol.objects.get(id=id)
+        if symbol.created_by != user:
+            raise ValidationError({"not_mine": ["the requested symbol is created by another user"]})
+
+        return data

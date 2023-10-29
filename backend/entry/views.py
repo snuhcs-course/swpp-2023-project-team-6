@@ -1,11 +1,13 @@
+import boto3
+import botocore
 from rest_framework import permissions, status
 from rest_framework.response import Response
-from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 
+from config import settings
 from entry.models import FavoriteSymbol, Symbol
-from entry.serializers import FavoriteBackupSerializer, MySymbolBackupSerializer
+from entry.serializers import FavoriteBackupSerializer, MySymbolBackupSerializer, MySymbolEnableSerializer
 
 
 class FavoriteBackupView(APIView):
@@ -22,21 +24,21 @@ class FavoriteBackupView(APIView):
 
         # Delete favorite-symbol if user undid favorite-symbol registration
         # Load all the favorite symbols (id values) of the user
-        # symbol_ids ultimately contains symbols to delete
+        # symbol_to_delete ultimately contains symbols to delete
         favorite_symbols = FavoriteSymbol.objects.filter(user=user).values('symbol_id')
-        symbol_ids = [item['symbol_id'] for item in favorite_symbols]
+        symbol_to_delete = [item['symbol_id'] for item in favorite_symbols]
 
-        # Remove symbols that user tries to backup from the symbol_ids list
+        # Remove symbols that user tries to backup from the symbol_to_delete list
         try:
             for item in serializer.validated_data:
-                symbol_ids.remove(item.get('symbol_id'))
+                symbol_to_delete.remove(item.get('symbol_id'))
         except ValueError:
             pass
 
-        # Now, symbol_ids contains the symbol ids to delete
-        for id in symbol_ids:
-            symbol_to_delete = Symbol.objects.get(id=id)
-            FavoriteSymbol.objects.get(user=user, symbol=symbol_to_delete).delete()
+        # Now, symbol_to_delete contains the symbol ids to delete
+        for id in symbol_to_delete:
+            symbol = Symbol.objects.get(id=id)
+            FavoriteSymbol.objects.get(user=user, symbol=symbol).delete()
 
         return Response(status=status.HTTP_200_OK)
 
@@ -73,6 +75,8 @@ class MySymbolBackupView(APIView):
 
 # Get information about user-created-symbol
 class MySymbolRetrieveView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def get(self, request, pk=None):
         user = request.user
 
@@ -91,4 +95,52 @@ class MySymbolRetrieveView(APIView):
 
         return Response(response_data, status=status.HTTP_200_OK)
 
-# Backup whether
+
+# Enable symbols(backup process completes when the symbol is enabled)
+class MySymbolEnableView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        user = request.user
+        symbol_ids = request.query_params.getlist('id')
+        data = [{'id': int(id)} for id in symbol_ids]
+
+        serializer = MySymbolEnableSerializer(data=data, context={'user': user}, many=True)
+        serializer.is_valid(raise_exception=True)
+
+        ### After all validations are done
+        # (Refer to FavoriteBackupView!)
+        # Load all the mysymbols (id values) of the user
+        my_symbols = Symbol.objects.filter(created_by=user).values('id')
+        symbol_to_delete = [item['id'] for item in my_symbols]
+
+        # Enabling process
+        for item in serializer.validated_data:
+            id = item['id']
+            symbol = Symbol.objects.get(id=id)
+            if not symbol.is_valid:
+                symbol.is_valid = True
+                symbol.save()
+            symbol_to_delete.remove(id)
+
+        # Deleting process
+        for id in symbol_to_delete:
+            symbol = Symbol.objects.get(id=id)
+
+            # delete image in s3
+            s3 = boto3.client(
+                's3',
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            )
+            key = "media/" + str(symbol.image)
+            bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+
+            try:
+                s3.delete_object(Bucket=bucket_name, Key=key)
+            except Exception as e:
+                print(f"Error: {e}")
+
+            symbol.delete()
+
+        return Response(status=status.HTTP_200_OK)

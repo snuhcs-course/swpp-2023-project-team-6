@@ -7,5 +7,6 @@ urlpatterns = [
     path('backup/', views.MySymbolBackupView.as_view(), name='backup my symbol'),
     path('', views.MySymbolRetrieveView.as_view(), name='get all of my symbols'),
     path('<int:pk>/', views.MySymbolRetrieveView.as_view(), name='get my specific symbol'),
-    path('favorite/backup/', views.FavoriteBackupView.as_view(), name='backup favorite symbol')
+    path('favorite/backup/', views.FavoriteBackupView.as_view(), name='backup favorite symbol'),
+    path('enable/', views.MySymbolEnableView.as_view(), name='enable my symbol'),
 ]
