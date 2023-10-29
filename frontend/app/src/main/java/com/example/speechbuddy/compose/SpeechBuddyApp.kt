@@ -25,14 +25,14 @@ fun SpeechBuddyNavHost(
     navController: NavHostController
 ) {
     // val activity = (LocalContext.current as Activity)
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "landing") {
         composable("landing") {
             LandingScreen(
+                onGuestClick = {
+                    navController.navigate("home")
+                },
                 onLoginClick = {
                     navController.navigate("login")
-                },
-                onGuestClick = {
-                    navController.navigate("text_to_speech")
                 }
             )
         }
@@ -74,7 +74,6 @@ fun SpeechBuddyNavHost(
                     navController.navigateUp()
                 },
                 onNextClick = {}
-
             )
         }
         composable("home") {

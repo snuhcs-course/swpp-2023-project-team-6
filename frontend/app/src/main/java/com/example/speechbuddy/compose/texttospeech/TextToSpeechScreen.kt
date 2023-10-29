@@ -1,6 +1,5 @@
 package com.example.speechbuddy.compose.texttospeech
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,7 +37,6 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.ButtonStatusType
 import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
