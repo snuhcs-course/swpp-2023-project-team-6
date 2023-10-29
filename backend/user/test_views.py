@@ -12,16 +12,19 @@ class UserTest(TestCase):
             password='test_password',
             nickname='test_nickname'
         )
-        self.access_token = self.login_and_get_access_token()
+        self.tokens = self.login_and_get_tokens()
+        self.access_token = self.tokens.get('access')
+        self.refresh_token = self.tokens.get('refresh')
 
-    def login_and_get_access_token(self):
+    def login_and_get_tokens(self):
         data = {
             'email': 'test_email@gmail.com',
             'password': 'test_password',
         }
         response = self.client.post('/user/login/', data)
         if response.status_code == status.HTTP_200_OK:
-            return response.json()['access']
+            tokens = response.json()
+            return tokens
         return None
 
     def test_signup_success(self):
@@ -50,3 +53,13 @@ class UserTest(TestCase):
         data = response.json()['user']
         self.assertEqual(self.user.email, data['email'])
         self.assertEqual(self.user.nickname, data['nickname'])
+
+    def test_logout_success(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        data = {
+            'refresh': self.refresh_token
+        }
+        response = self.client.post('/user/logout/', data, **headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
