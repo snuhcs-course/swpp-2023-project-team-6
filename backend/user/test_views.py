@@ -63,3 +63,10 @@ class UserTest(TestCase):
         }
         response = self.client.post('/user/logout/', data, **headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_refresh_success(self):
+        data = {
+            'refresh': self.refresh_token
+        }
+        response = self.client.post('/user/refresh/', data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
