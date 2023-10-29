@@ -129,6 +129,23 @@ class UserTest(TestCase):
         response = self.client.post('/user/validateemail/signup/accept/', verify_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_email_verification_pw_success(self):
+        data = {
+            'email': 'test_email@gmail.com'
+        }
+        # Sending
+        response = self.client.post('/user/validateemail/pw/send/', data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Accepting
+        email_veri = EmailVerification.objects.get(email=data['email'])
+        verify_data = {
+            'email': 'test_email@gmail.com',
+            'code': email_veri.code
+        }
+        response = self.client.post('/user/validateemail/pw/accept/', verify_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 
 
