@@ -1,3 +1,4 @@
+import boto3
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from rest_framework import status, permissions
@@ -6,7 +7,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from config import settings
 from config.utils import AccessToken
+from entry.models import Symbol
 from .models import EmailVerification
 
 from .serializers import UserSignUpSerializer, UserLoginSerializer, UserLogoutSerializer, EmailCheckSerializer, \
@@ -173,6 +176,23 @@ class UserWithdrawView(APIView):
     permission_classes = (permissions.IsAuthenticated, )
 
     def post(self, request):
+        user = request.user
+
+        # delete user's symbol images in s3
+        symbols = Symbol.objects.filter(created_by=user)
+        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        )
+        for symbol in symbols:
+            key = "media/" + str(symbol.image)
+            try:
+                s3.delete_object(Bucket=bucket_name, Key=key)
+            except Exception as e:
+                print(f"Error: {e}")
+
         # Don't know why, but if we attempt to delete the user after blacklisting the token,
         # the blacklisting doesn't work properly as expected
         request.user.delete()
