@@ -110,11 +110,7 @@ fun SelectedSymbolUiPreview() {
         id = 0,
         text = "119에 전화해주세요",
         imageResId = R.drawable.symbol_0,
-        category = Category(
-            id = 0,
-            text = "인사사회어",
-            imageResId = R.drawable.category_0
-        ),
+        categoryId = 0,
         isFavorite = true,
         isMine = false
     )

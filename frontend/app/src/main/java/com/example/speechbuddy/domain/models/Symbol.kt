@@ -8,7 +8,7 @@ data class Symbol(
     val id: Int,
     val text: String,
     val imageResId: Int,
-    val category: Category,
+    val categoryId: Int,
     val isFavorite: Boolean,
     val isMine: Boolean
 ): Parcelable
