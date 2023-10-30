@@ -15,29 +15,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.speechbuddy.R
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.speechbuddy.compose.utils.CategoryUi
 import com.example.speechbuddy.compose.utils.SymbolUi
+import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
-import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SymbolSelectionScreen(
     modifier: Modifier = Modifier,
+    viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
-    /* TODO: ViewModel 연결 후 삭제 */
-    val previewSymbol = Symbol(
-        id = 0,
-        text = "119에 전화해주세요",
-        imageResId = R.drawable.symbol_0,
-        categoryId = 0,
-        isFavorite = true,
-        isMine = false
-    )
-    val selectedSymbols = List(size = 10, init = { previewSymbol })
-
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -46,9 +37,13 @@ fun SymbolSelectionScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             /* TODO: ViewModel 연결 */
-            SymbolSearchTextField(value = "검색어", onValueChange = {})
+            SymbolSearchTextField(
+                value = viewModel.queryInput,
+                onValueChange = { viewModel.setQuery(it) })
 
-            SelectedSymbolsBox(selectedSymbols = selectedSymbols, onClearAll = {})
+            SelectedSymbolsBox(
+                selectedSymbols = viewModel.selectedSymbols,
+                onClearAll = { viewModel.clearAll() })
 
             Box(
                 modifier = Modifier
@@ -64,19 +59,20 @@ fun SymbolSelectionScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(selectedSymbols) { symbol ->
-                        SymbolUi(symbol = symbol, onSelect = {}, onFavoriteChange = {})
+                    items(viewModel.entries) { entry ->
+                        when (entry) {
+                            is Symbol -> SymbolUi(
+                                symbol = entry,
+                                onSelect = { viewModel.selectSymbol(entry) },
+                                onFavoriteChange = {})
+
+                            is Category -> CategoryUi(
+                                category = entry,
+                                onSelect = { viewModel.selectCategory(entry) })
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun SymbolSelectionScreenPreview() {
-    SpeechBuddyTheme {
-        SymbolSelectionScreen()
     }
 }

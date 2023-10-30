@@ -48,12 +48,17 @@ fun SelectedSymbolsBox(
             ),
         contentAlignment = Alignment.CenterEnd
     ) {
-        LazyRow(
-            contentPadding = PaddingValues(10.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.CenterStart
         ) {
-            items(selectedSymbols) { symbol ->
-                SelectedSymbolUi(symbol = symbol, onClear = {})
+            LazyRow(
+                contentPadding = PaddingValues(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(selectedSymbols) { symbol ->
+                    SelectedSymbolUi(symbol = symbol, onClear = {})
+                }
             }
         }
 
