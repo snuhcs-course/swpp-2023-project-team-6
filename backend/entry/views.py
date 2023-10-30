@@ -15,8 +15,13 @@ class FavoriteBackupView(APIView):
 
     def post(self, request):
         user = request.user
-        symbol_ids = request.query_params.getlist('id')
-        data = [{'id': int(id)} for id in symbol_ids]
+
+        symbol_ids = request.query_params.get('id')
+        if symbol_ids is None:
+            data = []
+        else:
+            unique_ids = set(symbol_ids.split(','))  # to handle duplicate values
+            data = [{'id': int(x)} for x in unique_ids]
 
         serializer = FavoriteBackupSerializer(data=data, context={'user': user}, many=True)
         serializer.is_valid(raise_exception=True)
@@ -106,8 +111,13 @@ class MySymbolEnableView(APIView):
 
     def post(self, request):
         user = request.user
-        symbol_ids = request.query_params.getlist('id')
-        data = [{'id': int(id)} for id in symbol_ids]
+
+        symbol_ids = request.query_params.get('id')
+        if symbol_ids is None:
+            data = []
+        else:
+            unique_ids = set(symbol_ids.split(','))
+            data = [{'id': int(x)} for x in unique_ids]
 
         serializer = MySymbolEnableSerializer(data=data, context={'user': user}, many=True)
         serializer.is_valid(raise_exception=True)
