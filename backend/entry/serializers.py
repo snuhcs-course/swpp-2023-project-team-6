@@ -49,7 +49,7 @@ class MySymbolBackupSerializer(serializers.Serializer):
         if len(text) > 20:
             raise ValidationError({"long_text": ["word text is too long"]})
 
-        if not (0 <= category <= 23):
+        if not (1 <= category <= 24):
             raise ValidationError({"category": ["No such category"]})
 
         return data
