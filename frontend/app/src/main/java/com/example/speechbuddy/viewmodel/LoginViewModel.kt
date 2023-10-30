@@ -81,7 +81,7 @@ class LoginViewModel @Inject internal constructor(
     }
 
     fun login() {
-        if (!isValidEmail(emailInput) && emailInput.isEmpty()) {
+        if (!isValidEmail(emailInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidEmail = false,

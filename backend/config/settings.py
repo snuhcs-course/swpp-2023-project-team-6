@@ -149,17 +149,17 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Local DB settings
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'sqlite3_for_dev'),
-#     }
-# }
-
-# Remote DB settings
-# Add your own confidential.py
-if not ("GITHUB_ACTIONS" in os.environ):
+if "GITHUB_ACTIONS" in os.environ:
+    # Local DB settings
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'sqlite3_for_dev'),
+        }
+    }
+else:
+    # Remote DB settings
+    # Add your own confidential.py
     import confidential
 
     DATABASES = confidential.DATABASES
