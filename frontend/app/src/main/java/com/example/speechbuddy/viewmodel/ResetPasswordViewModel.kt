@@ -29,6 +29,7 @@ class ResetPasswordViewModel @Inject internal constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ResetPasswordUiState())
     val uiState: StateFlow<ResetPasswordUiState> = _uiState.asStateFlow()
+    
     var passwordInput by mutableStateOf("")
         private set
     var passwordCheckInput by mutableStateOf("")
