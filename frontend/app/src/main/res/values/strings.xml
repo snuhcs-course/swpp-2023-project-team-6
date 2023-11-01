@@ -28,7 +28,7 @@
     <string name="verification_code_sent">인증번호를 발송하였습니다</string>
     <string name="validation_code_field">인증번호</string>
     <string name="reset_password_next">다음</string>
-    <string name="reset_password_subtitle2">비밀번호를 잊으셨다면 새로운 비밀번호로 바꿔주세요\n새 비밀번호의 길이는 8자 이상이어야 합니다</string>
+    <string name="reset_password_subtitle2">새 비밀번호의 길이는 8자 이상이어야 합니다</string>
     <string name="new_password_field">새 비밀번호</string>
     <string name="new_password_check_field">새 비밀번호 확인</string>
     <string name="false_new_password">8자 이상 입력해주세요</string>
