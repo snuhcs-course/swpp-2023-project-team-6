@@ -104,6 +104,8 @@ class ResetPasswordViewModel @Inject internal constructor(
                 ).collect { result ->
                     Log.d("test", result.toString())
                     when (result.status) {
+                        Status.LOADING -> {}
+                    
                         Status.SUCCESS -> {
                             navController.navigate("login")
                         }
