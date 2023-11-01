@@ -30,7 +30,6 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
@@ -58,7 +57,7 @@ fun ResetPasswordScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleUi(
-                    title = stringResource(id = R.string.reset_passoword_title),
+                    title = stringResource(id = R.string.reset_password_title),
                     description = stringResource(id = R.string.reset_password_subtitle2)
                 )
 

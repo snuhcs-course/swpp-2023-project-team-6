@@ -68,15 +68,15 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    implementation("androidx.compose.material:material:1.4.2")
-
-
     // Lifecycle
     val lifecycleVersion = "2.6.2"
     implementation("androidx.lifecycle:lifecycle-common:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+
+    // LiveData
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     // Coroutines
     val coroutinesVersion = "1.7.1"

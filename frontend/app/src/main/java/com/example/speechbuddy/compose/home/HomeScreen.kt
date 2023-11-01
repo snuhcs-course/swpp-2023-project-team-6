@@ -1,173 +1,145 @@
 package com.example.speechbuddy.compose.home
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.speechbuddy.compose.BottomNavItem
+import androidx.navigation.compose.rememberNavController
+import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.settings.SettingsScreen
+import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
+import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
+import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
+import com.example.speechbuddy.ui.SpeechBuddyTheme
+
+data class BottomNavItem(
+    val route: String,
+    val nameResId: Int,
+    val iconResId: Int
+)
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+
+) {
+    val navController = rememberNavController()
+    val navItems = listOf(
+        BottomNavItem(
+            "symbol_selection",
+            R.string.symbol_selection,
+            R.drawable.outline_touch_app_24
+        ),
+        BottomNavItem(
+            "text_to_speech",
+            R.string.text_to_speech,
+            R.drawable.outline_volume_up_24
+        ),
+        BottomNavItem(
+            "symbol_creation",
+            R.string.symbol_creation,
+            R.drawable.outline_add_a_photo_24
+        ),
+        BottomNavItem(
+            "settings",
+            R.string.settings,
+            R.drawable.outline_settings_24
+        )
+    )
+
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(
+                items = navItems,
+                navController = navController,
+                modifier = Modifier
+                    .height(100.dp),
+                onItemClick = {
+                    navController.navigate(it.route)
+                }
+            )
+        }
+    ) {
+        HomeScreenNavHost(
+            navController = navController
+        )
+    }
+}
 
 @Composable
-fun BottomNavigationBar(
+private fun BottomNavigationBar(
     items: List<BottomNavItem>,
     navController: NavController,
     modifier: Modifier = Modifier,
     onItemClick: (BottomNavItem) -> Unit
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
-    BottomNavigation(
+
+    NavigationBar(
         modifier = modifier,
-        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-        elevation = 10.dp
+        containerColor = MaterialTheme.colorScheme.secondaryContainer
     ) {
         items.forEach { item ->
             val selected = item.route == backStackEntry.value?.destination?.route
-            BottomNavigationItem(
+            NavigationBarItem(
                 selected = selected,
                 onClick = { onItemClick(item) },
-                selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                unselectedContentColor = MaterialTheme.colorScheme.secondary,
                 icon = {
                     Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = ""
+                        painter = painterResource(id = item.iconResId),
+                        contentDescription = stringResource(id = item.nameResId)
                     )
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.outline
+                )
             )
         }
     }
 }
 
-//@Composable
-//fun TtsScreen() {
-//    Box(
-//        modifier = Modifier.fillMaxSize(),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Text(text = "TTS")
-//    }
-//}
+@Composable
+private fun HomeScreenNavHost(
+    navController: NavHostController
+) {
+    NavHost(navController = navController, startDestination = "symbol_selection") {
+        composable("symbol_selection") {
+            SymbolSelectionScreen()
+        }
+        composable("text_to_speech") {
+            TextToSpeechScreen()
+        }
+        composable("symbol_creation") {
+            SymbolCreationScreen()
+        }
+        composable("settings") {
+            SettingsScreen()
+        }
+    }
+}
 
-
-//@Composable
-//fun SettingsScreen() {
-//    Box(
-//        modifier = Modifier.fillMaxSize(),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Text(text = "Settings")
-//    }
-//}
-
-
-//enum class SpeechBuddyPage(
-//    @StringRes val titleResId: Int,
-//    @DrawableRes val drawableResId: Int
-//) {
-//    TALK_WITH_SYMBOL(R.string.menu_talk_with_symbol, R.drawable.outline_touch_app_24),
-//    TTS(R.string.menu_tts, R.drawable.outline_volume_up_24),
-//    ADD_SYMBOL(R.string.menu_add_symbol, R.drawable.outline_add_a_photo_24),
-//    SETTINGS(R.string.menu_settings, R.drawable.outline_settings_24)
-//}
-//
-//@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-//@Composable
-//fun HomeScreen(
-//    modifier: Modifier = Modifier,
-//    onClick: () -> Unit
-//) {
-//    val pagerState = rememberPagerState(
-//        initialPage = 0,
-//        initialPageOffsetFraction = 0f,
-//        pageCount = { 4 }
-//    )
-//    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-//
-//    Scaffold(
-//        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-////        topBar = {
-////            HomeTopAppBar(
-////                pagerState = pagerState,
-////                onFilterClick = { viewModel.updateData() },
-////                scrollBehavior = scrollBehavior
-////            )
-////        }
-//    ) {
-//        HomePagerScreen(
-//            pagerState = pagerState,
-//            modifier = Modifier.padding(it)
-//        )
-//    }
-//}
-//
-//
-//@OptIn(ExperimentalFoundationApi::class)
-//@Composable
-//fun HomePagerScreen(
-//    pagerState: PagerState,
-//    modifier: Modifier = Modifier,
-//    pages: Array<SpeechBuddyPage> = SpeechBuddyPage.values()
-//) {
-//    Column(modifier) {
-//        HorizontalPager(
-//            modifier = Modifier.background(MaterialTheme.colorScheme.background),
-//            state = pagerState,
-//            verticalAlignment = Alignment.Top
-//        ) { index ->
-//            when (pages[index]) {
-//                SpeechBuddyPage.TALK_WITH_SYMBOL -> {
-//                    TalkWithSymbolScreen()
-//                }
-//
-//                SpeechBuddyPage.TTS -> {
-//                    TtsScreen()
-//                }
-//
-//                SpeechBuddyPage.ADD_SYMBOL -> {
-//                    AddSymbolScreen()
-//                }
-//
-//                SpeechBuddyPage.SETTINGS -> {
-//                    SettingsScreen()
-//                }
-//            }
-//        }
-//        //TabRow: menu navigation at the bottom
-//        TabRow(
-//            selectedTabIndex = pagerState.currentPage,
-//            modifier = Modifier.defaultMinSize(minHeight = 0.dp)
-//        ) {
-//            pages.forEachIndexed { index, page ->
-//                val pageName = page.titleResId
-//                val bottomIcon = page.drawableResId
-//                Tab(
-//                    selected = pagerState.currentPage == index,
-//                    onClick = {},
-//                    icon = {
-//                        Icon(
-//                            painter = painterResource(id = bottomIcon),
-//                            contentDescription = stringResource(id = pageName),
-//                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-//                        )
-//                    },
-//                    //selectedContentColor = MaterialTheme.colorScheme.secondaryContainer,
-//                    unselectedContentColor = MaterialTheme.colorScheme.secondary
-//                )
-//            }
-//        }
-//    }
-//}
-//
-//@OptIn(ExperimentalFoundationApi::class)
-//@Preview
-//@Composable
-//private fun HomeScreenPreview() {
-//    SpeechBuddyTheme {
-//        HomeScreen (onClick = {})
-//    }
-//}
+@Preview
+@Composable
+private fun HomeScreenPreview() {
+    SpeechBuddyTheme {
+        HomeScreen()
+    }
+}

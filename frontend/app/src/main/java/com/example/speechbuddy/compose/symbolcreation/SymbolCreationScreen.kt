@@ -1,4 +1,4 @@
-package com.example.speechbuddy.compose.addsymbol
+package com.example.speechbuddy.compose.symbolcreation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddSymbolScreen(
+fun SymbolCreationScreen(
 
 ) {
     Surface(
@@ -34,8 +34,8 @@ fun AddSymbolScreen(
             modifier = Modifier
                 .padding(25.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleUi(
                 title = "상징 추가하기",
@@ -59,8 +59,8 @@ fun AddSymbolScreen(
 
 @Preview
 @Composable
-private fun AddSymbolScreenPreview() {
+private fun SymbolCreationScreenPreview() {
     SpeechBuddyTheme {
-        AddSymbolScreen()
+        SymbolCreationScreen()
     }
 }

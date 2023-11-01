@@ -1,65 +1,73 @@
 package com.example.speechbuddy.compose.settings
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.speechbuddy.R
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
 fun SettingsScreen(
-    onUserSettingsClick: () -> Unit,
-    onBackupClick: () -> Unit,
-    onDisplayClick: () -> Unit,
-    onManageSymbolClick: () -> Unit,
-    onVersionInfoClick: () -> Unit,
-    onDeveloperInfoClick: () -> Unit
+
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 30.dp, vertical = 50.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            SettingsTextButtonUi(
-                text = stringResource(id = R.string.settings_account_button),
-                onClick = onUserSettingsClick
-            )
+    val navController = rememberNavController()
+    SettingsScreenNavHost(
+        navController = navController
+    )
+}
 
-            SettingsTextButtonUi(
-                text = stringResource(id = R.string.settings_backup_button),
-                onClick = onBackupClick
+@Composable
+private fun SettingsScreenNavHost(
+    navController: NavHostController
+) {
+    NavHost(navController = navController, startDestination = "settings_main") {
+        composable("settings_main") {
+            SettingsMainScreen(
+                onUserSettingsClick = { navController.navigate("settings_usersettings") },
+                onBackupClick = { navController.navigate("settings_backup") },
+                onDisplayClick = { navController.navigate("settings_display") },
+                onManageSymbolClick = { navController.navigate("settings_managesymbol") },
+                onVersionInfoClick = { navController.navigate("settings_versioninfo") },
+                onDeveloperInfoClick = { navController.navigate("settings_developerinfo") }
             )
-
-            SettingsTextButtonUi(
-                text = stringResource(id = R.string.settings_display_button),
-                onClick = onDisplayClick
+        }
+        composable("settings_usersettings") {
+            UserSettingsScreen(
+                onBackClick = { navController.navigate("settings_main") },
+                email = "example@example.com",
+                nickname = "example",
             )
-
-            SettingsTextButtonUi(
-                text = stringResource(id = R.string.settings_manage_symbol_button),
-                onClick = onManageSymbolClick
+        }
+        composable("settings_backup") {
+            BackupScreen(
+                modifier = Modifier,
+                onBackClick = { navController.navigate("settings_main") },
+                lastBackupDate = "2023.10.29.",
             )
-
-            SettingsTextButtonUi(
-                text = stringResource(id = R.string.settings_versioninfo_button),
-                onClick = onVersionInfoClick
+        }
+        composable("settings_display") {
+            DisplayScreen(
+                modifier = Modifier,
+                onBackClick = { navController.navigate("settings_main") },
             )
-
-            SettingsTextButtonUi(
-                text = stringResource(id = R.string.settings_developerinfo_button),
-                onClick = onDeveloperInfoClick
+        }
+        composable("settings_managesymbol") {
+            ManageSymbolScreen()
+        }
+        composable("settings_versioninfo") {
+            VersionInfoScreen(
+                modifier = Modifier,
+                onBackClick = { navController.navigate("settings_main") },
+                versionText = "1.0.0"
+            )
+        }
+        composable("settings_developerinfo") {
+            DeveloperInfoScreen(
+                modifier = Modifier,
+                onBackClick = { navController.navigate("settings_main") }
             )
         }
     }
@@ -69,13 +77,6 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenPreview() {
     SpeechBuddyTheme {
-        SettingsScreen(
-            onUserSettingsClick = {},
-            onBackupClick = {},
-            onDisplayClick = {},
-            onManageSymbolClick = {},
-            onVersionInfoClick = {},
-            onDeveloperInfoClick = {}
-        )
+        SettingsScreen()
     }
 }

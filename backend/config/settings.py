@@ -26,11 +26,17 @@ AUTHENTICATION_BACKENDS = ['user.backends.EmailBackend']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-secret_file = os.path.join(BASE_DIR, 'secrets.json')  # secrets.json 파일 위치를 명시
-
-with open(secret_file) as f:
-    secrets = json.loads(f.read())
+if "GITHUB_ACTIONS" in os.environ:
+    # If running in GitHub Actions, use secrets from environment variables
+    secrets = {
+        "SECRET_KEY": os.environ.get("SECRET_KEY"),
+        "EMAIL_HOST_USER": os.environ.get("EMAIL_HOST_USER"),
+        "EMAIL_HOST_PASSWORD": os.environ.get("EMAIL_HOST_PASSWORD"),
+    }
+else:
+    secret_file = os.path.join(BASE_DIR, 'secrets.json')  # secrets.json 파일 위치를 명시
+    with open(secret_file) as f:
+        secrets = json.loads(f.read())
 
 
 def get_secret(setting, secrets=secrets):
@@ -122,9 +128,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Remote DB settings
 # Add your own confidential.py
-import confidential
+if not ("GITHUB_ACTIONS" in os.environ):
+    import confidential
+    DATABASES = confidential.DATABASES
 
-DATABASES = confidential.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
