@@ -1,6 +1,5 @@
 package com.example.speechbuddy.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,7 +15,6 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationError
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.ui.models.EmailVerificationUiState
-import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
 import com.example.speechbuddy.utils.isValidVerifyCode
@@ -31,7 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EmailVerificationViewModel @Inject internal constructor(
     private val repository: AuthRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EmailVerificationUiState())
     val uiState: StateFlow<EmailVerificationUiState> = _uiState.asStateFlow()
@@ -78,16 +76,16 @@ class EmailVerificationViewModel @Inject internal constructor(
         }
     }
 
-    fun verifySend(source:String?) {
+    fun verifySend(source: String?) {
         // What function(ultimately, API call) to use
-        val verifySendFunction  = if (source=="signup"){
+        val verifySendFunction = if (source == "signup") {
             repository::verifySendSignup
-        } else{ // source == "reset_password"
+        } else { // source == "reset_password"
             repository::verifySendPW
         }
 
         // Prior validation of email input
-        if (!isValidEmail(emailInput)){
+        if (!isValidEmail(emailInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidEmail = false,
@@ -105,8 +103,8 @@ class EmailVerificationViewModel @Inject internal constructor(
                     email = emailInput
                 )
             ).collect { result ->
-                when(result.status){
-                    Status.SUCCESS-> {
+                when (result.status) {
+                    Status.SUCCESS -> {
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isSuccessfulSend = true,
@@ -114,10 +112,11 @@ class EmailVerificationViewModel @Inject internal constructor(
                             )
                         }
                     }
-                    Status.ERROR-> {
-                        val messageId = when(result.message) {
-                            "email"-> R.string.false_email
-                            "already_taken"-> R.string.email_already_taken
+
+                    Status.ERROR -> {
+                        val messageId = when (result.message) {
+                            "email" -> R.string.false_email
+                            "already_taken" -> R.string.email_already_taken
                             "no_user" -> R.string.no_such_user
                             else -> R.string.false_email
                         }
@@ -131,6 +130,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                             )
                         }
                     }
+
                     Status.LOADING -> {
                     }
                 }
@@ -139,13 +139,13 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     fun verifyAccept(source: String?, navController: NavHostController) {
-        val verifyAcceptFunction  = if (source=="signup"){
+        val verifyAcceptFunction = if (source == "signup") {
             repository::verifyAcceptSignup
-        } else{ // source == "reset_password"
+        } else { // source == "reset_password"
             repository::verifyAcceptPW
         }
 
-        if (!isValidVerifyCode(verifyCodeInput)){
+        if (!isValidVerifyCode(verifyCodeInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidVerifyCode = false,
@@ -164,9 +164,9 @@ class EmailVerificationViewModel @Inject internal constructor(
                     code = verifyCodeInput
                 )
             ).collect { result ->
-                when(result.status){
-                    Status.SUCCESS-> {
-                        if (source=="signup"){
+                when (result.status) {
+                    Status.SUCCESS -> {
+                        if (source == "signup") {
                             navController.navigate("signup/$emailInput")
                         } else {
                             val authToken = result.data as AuthToken
@@ -174,7 +174,8 @@ class EmailVerificationViewModel @Inject internal constructor(
                             navController.navigate("reset_password")
                         }
                     }
-                    Status.ERROR-> {
+
+                    Status.ERROR -> {
                         // All error cases from this API call can
                         // boil down to 'false_validation_code'
                         _uiState.update { currentState ->
@@ -187,6 +188,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                             )
                         }
                     }
+
                     Status.LOADING -> {
                     }
                 }
