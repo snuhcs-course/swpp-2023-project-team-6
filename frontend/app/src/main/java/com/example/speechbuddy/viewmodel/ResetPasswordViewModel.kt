@@ -91,37 +91,37 @@ class ResetPasswordViewModel @Inject internal constructor(
                     )
                 )
             }
-        }
+        } else {
+            viewModelScope.launch {
+                var accessToken = MainApplication.token_prefs.getAccessToken()
+                accessToken = "Bearer $accessToken"
 
-        viewModelScope.launch {
-            var accessToken = MainApplication.token_prefs.getAccessToken()
-            accessToken = "Bearer $accessToken"
-
-            repository.resetPassword(
-                accessToken = accessToken,
-                AuthResetPasswordRequest(
-                    password = passwordInput
-                )
-            ).collect { result ->
-                Log.d("test", result.toString())
-                when (result.status) {
-                    Status.SUCCESS -> {
-                        navController.navigate("login")
-                    }
-
-                    Status.ERROR -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidPassword = false,
-                                error = ResetPasswordError(
-                                    type = ResetPasswordErrorType.PASSWORD_CHECK,
-                                    messageId = R.string.resset_password_error
-                                )
-                            )
+                repository.resetPassword(
+                    accessToken = accessToken,
+                    AuthResetPasswordRequest(
+                        password = passwordInput
+                    )
+                ).collect { result ->
+                    Log.d("test", result.toString())
+                    when (result.status) {
+                        Status.SUCCESS -> {
+                            navController.navigate("login")
                         }
-                    }
 
-                    else -> {}
+                        Status.ERROR -> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidPassword = false,
+                                    error = ResetPasswordError(
+                                        type = ResetPasswordErrorType.PASSWORD_CHECK,
+                                        messageId = R.string.resset_password_error
+                                    )
+                                )
+                            }
+                        }
+
+                        else -> {}
+                    }
                 }
             }
         }
