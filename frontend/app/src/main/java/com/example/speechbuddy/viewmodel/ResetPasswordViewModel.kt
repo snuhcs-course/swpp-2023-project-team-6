@@ -116,8 +116,6 @@ class ResetPasswordViewModel @Inject internal constructor(
                                 )
                             }
                         }
-
-                        else -> {}
                     }
                 }
                 clearInputs()
