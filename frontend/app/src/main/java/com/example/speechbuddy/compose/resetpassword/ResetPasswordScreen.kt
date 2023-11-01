@@ -78,6 +78,7 @@ fun ResetPasswordScreen(
                         }
                     },
                     isError = isError,
+                    isValid = uiState.isValidPassword,
                     isHidden = true
                 )
 
@@ -92,6 +93,7 @@ fun ResetPasswordScreen(
                         }
                     },
                     isError = isError,
+                    isValid = uiState.isValidPassword,
                     isHidden = true
                 )
 
@@ -101,8 +103,7 @@ fun ResetPasswordScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
                     onClick = { viewModel.resetPassword(navController) },
-                    isError = false,
-                    isEnabled = true,
+                    isError = isError,
                     level = ButtonLevel.PRIMARY
                 )
             }

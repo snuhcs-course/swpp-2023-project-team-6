@@ -45,9 +45,9 @@ class ResetPasswordViewModel @Inject internal constructor(
         if (_uiState.value.error?.type == ResetPasswordErrorType.PASSWORD_CHECK) validatePasswordCheck()
     }
 
-    fun clearPassword() {
-        passwordCheckInput = ""
+    private fun clearInputs() {
         passwordInput = ""
+        passwordCheckInput = ""
     }
 
     private fun validatePassword() {
@@ -123,9 +123,8 @@ class ResetPasswordViewModel @Inject internal constructor(
                         else -> {}
                     }
                 }
+                clearInputs()
             }
         }
-        clearPassword()
     }
-
 }
