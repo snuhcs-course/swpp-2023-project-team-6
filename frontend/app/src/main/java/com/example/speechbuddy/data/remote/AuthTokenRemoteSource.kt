@@ -50,12 +50,9 @@ class AuthTokenRemoteSource @Inject constructor(private val authService: AuthSer
             emit(result)
         }
 
-    suspend fun resetPasswordAuthToken(
-        accessToken: String,
-        authResetPasswordRequest: AuthResetPasswordRequest
-    ): Flow<Response<Void>> =
+    suspend fun resetPasswordAuthToken(authResetPasswordRequest: AuthResetPasswordRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.resetPassword(accessToken, authResetPasswordRequest)
+            val result = authService.resetPassword(authResetPasswordRequest)
             emit(result)
         }
 }

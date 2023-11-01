@@ -140,11 +140,9 @@ class AuthRepository @Inject constructor(
             }
     }
 
-    suspend fun resetPassword(
-        accessToken: String,
-        authResetPasswordRequest: AuthResetPasswordRequest
-    ): Flow<Resource<Void>> {
-        return authTokenRemoteSource.resetPasswordAuthToken(accessToken, authResetPasswordRequest)
+    suspend fun resetPassword(authResetPasswordRequest: AuthResetPasswordRequest): Flow<Resource<Void>> {
+        return authTokenRemoteSource.resetPasswordAuthToken(authResetPasswordRequest)
+
             .map { response ->
                 if (response.isSuccessful && response.code() == 200) {
                     Resource.success(null)

@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.speechbuddy.MainApplication
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.repository.AuthRepository
@@ -26,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResetPasswordViewModel @Inject internal constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ResetPasswordUiState())
     val uiState: StateFlow<ResetPasswordUiState> = _uiState.asStateFlow()
@@ -93,11 +92,7 @@ class ResetPasswordViewModel @Inject internal constructor(
             }
         } else {
             viewModelScope.launch {
-                var accessToken = MainApplication.token_prefs.getAccessToken()
-                accessToken = "Bearer $accessToken"
-
                 repository.resetPassword(
-                    accessToken = accessToken,
                     AuthResetPasswordRequest(
                         password = passwordInput
                     )
@@ -105,7 +100,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                     Log.d("test", result.toString())
                     when (result.status) {
                         Status.LOADING -> {}
-                    
+
                         Status.SUCCESS -> {
                             navController.navigate("login")
                         }
