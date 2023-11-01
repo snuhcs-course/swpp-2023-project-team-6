@@ -51,20 +51,21 @@ class NetworkModule {
 
 }
 
-class AuthInterceptor : Interceptor {
+class AuthInterceptor: Interceptor {
+
+    private val requestsWithoutAuth = listOf("signup", "login", "refresh", "validateemail")
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request().newBuilder()
-        val auth = MainApplication.token_prefs.getAccessToken()
-        if (auth != null && shouldAddAuthToken(chain.request())) { // If it requires Auth token
-            builder.addHeader("Authorization", "Bearer $auth")
+        val accessToken = MainApplication.token_prefs.getAccessToken()
+        if (accessToken != null && requiresAuth(chain.request())) {
+            builder.addHeader("Authorization", "Bearer $accessToken")
         }
         return chain.proceed(builder.build())
     }
 
-    private fun shouldAddAuthToken(request: Request): Boolean {
-        // List of url to exclude
-        val substrings = listOf("signup", "validateemail", "login", "refresh")
-        val containSubstrings = substrings.any { request.url.toString().contains(it) }
-        return !containSubstrings
+    private fun requiresAuth(request: Request): Boolean {
+        return !requestsWithoutAuth.any { request.url.toString().contains(it) }
     }
+
 }
