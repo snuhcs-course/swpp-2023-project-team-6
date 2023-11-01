@@ -36,7 +36,6 @@ fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     navController: NavHostController,
-
     viewModel: ResetPasswordViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -45,8 +44,7 @@ fun ResetPasswordScreen(
     val isError = isPasswordError || isPasswordCheckError
 
     Surface(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(
             topBar = {
@@ -97,7 +95,7 @@ fun ResetPasswordScreen(
                     isHidden = true
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Set password Button
                 ButtonUi(
@@ -107,7 +105,6 @@ fun ResetPasswordScreen(
                     isEnabled = true,
                     level = ButtonLevel.PRIMARY
                 )
-
             }
         }
     }
