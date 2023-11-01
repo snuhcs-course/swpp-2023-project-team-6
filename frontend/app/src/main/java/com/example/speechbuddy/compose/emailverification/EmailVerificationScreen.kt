@@ -17,18 +17,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.viewmodel.EmailVerificationViewModel
 
@@ -50,9 +47,7 @@ fun EmailVerificationScreen(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            topBar = { TopAppBarUi(onBackClick = onBackClick) }
-        ) {
+        Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -65,8 +60,7 @@ fun EmailVerificationScreen(
                         "reset_password" -> stringResource(id = R.string.reset_password_title)
                         "signup" -> stringResource(id = R.string.verify_email_field)
                         else -> stringResource(id = R.string.verify_email_field)
-                    },
-                    description = when (source) {
+                    }, description = when (source) {
                         "reset_password" -> stringResource(id = R.string.reset_password_subtitle1)
                         "signup" -> stringResource(id = R.string.verify_email_explain)
                         else -> stringResource(id = R.string.verify_email_explain_default)
@@ -76,8 +70,7 @@ fun EmailVerificationScreen(
                 Spacer(modifier = Modifier.height(15.dp))
 
                 // Email Text Field
-                TextFieldUi(
-                    value = viewModel.emailInput,
+                TextFieldUi(value = viewModel.emailInput,
                     onValueChange = { viewModel.setEmail(it) },
                     label = { Text(text = stringResource(id = R.string.email_field)) },
                     supportingButton = {
@@ -90,7 +83,7 @@ fun EmailVerificationScreen(
                     supportingText = {
                         if (isEmailError) {
                             Text(stringResource(id = uiState.error!!.messageId))
-                        } else if(uiState.isSuccessfulSend) {
+                        } else if (uiState.isSuccessfulSend) {
                             Text(stringResource(id = R.string.verification_code_sent))
                         }
                     },
