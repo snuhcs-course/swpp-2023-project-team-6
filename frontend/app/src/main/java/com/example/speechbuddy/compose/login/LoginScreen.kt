@@ -21,11 +21,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.viewmodel.LoginViewModel
 
@@ -66,7 +66,7 @@ fun LoginScreen(
                 TextFieldUi(
                     value = viewModel.emailInput,
                     onValueChange = { viewModel.setEmail(it) },
-                    label = { Text(stringResource(id = R.string.email_field)) },
+                    label = { Text(stringResource(id = R.string.email)) },
                     supportingText = {
                         if (isEmailError) {
                             Text(stringResource(id = uiState.error!!.messageId))

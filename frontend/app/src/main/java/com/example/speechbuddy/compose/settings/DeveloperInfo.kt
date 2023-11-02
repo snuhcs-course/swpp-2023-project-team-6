@@ -45,7 +45,7 @@ fun DevelopersInfo(
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
             ) {
-                SettingsTitleUi(title = stringResource(id = R.string.settings_developerinfo_button))
+                SettingsTitleUi(title = stringResource(id = R.string.developers_info))
 
                 Spacer(modifier = modifier.height(20.dp))
 

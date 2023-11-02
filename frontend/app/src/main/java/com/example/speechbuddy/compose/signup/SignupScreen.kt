@@ -20,10 +20,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.viewmodel.SignupViewModel
 
@@ -62,7 +62,7 @@ fun SignupScreen(
                 TextFieldUi(
                     value = email,
                     onValueChange = {},
-                    label = { Text(text = stringResource(id = R.string.email_field)) },
+                    label = { Text(text = stringResource(id = R.string.email)) },
                     isEnabled = false
                 )
 

@@ -31,9 +31,7 @@ private fun SettingsScreenNavHost(
         }
         composable("account") {
             AccountSettings(
-                onBackClick = navigateToMain,
-                email = "example@example.com",
-                nickname = "example",
+                onBackClick = navigateToMain
             )
         }
         composable("backup") {

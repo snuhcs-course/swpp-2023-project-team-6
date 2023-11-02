@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 enum class ButtonLevel {
-    PRIMARY, SECONDARY, INVERSESURFACE, TERTIARY
+    PRIMARY, SECONDARY, TERTIARY, QUATERNARY
 }
 
 /**
@@ -84,21 +84,6 @@ fun ButtonUi(
             Text(text = text, style = MaterialTheme.typography.titleMedium)
         }
 
-        ButtonLevel.INVERSESURFACE -> Button(
-            onClick = onClick,
-            modifier = modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            enabled = isEnabled,
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.inverseSurface,
-                contentColor = MaterialTheme.colorScheme.inverseOnSurface
-            )
-        ) {
-            Text(text = text, style = MaterialTheme.typography.titleMedium)
-        }
-
         ButtonLevel.TERTIARY -> Button(
             onClick = onClick,
             modifier = modifier
@@ -122,6 +107,28 @@ fun ButtonUi(
             contentPadding = PaddingValues(8.dp)
         ) {
             Text(text = text, style = MaterialTheme.typography.bodyMedium)
+        }
+
+        ButtonLevel.QUATERNARY -> Button(
+            onClick = onClick,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            enabled = isEnabled,
+            shape = RoundedCornerShape(10.dp),
+            colors = if (isError) {
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError,
+                    disabledContainerColor = MaterialTheme.colorScheme.error,
+                    disabledContentColor = MaterialTheme.colorScheme.onError
+                )
+            } else ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface
+            )
+        ) {
+            Text(text = text, style = MaterialTheme.typography.titleMedium)
         }
     }
 }

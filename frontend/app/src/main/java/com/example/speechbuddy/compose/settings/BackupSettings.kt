@@ -52,7 +52,7 @@ fun BackupSettings(
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
             ) {
-                SettingsTitleUi(title = stringResource(id = R.string.settings_backup_button))
+                SettingsTitleUi(title = stringResource(id = R.string.backup_to_server))
 
                 Spacer(modifier = modifier.height(20.dp))
 

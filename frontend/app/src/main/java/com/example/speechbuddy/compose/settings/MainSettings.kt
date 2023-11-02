@@ -23,10 +23,11 @@ import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainSettings(
+    modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
             HomeTopAppBarUi(title = stringResource(id = R.string.settings))

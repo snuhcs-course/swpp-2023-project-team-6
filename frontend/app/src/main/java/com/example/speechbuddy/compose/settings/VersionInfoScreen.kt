@@ -44,7 +44,7 @@ fun VersionInfo(
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
             ) {
-                SettingsTitleUi(title = stringResource(id = R.string.settings_versioninfo_button))
+                SettingsTitleUi(title = stringResource(id = R.string.version_info))
 
                 Spacer(modifier = modifier.height(20.dp))
 
@@ -61,7 +61,7 @@ fun VersionInfo(
                 Row(
                     modifier = modifier.fillMaxWidth(),
                 ) {
-                    SettingsTextUi(text = stringResource(id = R.string.email_field))
+                    SettingsTextUi(text = stringResource(id = R.string.email))
                     Spacer(modifier.weight(1f))
                     SettingsTextUi(text = stringResource(id = R.string.developer_email))
                 }

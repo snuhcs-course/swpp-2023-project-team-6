@@ -22,7 +22,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 fun TitleUi(
     modifier: Modifier = Modifier,
     title: String,
-    description: String,
+    description: String? = null,
 ) {
     Column(modifier = modifier) {
         Text(
@@ -30,11 +30,13 @@ fun TitleUi(
             text = title,
             style = MaterialTheme.typography.displayMedium,
         )
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = description,
-            style = MaterialTheme.typography.bodyMedium,
-        )
+        if (!description.isNullOrEmpty()) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = description,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
     }
 }
 

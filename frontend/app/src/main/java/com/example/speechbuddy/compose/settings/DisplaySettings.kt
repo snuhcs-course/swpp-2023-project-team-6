@@ -47,7 +47,7 @@ fun DisplaySettings(
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
             ) {
-                SettingsTitleUi(title = stringResource(id = R.string.display_setting))
+                SettingsTitleUi(title = stringResource(id = R.string.display_settings))
 
                 Spacer(modifier = modifier.height(15.dp))
 

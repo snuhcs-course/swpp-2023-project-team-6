@@ -76,7 +76,7 @@ fun EmailVerificationScreen(
                 TextFieldUi(
                     value = viewModel.emailInput,
                     onValueChange = { viewModel.setEmail(it) },
-                    label = { Text(text = stringResource(id = R.string.email_field)) },
+                    label = { Text(text = stringResource(id = R.string.email)) },
                     supportingButton = {
                         ButtonUi(
                             text = stringResource(id = R.string.send_validation_code),
