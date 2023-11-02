@@ -34,6 +34,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 @Composable
 fun SelectedSymbolsBox(
     selectedSymbols: List<Symbol>,
+    onClear: (Symbol) -> Unit,
     onClearAll: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -59,7 +60,7 @@ fun SelectedSymbolsBox(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(selectedSymbols) { symbol ->
-                    SelectedSymbolUi(symbol = symbol, onClear = {})
+                    SelectedSymbolUi(symbol = symbol, onClear = { onClear(symbol) })
                 }
             }
         }
@@ -78,7 +79,7 @@ fun SelectedSymbolsBox(
                 shape = RoundedCornerShape(5.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
                 ),
                 contentPadding = PaddingValues(2.dp)
             ) {
@@ -106,6 +107,6 @@ fun SelectedSymbolsBoxPreview() {
     val selectedSymbols = List(size = 10, init = { previewSymbol })
 
     SpeechBuddyTheme {
-        SelectedSymbolsBox(selectedSymbols = selectedSymbols, onClearAll = {})
+        SelectedSymbolsBox(selectedSymbols = selectedSymbols, onClear = {}, onClearAll = {})
     }
 }

@@ -70,6 +70,12 @@ class SymbolSelectionViewModel @Inject internal constructor() : ViewModel() {
         queryInput = input
     }
 
+    fun clear(symbol: Symbol) {
+        val mutableSelectedSymbols = selectedSymbols.toMutableList()
+        mutableSelectedSymbols.remove(symbol)
+        selectedSymbols = mutableSelectedSymbols.toList()
+    }
+
     fun clearAll() {
         selectedSymbols = listOf()
         entries = initialEntries
@@ -78,6 +84,10 @@ class SymbolSelectionViewModel @Inject internal constructor() : ViewModel() {
     fun selectSymbol(symbol: Symbol) {
         selectedSymbols = selectedSymbols.plus(symbol)
         entries = secondaryEntries
+    }
+
+    fun toggleFavorite(symbol: Symbol, value: Boolean) {
+        /* TODO */
     }
 
     fun selectCategory(category: Category) {

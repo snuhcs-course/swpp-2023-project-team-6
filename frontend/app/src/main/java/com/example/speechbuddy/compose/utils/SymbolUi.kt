@@ -49,7 +49,7 @@ fun SymbolUi(
     symbol: Symbol,
     modifier: Modifier = Modifier,
     onSelect: () -> Unit,
-    onFavoriteChange: () -> Unit
+    onFavoriteChange: (Boolean) -> Unit
 ) {
     Card(
         onClick = onSelect,
@@ -62,7 +62,7 @@ fun SymbolUi(
         Box(contentAlignment = Alignment.TopEnd) {
             IconToggleButton(
                 checked = symbol.isFavorite,
-                onCheckedChange = { onFavoriteChange() },
+                onCheckedChange = onFavoriteChange,
                 modifier = Modifier
                     .size(24.dp)
                     .padding(4.dp),

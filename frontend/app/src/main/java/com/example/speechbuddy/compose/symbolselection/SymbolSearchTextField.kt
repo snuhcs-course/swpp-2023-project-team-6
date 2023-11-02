@@ -57,7 +57,7 @@ fun SymbolSearchTextFieldPreview() {
     SpeechBuddyTheme {
         SymbolSearchTextField(
             value = "검색어",
-            onValueChange = {},
+            onValueChange = {}
         )
     }
 }

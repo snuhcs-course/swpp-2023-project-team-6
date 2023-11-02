@@ -32,18 +32,21 @@ fun SymbolSelectionScreen(
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .padding(start = 24.dp, top = 80.dp, end = 24.dp, bottom = 80.dp)
+                .padding(horizontal = 24.dp, vertical = 100.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             /* TODO: ViewModel 연결 */
             SymbolSearchTextField(
                 value = viewModel.queryInput,
-                onValueChange = { viewModel.setQuery(it) })
+                onValueChange = { viewModel.setQuery(it) }
+            )
 
             SelectedSymbolsBox(
                 selectedSymbols = viewModel.selectedSymbols,
-                onClearAll = { viewModel.clearAll() })
+                onClear = { viewModel.clear(it) },
+                onClearAll = { viewModel.clearAll() }
+            )
 
             Box(
                 modifier = Modifier
@@ -64,11 +67,13 @@ fun SymbolSelectionScreen(
                             is Symbol -> SymbolUi(
                                 symbol = entry,
                                 onSelect = { viewModel.selectSymbol(entry) },
-                                onFavoriteChange = {})
+                                onFavoriteChange = { viewModel.toggleFavorite(entry, it) }
+                            )
 
                             is Category -> CategoryUi(
                                 category = entry,
-                                onSelect = { viewModel.selectCategory(entry) })
+                                onSelect = { viewModel.selectCategory(entry) }
+                            )
                         }
                     }
                 }
