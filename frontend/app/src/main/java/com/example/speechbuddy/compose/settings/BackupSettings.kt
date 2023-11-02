@@ -5,13 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,45 +36,39 @@ fun BackupSettings(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            topBar = {
-                HomeTopAppBarUi(
-                    title = stringResource(id = R.string.settings),
-                    onBackClick = onBackClick,
-                    isBackClickEnabled = true
-                )
-            }
-        ) { paddingValues ->
+        Scaffold(topBar = {
+            HomeTopAppBarUi(
+                title = stringResource(id = R.string.settings),
+                onBackClick = onBackClick,
+                isBackClickEnabled = true
+            )
+        }) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = paddingValues.calculateTopPadding())
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center
+                    .padding(24.dp), verticalArrangement = Arrangement.Center
             ) {
                 TitleUi(title = stringResource(id = R.string.backup_to_server))
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     SettingsRow(
                         label = stringResource(id = R.string.last_backup_date),
                         content = {
-                            Text(
-                                text = uiState.lastBackupDate,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                            SettingsRowText(text = uiState.lastBackupDate)
                         }
                     )
 
-                    SettingsRow(
-                        label = stringResource(id = R.string.enable_auto_backup),
+                    SettingsRow(label = stringResource(id = R.string.enable_auto_backup),
                         content = {
                             Switch(
                                 checked = uiState.isAutoBackupEnabled,
-                                onCheckedChange = { viewModel.setAutoBackup(it) }
+                                onCheckedChange = { viewModel.setAutoBackup(it) },
+                                modifier = Modifier.heightIn(max = 32.dp)
                             )
                         }
                     )

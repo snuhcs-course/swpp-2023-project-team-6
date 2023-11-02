@@ -54,7 +54,7 @@ fun TextToSpeechScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
-            HomeTopAppBarUi(title = stringResource(id = R.string.text_to_speech))
+            HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_speech))
         }) {
             Column(
                 modifier = Modifier

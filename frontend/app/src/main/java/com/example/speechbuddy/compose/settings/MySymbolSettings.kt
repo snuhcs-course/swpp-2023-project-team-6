@@ -14,13 +14,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
-import com.example.speechbuddy.viewmodel.DisplayViewModel
+import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MySymbolSettings(
-    modifier: Modifier, onBackClick: () -> Unit, viewModel: DisplayViewModel = hiltViewModel()
+    modifier: Modifier, onBackClick: () -> Unit, viewModel: DisplaySettingsViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = modifier.fillMaxSize()

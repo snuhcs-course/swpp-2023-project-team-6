@@ -45,12 +45,12 @@ fun HomeScreen(
     val navItems = listOf(
         BottomNavItem(
             "symbol_selection",
-            R.string.symbol_selection,
+            R.string.talk_with_symbols,
             R.drawable.outline_touch_app_24
         ),
         BottomNavItem(
             "text_to_speech",
-            R.string.text_to_speech,
+            R.string.talk_with_speech,
             R.drawable.outline_volume_up_24
         ),
         BottomNavItem(

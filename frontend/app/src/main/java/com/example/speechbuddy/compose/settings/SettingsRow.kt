@@ -1,13 +1,17 @@
 package com.example.speechbuddy.compose.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
@@ -17,14 +21,27 @@ fun SettingsRow(
     content: @Composable (() -> Unit)
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        SettingsRowText(text = label)
+        content()
+    }
+}
+
+@Composable
+fun SettingsRowText(
+    modifier: Modifier = Modifier,
+    text: String
+) {
+    Box(
+        modifier = modifier.height(32.dp),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
+            text = text,
+            style = MaterialTheme.typography.bodyMedium
         )
-
-        content()
     }
 }
 
@@ -35,10 +52,7 @@ fun SettingsRowPreview() {
         SettingsRow(
             label = "이메일",
             content = {
-                Text(
-                    text = "example@gmail.com",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                SettingsRowText(text = "example@gmail.com")
             }
         )
     }

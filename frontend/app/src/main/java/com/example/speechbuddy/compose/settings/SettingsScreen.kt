@@ -41,7 +41,6 @@ private fun SettingsScreenNavHost(
         }
         composable("display") {
             DisplaySettings(
-                modifier = Modifier,
                 onBackClick = navigateToMain
             )
         }

@@ -23,7 +23,7 @@ fun SymbolSelectionScreen(
     Surface(modifier = modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
-                HomeTopAppBarUi(title = stringResource(id = R.string.symbol_selection))
+                HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_symbols))
             }
         ) {
             Box(

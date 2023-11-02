@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,25 +58,19 @@ fun AccountSettings(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     SettingsRow(
                         label = stringResource(id = R.string.email),
                         content = {
-                            Text(
-                                text = uiState.email,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                            SettingsRowText(text = uiState.email)
                         }
                     )
 
                     SettingsRow(
                         label = stringResource(id = R.string.nickname),
                         content = {
-                            Text(
-                                text = uiState.nickname,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                            SettingsRowText(text = uiState.nickname)
                         }
                     )
                 }

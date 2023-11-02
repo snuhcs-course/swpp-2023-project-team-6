@@ -33,8 +33,8 @@
     <string name="new_password_check_field">새 비밀번호 확인</string>
     <string name="false_new_password">8자 이상 입력해주세요</string>
     <string name="false_new_password_check">비밀번호가 일치하지 않습니다</string>
-    <string name="symbol_selection">상징으로 말하기</string>
-    <string name="text_to_speech">음성으로 말하기</string>
+    <string name="talk_with_symbols">상징으로 말하기</string>
+    <string name="talk_with_speech">음성으로 말하기</string>
     <string name="symbol_creation">새 상징 만들기</string>
     <string name="settings">설정</string>
     <string name="email_already_taken">다른 사용자가 이미 사용하고 있는 이메일입니다</string>
