@@ -18,14 +18,14 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 /**
- * Custom UI designed for top app bars.
+ * Custom UI designed for top app bars used in auth activity.
  *
  * @param modifier the Modifier to be applied to this top app bar
  * @param onBackClick called when the back icon of this top app bar is clicked
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarUi(
+fun AuthTopAppBarUi(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit
 ) {
@@ -52,8 +52,8 @@ fun TopAppBarUi(
 
 @Preview
 @Composable
-fun TopAppBarUiPreview() {
+fun AuthTopAppBarUiPreview() {
     SpeechBuddyTheme {
-        TopAppBarUi(onBackClick = {})
+        AuthTopAppBarUi(onBackClick = {})
     }
 }

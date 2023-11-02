@@ -23,7 +23,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
+import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.viewmodel.SignupViewModel
 
@@ -42,9 +42,8 @@ fun SignupScreen(
     val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORD_CHECK
 
-
     Surface(modifier = modifier.fillMaxSize()) {
-        Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
+        Scaffold(topBar = { AuthTopAppBarUi(onBackClick = onBackClick) }) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()

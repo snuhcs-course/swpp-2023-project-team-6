@@ -17,18 +17,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.viewmodel.EmailVerificationViewModel
 
@@ -51,7 +48,7 @@ fun EmailVerificationScreen(
         modifier = modifier.fillMaxSize()
     ) {
         Scaffold(
-            topBar = { TopAppBarUi(onBackClick = onBackClick) }
+            topBar = { AuthTopAppBarUi(onBackClick = onBackClick) }
         ) {
             Column(
                 modifier = Modifier
@@ -90,7 +87,7 @@ fun EmailVerificationScreen(
                     supportingText = {
                         if (isEmailError) {
                             Text(stringResource(id = uiState.error!!.messageId))
-                        } else if(uiState.isSuccessfulSend) {
+                        } else if (uiState.isSuccessfulSend) {
                             Text(stringResource(id = R.string.verification_code_sent))
                         }
                     },
