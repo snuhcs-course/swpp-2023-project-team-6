@@ -1,4 +1,4 @@
-package com.example.speechbuddy.compose.settings
+package com.example.speechbuddy.compose.utils
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -6,32 +6,23 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
 fun AlertDialogUi(
-    onConfirmButtonClick: () -> Unit,
-    onDismissButtonClick: () -> Unit,
     title: String,
-    content: String,
+    text: String,
+    dismissButtonText: String,
     confirmButtonText: String,
-    dismissButtonText: String
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
 ) {
     AlertDialog(
-        title = {
-            Text(text = title)
-        },
-        text = {
-            Text(text = content)
-        },
-        onDismissRequest = {
-            onDismissButtonClick
-        },
+        onDismissRequest = onDismiss,
         confirmButton = {
             Button(
-                onClick = onConfirmButtonClick,
+                onClick = onConfirm,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error,
                     contentColor = MaterialTheme.colorScheme.onError,
@@ -42,7 +33,7 @@ fun AlertDialogUi(
         },
         dismissButton = {
             Button(
-                onClick = onDismissButtonClick,
+                onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -50,6 +41,12 @@ fun AlertDialogUi(
             ) {
                 Text(dismissButtonText)
             }
+        },
+        title = {
+            Text(text = title)
+        },
+        text = {
+            Text(text = text)
         },
         containerColor = MaterialTheme.colorScheme.inverseOnSurface
     )
@@ -60,12 +57,12 @@ fun AlertDialogUi(
 fun AlertDialogUiPreview() {
     SpeechBuddyTheme {
         AlertDialogUi(
-            onConfirmButtonClick = { /*TODO*/ },
-            onDismissButtonClick = { /*TODO*/ },
             title = "title",
-            content = "content",
+            text = "text",
+            dismissButtonText = "dismiss",
             confirmButtonText = "confirm",
-            dismissButtonText = "dismiss"
+            onDismiss = {},
+            onConfirm = {}
         )
     }
 }
