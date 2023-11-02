@@ -13,13 +13,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.utils.AlertDialogUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.viewmodel.UserSettingsViewModel
 
 @Composable
@@ -85,55 +84,40 @@ fun UserSettingsScreen(
             )
         }
     }
+
     if (viewModel.showLogoutDialog) {
         AlertDialogUi(
-            onConfirmButtonClick = { viewModel.logout() },
-            onDismissButtonClick = { viewModel.onHideLogoutDialog() },
             title = stringResource(id = R.string.settings_account_logout),
-            content = stringResource(id = R.string.logout_warning),
+            text = stringResource(id = R.string.logout_warning),
+            dismissButtonText = stringResource(id = R.string.logout_dismiss),
             confirmButtonText = stringResource(id = R.string.logout_confirm),
-            dismissButtonText = stringResource(id = R.string.logout_dismiss)
+            onDismiss = { viewModel.onHideLogoutDialog() },
+            onConfirm = { viewModel.logout() }
         )
     }
 
     if (viewModel.showWithdrawalDialog) {
         AlertDialogUi(
-            onConfirmButtonClick = {
+            title = stringResource(id = R.string.settings_account_withdrawal),
+            text = stringResource(id = R.string.withdrawal_warning),
+            dismissButtonText = stringResource(id = R.string.withdrawal_dismiss),
+            confirmButtonText = stringResource(id = R.string.withdrawal_confirm),
+            onDismiss = { viewModel.onHideWithdrawalDialog() },
+            onConfirm = {
                 viewModel.onShowSecondWithdrawalDialog()
                 viewModel.onHideWithdrawalDialog()
-            },
-            onDismissButtonClick = { viewModel.onHideWithdrawalDialog() },
-            title = stringResource(id = R.string.settings_account_withdrawal),
-            content = stringResource(id = R.string.withdrawal_warning),
-            confirmButtonText = stringResource(id = R.string.withdrawal_confirm),
-            dismissButtonText = stringResource(id = R.string.withdrawal_dismiss)
+            }
         )
     }
 
     if (viewModel.showSecondWithdrawalDialog) {
-        //onHideWithdrawalDialog
         AlertDialogUi(
-            onConfirmButtonClick = { viewModel.deleteAccount() },
-            onDismissButtonClick = { viewModel.onHideSecondWithdrawalDialog() },
             title = stringResource(id = R.string.settings_account_withdrawal),
-            content = stringResource(id = R.string.withdrawal_second_warning),
+            text = stringResource(id = R.string.withdrawal_second_warning),
+            dismissButtonText = stringResource(id = R.string.withdrawal_second_dismiss),
             confirmButtonText = stringResource(id = R.string.withdrawal_second_confirm),
-            dismissButtonText = stringResource(id = R.string.withdrawal_second_dismiss)
-        )
-    }
-
-
-}
-
-@Preview
-@Composable
-private fun UserSettingsScreenPreview() {
-    SpeechBuddyTheme {
-        UserSettingsScreen(
-            modifier = Modifier,
-            onBackClick = {},
-            email = "id",
-            nickname = "nickname"
+            onDismiss = { viewModel.onHideSecondWithdrawalDialog() },
+            onConfirm = { viewModel.deleteAccount() }
         )
     }
 }
