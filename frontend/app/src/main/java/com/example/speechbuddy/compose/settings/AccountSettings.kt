@@ -66,7 +66,7 @@ fun AccountSettings(
                         label = stringResource(id = R.string.email),
                         content = {
                             Text(
-                                text = "example@gmail.com", /* TODO */
+                                text = uiState.email,
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -76,7 +76,7 @@ fun AccountSettings(
                         label = stringResource(id = R.string.nickname),
                         content = {
                             Text(
-                                text = "nickname", /* TODO */
+                                text = uiState.nickname,
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }

@@ -36,9 +36,7 @@ private fun SettingsScreenNavHost(
         }
         composable("backup") {
             BackupSettings(
-                modifier = Modifier,
-                onBackClick = navigateToMain,
-                lastBackupDate = "2023.10.29."
+                onBackClick = navigateToMain
             )
         }
         composable("display") {

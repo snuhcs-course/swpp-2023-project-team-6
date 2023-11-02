@@ -56,7 +56,7 @@
     <string name="version_info">버전 정보</string>
     <string name="developers_info">개발자 정보</string>
     <string name="last_backup_date">마지막 백업 날짜</string>
-    <string name="automatic_backup_enable">자동 백업 활성화</string>
+    <string name="enable_auto_backup">자동 백업 활성화</string>
     <string name="backup_now">지금 백업하기</string>
     <string name="display_settings">디스플레이 설정</string>
     <string name="dark_mode">다크 모드</string>
