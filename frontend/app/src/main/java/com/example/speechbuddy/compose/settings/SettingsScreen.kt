@@ -1,7 +1,6 @@
 package com.example.speechbuddy.compose.settings
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -46,20 +45,16 @@ private fun SettingsScreenNavHost(
         }
         composable("my_symbol") {
             MySymbolSettings(
-                modifier = Modifier,
                 onBackClick = navigateToMain
             )
         }
         composable("version") {
             VersionInfo(
-                modifier = Modifier,
-                onBackClick = navigateToMain,
-                versionText = "1.0.0"
+                onBackClick = navigateToMain
             )
         }
         composable("developers") {
             DevelopersInfo(
-                modifier = Modifier,
                 onBackClick = navigateToMain
             )
         }

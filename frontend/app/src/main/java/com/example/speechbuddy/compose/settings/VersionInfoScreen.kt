@@ -1,13 +1,9 @@
 package com.example.speechbuddy.compose.settings
 
-import SettingsTextUi
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,50 +16,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VersionInfo(
-    modifier: Modifier, onBackClick: () -> Unit, versionText: String
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(topBar = {
-            HomeTopAppBarUi(
-                title = stringResource(id = R.string.settings),
-                onBackClick = onBackClick,
-                isBackClickEnabled = true
-            )
-        }) {
+        Scaffold(
+            topBar = {
+                HomeTopAppBarUi(
+                    title = stringResource(id = R.string.settings),
+                    onBackClick = onBackClick,
+                    isBackClickEnabled = true
+                )
+            }
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 30.dp)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                    .fillMaxSize()
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center
             ) {
-                SettingsTitleUi(title = stringResource(id = R.string.version_info))
+                TitleUi(title = stringResource(id = R.string.version_info))
 
                 Spacer(modifier = modifier.height(20.dp))
 
-                Row(
-                    modifier = modifier.fillMaxWidth()
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    SettingsTextUi(text = stringResource(id = R.string.version))
-                    Spacer(modifier.weight(1f))
-                    SettingsTextUi(text = versionText)
-                }
+                    SettingsRow(
+                        label = stringResource(id = R.string.version),
+                        content = {
+                            /* TODO */
+                            SettingsRowText(text = "1.0.0")
+                        }
+                    )
 
-                Spacer(modifier = modifier.height(20.dp))
-
-                Row(
-                    modifier = modifier.fillMaxWidth(),
-                ) {
-                    SettingsTextUi(text = stringResource(id = R.string.email))
-                    Spacer(modifier.weight(1f))
-                    SettingsTextUi(text = stringResource(id = R.string.developer_email))
+                    SettingsRow(
+                        label = stringResource(id = R.string.email),
+                        content = {
+                            /* TODO */
+                            SettingsRowText(text = "speechbuddy@gmail.com")
+                        }
+                    )
                 }
             }
         }
@@ -72,8 +74,8 @@ fun VersionInfo(
 
 @Preview
 @Composable
-fun VersionInfoScreenPreview() {
+fun VersionInfoPreview() {
     SpeechBuddyTheme {
-        VersionInfo(modifier = Modifier, onBackClick = { /*TODO*/ }, versionText = "1.0.0")
+        VersionInfo(onBackClick = {})
     }
 }

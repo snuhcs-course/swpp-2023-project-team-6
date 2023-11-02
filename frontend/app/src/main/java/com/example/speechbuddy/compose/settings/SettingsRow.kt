@@ -18,7 +18,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 fun SettingsRow(
     modifier: Modifier = Modifier,
     label: String,
-    content: @Composable (() -> Unit)
+    content: @Composable (() -> Unit) = {}
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
