@@ -46,7 +46,7 @@ fun HomeTopAppBarUi(
         title = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleLarge
             )
         },
         navigationIcon = {

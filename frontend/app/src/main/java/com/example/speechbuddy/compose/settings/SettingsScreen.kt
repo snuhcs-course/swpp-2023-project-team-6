@@ -1,24 +1,12 @@
 package com.example.speechbuddy.compose.settings
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
@@ -79,48 +67,6 @@ private fun SettingsScreenNavHost(
                 modifier = Modifier,
                 onBackClick = navigateToMain
             )
-        }
-    }
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MainSettings(
-    navController: NavHostController
-) {
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Scaffold(
-            topBar = {
-                HomeTopAppBarUi(title = stringResource(id = R.string.settings))
-            }
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 30.dp, vertical = 50.dp)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                SettingsTextButtonUi(text = stringResource(id = R.string.settings_account_button),
-                    onClick = { navController.navigate("account") })
-
-                SettingsTextButtonUi(text = stringResource(id = R.string.settings_backup_button),
-                    onClick = { navController.navigate("backup") })
-
-                SettingsTextButtonUi(text = stringResource(id = R.string.settings_display_button),
-                    onClick = { navController.navigate("display") })
-
-                SettingsTextButtonUi(text = stringResource(id = R.string.settings_manage_symbol_button),
-                    onClick = { navController.navigate("my_symbol") })
-
-                SettingsTextButtonUi(text = stringResource(id = R.string.settings_versioninfo_button),
-                    onClick = { navController.navigate("version") })
-
-                SettingsTextButtonUi(text = stringResource(id = R.string.settings_developerinfo_button),
-                    onClick = { navController.navigate("developers") })
-            }
         }
     }
 }
