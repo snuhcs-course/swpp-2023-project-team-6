@@ -1,6 +1,8 @@
 package com.example.speechbuddy.compose.utils
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -28,6 +30,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
  * @param modifier the Modifier to be applied to this top app bar
  * @param onBackClick called when the back icon of this top app bar is clicked
  * @param isBackClickEnabled decides what to show in the left edge of this top app bar. If false, app logo is displayed instead.
+ * @param actions the actions displayed at the end of the top app bar
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +38,8 @@ fun HomeTopAppBarUi(
     title: String,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    isBackClickEnabled: Boolean = false
+    isBackClickEnabled: Boolean = false,
+    actions: @Composable (RowScope.() -> Unit) = {}
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -50,17 +54,20 @@ fun HomeTopAppBarUi(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Go back to landing page"
+                        contentDescription = stringResource(id = R.string.back)
                     )
                 }
             else
                 Image(
-                    painter = painterResource(id = R.drawable.stop_icon),
+                    painter = painterResource(id = R.drawable.speechbuddy_parrot),
                     contentDescription = stringResource(id = R.string.app_name),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .size(40.dp),
+                    contentScale = ContentScale.Fit
                 )
         },
+        actions = actions,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.tertiaryContainer,
             titleContentColor = MaterialTheme.colorScheme.onTertiaryContainer
