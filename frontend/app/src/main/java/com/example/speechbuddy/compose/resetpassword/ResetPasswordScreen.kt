@@ -12,20 +12,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.ui.models.ResetPasswordErrorType
+import com.example.speechbuddy.viewmodel.ResetPasswordViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,11 +35,16 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    navController: NavHostController,
+    viewModel: ResetPasswordViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    val isPasswordError = uiState.error?.type == ResetPasswordErrorType.PASSWORD
+    val isPasswordCheckError = uiState.error?.type == ResetPasswordErrorType.PASSWORD_CHECK
+    val isError = isPasswordError || isPasswordCheckError
+
     Surface(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(
             topBar = {
@@ -46,9 +53,6 @@ fun ResetPasswordScreen(
                 )
             }
         ) {
-            val password = remember { mutableStateOf("") }
-            val passwordCheck = remember { mutableStateOf("") }
-
             Column(
                 modifier = Modifier
                     .padding(24.dp)
@@ -65,49 +69,44 @@ fun ResetPasswordScreen(
 
                 // Password Text Field
                 TextFieldUi(
-                    value = password.value,
-                    onValueChange = { password.value = it },
+                    value = viewModel.passwordInput,
+                    onValueChange = { viewModel.setPassword(it) },
                     label = { Text(stringResource(id = R.string.new_password_field)) },
-                    supportingText = { Text(stringResource(id = R.string.false_new_password)) },
-                    isError = false,
-                    isValid = false,
+                    supportingText = {
+                        if (isPasswordError) {
+                            Text(stringResource(id = uiState.error!!.messageId))
+                        }
+                    },
+                    isError = isError,
+                    isValid = uiState.isValidPassword,
                     isHidden = true
                 )
 
                 // Password Check Text Field
                 TextFieldUi(
-                    value = passwordCheck.value,
-                    onValueChange = { passwordCheck.value = it },
+                    value = viewModel.passwordCheckInput,
+                    onValueChange = { viewModel.setPasswordCheck(it) },
                     label = { Text(stringResource(id = R.string.new_password_check_field)) },
-                    supportingText = { Text(stringResource(id = R.string.false_new_password_check)) },
-                    isError = false,
-                    isValid = false,
+                    supportingText = {
+                        if (isPasswordCheckError) {
+                            Text(stringResource(id = uiState.error!!.messageId))
+                        }
+                    },
+                    isError = isError,
+                    isValid = uiState.isValidPassword,
                     isHidden = true
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Set password Button
                 ButtonUi(
                     text = stringResource(id = R.string.reset_password_next),
-                    onClick = onNextClick,
-                    isError = false,
-                    isEnabled = true,
+                    onClick = { viewModel.resetPassword(navController) },
+                    isError = isError,
                     level = ButtonLevel.PRIMARY
                 )
-
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun ResetPasswordScreenPreview() {
-    SpeechBuddyTheme {
-        ResetPasswordScreen(
-            onBackClick = {},
-            onNextClick = {}
-        )
     }
 }

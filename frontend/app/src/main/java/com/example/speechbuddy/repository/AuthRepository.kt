@@ -3,6 +3,7 @@ package com.example.speechbuddy.repository
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
@@ -60,56 +61,60 @@ class AuthRepository @Inject constructor(
     }
 
     suspend fun verifySendSignup(authVerifyEmailSendRequest: AuthVerifyEmailSendRequest): Flow<Resource<Void>> {
-        return authTokenRemoteSource.verifySendSignupAuthToken(authVerifyEmailSendRequest).map { response ->
-            if (response.isSuccessful && response.code() == 200) {
-                Resource.success(null)
-            } else {
-                response.errorBody()?.let { responseBody ->
-                    val errorJson = JSONObject(responseBody.charStream().readText())
-                    val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                    val firstKeyOfMessage = messageJson.keys().next().toString()
-                    Resource.error(
-                        firstKeyOfMessage,
-                        null
-                    )
-                } ?: Resource.error("Unknown Error", null)
+        return authTokenRemoteSource.verifySendSignupAuthToken(authVerifyEmailSendRequest)
+            .map { response ->
+                if (response.isSuccessful && response.code() == 200) {
+                    Resource.success(null)
+                } else {
+                    response.errorBody()?.let { responseBody ->
+                        val errorJson = JSONObject(responseBody.charStream().readText())
+                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
+                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        Resource.error(
+                            firstKeyOfMessage,
+                            null
+                        )
+                    } ?: Resource.error("Unknown Error", null)
+                }
             }
-        }
     }
 
     suspend fun verifySendPW(authVerifyEmailSendRequest: AuthVerifyEmailSendRequest): Flow<Resource<Void>> {
-        return authTokenRemoteSource.verifySendPWAuthToken(authVerifyEmailSendRequest).map { response ->
-            if (response.isSuccessful && response.code() == 200) {
-                Resource.success(null)
-            } else {
-                response.errorBody()?.let { responseBody ->
-                    val errorJson = JSONObject(responseBody.charStream().readText())
-                    val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                    val firstKeyOfMessage = messageJson.keys().next().toString()
-                    Resource.error(
-                        firstKeyOfMessage,
-                        null
-                    )
-                } ?: Resource.error("Unknown Error", null)
+        return authTokenRemoteSource.verifySendPWAuthToken(authVerifyEmailSendRequest)
+            .map { response ->
+                if (response.isSuccessful && response.code() == 200) {
+                    Resource.success(null)
+                } else {
+                    response.errorBody()?.let { responseBody ->
+                        val errorJson = JSONObject(responseBody.charStream().readText())
+                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
+                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        Resource.error(
+                            firstKeyOfMessage,
+                            null
+                        )
+                    } ?: Resource.error("Unknown Error", null)
+                }
             }
-        }
     }
+
     suspend fun verifyAcceptSignup(authVerifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest): Flow<Resource<Void>> {
-        return authTokenRemoteSource.verifyAcceptSignupAuthToken(authVerifyEmailAcceptRequest).map { response ->
-            if (response.isSuccessful && response.code() == 200) {
-                Resource.success(null)
-            } else {
-                response.errorBody()?.let { responseBody ->
-                    val errorJson = JSONObject(responseBody.charStream().readText())
-                    val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                    val firstKeyOfMessage = messageJson.keys().next().toString()
-                    Resource.error(
-                        firstKeyOfMessage,
-                        null
-                    )
-                } ?: Resource.error("Unknown Error", null)
+        return authTokenRemoteSource.verifyAcceptSignupAuthToken(authVerifyEmailAcceptRequest)
+            .map { response ->
+                if (response.isSuccessful && response.code() == 200) {
+                    Resource.success(null)
+                } else {
+                    response.errorBody()?.let { responseBody ->
+                        val errorJson = JSONObject(responseBody.charStream().readText())
+                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
+                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        Resource.error(
+                            firstKeyOfMessage,
+                            null
+                        )
+                    } ?: Resource.error("Unknown Error", null)
+                }
             }
-        }
     }
 
     suspend fun verifyAcceptPW(authVerifyEmailAcceptRequest: AuthVerifyEmailAcceptRequest): Flow<Resource<AuthToken>> {
@@ -131,6 +136,24 @@ class AuthRepository @Inject constructor(
                             null
                         )
                     } ?: returnUnknownError()
+                }
+            }
+    }
+
+    suspend fun resetPassword(authResetPasswordRequest: AuthResetPasswordRequest): Flow<Resource<Void>> {
+        return authTokenRemoteSource.resetPasswordAuthToken(authResetPasswordRequest)
+            .map { response ->
+                if (response.isSuccessful && response.code() == 200) {
+                    Resource.success(null)
+                } else {
+                    response.errorBody()?.let { responseBody ->
+                        val errorMessage =
+                            JSONObject(responseBody.charStream().readText()).getString("error")
+                        Resource.error(
+                            errorMessage,
+                            null
+                        )
+                    } ?: Resource.error("Unknown Error", null)
                 }
             }
     }
