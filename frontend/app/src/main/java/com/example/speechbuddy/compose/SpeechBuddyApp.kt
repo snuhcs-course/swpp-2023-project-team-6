@@ -73,7 +73,7 @@ fun SpeechBuddyNavHost(
                 onBackClick = {
                     navController.navigateUp()
                 },
-                onNextClick = {}
+                navController = navController
             )
         }
         composable("home") {

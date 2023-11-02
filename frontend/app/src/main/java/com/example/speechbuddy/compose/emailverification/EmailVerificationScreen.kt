@@ -62,8 +62,7 @@ fun EmailVerificationScreen(
                         "reset_password" -> stringResource(id = R.string.reset_password_title)
                         "signup" -> stringResource(id = R.string.verify_email_field)
                         else -> stringResource(id = R.string.verify_email_field)
-                    },
-                    description = when (source) {
+                    }, description = when (source) {
                         "reset_password" -> stringResource(id = R.string.reset_password_subtitle1)
                         "signup" -> stringResource(id = R.string.verify_email_explain)
                         else -> stringResource(id = R.string.verify_email_explain_default)
@@ -73,8 +72,7 @@ fun EmailVerificationScreen(
                 Spacer(modifier = Modifier.height(15.dp))
 
                 // Email Text Field
-                TextFieldUi(
-                    value = viewModel.emailInput,
+                TextFieldUi(value = viewModel.emailInput,
                     onValueChange = { viewModel.setEmail(it) },
                     label = { Text(text = stringResource(id = R.string.email)) },
                     supportingButton = {
