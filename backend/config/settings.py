@@ -32,6 +32,10 @@ if "GITHUB_ACTIONS" in os.environ:
         "SECRET_KEY": os.environ.get("SECRET_KEY"),
         "EMAIL_HOST_USER": os.environ.get("EMAIL_HOST_USER"),
         "EMAIL_HOST_PASSWORD": os.environ.get("EMAIL_HOST_PASSWORD"),
+        "AWS_ACCESS_KEY_ID": os.environ.get("AWS_ACCESS_KEY_ID"),
+        "AWS_SECRET_ACCESS_KEY": os.environ.get("AWS_SECRET_ACCESS_KEY"),
+        "AWS_STORAGE_BUCKET_NAME": os.environ.get("AWS_STORAGE_BUCKET_NAME"),
+        "AWS_S3_REGION_NAME": os.environ.get("AWS_S3_REGION_NAME"),
     }
 else:
     secret_file = os.path.join(BASE_DIR, 'secrets.json')  # secrets.json 파일 위치를 명시
@@ -57,8 +61,34 @@ EMAIL_HOST_USER = get_secret("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = get_secret("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# AWS S3 settings
+AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = get_secret("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = get_secret("AWS_S3_REGION_NAME")
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = 'public-read'  uncomment하면 s3에 이미지 업로드 못함
+AWS_S3_CUSTOM_DOMAIN = "%s.s3.%s.amazonaws.com" % (AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+# Static Setting
+STATICFILES_STORAGE = "config.s3storages.StaticStorage"  # 저장 루트 관련
+STATIC_URL = "https://%s/static/" % AWS_S3_CUSTOM_DOMAIN  # 저장 루트와 관련 X, 불러오는 루트
+# STATICFILES_STORAGE 가 기본값(django.contrib.staticfiles.storage.StaticFilesStorage)일때 저장되는 곳
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+# Media Setting
+DEFAULT_FILE_STORAGE = "config.s3storages.MediaStorage"  # 저장 루트 관련
+MEDIA_URL = "https://%s/media/" % AWS_S3_CUSTOM_DOMAIN  # 저장 루트와 관련 X, 불러오는 루트
+# DEFAULT_FILE_STORAGE 가 기본값(django.core.files.storage.FileSystemStorage)일때 저장되는 곳
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'ec2-54-180-112-72.ap-northeast-2.compute.amazonaws.com',
@@ -83,6 +113,7 @@ INSTALLED_APPS = [
     'user',
     'entry',
     'setup',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -118,20 +149,20 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Local DB settings
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'sqlite3_for_dev'),
-#     }
-# }
-
-# Remote DB settings
-# Add your own confidential.py
-if not ("GITHUB_ACTIONS" in os.environ):
+if "GITHUB_ACTIONS" in os.environ:
+    # Local DB settings
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'sqlite3_for_dev'),
+        }
+    }
+else:
+    # Remote DB settings
+    # Add your own confidential.py
     import confidential
-    DATABASES = confidential.DATABASES
 
+    DATABASES = confidential.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -163,11 +194,6 @@ TIME_ZONE = "Asia/Seoul"
 USE_I18N = True
 
 USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
