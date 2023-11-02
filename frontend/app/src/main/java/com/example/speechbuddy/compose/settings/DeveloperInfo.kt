@@ -19,7 +19,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
-fun DeveloperInfoScreen(
+fun DevelopersInfo(
     modifier: Modifier,
     onBackClick: () -> Unit,
 ) {
@@ -68,6 +68,6 @@ fun DeveloperInfoScreen(
 @Composable
 fun DeveloperInfoScreenPreview() {
     SpeechBuddyTheme {
-        DeveloperInfoScreen(modifier = Modifier, onBackClick = { /*TODO*/ })
+        DevelopersInfo(modifier = Modifier, onBackClick = { /*TODO*/ })
     }
 }

@@ -24,7 +24,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.viewmodel.DisplayViewModel
 
 @Composable
-fun DisplayScreen(
+fun DisplaySettings(
     modifier: Modifier,
     onBackClick: () -> Unit,
     viewModel: DisplayViewModel = hiltViewModel()
@@ -98,16 +98,5 @@ fun DisplayScreen(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun DisplayScreenPreview() {
-    SpeechBuddyTheme {
-        DisplayScreen(
-            modifier = Modifier,
-            onBackClick = {}
-        )
     }
 }

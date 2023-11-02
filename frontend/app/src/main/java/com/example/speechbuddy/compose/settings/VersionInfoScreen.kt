@@ -19,7 +19,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
-fun VersionInfoScreen(
+fun VersionInfo(
     modifier: Modifier,
     onBackClick: () -> Unit,
     versionText: String
@@ -68,6 +68,6 @@ fun VersionInfoScreen(
 @Composable
 fun VersionInfoScreenPreview() {
     SpeechBuddyTheme {
-        VersionInfoScreen(modifier = Modifier, onBackClick = { /*TODO*/ }, versionText = "1.0.0")
+        VersionInfo(modifier = Modifier, onBackClick = { /*TODO*/ }, versionText = "1.0.0")
     }
 }

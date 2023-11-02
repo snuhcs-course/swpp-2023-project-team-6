@@ -1,18 +1,24 @@
 package com.example.speechbuddy.compose.settings
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.speechbuddy.R
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
-fun SettingsScreen(
-
-) {
+fun SettingsScreen() {
     val navController = rememberNavController()
     SettingsScreenNavHost(
         navController = navController
@@ -23,52 +29,83 @@ fun SettingsScreen(
 private fun SettingsScreenNavHost(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "settings_main") {
-        composable("settings_main") {
-            SettingsMainScreen(
-                onUserSettingsClick = { navController.navigate("settings_usersettings") },
-                onBackupClick = { navController.navigate("settings_backup") },
-                onDisplayClick = { navController.navigate("settings_display") },
-                onManageSymbolClick = { navController.navigate("settings_managesymbol") },
-                onVersionInfoClick = { navController.navigate("settings_versioninfo") },
-                onDeveloperInfoClick = { navController.navigate("settings_developerinfo") }
+    val navigateToMain = { navController.navigate("main") }
+
+    NavHost(navController = navController, startDestination = "main") {
+        composable("main") {
+            MainSettings(
+                navController = navController
             )
         }
-        composable("settings_usersettings") {
-            UserSettingsScreen(
-                onBackClick = { navController.navigate("settings_main") },
+        composable("account") {
+            AccountSettings(
+                onBackClick = navigateToMain,
                 email = "example@example.com",
                 nickname = "example",
             )
         }
-        composable("settings_backup") {
-            BackupScreen(
+        composable("backup") {
+            BackupSettings(
                 modifier = Modifier,
-                onBackClick = { navController.navigate("settings_main") },
-                lastBackupDate = "2023.10.29.",
+                onBackClick = navigateToMain,
+                lastBackupDate = "2023.10.29."
             )
         }
-        composable("settings_display") {
-            DisplayScreen(
+        composable("display") {
+            DisplaySettings(
                 modifier = Modifier,
-                onBackClick = { navController.navigate("settings_main") },
+                onBackClick = navigateToMain
             )
         }
-        composable("settings_managesymbol") {
-            ManageSymbolScreen()
+        composable("my_symbol") {
+            MySymbolSettings()
         }
-        composable("settings_versioninfo") {
-            VersionInfoScreen(
+        composable("version") {
+            VersionInfo(
                 modifier = Modifier,
-                onBackClick = { navController.navigate("settings_main") },
+                onBackClick = navigateToMain,
                 versionText = "1.0.0"
             )
         }
-        composable("settings_developerinfo") {
-            DeveloperInfoScreen(
+        composable("developers") {
+            DevelopersInfo(
                 modifier = Modifier,
-                onBackClick = { navController.navigate("settings_main") }
+                onBackClick = navigateToMain
             )
+        }
+    }
+}
+
+@Composable
+fun MainSettings(
+    navController: NavHostController
+) {
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 30.dp, vertical = 50.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            SettingsTextButtonUi(text = stringResource(id = R.string.settings_account_button),
+                onClick = { navController.navigate("account") })
+
+            SettingsTextButtonUi(text = stringResource(id = R.string.settings_backup_button),
+                onClick = { navController.navigate("backup") })
+
+            SettingsTextButtonUi(text = stringResource(id = R.string.settings_display_button),
+                onClick = { navController.navigate("display") })
+
+            SettingsTextButtonUi(text = stringResource(id = R.string.settings_manage_symbol_button),
+                onClick = { navController.navigate("my_symbol") })
+
+            SettingsTextButtonUi(text = stringResource(id = R.string.settings_versioninfo_button),
+                onClick = { navController.navigate("version") })
+
+            SettingsTextButtonUi(text = stringResource(id = R.string.settings_developerinfo_button),
+                onClick = { navController.navigate("developers") })
         }
     }
 }

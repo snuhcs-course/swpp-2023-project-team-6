@@ -24,7 +24,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.viewmodel.BackupViewModel
 
 @Composable
-fun BackupScreen(
+fun BackupSettings(
     modifier: Modifier,
     onBackClick: () -> Unit,
     lastBackupDate: String,
@@ -83,17 +83,5 @@ fun BackupScreen(
                 onClick = { viewModel.backup() }
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun BackupScreenPreview() {
-    SpeechBuddyTheme {
-        BackupScreen(
-            modifier = Modifier,
-            onBackClick = {},
-            lastBackupDate = "2023.10.27"
-        )
     }
 }

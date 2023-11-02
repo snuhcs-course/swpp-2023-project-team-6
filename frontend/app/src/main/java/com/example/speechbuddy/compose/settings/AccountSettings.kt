@@ -22,7 +22,7 @@ import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.viewmodel.UserSettingsViewModel
 
 @Composable
-fun UserSettingsScreen(
+fun AccountSettings(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     email: String,
