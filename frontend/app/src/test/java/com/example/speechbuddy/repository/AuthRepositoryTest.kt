@@ -69,5 +69,25 @@ class AuthRepositoryTest {
             }
         }
     }
+
+    @Test
+    fun testVerifySendPWSuccess() {
+        runBlocking {
+            val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
+                email = "testemail@google.com"
+            )
+            val successResponse = Response.success<Void>(200, null)
+
+            coEvery { authTokenRemoteSource.verifySendPWAuthToken(authVerifyEmailSendRequest) } returns flowOf(successResponse)
+
+            val result = authRepository.verifySendPW(authVerifyEmailSendRequest)
+            // 아래 resource는 Resource<Void> 타입
+            result.collect { resource ->
+                assert(resource.status == Status.SUCCESS)
+                assert(resource.data == null)
+                assert(resource.message == null)
+            }
+        }
+    }
 }
 
