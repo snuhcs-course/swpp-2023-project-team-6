@@ -1,6 +1,7 @@
-package com.example.speechbuddy.compose.symbolselection
+package com.example.speechbuddy.compose.settings
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,8 +19,9 @@ import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SymbolSelectionScreen(
+fun MySymbolSettings(
     modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
     bottomPaddingValues: PaddingValues
 ) {
     Surface(
@@ -27,10 +29,14 @@ fun SymbolSelectionScreen(
     ) {
         Scaffold(
             topBar = {
-                HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_symbols))
+                HomeTopAppBarUi(
+                    title = stringResource(id = R.string.settings),
+                    onBackClick = onBackClick,
+                    isBackClickEnabled = true
+                )
             }
         ) { topPaddingValues ->
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(
@@ -38,9 +44,11 @@ fun SymbolSelectionScreen(
                         bottom = bottomPaddingValues.calculateBottomPadding()
                     )
                     .padding(24.dp),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Talk With Symbol")
+                /* TODO */
+                Text(text = "My Symbol Settings")
             }
         }
     }
