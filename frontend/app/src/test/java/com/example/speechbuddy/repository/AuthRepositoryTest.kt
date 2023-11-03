@@ -10,6 +10,7 @@ import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.utils.Status
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
@@ -358,6 +360,11 @@ class AuthRepositoryTest {
                 assert(resource.message == "key of message")
             }
         }
+    }
+
+    @After
+    fun tearDown(){
+        clearAllMocks()
     }
 
 }
