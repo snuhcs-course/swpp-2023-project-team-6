@@ -129,6 +129,26 @@ class AuthRepositoryTest {
     }
 
     @Test
+    fun `should return ERROR Resource when login request is invalid`() {
+        runBlocking{
+            val authLoginRequest = AuthLoginRequest(
+                email = mockEmail,
+                password = "invalid"
+            )
+            val errorResponse = Response.error<AuthTokenDto>(400, mockErrorResponseBody)
+
+            coEvery { authTokenRemoteSource.loginAuthToken(authLoginRequest) } returns flowOf(errorResponse)
+
+            val result = authRepository.login(authLoginRequest)
+            result.collect { resource ->
+                assert(resource.status == Status.ERROR)
+                assert(resource.data == null)
+                assert(resource.message == "key of message")
+            }
+        }
+    }
+
+    @Test
     fun `should return SUCCESS Resource when verifySendSignup request is valid`() {
         runBlocking {
             val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
