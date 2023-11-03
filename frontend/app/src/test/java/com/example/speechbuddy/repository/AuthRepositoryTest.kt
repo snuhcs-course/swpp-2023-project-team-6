@@ -1,11 +1,14 @@
 package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
+import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
+import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.utils.Status
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -49,8 +52,36 @@ class AuthRepositoryTest {
         }
     }
 
-//    @Test
-//    fun testLoginSuccess(){}
+    @Test
+    fun testLoginSuccess(){
+        runBlocking {
+            val authLoginRequest = AuthLoginRequest(
+                email = "testemail@google.com",
+                password = "testpassword"
+            )
+            val authTokenDto = AuthTokenDto(
+                accessToken = "test_access_token",
+                refreshToken = "test_refresh_token"
+            )
+            val expectedAuthToken = AuthToken(
+                accessToken = "test_access_token",
+                refreshToken = "test_refresh_token"
+            )
+            // 성공 케이스의 Response<AuthTokenDto>를 정의
+            val successResponse = Response.success<AuthTokenDto>(200, authTokenDto)
+
+            coEvery { authTokenRemoteSource.loginAuthToken(authLoginRequest) } returns flowOf(successResponse)
+
+            val result = authRepository.login(authLoginRequest)
+
+            // 아래 resource는 Resource<AuthToken> 타입
+            result.collect { resource ->
+                assert(resource.status == Status.SUCCESS)
+                assert(resource.data == expectedAuthToken)
+                assert(resource.message == null)
+            }
+        }
+    }
 
     @Test
     fun testVerifySendSignupSuccess() {
