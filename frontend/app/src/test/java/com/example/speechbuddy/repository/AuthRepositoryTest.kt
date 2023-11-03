@@ -172,7 +172,7 @@ class AuthRepositoryTest {
     fun `should return ERROR Resource when verifySendSignup request is invalid`() {
         runBlocking{
             val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
-                email = mockEmail
+                email = "invalid@example.com"
             )
             val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
 
@@ -211,7 +211,7 @@ class AuthRepositoryTest {
     fun `should return ERROR Resource when verifySendPW request is invalid`() {
         runBlocking{
             val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
-                email = mockEmail
+                email = "invalid@example.com"
             )
             val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
 
@@ -252,7 +252,7 @@ class AuthRepositoryTest {
         runBlocking{
             val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
                 email = mockEmail,
-                code = mockCode
+                code = "invalid"
             )
             val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
 
@@ -302,7 +302,7 @@ class AuthRepositoryTest {
         runBlocking{
             val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
                 email = mockEmail,
-                code = mockCode
+                code = "invalid"
             )
             val errorResponse = Response.error<AuthTokenDto>(400, mockErrorResponseBody)
 
@@ -333,6 +333,25 @@ class AuthRepositoryTest {
                 assert(resource.status == Status.SUCCESS)
                 assert(resource.data == null)
                 assert(resource.message == null)
+            }
+        }
+    }
+
+    @Test
+    fun `should return ERROR Resource when resetPassword request is invalid`() {
+        runBlocking{
+            val authResetPasswordRequest = AuthResetPasswordRequest(
+                password = "invalid"
+            )
+            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
+
+            coEvery { authTokenRemoteSource.resetPasswordAuthToken(authResetPasswordRequest) } returns flowOf(errorResponse)
+
+            val result = authRepository.resetPassword(authResetPasswordRequest)
+            result.collect { resource ->
+                assert(resource.status == Status.ERROR)
+                assert(resource.data == null)
+                assert(resource.message == "key of message")
             }
         }
     }
