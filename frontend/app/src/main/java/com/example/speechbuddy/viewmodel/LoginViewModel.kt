@@ -1,5 +1,6 @@
 package com.example.speechbuddy.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -125,6 +126,7 @@ class LoginViewModel @Inject internal constructor(
                             }
                         } else if (it.message?.contains("email", ignoreCase = true) == true
                         ) { // email is wrong
+                            Log.d("email", "email")
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,

@@ -117,4 +117,11 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    // Test
+    val mockkVersion = "1.13.8"
+    testImplementation ("io.mockk:mockk-android:$mockkVersion")
+    testImplementation ("io.mockk:mockk-agent:$mockkVersion")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
+    testImplementation ("androidx.arch.core:core-testing:2.1.0")
 }
