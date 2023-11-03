@@ -33,7 +33,7 @@ class SignupViewModelTest {
     private lateinit var viewModel: SignupViewModel
 
     // boundary condition: 15 characters in nickname field
-    private val validNickname = "valid_nickname_"
+    private val validNickname = "valid_nickname"
     private val longNickname = "invalid_nickname"
     private val emptyNickname = ""
 
@@ -61,7 +61,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set empty nickname before signup click when setnickname is called with empty nickname`() {
+    fun `should set empty nickname before signup click when set nickname is called with empty nickname`() {
         viewModel.setNickname(emptyNickname)
 
         assertEquals(emptyNickname, viewModel.nicknameInput)
@@ -70,7 +70,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set long nickname before signup click when setnickname is called with long nickname`() {
+    fun `should set long nickname before signup click when set nickname is called with long nickname`() {
         viewModel.setNickname(longNickname)
 
         assertEquals(longNickname, viewModel.nicknameInput)
@@ -79,7 +79,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set valid nickname before signup click when setnickname is called with valid nickname`() {
+    fun `should set valid nickname before signup click when set nickname is called with valid nickname`() {
         viewModel.setNickname(validNickname)
 
         assertEquals(validNickname, viewModel.nicknameInput)
@@ -88,7 +88,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname after signup click when setnickname is called with empty nickname`() {
+    fun `should set error type nickname after signup click when set nickname is called with empty nickname`() {
         viewModel.setNickname(emptyNickname)
 
         viewModel.signup(validEmail)
@@ -99,7 +99,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype null after signup click when empty nickname is changed to valid nickname`() {
+    fun `should set error type null after signup click when empty nickname is changed to valid nickname`() {
         viewModel.setNickname(emptyNickname)
 
         viewModel.signup(validEmail)
@@ -112,7 +112,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname after signup click when setnickname is called with long nickname`() {
+    fun `should set error type nickname after signup click when set nickname is called with long nickname`() {
         viewModel.setNickname(longNickname)
 
         viewModel.signup(validEmail)
@@ -123,7 +123,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype null after signup click when long nickname is changed to valid nickname`() {
+    fun `should set error type null after signup click when long nickname is changed to valid nickname`() {
         viewModel.setNickname(longNickname)
 
         viewModel.signup(validEmail)
@@ -136,10 +136,10 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype not nickname after signup click when setnickname is called with valid nickname`() {
+    fun `should set error type not nickname after signup click when set nickname is called with valid nickname`() {
         viewModel.setNickname(validNickname)
 
-        viewModel.signup("email@test.com")
+        viewModel.signup(validEmail)
 
         assertEquals(validNickname, viewModel.nicknameInput)
         assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
@@ -147,10 +147,10 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype not nickname after signup click when valid nickname is changed to invalid nickname`() {
+    fun `should set error type not nickname after signup click when valid nickname is changed to invalid nickname`() {
         viewModel.setNickname(validNickname)
 
-        viewModel.signup("email@test.com")
+        viewModel.signup(validEmail)
 
         viewModel.setNickname(longNickname)
 
@@ -160,7 +160,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set short password before signup click when setpassword is called with short password`() {
+    fun `should set short password before signup click when set password is called with short password`() {
         viewModel.setPassword(shortPassword)
 
         assertEquals(shortPassword, viewModel.passwordInput)
@@ -169,7 +169,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set valid password before signup click when setpassword is called with valid password`() {
+    fun `should set valid password before signup click when set password is called with valid password`() {
         viewModel.setPassword(validPassword)
 
         assertEquals(validPassword, viewModel.passwordInput)
@@ -178,7 +178,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype password after signup click when setpassword is called with short password`() {
+    fun `should set error type password after signup click when set password is called with short password`() {
         viewModel.setPassword(shortPassword)
         viewModel.setNickname(validNickname)
 
@@ -190,7 +190,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype null after signup click when short password is changed to valid password`() {
+    fun `should set error type null after signup click when short password is changed to valid password`() {
         viewModel.setPassword(shortPassword)
         viewModel.setNickname(validNickname)
 
@@ -204,7 +204,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype not password after signup click when setpassword is called with valid password`() {
+    fun `should set error type not password after signup click when set password is called with valid password`() {
         viewModel.setPassword(validPassword)
 
         viewModel.signup(validEmail)
@@ -215,7 +215,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype not password after signup click when valid password is changed to invalid password`() {
+    fun `should set error type not password after signup click when valid password is changed to invalid password`() {
         viewModel.setPassword(validPassword)
 
         viewModel.signup(validEmail)
@@ -227,9 +227,8 @@ class SignupViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidPassword)
     }
 
-
     @Test
-    fun `should set invalid passwordcheck before signup click when setpasswordcheck is called with invalid passwordcheck`() {
+    fun `should set invalid password check before signup click when set password check is called with invalid password check`() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
 
@@ -239,7 +238,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set valid passwordcheck before signup click when setpasswordcheck is called with valid passwordcheck`() {
+    fun `should set valid password check before signup click when set password check is called with valid password check`() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
@@ -249,7 +248,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype email after signup click when setpasswordcheck is called with invalid passwordcheck`() {
+    fun `should set error type email after signup click when set password check is called with invalid password check`() {
         viewModel.setPassword(validPassword)
         viewModel.setNickname(validNickname)
         viewModel.setPasswordCheck(shortPassword)
@@ -262,7 +261,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype null after signup click when invalid passwordcheck is changed to valid passwordcheck`() {
+    fun `should set error type null after signup click when invalid password check is changed to valid password check`() {
         viewModel.setPassword(validPassword)
         viewModel.setNickname(validNickname)
         viewModel.setPasswordCheck(shortPassword)
@@ -277,7 +276,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype not email after signup click when setpasswordcheck is called with valid passwordcheck`() {
+    fun `should set error type not email after signup click when set password check is called with valid password check`() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
@@ -289,7 +288,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype not email after signup click when valid setpasswordcheck is changed to invalid passwordcheck`() {
+    fun `should set error type not email after signup click when valid set password check is changed to invalid password check`() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
@@ -301,8 +300,9 @@ class SignupViewModelTest {
         assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
         assertEquals(false, viewModel.uiState.value.isValidPassword)
     }
+
     @Test
-    fun `should set errortype nickname when signup is called with empty nickname, short password, invalid passwordcheck`() {
+    fun `should set error type nickname when signup is called with empty nickname, short password, invalid password check`() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -317,7 +317,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname when signup is called with empty nickname, short password, valid passwordcheck`() {
+    fun `should set error type nickname when signup is called with empty nickname, short password, valid password check`() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -332,7 +332,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname when signup is called with empty nickname, valid password, invalid passwordcheck`() {
+    fun `should set error type nickname when signup is called with empty nickname, valid password, invalid password check`() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -347,7 +347,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname when signup is called with empty nickname, valid password, valid passwordcheck`() {
+    fun `should set error type nickname when signup is called with empty nickname, valid password, valid password check`() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -362,7 +362,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname when signup is called with long nickname, short password, invalid passwordcheck`() {
+    fun `should set error type nickname when signup is called with long nickname, short password, invalid password check`() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -377,7 +377,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname when signup is called with long nickname, short password, valid passwordcheck`() {
+    fun `should set error type nickname when signup is called with long nickname, short password, valid password check`() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -392,7 +392,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname when signup is called with long nickname, valid password, invalid passwordcheck`() {
+    fun `should set error type nickname when signup is called with long nickname, valid password, invalid password check`() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -407,7 +407,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype nickname when signup is called with long nickname, valid password, valid passwordcheck`() {
+    fun `should set error type nickname when signup is called with long nickname, valid password, valid password check`() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -422,7 +422,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype password when signup is called with valid nickname, short password, invalid passwordcheck`() {
+    fun `should set error type password when signup is called with valid nickname, short password, invalid password check`() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -437,7 +437,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype password when signup is called with valid nickname, short password, valid passwordcheck`() {
+    fun `should set error type password when signup is called with valid nickname, short password, valid password check`() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -452,7 +452,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should set errortype passwordcheck when signup is called with valid nickname, valid password, invalid passwordcheck`() {
+    fun `should set error type password check when signup is called with valid nickname, valid password, invalid password check`() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -467,23 +467,24 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun `should signup success when signup is called with valid nickname, valid password, valid passwordcheck`() = runTest {
-        val authSignupRequest = AuthSignupRequest(validEmail, validPassword, validNickname)
-        coEvery { repository.signup(authSignupRequest) } returns flowOf(Resource.success(null))
+    fun `should signup success when signup is called with valid nickname, valid password, valid password check`() =
+        runTest {
+            val authSignupRequest = AuthSignupRequest(validEmail, validPassword, validNickname)
+            coEvery { repository.signup(authSignupRequest) } returns flowOf(Resource.success(null))
 
-        viewModel.setNickname(validNickname)
-        viewModel.setPassword(validPassword)
-        viewModel.setPasswordCheck(validPassword)
+            viewModel.setNickname(validNickname)
+            viewModel.setPassword(validPassword)
+            viewModel.setPasswordCheck(validPassword)
 
-        viewModel.signup(validEmail)
+            viewModel.signup(validEmail)
 
-        assertEquals(null, viewModel.signupResult.value?.message)
-        assertEquals(null, viewModel.signupResult.value?.data)
+            assertEquals(null, viewModel.signupResult.value?.message)
+            assertEquals(null, viewModel.signupResult.value?.data)
 
-    }
+        }
 
     @Test
-    fun `should clear all input fields when clearinput is called`() {
+    fun `should clear all input fields when clear input is called`() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -498,4 +499,5 @@ class SignupViewModelTest {
         assertEquals(emptyString, viewModel.passwordInput)
         assertEquals(emptyString, viewModel.passwordCheckInput)
     }
+
 }
