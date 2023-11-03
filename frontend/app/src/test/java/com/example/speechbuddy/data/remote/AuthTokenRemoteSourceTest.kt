@@ -20,6 +20,7 @@ class AuthTokenRemoteSourceTest {
 
     private lateinit var authService: AuthService
     private lateinit var authTokenRemoteSource: AuthTokenRemoteSource
+
     private val errorResponseBody =
         "{\"error\":\"Something went wrong\"}".toResponseBody("application/json".toMediaType())
 
@@ -33,10 +34,10 @@ class AuthTokenRemoteSourceTest {
     fun `should return auth token when request is valid for login`() = runBlocking {
         val request = AuthLoginRequest(email = "test@example.com", password = "password123")
         val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
-
         coEvery { authService.login(request) } returns expectedResponse
 
         val result = authTokenRemoteSource.loginAuthToken(request).first()
+
         assertEquals(expectedResponse, result)
         coVerify(exactly = 1) { authService.login(request) }
     }
@@ -45,10 +46,10 @@ class AuthTokenRemoteSourceTest {
     fun `should return auth token when request is valid for verify email`() = runBlocking {
         val request = AuthVerifyEmailRequest(email = "test@example.com", code = "123456")
         val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
-
         coEvery { authService.verifyEmailForResetPassword(request) } returns expectedResponse
 
         val result = authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).first()
+
         assertEquals(expectedResponse, result)
         coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
     }
