@@ -11,6 +11,7 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -23,6 +24,8 @@ import org.junit.Rule
 import org.junit.Test
 
 class LoginViewModelTest {
+
+    @OptIn(DelicateCoroutinesApi::class)
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     @MockK
@@ -36,7 +39,6 @@ class LoginViewModelTest {
     private val validEmail = "valid@test.com"
     private val invalidEmail = "invalid"
     private val unregisteredEmail = "unregistered@test.com" // valid format
-    private val emptyString = ""
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -48,6 +50,7 @@ class LoginViewModelTest {
         viewModel = LoginViewModel(repository)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()
@@ -55,7 +58,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set invalid email before login click when setemail is called with invalid email`() {
+    fun `should set invalid email before login click when set email is called with invalid email`() {
         viewModel.setEmail(invalidEmail)
 
         assertEquals(invalidEmail, viewModel.emailInput)
@@ -64,7 +67,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set valid email before login click when setemail is called with valid email`() {
+    fun `should set valid email before login click when set email is called with valid email`() {
         viewModel.setEmail(validEmail)
 
         assertEquals(validEmail, viewModel.emailInput)
@@ -73,7 +76,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype email after login click when setemail is called with invalid email`() {
+    fun `should set error type email after login click when set email is called with invalid email`() {
         viewModel.setEmail(invalidEmail)
 
         viewModel.login()
@@ -84,7 +87,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype null after login click when invalid email is changed to valid email`() {
+    fun `should set error type null after login click when invalid email is changed to valid email`() {
         viewModel.setEmail(invalidEmail)
 
         viewModel.login()
@@ -97,7 +100,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype email after login click when setemail is called with unregistered email`() {
+    fun `should set error type email after login click when set email is called with unregistered email`() {
         viewModel.setEmail(unregisteredEmail)
         viewModel.setPassword(validPassword)
 
@@ -105,8 +108,9 @@ class LoginViewModelTest {
             repository.login(AuthLoginRequest(unregisteredEmail, validPassword))
         } returns flowOf(
             Resource.error(
-            "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
-            null)
+                "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
+                null
+            )
         )
 
         viewModel.login()
@@ -119,7 +123,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype null after login click when unregistered email is changed to valid email`() {
+    fun `should set error type null after login click when unregistered email is changed to valid email`() {
         viewModel.setEmail(unregisteredEmail)
         viewModel.setPassword(validPassword)
 
@@ -128,7 +132,8 @@ class LoginViewModelTest {
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
-                null)
+                null
+            )
         )
 
         viewModel.login()
@@ -143,7 +148,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype not email after login click when setemail is called with valid email`() {
+    fun `should set error type not email after login click when set email is called with valid email`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(wrongPassword)
 
@@ -152,7 +157,8 @@ class LoginViewModelTest {
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
-                null)
+                null
+            )
         )
 
         viewModel.login()
@@ -165,7 +171,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype not email after login click when valid email is changed to invalid email`() {
+    fun `should set error type not email after login click when valid email is changed to invalid email`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(wrongPassword)
 
@@ -174,7 +180,8 @@ class LoginViewModelTest {
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
-                null)
+                null
+            )
         )
 
         viewModel.login()
@@ -189,7 +196,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set short password before login click when setpassword is called with short email`() {
+    fun `should set short password before login click when set password is called with short email`() {
         viewModel.setPassword(shortPassword)
 
         assertEquals(shortPassword, viewModel.passwordInput)
@@ -198,7 +205,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set valid password before login click when setpassword is called with valid email`(){
+    fun `should set valid password before login click when set password is called with valid email`() {
         viewModel.setPassword(validPassword)
 
         assertEquals(validPassword, viewModel.passwordInput)
@@ -207,7 +214,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype password after login click when setpassword is called with short password`() {
+    fun `should set error type password after login click when set password is called with short password`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(shortPassword)
 
@@ -219,7 +226,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype null after login click when short password is changed to valid password`() {
+    fun `should set error type null after login click when short password is changed to valid password`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(shortPassword)
 
@@ -233,7 +240,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype password after login click when setpassword is called with wrong password`(){
+    fun `should set error type password after login click when set password is called with wrong password`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(wrongPassword)
 
@@ -242,7 +249,8 @@ class LoginViewModelTest {
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
-                null)
+                null
+            )
         )
 
         viewModel.login()
@@ -254,7 +262,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype null after login click when wrong password is changed to valid password`(){
+    fun `should set error type null after login click when wrong password is changed to valid password`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(wrongPassword)
 
@@ -263,7 +271,8 @@ class LoginViewModelTest {
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
-                null)
+                null
+            )
         )
 
         viewModel.login()
@@ -277,7 +286,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype email when login is called with invalid email, short password`(){
+    fun `should set error type email when login is called with invalid email, short password`() {
         viewModel.setEmail(invalidEmail)
         viewModel.setPassword(shortPassword)
 
@@ -290,7 +299,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype email when login is called with invalid email, valid password`(){
+    fun `should set error type email when login is called with invalid email, valid password`() {
         viewModel.setEmail(invalidEmail)
         viewModel.setPassword(validPassword)
 
@@ -303,7 +312,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype email when login is called with unregistered email, short password`(){
+    fun `should set error type email when login is called with unregistered email, short password`() {
         viewModel.setEmail(unregisteredEmail)
         viewModel.setPassword(shortPassword)
 
@@ -316,7 +325,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype email when login is called with unregistered email, valid password`(){
+    fun `should set error type email when login is called with unregistered email, valid password`() {
         viewModel.setEmail(unregisteredEmail)
         viewModel.setPassword(validPassword)
 
@@ -325,7 +334,8 @@ class LoginViewModelTest {
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
-                null)
+                null
+            )
         )
 
         viewModel.login()
@@ -339,7 +349,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype password when login is called with valid email, short password`(){
+    fun `should set error type password when login is called with valid email, short password`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(shortPassword)
 
@@ -353,7 +363,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should set errortype password when login is called with valid email, wrong password`(){
+    fun `should set error type password when login is called with valid email, wrong password`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(wrongPassword)
 
@@ -362,7 +372,8 @@ class LoginViewModelTest {
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
-                null)
+                null
+            )
         )
 
         viewModel.login()
@@ -375,7 +386,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `should login success when login is called with valid email, valid password`(){
+    fun `should login success when login is called with valid email, valid password`() {
         viewModel.setEmail(validEmail)
         viewModel.setPassword(validPassword)
 
