@@ -10,27 +10,19 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.flow.flowOf
-import org.junit.Before
-import org.junit.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Before
 import org.junit.Rule
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.junit.Test
 
-//@RunWith(JUnit4::class)
 class SignupViewModelTest {
-    /*
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     @MockK
@@ -41,26 +33,27 @@ class SignupViewModelTest {
     private val validNickname = "valid_nickname_"
     private val longNickname = "invalid_nickname"
     private val emptyNickname = ""
+
     // boundary condition: 8 characters in password field
     private val validPassword = "password"
     private val shortPassword = "pwd"
     private val validEmail = "test@test.com"
+    private val emptyString = ""
 
-
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
-    @Rule
     fun setup() {
-        //Dispatchers.setMain(mainThreadSurrogate)
+        Dispatchers.setMain(mainThreadSurrogate)
         viewModel = SignupViewModel(repository)
-        //val instantTaskExecutorRule = InstantTaskExecutorRule()
     }
 
     @After
     fun tearDown() {
-        //Dispatchers.resetMain()
-        //mainThreadSurrogate.close()
+        Dispatchers.resetMain()
+        mainThreadSurrogate.close()
     }
 
     @Test
@@ -91,7 +84,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setNickname_empty_afterSignupClick(){
+    fun signupViewModel_setNickname_empty_afterSignupClick() {
         viewModel.setNickname(emptyNickname)
 
         viewModel.signup(validEmail)
@@ -108,7 +101,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setNickname_long_afterSignupClick(){
+    fun signupViewModel_setNickname_long_afterSignupClick() {
         viewModel.setNickname(longNickname)
 
         viewModel.signup(validEmail)
@@ -125,7 +118,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setNickname_valid_afterSignupClick(){
+    fun signupViewModel_setNickname_valid_afterSignupClick() {
         viewModel.setNickname(validNickname)
 
         viewModel.signup("email@test.com")
@@ -142,7 +135,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setPassword_short_beforeSignupClick(){
+    fun signupViewModel_setPassword_short_beforeSignupClick() {
         viewModel.setPassword(shortPassword)
 
         assertEquals(shortPassword, viewModel.passwordInput)
@@ -151,7 +144,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setPassword_valid_beforeSignupClick(){
+    fun signupViewModel_setPassword_valid_beforeSignupClick() {
         viewModel.setPassword(validPassword)
 
         assertEquals(validPassword, viewModel.passwordInput)
@@ -160,7 +153,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setPassword_short_afterSignupClick(){
+    fun signupViewModel_setPassword_short_afterSignupClick() {
         viewModel.setPassword(shortPassword)
         viewModel.setNickname(validNickname)
 
@@ -178,7 +171,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setPassword_valid_afterSignupClick(){
+    fun signupViewModel_setPassword_valid_afterSignupClick() {
         viewModel.setPassword(validPassword)
 
         viewModel.signup(validEmail)
@@ -196,7 +189,7 @@ class SignupViewModelTest {
 
 
     @Test
-    fun signupViewModel_setPasswordCheck_invalid_beforeSignupClick(){
+    fun signupViewModel_setPasswordCheck_invalid_beforeSignupClick() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
 
@@ -206,7 +199,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setPasswordCheck_valid_beforeSignupClick(){
+    fun signupViewModel_setPasswordCheck_valid_beforeSignupClick() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
@@ -216,7 +209,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setPasswordCheck_invalid_afterSignupClick(){
+    fun signupViewModel_setPasswordCheck_invalid_afterSignupClick() {
         viewModel.setPassword(validPassword)
         viewModel.setNickname(validNickname)
         viewModel.setPasswordCheck(shortPassword)
@@ -235,7 +228,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setPasswordCheck_valid_afterSignupClick(){
+    fun signupViewModel_setPasswordCheck_valid_afterSignupClick() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
@@ -253,7 +246,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_emptyNickname_shortPwd_invalidPwdCheck(){
+    fun signupViewModel_signup_emptyNickname_shortPwd_invalidPwdCheck() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -268,7 +261,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_emptyNickname_shortPwd_validPwdCheck(){
+    fun signupViewModel_signup_emptyNickname_shortPwd_validPwdCheck() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -283,7 +276,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_emptyNickname_validPwd_invalidPwdCheck(){
+    fun signupViewModel_signup_emptyNickname_validPwd_invalidPwdCheck() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -298,7 +291,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_emptyNickname_validPwd_validPwdCheck(){
+    fun signupViewModel_signup_emptyNickname_validPwd_validPwdCheck() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -313,7 +306,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_longNickname_shortPwd_invalidPwdCheck(){
+    fun signupViewModel_signup_longNickname_shortPwd_invalidPwdCheck() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -328,7 +321,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_longNickname_shortPwd_validPwdCheck(){
+    fun signupViewModel_signup_longNickname_shortPwd_validPwdCheck() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -343,7 +336,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_longNickname_validPwd_invalidPwdCheck(){
+    fun signupViewModel_signup_longNickname_validPwd_invalidPwdCheck() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -358,7 +351,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_longNickname_validPwd_validPwdCheck(){
+    fun signupViewModel_signup_longNickname_validPwd_validPwdCheck() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -373,7 +366,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_validNickname_shortPwd_invalidPwdCheck(){
+    fun signupViewModel_signup_validNickname_shortPwd_invalidPwdCheck() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
@@ -388,7 +381,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_validNickname_shortPwd_validPwdCheck(){
+    fun signupViewModel_signup_validNickname_shortPwd_validPwdCheck() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -403,7 +396,7 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_signup_validNickname_validPwd_invalidPwdCheck(){
+    fun signupViewModel_signup_validNickname_validPwd_invalidPwdCheck() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
@@ -418,23 +411,35 @@ class SignupViewModelTest {
     }
 
     @Test
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun signupViewModel_signup_validNickname_validPwd_validPwdCheck() = runTest{
+    fun signupViewModel_signup_validNickname_validPwd_validPwdCheck() = runTest {
         val authSignupRequest = AuthSignupRequest(validEmail, validPassword, validNickname)
-        launch(Dispatchers.Main){
-            coEvery { repository.signup(authSignupRequest) } returns flowOf(Resource.success(null))
+        coEvery { repository.signup(authSignupRequest) } returns flowOf(Resource.success(null))
 
-            viewModel.setNickname(validNickname)
-            viewModel.setPassword(validPassword)
-            viewModel.setPasswordCheck(validPassword)
+        viewModel.setNickname(validNickname)
+        viewModel.setPassword(validPassword)
+        viewModel.setPasswordCheck(validPassword)
 
-            viewModel.signup(validEmail)
-        }
+        viewModel.signup(validEmail)
 
         assertEquals(viewModel.signupResult.value?.message, null)
         assertEquals(viewModel.signupResult.value?.data, null)
 
     }
-     */
 
+    @Test
+    fun signupViewModel_clearInputs() {
+        viewModel.setNickname(validNickname)
+        viewModel.setPassword(validPassword)
+        viewModel.setPasswordCheck(validPassword)
+
+        assertEquals(validNickname, viewModel.nicknameInput)
+        assertEquals(validPassword, viewModel.passwordInput)
+        assertEquals(validPassword, viewModel.passwordCheckInput)
+
+        viewModel.clearInputs()
+
+        assertEquals(emptyString, viewModel.nicknameInput)
+        assertEquals(emptyString, viewModel.passwordInput)
+        assertEquals(emptyString, viewModel.passwordCheckInput)
+    }
 }

@@ -50,6 +50,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
@@ -123,6 +124,5 @@ dependencies {
     testImplementation ("io.mockk:mockk-android:$mockkVersion")
     testImplementation ("io.mockk:mockk-agent:$mockkVersion")
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-    testImplementation ("junit:junit:4.13")
     testImplementation ("androidx.arch.core:core-testing:2.1.0")
 }
