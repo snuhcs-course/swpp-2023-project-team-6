@@ -99,7 +99,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect { result ->
-                    Log.d("test", result.toString())
+                    /* TODO: 나중에 고쳐야 함 */
                     when (result.code()) {
                         200 -> {
                             navController.navigate("login")
