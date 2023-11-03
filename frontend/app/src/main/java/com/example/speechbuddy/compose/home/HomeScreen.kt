@@ -1,7 +1,6 @@
 package com.example.speechbuddy.compose.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -14,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,7 +24,7 @@ import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 data class BottomNavItem(
@@ -109,7 +107,8 @@ private fun BottomNavigationBar(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     unselectedIconColor = MaterialTheme.colorScheme.outline
-                )
+                ),
+                interactionSource = NoRippleInteractionSource()
             )
         }
     }

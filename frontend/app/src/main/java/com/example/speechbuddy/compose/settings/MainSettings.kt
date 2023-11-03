@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +69,8 @@ fun SettingsTextButton(
 ) {
     TextButton(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        interactionSource = NoRippleInteractionSource()
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
