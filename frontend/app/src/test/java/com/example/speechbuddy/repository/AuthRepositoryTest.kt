@@ -30,7 +30,7 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun testSignupSuccess() {
+    fun `should return SUCCESS Resource when signup request is valid`() {
         runBlocking {
             val authSignupRequest = AuthSignupRequest(
                 email = "testemail@google.com",
@@ -53,7 +53,7 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun testLoginSuccess(){
+    fun `should return SUCCESS Resource when login request is valid`(){
         runBlocking {
             val authLoginRequest = AuthLoginRequest(
                 email = "testemail@google.com",
@@ -84,7 +84,7 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun testVerifySendSignupSuccess() {
+    fun `should return SUCCESS Resource when verifySendSignup request is valid`() {
         runBlocking {
             val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
                 email = "testemail@google.com"
@@ -104,7 +104,7 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun testVerifySendPWSuccess() {
+    fun `should return SUCCESS Resource when verifySendPW request is valid`() {
         runBlocking {
             val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
                 email = "testemail@google.com"
@@ -124,7 +124,7 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun testVerifyAcceptSignupSuccess() {
+    fun `should return SUCCESS Resource when verifyAcceptSignup request is valid`() {
         runBlocking {
             val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
                 email = "testemail@google.com",
@@ -145,7 +145,7 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun testVerifyAcceptPWSuccess(){
+    fun `should return SUCCESS Resource when verifyAcceptPW request is valid`(){
         runBlocking {
             val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
                 email = "testemail@google.com",
@@ -175,7 +175,7 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun testResetPasswordSuccess() {
+    fun `should return SUCCESS Resource when resetPassword request is valid`() {
         runBlocking {
             val authResetPasswordRequest = AuthResetPasswordRequest(
                 password = "newpassword"
