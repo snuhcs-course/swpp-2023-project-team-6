@@ -70,8 +70,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    testImplementation("io.mockk:mockk:1.13.8")
-
     // Lifecycle
     val lifecycleVersion = "2.6.2"
     implementation("androidx.lifecycle:lifecycle-common:$lifecycleVersion")
@@ -86,7 +84,6 @@ dependencies {
     val coroutinesVersion = "1.7.1"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
     // Preference
@@ -104,21 +101,29 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
 
+    // Gson
+    implementation("com.google.code.gson:gson:2.9.0")
+
     // Room
-    val roomVersion = "2.5.2"
+    val roomVersion = "2.6.0"
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
 
+    // Work
+    val workVersion = "2.8.1"
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    testImplementation("androidx.work:work-testing:$workVersion")
+
     // Navigation
-    val navigationVersion = "2.7.4"
+    val navigationVersion = "2.7.5"
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-compose:$navigationVersion")
     implementation("androidx.navigation:navigation-runtime-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 
     // Hilt
-    val hiltVersion = "2.46.1"
+    val hiltVersion = "2.48.1"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
@@ -126,6 +131,7 @@ dependencies {
 
     // MockK
     val mockkVersion = "1.13.8"
+    testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
 }
