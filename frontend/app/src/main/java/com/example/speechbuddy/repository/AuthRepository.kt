@@ -2,6 +2,8 @@ package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.data.remote.models.ErrorResponseDto
+import com.example.speechbuddy.data.remote.models.ErrorResponseDtoMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
@@ -11,15 +13,25 @@ import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import okhttp3.ResponseBody
 import org.json.JSONObject
+import retrofit2.Converter
+import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AuthRepository @Inject constructor(
     private val authTokenRemoteSource: AuthTokenRemoteSource,
-    private val authTokenDtoMapper: AuthTokenDtoMapper
+    private val authTokenDtoMapper: AuthTokenDtoMapper,
+    private val errorResponseDtoMapper: ErrorResponseDtoMapper,
+    private val retrofit : Retrofit
 ) {
+
+    // convert API responseBody to errorResponseMsgDto
+    private val converter: Converter<ResponseBody, ErrorResponseDto> = retrofit.responseBodyConverter(
+        ErrorResponseDto::class.java, ErrorResponseDto::class.java.annotations
+    )
 
     suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Resource<Void>> {
         return authTokenRemoteSource.signupAuthToken(authSignupRequest).map { response ->
@@ -27,11 +39,10 @@ class AuthRepository @Inject constructor(
                 Resource.success(null)
             } else {
                 response.errorBody()?.let { responseBody ->
-                    val errorJson = JSONObject(responseBody.charStream().readText())
-                    val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                    val firstKeyOfMessage = messageJson.keys().next().toString()
+                    val errorResponseMsgDto = converter.convert(responseBody)
+                    val errorMsgKey = errorResponseDtoMapper.mapToDomainModel(errorResponseMsgDto!!).key
                     Resource.error(
-                        firstKeyOfMessage,
+                        errorMsgKey ?: "Unknown Error",
                         null
                     )
                 } ?: Resource.error("Unknown Error", null)

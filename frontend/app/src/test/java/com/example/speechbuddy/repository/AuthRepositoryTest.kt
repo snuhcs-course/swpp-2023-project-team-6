@@ -3,6 +3,7 @@ package com.example.speechbuddy.repository
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.data.remote.models.ErrorResponseDtoMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
@@ -22,6 +23,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
+import retrofit2.Retrofit
 
 class AuthRepositoryTest {
 
@@ -30,6 +32,8 @@ class AuthRepositoryTest {
     @MockK
     private val authTokenRemoteSource = mockk<AuthTokenRemoteSource>()
     private val authTokenDtoMapper = AuthTokenDtoMapper()
+    private val errorResponseDtoMapper = ErrorResponseDtoMapper()
+    private val retrofit = mockk<Retrofit>()
 
     private val mockEmail = "test@example.com"
     private val mockPassword = "password123"
@@ -55,7 +59,7 @@ class AuthRepositoryTest {
 
     @Before
     fun setup() {
-        authRepository = AuthRepository(authTokenRemoteSource, authTokenDtoMapper)
+        authRepository = AuthRepository(authTokenRemoteSource, authTokenDtoMapper, errorResponseDtoMapper, retrofit)
     }
 
     @Test
