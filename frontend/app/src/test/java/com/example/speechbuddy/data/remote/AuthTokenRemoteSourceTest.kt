@@ -131,18 +131,24 @@ class AuthTokenRemoteSourceTest {
             password = "password123",
             nickname = "testUser"
         )
-        coEvery { authService.signup(request) } throws Exception("Signup failed")
+        val expectedResponse = RuntimeException("Signup failed")
+        coEvery { authService.signup(request) } throws Exception(expectedResponse)
 
-        authTokenRemoteSource.signupAuthToken(request).toList()
+        val result = authTokenRemoteSource.signupAuthToken(request).toList()
+
+        assertEquals(expectedResponse, result)
         coVerify(exactly = 1) { authTokenRemoteSource.signupAuthToken(request) }
     }
 
     @Test(expected = Exception::class)
     fun loginAuthToken_AuthLoginRequest_returnException(): Unit = runBlocking {
         val request = AuthLoginRequest(email = "test@example.com", password = "password123")
-        coEvery { authService.login(request) } throws Exception("Login failed")
+        val expectedResponse = RuntimeException("Login failed")
+        coEvery { authService.login(request) } throws Exception(expectedResponse)
 
-        authTokenRemoteSource.loginAuthToken(request).toList()
+        val result = authTokenRemoteSource.loginAuthToken(request).toList()
+
+        assertEquals(expectedResponse, result)
         coVerify(exactly = 1) { authTokenRemoteSource.loginAuthToken(request) }
     }
 
@@ -150,17 +156,23 @@ class AuthTokenRemoteSourceTest {
     fun verifySendSignupAuthToken_AuthVerifyEmailSendRequest_returnException(): Unit = runBlocking {
         val request = AuthVerifyEmailSendRequest(email = "test@example.com")
         coEvery { authService.verifySendSignup(request) } throws Exception("Email verification send failed")
+        val expectedResponse = RuntimeException("Email verification send failed")
 
-        authTokenRemoteSource.verifySendSignupAuthToken(request).toList()
+        val result = authTokenRemoteSource.verifySendSignupAuthToken(request).toList()
+
+        assertEquals(expectedResponse, result)
         coVerify(exactly = 1) { authTokenRemoteSource.verifySendSignupAuthToken(request) }
     }
 
     @Test(expected = Exception::class)
     fun verifySendPWAuthToken_AuthVerifyEmailSendRequest_returnException(): Unit = runBlocking {
         val request = AuthVerifyEmailSendRequest(email = "test@example.com")
+        val expectedResponse = RuntimeException("Password verification send failed")
         coEvery { authService.verifySendPW(request) } throws Exception("Password verification send failed")
 
-        authTokenRemoteSource.verifySendPWAuthToken(request).toList()
+        val result = authTokenRemoteSource.verifySendPWAuthToken(request).toList()
+
+        assertEquals(expectedResponse, result)
         coVerify(exactly = 1) { authTokenRemoteSource.verifySendPWAuthToken(request) }
     }
 
@@ -168,27 +180,36 @@ class AuthTokenRemoteSourceTest {
     fun verifyAcceptSignupAuthTokenAuthVerifyEmailAcceptRequest_returnException(): Unit =
         runBlocking {
             val request = AuthVerifyEmailAcceptRequest(email = "test@example.com", code = "123456")
+            val expectedResponse = RuntimeException("Email verification accept failed")
             coEvery { authService.verifyAcceptSignup(request) } throws Exception("Email verification accept failed")
 
-            authTokenRemoteSource.verifyAcceptSignupAuthToken(request).toList()
+            val result = authTokenRemoteSource.verifyAcceptSignupAuthToken(request).toList()
+
+            assertEquals(expectedResponse, result)
             coVerify(exactly = 1) { authTokenRemoteSource.verifyAcceptSignupAuthToken(request) }
         }
 
     @Test(expected = Exception::class)
     fun verifyAcceptPWAuthToken_AuthVerifyEmailAcceptRequest_returnException(): Unit = runBlocking {
         val request = AuthVerifyEmailAcceptRequest(email = "test@example.com", code = "123456")
+        val expectedResponse = RuntimeException("Password verification accept failed")
         coEvery { authService.verifyAcceptPW(request) } throws Exception("Password verification accept failed")
 
-        authTokenRemoteSource.verifyAcceptPWAuthToken(request).toList()
+        val result = authTokenRemoteSource.verifyAcceptPWAuthToken(request).toList()
+
+        assertEquals(expectedResponse, result)
         coVerify(exactly = 1) { authTokenRemoteSource.verifyAcceptPWAuthToken(request) }
     }
 
     @Test(expected = Exception::class)
     fun resetPasswordAuthToken_AuthResetPasswordRequest_returnException(): Unit = runBlocking {
         val request = AuthResetPasswordRequest(password = "newPassword123")
+        val expectedResponse = RuntimeException("Password reset failed")
         coEvery { authService.resetPassword(request) } throws Exception("Password reset failed")
 
-        authTokenRemoteSource.resetPasswordAuthToken(request).toList()
+        val result = authTokenRemoteSource.resetPasswordAuthToken(request).toList()
+
+        assertEquals(expectedResponse, result)
         coVerify(exactly = 1) { authTokenRemoteSource.resetPasswordAuthToken(request) }
     }
 }
