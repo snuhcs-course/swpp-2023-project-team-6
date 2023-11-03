@@ -33,7 +33,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun signup_AuthSignupRequest_returnResponseSuccess() = runBlocking {
+    fun `should return response success when signup request is valid`() = runBlocking {
         val signupRequest = AuthSignupRequest(mockEmail, mockPassword, mockNickname)
         coEvery { authService.signup(signupRequest) } returns Response.success(null)
 
@@ -44,7 +44,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun login_AuthLoginRequest_returnResponseSuccess() = runBlocking {
+    fun `should return response with auth token dto when login request is valid`() = runBlocking {
         val loginRequest = AuthLoginRequest(mockEmail, mockPassword)
         val authTokenDto = AuthTokenDto("AccessToken", "RefreshToken")
         coEvery { authService.login(loginRequest) } returns Response.success(authTokenDto)
@@ -58,7 +58,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun verifySendSignup_AuthVerifyEmailSendRequest_returnResponseSuccess() = runBlocking {
+    fun `should return response success when request email send is valid for signup`() = runBlocking {
         val verifyEmailSendRequest = AuthVerifyEmailSendRequest(mockEmail)
         coEvery { authService.verifySendSignup(verifyEmailSendRequest) } returns Response.success(
             null
@@ -71,7 +71,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun verifySendPW_AuthVerifyEmailSendRequest_returnResponseSuccess() = runBlocking {
+    fun `should return response success when request email send is valid for password reset`() = runBlocking {
         val verifyEmailSendRequest = AuthVerifyEmailSendRequest(mockEmail)
         coEvery { authService.verifySendPW(verifyEmailSendRequest) } returns Response.success(null)
 
@@ -82,7 +82,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun verifyAcceptSignup_AuthVerifyEmailAcceptRequest_returnResponseSuccess() = runBlocking {
+    fun `should return response with success when request code is valid for signup`() = runBlocking {
         val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, mockCode)
         coEvery { authService.verifyAcceptSignup(verifyEmailAcceptRequest) } returns Response.success(
             null
@@ -95,7 +95,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun verifyAcceptPW_AuthVerifyEmailAccpetRequest_returnResponseSuccess() = runBlocking {
+    fun `should return response with auth token dto when request code is valid for password reset`() = runBlocking {
         val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, mockCode)
         val authTokenDto = AuthTokenDto("AccessToken", "RefreshToken")
         coEvery { authService.verifyAcceptPW(verifyEmailAcceptRequest) } returns Response.success(
@@ -111,7 +111,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun resetPassword_AuthResetPasswordRequest_returnResponseSuccess() = runBlocking {
+    fun `should return response with success when request is valid password`() = runBlocking {
         val resetPasswordRequest = AuthResetPasswordRequest(mockPassword)
         coEvery { authService.resetPassword(resetPasswordRequest) } returns Response.success(null)
 
@@ -124,7 +124,7 @@ class AuthServiceTest {
 
     // Test Error Case
     @Test
-    fun signup_AuthSignupRequest_returnResponseFail() = runBlocking {
+    fun `should return response with error when signup request is invalid`() = runBlocking {
         val signupRequest = AuthSignupRequest(mockEmail, "short", mockNickname)
         coEvery { authService.signup(signupRequest) } returns Response.error(400, errorResponseBody)
 
@@ -135,7 +135,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun login_AuthLoginRequest_returnResponseFail() = runBlocking {
+    fun `should return response with error when login request is invalid`() = runBlocking {
         val loginRequest = AuthLoginRequest(mockEmail, "wrongpassword")
         coEvery { authService.login(loginRequest) } returns Response.error(401, errorResponseBody)
 
@@ -146,7 +146,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun verifySendSignup_AuthVerifyEmailSendRequest_returnResponseFail() = runBlocking {
+    fun `should return response with error when reques temail send is invalid for signup`() = runBlocking {
         val verifyEmailSendRequest = AuthVerifyEmailSendRequest("invalid_email")
         coEvery { authService.verifySendSignup(verifyEmailSendRequest) } returns Response.error(
             400,
@@ -160,7 +160,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun verifySendPW_AuthVerifyEmailSendRequest_returnResponseFail() = runBlocking {
+    fun `should return response with error when request email send is invalid for password reset`() = runBlocking {
         val verifyEmailSendRequest = AuthVerifyEmailSendRequest("invalid_email")
         coEvery { authService.verifySendPW(verifyEmailSendRequest) } returns Response.error(
             400,
@@ -174,7 +174,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun verifyAcceptSignup_AuthVerifyEmailAcceptRequest_returnResponseFail() = runBlocking {
+    fun `should return response with error when request code is invalid for signup`() = runBlocking {
         val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, "wrongcode")
         coEvery { authService.verifyAcceptSignup(verifyEmailAcceptRequest) } returns Response.error(
             400,
@@ -188,7 +188,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun verifyAcceptPW_AuthVerifyEmailAcceptRequest_returnResponseFail() = runBlocking {
+    fun `should return response with error when request code is invalid for password reset`() = runBlocking {
         val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, "wrongcode")
         coEvery { authService.verifyAcceptPW(verifyEmailAcceptRequest) } returns Response.error(
             400,
@@ -202,7 +202,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun resetPassword_AuthResetPasswordRequest_returnResponseFail() = runBlocking {
+    fun `should return response with error when request is invalid password`() = runBlocking {
         val resetPasswordRequest = AuthResetPasswordRequest("short")
         coEvery { authService.resetPassword(resetPasswordRequest) } returns Response.error(
             400,
