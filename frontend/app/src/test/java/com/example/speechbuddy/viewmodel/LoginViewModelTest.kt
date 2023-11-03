@@ -1,17 +1,12 @@
-package com.example.speechbuddy
+package com.example.speechbuddy.viewmodel
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
-import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginErrorType
-import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.utils.Resource
-import com.example.speechbuddy.utils.Status
-import com.example.speechbuddy.viewmodel.LoginViewModel
-import com.example.speechbuddy.viewmodel.SignupViewModel
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
@@ -21,13 +16,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
 class LoginViewModelTest {
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
