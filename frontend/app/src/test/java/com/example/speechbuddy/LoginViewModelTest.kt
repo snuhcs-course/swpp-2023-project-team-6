@@ -1,8 +1,10 @@
 package com.example.speechbuddy
 
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
+import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.SignupErrorType
@@ -37,10 +39,10 @@ class LoginViewModelTest {
     // boundary condition: 8 characters in password field
     private val validPassword = "password"
     private val shortPassword = "pwd"
-    private val wrongPassword = "wrong_password"
+    private val wrongPassword = "wrong_password" // valid format
     private val validEmail = "valid@test.com"
     private val invalidEmail = "invalid"
-    private val notRegisteredEmail = "not_registered@test.com"
+    private val unregisteredEmail = "unregistered@test.com" // valid format
     private val emptyString = ""
 
     @get:Rule
@@ -60,7 +62,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun loginViewModel_setEmail_invalid_beforeSignupClick() {
+    fun `should set invalid email before login click when setemail is called with invalid email`() {
         viewModel.setEmail(invalidEmail)
 
         assertEquals(invalidEmail, viewModel.emailInput)
@@ -69,7 +71,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun loginViewModel_setEmail_valid_beforeSignupClick() {
+    fun `should set valid email before login click when setemail is called with valid email`() {
         viewModel.setEmail(validEmail)
 
         assertEquals(validEmail, viewModel.emailInput)
@@ -78,7 +80,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun loginViewModel_setEmail_invalid_afterSignupClick() {
+    fun `should set errortype email after login click when setemail is called with invalid email`() {
         viewModel.setEmail(invalidEmail)
 
         viewModel.login()
@@ -86,6 +88,13 @@ class LoginViewModelTest {
         assertEquals(invalidEmail, viewModel.emailInput)
         assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
         assertEquals(false, viewModel.uiState.value.isValidEmail)
+    }
+
+    @Test
+    fun `should set errortype null after login click when invalid email is changed to valid email`() {
+        viewModel.setEmail(invalidEmail)
+
+        viewModel.login()
 
         viewModel.setEmail(validEmail)
 
@@ -95,23 +104,42 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun loginViewModel_setEmail_notRegistered_afterSignupClick() {
-        viewModel.setEmail(notRegisteredEmail)
+    fun `should set errortype email after login click when setemail is called with unregistered email`() {
+        viewModel.setEmail(unregisteredEmail)
         viewModel.setPassword(validPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(notRegisteredEmail, validPassword))
+            repository.login(AuthLoginRequest(unregisteredEmail, validPassword))
         } returns flowOf(
             Resource.error(
             "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
             null)
         )
-        viewModel.login()
 
-        assertEquals(notRegisteredEmail, viewModel.emailInput)
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
+
+        assertEquals(unregisteredEmail, viewModel.emailInput)
         assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
         assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
         assertEquals(false, viewModel.uiState.value.isValidEmail)
+    }
+
+    @Test
+    fun `should set errortype null after login click when unregistered email is changed to valid email`() {
+        viewModel.setEmail(unregisteredEmail)
+        viewModel.setPassword(validPassword)
+
+        coEvery {
+            repository.login(AuthLoginRequest(unregisteredEmail, validPassword))
+        } returns flowOf(
+            Resource.error(
+                "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
+                null)
+        )
+
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
 
         viewModel.setEmail(validEmail)
 
@@ -120,210 +148,256 @@ class LoginViewModelTest {
         assertEquals(null, viewModel.uiState.value.error?.messageId)
         assertEquals(true, viewModel.uiState.value.isValidEmail)
     }
-/*
+
     @Test
-    fun loginViewModel_setEmail_valid_afterSignupClick() {
+    fun `should set errortype not email after login click when setemail is called with valid email`() {
+        viewModel.setEmail(validEmail)
+        viewModel.setPassword(wrongPassword)
+
+        coEvery {
+            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+        } returns flowOf(
+            Resource.error(
+                "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
+                null)
+        )
+
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
+
+        assertEquals(validEmail, viewModel.emailInput)
+        assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+    }
+
+    @Test
+    fun `should set errortype not email after login click when valid email is changed to invalid email`() {
+        viewModel.setEmail(validEmail)
+        viewModel.setPassword(wrongPassword)
+
+        coEvery {
+            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+        } returns flowOf(
+            Resource.error(
+                "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
+                null)
+        )
+
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
+
         viewModel.setEmail(invalidEmail)
+
+        assertEquals(invalidEmail, viewModel.emailInput)
+        assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+    }
+
+    @Test
+    fun `should set short password before login click when setpassword is called with short email`() {
+        viewModel.setPassword(shortPassword)
+
+        assertEquals(shortPassword, viewModel.passwordInput)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+    }
+
+    @Test
+    fun `should set valid password before login click when setpassword is called with valid email`(){
+        viewModel.setPassword(validPassword)
+
+        assertEquals(validPassword, viewModel.passwordInput)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+    }
+
+    @Test
+    fun `should set errortype password after login click when setpassword is called with short password`() {
+        viewModel.setEmail(validEmail)
+        viewModel.setPassword(shortPassword)
 
         viewModel.login()
 
-        assertEquals(invalidEmail, viewModel.emailInput)
-        assertEquals(viewModel.uiState.value.error?.type, LoginErrorType.EMAIL)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        assertEquals(shortPassword, viewModel.passwordInput)
+        assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+    }
 
+    @Test
+    fun `should set errortype null after login click when short password is changed to valid password`() {
         viewModel.setEmail(validEmail)
-
-        assertEquals(validEmail, viewModel.emailInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, true)
-    }
-
-    @Test
-    fun loginViewModel_setPassword_short_beforeSignupClick() {
         viewModel.setPassword(shortPassword)
 
-        assertEquals(shortPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-    }
-
-    @Test
-    fun loginViewModel_setPassword_valid_beforeSignupClick() {
-        viewModel.setPassword(validPassword)
-
-        assertEquals(validPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-    }
-
-    @Test
-    fun loginViewModel_setPassword_short_afterSignupClick() {
-        viewModel.setPassword(shortPassword)
-        viewModel.setNickname(validNickname)
-
-        viewModel.signup(validEmail)
-
-        assertEquals(shortPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.PASSWORD)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        viewModel.login()
 
         viewModel.setPassword(validPassword)
 
         assertEquals(validPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidPassword, true)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(true, viewModel.uiState.value.isValidPassword)
     }
 
     @Test
-    fun loginViewModel_setPassword_wrong_afterSignupClick() {
-        viewModel.setPassword(validPassword)
+    fun `should set errortype password after login click when setpassword is called with wrong password`(){
+        viewModel.setEmail(validEmail)
+        viewModel.setPassword(wrongPassword)
 
-        viewModel.signup(validEmail)
+        coEvery {
+            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+        } returns flowOf(
+            Resource.error(
+                "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
+                null)
+        )
+
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
+
+        assertEquals(wrongPassword, viewModel.passwordInput)
+        assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+    }
+
+    @Test
+    fun `should set errortype null after login click when wrong password is changed to valid password`(){
+        viewModel.setEmail(validEmail)
+        viewModel.setPassword(wrongPassword)
+
+        coEvery {
+            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+        } returns flowOf(
+            Resource.error(
+                "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
+                null)
+        )
+
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
+
+        viewModel.setPassword(validPassword)
 
         assertEquals(validPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(true, viewModel.uiState.value.isValidPassword)
+    }
 
+    @Test
+    fun `should set errortype email when login is called with invalid email, short password`(){
+        viewModel.setEmail(invalidEmail)
         viewModel.setPassword(shortPassword)
 
-        assertEquals(shortPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        viewModel.login()
+
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
     }
 
-
     @Test
-    fun loginViewModel_setPassword_valid_afterSignupClick() {
+    fun `should set errortype email when login is called with invalid email, valid password`(){
+        viewModel.setEmail(invalidEmail)
         viewModel.setPassword(validPassword)
-        viewModel.setPasswordCheck(shortPassword)
 
-        assertEquals(shortPassword, viewModel.passwordCheckInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        viewModel.login()
+
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun loginViewModel_login_invalidEmail_shortPassword() {
+    fun `should set errortype email when login is called with unregistered email, short password`(){
+        viewModel.setEmail(unregisteredEmail)
         viewModel.setPassword(shortPassword)
-        viewModel.setPasswordCheck(validPassword)
 
-        viewModel.signup(validEmail)
+        viewModel.login()
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun loginViewModel_login_invalidEmail_validPassword() {
-        viewModel.setNickname(emptyNickname)
+    fun `should set errortype email when login is called with unregistered email, valid password`(){
+        viewModel.setEmail(unregisteredEmail)
+        viewModel.setPassword(validPassword)
+
+        coEvery {
+            repository.login(AuthLoginRequest(unregisteredEmail, validPassword))
+        } returns flowOf(
+            Resource.error(
+                "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
+                null)
+        )
+
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
+
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
+
+    }
+
+    @Test
+    fun `should set errortype password when login is called with valid email, short password`(){
+        viewModel.setEmail(validEmail)
         viewModel.setPassword(shortPassword)
-        viewModel.setPasswordCheck(shortPassword)
 
-        viewModel.signup(validEmail)
+        viewModel.login()
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
+
     }
 
     @Test
-    fun loginViewModel_login_notRegisteredEmail_shortPassword() {
-        viewModel.setNickname(emptyNickname)
+    fun `should set errortype password when login is called with valid email, wrong password`(){
+        viewModel.setEmail(validEmail)
+        viewModel.setPassword(wrongPassword)
+
+        coEvery {
+            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+        } returns flowOf(
+            Resource.error(
+                "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
+                null)
+        )
+
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
+
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
+    }
+
+    @Test
+    fun `should login success when login is called with valid email, valid password`(){
+        viewModel.setEmail(validEmail)
         viewModel.setPassword(validPassword)
-        viewModel.setPasswordCheck(shortPassword)
 
-        viewModel.signup(validEmail)
+        val authToken = AuthToken("access", "refresh")
+        coEvery {
+            repository.login(AuthLoginRequest(validEmail, validPassword))
+        } returns flowOf(
+            Resource.success(authToken)
+        )
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        viewModel.login()
+        Thread.sleep(10) //viewModel.login() does not immediately produce result
+
+        assertEquals(null, viewModel.loginResult.value?.message)
+        assertEquals(authToken, viewModel.loginResult.value?.data)
     }
-
-    @Test
-    fun loginViewModel_login_notRegisteredEmail_validPassword() {
-        viewModel.setNickname(emptyNickname)
-        viewModel.setPassword(validPassword)
-        viewModel.setPasswordCheck(validPassword)
-
-        viewModel.signup(validEmail)
-
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
-    }
-
-    @Test
-    fun loginViewModel_login_validEmail_shortPassword() {
-        viewModel.setNickname(longNickname)
-        viewModel.setPassword(shortPassword)
-        viewModel.setPasswordCheck(validPassword)
-
-        viewModel.signup(validEmail)
-
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
-    }
-
-    @Test
-    fun loginViewModel_login_validEmail_wrongPassword() {
-        viewModel.setNickname(longNickname)
-        viewModel.setPassword(shortPassword)
-        viewModel.setPasswordCheck(shortPassword)
-
-        viewModel.signup(validEmail)
-
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
-    }
-
-    @Test
-    fun loginViewModel_login_validEmail_validPassword() {
-        val authSignupRequest = AuthSignupRequest(validEmail, validPassword, validNickname)
-        coEvery { repository.signup(authSignupRequest) } returns flowOf(Resource.success(null))
-
-        viewModel.setNickname(validNickname)
-        viewModel.setPassword(validPassword)
-        viewModel.setPasswordCheck(validPassword)
-
-        viewModel.signup(validEmail)
-
-        assertEquals(viewModel.signupResult.value?.message, null)
-        assertEquals(viewModel.signupResult.value?.data, null)
-    }
-
-    @Test
-    fun loginViewModel_clearInputs() {
-        viewModel.setNickname(validNickname)
-        viewModel.setPassword(validPassword)
-        viewModel.setPasswordCheck(validPassword)
-
-        assertEquals(validNickname, viewModel.nicknameInput)
-        assertEquals(validPassword, viewModel.passwordInput)
-        assertEquals(validPassword, viewModel.passwordCheckInput)
-
-        viewModel.clearInputs()
-
-        assertEquals(emptyString, viewModel.nicknameInput)
-        assertEquals(emptyString, viewModel.passwordInput)
-        assertEquals(emptyString, viewModel.passwordCheckInput)
-    }
-
- */
-
 
 }
