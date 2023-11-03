@@ -57,16 +57,17 @@ class AuthTokenRemoteSourceTest {
         }
 
     @Test
-    fun `should return response with error when request is invalid for login`(): Unit = runBlocking {
-        val request = AuthLoginRequest(email = "test@example.com", password = "password123")
-        val expectedResponse = Response.error<AuthTokenDto>(400, errorResponseBody)
-        coEvery { authService.login(request) } returns expectedResponse
+    fun `should return response with error when request is invalid for login`(): Unit =
+        runBlocking {
+            val request = AuthLoginRequest(email = "test@example.com", password = "password123")
+            val expectedResponse = Response.error<AuthTokenDto>(400, errorResponseBody)
+            coEvery { authService.login(request) } returns expectedResponse
 
-        val result = authTokenRemoteSource.loginAuthToken(request).first()
+            val result = authTokenRemoteSource.loginAuthToken(request).first()
 
-        assertEquals(expectedResponse, result)
-        coVerify(exactly = 1) { authService.login(request) }
-    }
+            assertEquals(expectedResponse, result)
+            coVerify(exactly = 1) { authService.login(request) }
+        }
 
     @Test
     fun `should return response with error when request is invalid`(): Unit = runBlocking {
