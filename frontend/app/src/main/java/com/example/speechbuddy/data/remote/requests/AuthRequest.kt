@@ -13,12 +13,12 @@ data class AuthLoginRequest(
 )
 
 @JsonClass(generateAdapter = true)
-data class AuthVerifyEmailSendRequest(
+data class AuthSendCodeRequest(
     val email: String
 )
 
 @JsonClass(generateAdapter = true)
-data class AuthVerifyEmailAcceptRequest(
+data class AuthVerifyEmailRequest(
     val email: String, val code: String
 )
 

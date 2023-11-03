@@ -14,7 +14,6 @@ import com.example.speechbuddy.ui.models.SignupError
 import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.ui.models.SignupUiState
 import com.example.speechbuddy.utils.Constants
-import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,8 +41,8 @@ class SignupViewModel @Inject internal constructor(
     var passwordCheckInput by mutableStateOf("")
         private set
 
-    private val _signupResult = MutableLiveData<Resource<Void>>()
-    val signupResult: LiveData<Resource<Void>> = _signupResult
+    private val _signupResult = MutableLiveData<Response<Void>>()
+    val signupResult: LiveData<Response<Void>> = _signupResult
 
     fun setNickname(input: String) {
         nicknameInput = input
