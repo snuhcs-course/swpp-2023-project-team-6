@@ -57,159 +57,195 @@ class SignupViewModelTest {
     }
 
     @Test
-    fun signupViewModel_setNickname_empty_beforeSignupClick() {
+    fun `should set empty nickname before signup click when setnickname is called with empty nickname`() {
         viewModel.setNickname(emptyNickname)
 
         assertEquals(emptyNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
     }
 
     @Test
-    fun signupViewModel_setNickname_long_beforeSignupClick() {
+    fun `should set long nickname before signup click when setnickname is called with long nickname`() {
         viewModel.setNickname(longNickname)
 
         assertEquals(longNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
     }
 
     @Test
-    fun signupViewModel_setNickname_valid_beforeSignupClick() {
+    fun `should set valid nickname before signup click when setnickname is called with valid nickname`() {
         viewModel.setNickname(validNickname)
 
         assertEquals(validNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
     }
 
     @Test
-    fun signupViewModel_setNickname_empty_afterSignupClick() {
+    fun `should set errortype nickname after signup click when setnickname is called with empty nickname`() {
         viewModel.setNickname(emptyNickname)
 
         viewModel.signup(validEmail)
 
         assertEquals(emptyNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+    }
+
+    @Test
+    fun `should set errortype null after signup click when empty nickname is changed to valid nickname`() {
+        viewModel.setNickname(emptyNickname)
+
+        viewModel.signup(validEmail)
 
         viewModel.setNickname(validNickname)
 
         assertEquals(validNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidNickname, true)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(true, viewModel.uiState.value.isValidNickname)
     }
 
     @Test
-    fun signupViewModel_setNickname_long_afterSignupClick() {
+    fun `should set errortype nickname after signup click when setnickname is called with long nickname`() {
         viewModel.setNickname(longNickname)
 
         viewModel.signup(validEmail)
 
         assertEquals(longNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+    }
+
+    @Test
+    fun `should set errortype null after signup click when long nickname is changed to valid nickname`() {
+        viewModel.setNickname(longNickname)
+
+        viewModel.signup(validEmail)
 
         viewModel.setNickname(validNickname)
 
         assertEquals(validNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidNickname, true)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(true, viewModel.uiState.value.isValidNickname)
     }
 
     @Test
-    fun signupViewModel_setNickname_valid_afterSignupClick() {
+    fun `should set errortype not nickname after signup click when setnickname is called with valid nickname`() {
         viewModel.setNickname(validNickname)
 
         viewModel.signup("email@test.com")
 
         assertEquals(validNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.PASSWORD)
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
+        assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+    }
+
+    @Test
+    fun `should set errortype not nickname after signup click when valid nickname is changed to invalid nickname`() {
+        viewModel.setNickname(validNickname)
+
+        viewModel.signup("email@test.com")
 
         viewModel.setNickname(longNickname)
 
         assertEquals(longNickname, viewModel.nicknameInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.PASSWORD)
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
+        assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
     }
 
     @Test
-    fun signupViewModel_setPassword_short_beforeSignupClick() {
+    fun `should set short password before signup click when setpassword is called with short password`() {
         viewModel.setPassword(shortPassword)
 
         assertEquals(shortPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
     }
 
     @Test
-    fun signupViewModel_setPassword_valid_beforeSignupClick() {
+    fun `should set valid password before signup click when setpassword is called with valid password`() {
         viewModel.setPassword(validPassword)
 
         assertEquals(validPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
     }
 
     @Test
-    fun signupViewModel_setPassword_short_afterSignupClick() {
+    fun `should set errortype password after signup click when setpassword is called with short password`() {
         viewModel.setPassword(shortPassword)
         viewModel.setNickname(validNickname)
 
         viewModel.signup(validEmail)
 
         assertEquals(shortPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.PASSWORD)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+    }
+
+    @Test
+    fun `should set errortype null after signup click when short password is changed to valid password`() {
+        viewModel.setPassword(shortPassword)
+        viewModel.setNickname(validNickname)
+
+        viewModel.signup(validEmail)
 
         viewModel.setPassword(validPassword)
 
         assertEquals(validPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidPassword, true)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(true, viewModel.uiState.value.isValidPassword)
     }
 
     @Test
-    fun signupViewModel_setPassword_valid_afterSignupClick() {
+    fun `should set errortype not password after signup click when setpassword is called with valid password`() {
         viewModel.setPassword(validPassword)
 
         viewModel.signup(validEmail)
 
         assertEquals(validPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+    }
+
+    @Test
+    fun `should set errortype not password after signup click when valid password is changed to invalid password`() {
+        viewModel.setPassword(validPassword)
+
+        viewModel.signup(validEmail)
 
         viewModel.setPassword(shortPassword)
 
         assertEquals(shortPassword, viewModel.passwordInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
     }
 
 
     @Test
-    fun signupViewModel_setPasswordCheck_invalid_beforeSignupClick() {
+    fun `should set invalid passwordcheck before signup click when setpasswordcheck is called with invalid passwordcheck`() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
 
         assertEquals(shortPassword, viewModel.passwordCheckInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
     }
 
     @Test
-    fun signupViewModel_setPasswordCheck_valid_beforeSignupClick() {
+    fun `should set valid passwordcheck before signup click when setpasswordcheck is called with valid passwordcheck`() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
         assertEquals(validPassword, viewModel.passwordCheckInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
     }
 
     @Test
-    fun signupViewModel_setPasswordCheck_invalid_afterSignupClick() {
+    fun `should set errortype email after signup click when setpasswordcheck is called with invalid passwordcheck`() {
         viewModel.setPassword(validPassword)
         viewModel.setNickname(validNickname)
         viewModel.setPasswordCheck(shortPassword)
@@ -217,201 +253,217 @@ class SignupViewModelTest {
         viewModel.signup(validEmail)
 
         assertEquals(shortPassword, viewModel.passwordCheckInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.PASSWORD_CHECK)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        assertEquals(SignupErrorType.PASSWORD_CHECK, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+    }
+
+    @Test
+    fun `should set errortype null after signup click when invalid passwordcheck is changed to valid passwordcheck`() {
+        viewModel.setPassword(validPassword)
+        viewModel.setNickname(validNickname)
+        viewModel.setPasswordCheck(shortPassword)
+
+        viewModel.signup(validEmail)
 
         viewModel.setPasswordCheck(validPassword)
 
         assertEquals(validPassword, viewModel.passwordCheckInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, true)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(true, viewModel.uiState.value.isValidEmail)
     }
 
     @Test
-    fun signupViewModel_setPasswordCheck_valid_afterSignupClick() {
+    fun `should set errortype not email after signup click when setpasswordcheck is called with valid passwordcheck`() {
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
         viewModel.signup(validEmail)
 
         assertEquals(validPassword, viewModel.passwordCheckInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+    }
+
+    @Test
+    fun `should set errortype not email after signup click when valid setpasswordcheck is changed to invalid passwordcheck`() {
+        viewModel.setPassword(validPassword)
+        viewModel.setPasswordCheck(validPassword)
+
+        viewModel.signup(validEmail)
 
         viewModel.setPasswordCheck(shortPassword)
 
         assertEquals(shortPassword, viewModel.passwordCheckInput)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
     }
-
     @Test
-    fun signupViewModel_signup_emptyNickname_shortPwd_invalidPwdCheck() {
+    fun `should set errortype nickname when signup is called with empty nickname, short password, invalid passwordcheck`() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.nickname_length_error, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_emptyNickname_shortPwd_validPwdCheck() {
+    fun `should set errortype nickname when signup is called with empty nickname, short password, valid passwordcheck`() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.nickname_length_error, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_emptyNickname_validPwd_invalidPwdCheck() {
+    fun `should set errortype nickname when signup is called with empty nickname, valid password, invalid passwordcheck`() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.nickname_length_error, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_emptyNickname_validPwd_validPwdCheck() {
+    fun `should set errortype nickname when signup is called with empty nickname, valid password, valid passwordcheck`() {
         viewModel.setNickname(emptyNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.nickname_length_error, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_longNickname_shortPwd_invalidPwdCheck() {
+    fun `should set errortype nickname when signup is called with long nickname, short password, invalid passwordcheck`() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.nickname_length_error, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_longNickname_shortPwd_validPwdCheck() {
+    fun `should set errortype nickname when signup is called with long nickname, short password, valid passwordcheck`() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.nickname_length_error, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_longNickname_validPwd_invalidPwdCheck() {
+    fun `should set errortype nickname when signup is called with long nickname, valid password, invalid passwordcheck`() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.nickname_length_error, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_longNickname_validPwd_validPwdCheck() {
+    fun `should set errortype nickname when signup is called with long nickname, valid password, valid passwordcheck`() {
         viewModel.setNickname(longNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.NICKNAME)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.nickname_length_error)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.NICKNAME, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.nickname_length_error, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_validNickname_shortPwd_invalidPwdCheck() {
+    fun `should set errortype password when signup is called with valid nickname, short password, invalid passwordcheck`() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(validPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.PASSWORD)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.false_new_password)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_new_password, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_validNickname_shortPwd_validPwdCheck() {
+    fun `should set errortype password when signup is called with valid nickname, short password, valid passwordcheck`() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(shortPassword)
         viewModel.setPasswordCheck(shortPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.PASSWORD)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.false_new_password)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_new_password, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_validNickname_validPwd_invalidPwdCheck() {
+    fun `should set errortype passwordcheck when signup is called with valid nickname, valid password, invalid passwordcheck`() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(shortPassword)
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.uiState.value.isValidNickname, false)
-        assertEquals(viewModel.uiState.value.isValidPassword, false)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
-        assertEquals(viewModel.uiState.value.error?.type, SignupErrorType.PASSWORD_CHECK)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.false_new_password_check)
+        assertEquals(false, viewModel.uiState.value.isValidNickname)
+        assertEquals(false, viewModel.uiState.value.isValidPassword)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
+        assertEquals(SignupErrorType.PASSWORD_CHECK, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_new_password_check, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
-    fun signupViewModel_signup_validNickname_validPwd_validPwdCheck() = runTest {
+    fun `should signup success when signup is called with valid nickname, valid password, valid passwordcheck`() = runTest {
         val authSignupRequest = AuthSignupRequest(validEmail, validPassword, validNickname)
         coEvery { repository.signup(authSignupRequest) } returns flowOf(Resource.success(null))
 
@@ -421,13 +473,13 @@ class SignupViewModelTest {
 
         viewModel.signup(validEmail)
 
-        assertEquals(viewModel.signupResult.value?.message, null)
-        assertEquals(viewModel.signupResult.value?.data, null)
+        assertEquals(null, viewModel.signupResult.value?.message)
+        assertEquals(null, viewModel.signupResult.value?.data)
 
     }
 
     @Test
-    fun signupViewModel_clearInputs() {
+    fun `should clear all input fields when clearinput is called`() {
         viewModel.setNickname(validNickname)
         viewModel.setPassword(validPassword)
         viewModel.setPasswordCheck(validPassword)
