@@ -1,8 +1,8 @@
 package com.example.speechbuddy.compose.symbolcreation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,31 +19,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SymbolCreationScreen(
-
+    modifier: Modifier = Modifier,
+    bottomPaddingValues: PaddingValues
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(
             topBar = {
                 HomeTopAppBarUi(title = stringResource(id = R.string.symbol_creation))
             }
-        ) {
+        ) { topPaddingValues ->
             Column(
                 modifier = Modifier
-                    .padding(25.dp)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(
+                        top = topPaddingValues.calculateTopPadding(),
+                        bottom = bottomPaddingValues.calculateBottomPadding()
+                    )
+                    .padding(24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -65,13 +67,5 @@ fun SymbolCreationScreen(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun SymbolCreationScreenPreview() {
-    SpeechBuddyTheme {
-        SymbolCreationScreen()
     }
 }

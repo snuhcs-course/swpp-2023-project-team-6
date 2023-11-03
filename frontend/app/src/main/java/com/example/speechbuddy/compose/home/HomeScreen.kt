@@ -1,6 +1,6 @@
 package com.example.speechbuddy.compose.home
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,12 +33,9 @@ data class BottomNavItem(
     val iconResId: Int
 )
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-
-) {
+fun HomeScreen() {
     val navController = rememberNavController()
     val navItems = listOf(
         BottomNavItem(
@@ -73,9 +70,10 @@ fun HomeScreen(
                 }
             )
         }
-    ) {
+    ) { paddingValues ->
         HomeScreenNavHost(
-            navController = navController
+            navController = navController,
+            bottomPaddingValues = paddingValues
         )
     }
 }
@@ -116,20 +114,29 @@ private fun BottomNavigationBar(
 
 @Composable
 private fun HomeScreenNavHost(
-    navController: NavHostController
+    navController: NavHostController,
+    bottomPaddingValues: PaddingValues
 ) {
     NavHost(navController = navController, startDestination = "symbol_selection") {
         composable("symbol_selection") {
-            SymbolSelectionScreen()
+            SymbolSelectionScreen(
+                bottomPaddingValues = bottomPaddingValues
+            )
         }
         composable("text_to_speech") {
-            TextToSpeechScreen()
+            TextToSpeechScreen(
+                bottomPaddingValues = bottomPaddingValues
+            )
         }
         composable("symbol_creation") {
-            SymbolCreationScreen()
+            SymbolCreationScreen(
+                bottomPaddingValues = bottomPaddingValues
+            )
         }
         composable("settings") {
-            SettingsScreen()
+            SettingsScreen(
+                bottomPaddingValues = bottomPaddingValues
+            )
         }
     }
 }

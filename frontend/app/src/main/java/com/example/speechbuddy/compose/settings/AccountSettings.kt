@@ -2,6 +2,7 @@ package com.example.speechbuddy.compose.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
 fun AccountSettings(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
+    bottomPaddingValues: PaddingValues,
     viewModel: AccountSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -45,11 +47,14 @@ fun AccountSettings(
                     isBackClickEnabled = true
                 )
             }
-        ) { paddingValues ->
+        ) { topPaddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(
+                        top = topPaddingValues.calculateTopPadding(),
+                        bottom = bottomPaddingValues.calculateBottomPadding()
+                    )
                     .padding(24.dp),
                 verticalArrangement = Arrangement.Center
             ) {

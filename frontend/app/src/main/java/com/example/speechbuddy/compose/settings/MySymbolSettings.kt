@@ -2,6 +2,7 @@ package com.example.speechbuddy.compose.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,7 +21,8 @@ import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 @Composable
 fun MySymbolSettings(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    bottomPaddingValues: PaddingValues
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
@@ -33,11 +35,14 @@ fun MySymbolSettings(
                     isBackClickEnabled = true
                 )
             }
-        ) { paddingValues ->
+        ) { topPaddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(
+                        top = topPaddingValues.calculateTopPadding(),
+                        bottom = bottomPaddingValues.calculateBottomPadding()
+                    )
                     .padding(24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally

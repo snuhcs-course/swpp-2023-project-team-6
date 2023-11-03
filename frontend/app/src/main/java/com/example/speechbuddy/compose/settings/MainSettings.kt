@@ -2,6 +2,7 @@ package com.example.speechbuddy.compose.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,18 +26,22 @@ import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 @Composable
 fun MainSettings(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    bottomPaddingValues: PaddingValues
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
             HomeTopAppBarUi(title = stringResource(id = R.string.settings))
-        }) { paddingValues ->
+        }) { topPaddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(
+                        top = topPaddingValues.calculateTopPadding(),
+                        bottom = bottomPaddingValues.calculateBottomPadding()
+                    )
                     .padding(24.dp)
             ) {
                 SettingsTextButton(text = stringResource(id = R.string.account),

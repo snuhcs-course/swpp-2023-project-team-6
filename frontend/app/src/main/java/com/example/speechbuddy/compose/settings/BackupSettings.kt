@@ -2,6 +2,7 @@ package com.example.speechbuddy.compose.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -29,6 +30,7 @@ import com.example.speechbuddy.viewmodel.BackupSettingsViewModel
 fun BackupSettings(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
+    bottomPaddingValues: PaddingValues,
     viewModel: BackupSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -42,12 +44,16 @@ fun BackupSettings(
                 onBackClick = onBackClick,
                 isBackClickEnabled = true
             )
-        }) { paddingValues ->
+        }) { topPaddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .padding(24.dp), verticalArrangement = Arrangement.Center
+                    .padding(
+                        top = topPaddingValues.calculateTopPadding(),
+                        bottom = bottomPaddingValues.calculateBottomPadding()
+                    )
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center
             ) {
                 TitleUi(title = stringResource(id = R.string.backup_to_server))
 

@@ -2,6 +2,7 @@ package com.example.speechbuddy.compose.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -12,37 +13,34 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DevelopersInfo(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier, onBackClick: () -> Unit, bottomPaddingValues: PaddingValues
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            topBar = {
-                HomeTopAppBarUi(
-                    title = stringResource(id = R.string.settings),
-                    onBackClick = onBackClick,
-                    isBackClickEnabled = true
-                )
-            }
-        ) { paddingValues ->
+        Scaffold(topBar = {
+            HomeTopAppBarUi(
+                title = stringResource(id = R.string.settings),
+                onBackClick = onBackClick,
+                isBackClickEnabled = true
+            )
+        }) { topPaddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center
+                    .padding(
+                        top = topPaddingValues.calculateTopPadding(),
+                        bottom = bottomPaddingValues.calculateBottomPadding()
+                    )
+                    .padding(24.dp), verticalArrangement = Arrangement.Center
             ) {
                 TitleUi(title = stringResource(id = R.string.developers_info))
 
@@ -62,13 +60,5 @@ fun DevelopersInfo(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun DevelopersInfoPreview() {
-    SpeechBuddyTheme {
-        DevelopersInfo(onBackClick = {})
     }
 }

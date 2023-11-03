@@ -1,70 +1,72 @@
 package com.example.speechbuddy.compose.settings
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    bottomPaddingValues: PaddingValues
+) {
     val navController = rememberNavController()
     SettingsScreenNavHost(
-        navController = navController
+        navController = navController,
+        bottomPaddingValues = bottomPaddingValues
     )
 }
 
 @Composable
 private fun SettingsScreenNavHost(
-    navController: NavHostController
+    navController: NavHostController,
+    bottomPaddingValues: PaddingValues
 ) {
     val navigateToMain = { navController.navigate("main") }
 
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
             MainSettings(
-                navController = navController
+                navController = navController,
+                bottomPaddingValues = bottomPaddingValues
             )
         }
         composable("account") {
             AccountSettings(
-                onBackClick = navigateToMain
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
             )
         }
         composable("backup") {
             BackupSettings(
-                onBackClick = navigateToMain
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
             )
         }
         composable("display") {
             DisplaySettings(
-                onBackClick = navigateToMain
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
             )
         }
         composable("my_symbol") {
             MySymbolSettings(
-                onBackClick = navigateToMain
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
             )
         }
         composable("version") {
             VersionInfo(
-                onBackClick = navigateToMain
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
             )
         }
         composable("developers") {
             DevelopersInfo(
-                onBackClick = navigateToMain
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun SettingsScreenPreview() {
-    SpeechBuddyTheme {
-        SettingsScreen()
     }
 }

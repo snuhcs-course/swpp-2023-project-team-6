@@ -1,8 +1,8 @@
 package com.example.speechbuddy.compose.texttospeech
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,25 +41,30 @@ import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.ButtonStatusType
 import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextToSpeechScreen(
+    modifier: Modifier = Modifier,
+    bottomPaddingValues: PaddingValues,
     viewModel: TextToSpeechViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
             HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_speech))
-        }) {
+        }) { topPaddingValues ->
             Column(
                 modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(
+                        top = topPaddingValues.calculateTopPadding(),
+                        bottom = bottomPaddingValues.calculateBottomPadding()
+                    )
+                    .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
