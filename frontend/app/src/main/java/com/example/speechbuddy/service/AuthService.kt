@@ -30,7 +30,7 @@ interface AuthService {
 
     @POST("/user/validateemail/pw/send/")
     suspend fun sendCodeForResetPassword(
-        @Body seondCodeRequest: AuthSendCodeRequest
+        @Body sendCodeRequest: AuthSendCodeRequest
     ): Response<Void>
 
     @POST("/user/validateemail/signup/accept/")
