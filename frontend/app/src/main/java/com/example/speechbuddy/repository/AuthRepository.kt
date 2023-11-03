@@ -27,10 +27,11 @@ class AuthRepository @Inject constructor(
                 Resource.success(null)
             } else {
                 response.errorBody()?.let { responseBody ->
-                    val errorMessage =
-                        JSONObject(responseBody.charStream().readText()).getString("error")
+                    val errorJson = JSONObject(responseBody.charStream().readText())
+                    val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
+                    val firstKeyOfMessage = messageJson.keys().next().toString()
                     Resource.error(
-                        errorMessage,
+                        firstKeyOfMessage,
                         null
                     )
                 } ?: Resource.error("Unknown Error", null)
@@ -49,10 +50,11 @@ class AuthRepository @Inject constructor(
                     } ?: returnUnknownError()
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorMessage =
-                            JSONObject(responseBody.charStream().readText()).getString("error")
+                        val errorJson = JSONObject(responseBody.charStream().readText())
+                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
+                        val firstKeyOfMessage = messageJson.keys().next().toString()
                         Resource.error(
-                            errorMessage,
+                            firstKeyOfMessage,
                             null
                         )
                     } ?: returnUnknownError()
@@ -147,10 +149,11 @@ class AuthRepository @Inject constructor(
                     Resource.success(null)
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorMessage =
-                            JSONObject(responseBody.charStream().readText()).getString("error")
+                        val errorJson = JSONObject(responseBody.charStream().readText())
+                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
+                        val firstKeyOfMessage = messageJson.keys().next().toString()
                         Resource.error(
-                            errorMessage,
+                            firstKeyOfMessage,
                             null
                         )
                     } ?: Resource.error("Unknown Error", null)
