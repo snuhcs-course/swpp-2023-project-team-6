@@ -7,6 +7,7 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.viewmodel.LoginViewModel
 import com.example.speechbuddy.viewmodel.SignupViewModel
 import io.mockk.coEvery
@@ -63,8 +64,8 @@ class LoginViewModelTest {
         viewModel.setEmail(invalidEmail)
 
         assertEquals(invalidEmail, viewModel.emailInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
     }
 
     @Test
@@ -72,8 +73,8 @@ class LoginViewModelTest {
         viewModel.setEmail(validEmail)
 
         assertEquals(validEmail, viewModel.emailInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
     }
 
     @Test
@@ -83,14 +84,14 @@ class LoginViewModelTest {
         viewModel.login()
 
         assertEquals(invalidEmail, viewModel.emailInput)
-        assertEquals(viewModel.uiState.value.error?.type, LoginErrorType.EMAIL)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
 
         viewModel.setEmail(validEmail)
 
         assertEquals(validEmail, viewModel.emailInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, true)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(true, viewModel.uiState.value.isValidEmail)
     }
 
     @Test
@@ -108,16 +109,16 @@ class LoginViewModelTest {
         viewModel.login()
 
         assertEquals(notRegisteredEmail, viewModel.emailInput)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.false_email)
-        assertEquals(viewModel.uiState.value.error?.type, LoginErrorType.EMAIL)
-        assertEquals(viewModel.uiState.value.isValidEmail, false)
+        assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
+        assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
+        assertEquals(false, viewModel.uiState.value.isValidEmail)
 
         viewModel.setEmail(validEmail)
 
         assertEquals(validEmail, viewModel.emailInput)
-        assertEquals(viewModel.uiState.value.error?.type, null)
-        assertEquals(viewModel.uiState.value.error?.messageId, null)
-        assertEquals(viewModel.uiState.value.isValidEmail, true)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(null, viewModel.uiState.value.error?.messageId)
+        assertEquals(true, viewModel.uiState.value.isValidEmail)
     }
 /*
     @Test
