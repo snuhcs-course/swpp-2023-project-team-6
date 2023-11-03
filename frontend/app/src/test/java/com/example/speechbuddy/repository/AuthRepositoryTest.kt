@@ -11,6 +11,7 @@ import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.utils.Status
 import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
@@ -23,6 +24,8 @@ import retrofit2.Response
 class AuthRepositoryTest {
 
     private lateinit var authRepository: AuthRepository
+
+    @MockK
     private val authTokenRemoteSource = mockk<AuthTokenRemoteSource>()
     private val authTokenDtoMapper = AuthTokenDtoMapper()
 
@@ -32,7 +35,8 @@ class AuthRepositoryTest {
     private val mockCode = "123456"
     private val mockAccessToken = "testAccessToken"
     private val mockRefreshToken = "testRefreshToken"
-    val mockErrorJson = """
+
+    private val mockErrorJson = """
     {
         "error": {
             "code": 000,
@@ -355,5 +359,5 @@ class AuthRepositoryTest {
             }
         }
     }
-}
 
+}
