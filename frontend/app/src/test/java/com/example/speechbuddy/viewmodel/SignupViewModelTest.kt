@@ -5,7 +5,6 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.SignupErrorType
-import com.example.speechbuddy.utils.Resource
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
@@ -22,6 +21,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import retrofit2.Response
 
 class SignupViewModelTest {
 
@@ -470,7 +470,7 @@ class SignupViewModelTest {
     fun `should signup success when signup is called with valid nickname, valid password, valid password check`() =
         runTest {
             val authSignupRequest = AuthSignupRequest(validEmail, validPassword, validNickname)
-            coEvery { repository.signup(authSignupRequest) } returns flowOf(Resource.success(null))
+            coEvery { repository.signup(authSignupRequest) } returns flowOf(Response.success(null))
 
             viewModel.setNickname(validNickname)
             viewModel.setPassword(validPassword)
@@ -478,9 +478,8 @@ class SignupViewModelTest {
 
             viewModel.signup(validEmail)
 
-            assertEquals(null, viewModel.signupResult.value?.message)
-            assertEquals(null, viewModel.signupResult.value?.data)
-
+            assertEquals(null, viewModel.signupResult.value?.message())
+            assertEquals(null, viewModel.signupResult.value?.body())
         }
 
     @Test
