@@ -14,6 +14,8 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
@@ -24,6 +26,27 @@ class AuthRepositoryTest {
     private val authTokenRemoteSource = mockk<AuthTokenRemoteSource>()
     private val authTokenDtoMapper = AuthTokenDtoMapper()
 
+    private val mockEmail = "test@example.com"
+    private val mockPassword = "password123"
+    private val mockNickname = "TestUser"
+    private val mockCode = "123456"
+    private val mockAccessToken = "testAccessToken"
+    private val mockRefreshToken = "testRefreshToken"
+    val mockErrorJson = """
+    {
+        "error": {
+            "code": 000,
+            "message": {
+                "key of message": [
+                    "error description"
+                ]
+            }
+        }
+    }
+    """
+    private val mockErrorResponseBody =
+        mockErrorJson.toResponseBody("application/json".toMediaType())
+
     @Before
     fun setup() {
         authRepository = AuthRepository(authTokenRemoteSource, authTokenDtoMapper)
@@ -33,9 +56,9 @@ class AuthRepositoryTest {
     fun `should return SUCCESS Resource when signup request is valid`() {
         runBlocking {
             val authSignupRequest = AuthSignupRequest(
-                email = "testemail@google.com",
-                nickname = "testnickname",
-                password = "testpassword"
+                email = mockEmail,
+                password = mockPassword,
+                nickname = mockNickname
             )
             // 성공 케이스의 Response<Void>를 정의
             val successResponse = Response.success<Void>(201, null)
@@ -53,19 +76,41 @@ class AuthRepositoryTest {
     }
 
     @Test
+    fun `should return ERROR Resource when signup request is invalid`() {
+        runBlocking{
+            val authSignupRequest = AuthSignupRequest(
+                email = mockEmail,
+                password = "invalid",
+                nickname = mockNickname
+            )
+            // 에러 케이스의 Response<Void>를 정의
+            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
+
+            coEvery { authTokenRemoteSource.signupAuthToken(authSignupRequest) } returns flowOf(errorResponse)
+
+            val result = authRepository.signup(authSignupRequest)
+            result.collect { resource ->
+                assert(resource.status == Status.ERROR)
+                assert(resource.data == null)
+                assert(resource.message == "key of message")
+            }
+        }
+    }
+
+    @Test
     fun `should return SUCCESS Resource when login request is valid`(){
         runBlocking {
             val authLoginRequest = AuthLoginRequest(
-                email = "testemail@google.com",
-                password = "testpassword"
+                email = mockEmail,
+                password = mockPassword
             )
             val authTokenDto = AuthTokenDto(
-                accessToken = "test_access_token",
-                refreshToken = "test_refresh_token"
+                accessToken = mockAccessToken,
+                refreshToken = mockRefreshToken
             )
             val expectedAuthToken = AuthToken(
-                accessToken = "test_access_token",
-                refreshToken = "test_refresh_token"
+                accessToken = mockAccessToken,
+                refreshToken = mockRefreshToken
             )
             // 성공 케이스의 Response<AuthTokenDto>를 정의
             val successResponse = Response.success<AuthTokenDto>(200, authTokenDto)
@@ -87,7 +132,7 @@ class AuthRepositoryTest {
     fun `should return SUCCESS Resource when verifySendSignup request is valid`() {
         runBlocking {
             val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
-                email = "testemail@google.com"
+                email = mockEmail
             )
             val successResponse = Response.success<Void>(200, null)
 
@@ -107,7 +152,7 @@ class AuthRepositoryTest {
     fun `should return SUCCESS Resource when verifySendPW request is valid`() {
         runBlocking {
             val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
-                email = "testemail@google.com"
+                email = mockEmail
             )
             val successResponse = Response.success<Void>(200, null)
 
@@ -127,8 +172,8 @@ class AuthRepositoryTest {
     fun `should return SUCCESS Resource when verifyAcceptSignup request is valid`() {
         runBlocking {
             val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
-                email = "testemail@google.com",
-                code = "sample"
+                email = mockEmail,
+                code = mockCode
             )
             val successResponse = Response.success<Void>(200, null)
 
@@ -148,15 +193,15 @@ class AuthRepositoryTest {
     fun `should return SUCCESS Resource when verifyAcceptPW request is valid`(){
         runBlocking {
             val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
-                email = "testemail@google.com",
-                code = "sample"
+                email = mockEmail,
+                code = mockCode
             )
             val authTokenDto = AuthTokenDto(
-                accessToken = "test_access_token",
+                accessToken = mockAccessToken,
                 refreshToken = null
             )
             val expectedAuthToken = AuthToken(
-                accessToken = "test_access_token",
+                accessToken = mockAccessToken,
                 refreshToken = null
             )
             val successResponse = Response.success<AuthTokenDto>(200, authTokenDto)
@@ -178,7 +223,7 @@ class AuthRepositoryTest {
     fun `should return SUCCESS Resource when resetPassword request is valid`() {
         runBlocking {
             val authResetPasswordRequest = AuthResetPasswordRequest(
-                password = "newpassword"
+                password = "newPassword"
             )
             val successResponse = Response.success<Void>(200, null)
 
