@@ -1,11 +1,11 @@
-package com.example.speechbuddy
+package com.example.speechbuddy.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.utils.Resource
-import com.example.speechbuddy.viewmodel.SignupViewModel
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
