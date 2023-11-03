@@ -2,6 +2,7 @@ package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
@@ -103,6 +104,29 @@ class AuthRepositoryTest {
             coEvery { authTokenRemoteSource.verifyAcceptSignupAuthToken(authVerifyEmailAcceptRequest) } returns flowOf(successResponse)
 
             val result = authRepository.verifyAcceptSignup(authVerifyEmailAcceptRequest)
+            // 아래 resource는 Resource<Void> 타입
+            result.collect { resource ->
+                assert(resource.status == Status.SUCCESS)
+                assert(resource.data == null)
+                assert(resource.message == null)
+            }
+        }
+    }
+
+//    @Test
+//    fun testVerifyAcceptPWSuccess() {}
+
+    @Test
+    fun testResetPasswordSuccess() {
+        runBlocking {
+            val authResetPasswordRequest = AuthResetPasswordRequest(
+                password = "newpassword"
+            )
+            val successResponse = Response.success<Void>(200, null)
+
+            coEvery { authTokenRemoteSource.resetPasswordAuthToken(authResetPasswordRequest) } returns flowOf(successResponse)
+
+            val result = authRepository.resetPassword(authResetPasswordRequest)
             // 아래 resource는 Resource<Void> 타입
             result.collect { resource ->
                 assert(resource.status == Status.SUCCESS)
