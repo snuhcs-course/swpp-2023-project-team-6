@@ -30,55 +30,51 @@ class AuthTokenRemoteSourceTest {
     }
 
     @Test
-    fun `should return response with auth token dto when request is valid for login`() =
-        runBlocking {
-            val request = AuthLoginRequest(email = "test@example.com", password = "password123")
-            val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
+    fun `should return auth token when request is valid for login`() = runBlocking {
+        val request = AuthLoginRequest(email = "test@example.com", password = "password123")
+        val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
 
-            coEvery { authService.login(request) } returns expectedResponse
+        coEvery { authService.login(request) } returns expectedResponse
 
-            val result = authTokenRemoteSource.loginAuthToken(request).first()
-            assertEquals(expectedResponse, result)
-            coVerify(exactly = 1) { authService.login(request) }
-        }
-
-    @Test
-    fun `should return response with auth token dto when request is valid for verify email`() =
-        runBlocking {
-            val request = AuthVerifyEmailRequest(email = "test@example.com", code = "123456")
-            val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
-
-            coEvery { authService.verifyEmailForResetPassword(request) } returns expectedResponse
-
-            val result = authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).first()
-            assertEquals(expectedResponse, result)
-            coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
-        }
+        val result = authTokenRemoteSource.loginAuthToken(request).first()
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.login(request) }
+    }
 
     @Test
-    fun `should return response with error when request is invalid for login`(): Unit =
-        runBlocking {
-            val request = AuthLoginRequest(email = "test@example.com", password = "password123")
-            val expectedResponse = Response.error<AuthTokenDto>(400, errorResponseBody)
-            coEvery { authService.login(request) } returns expectedResponse
+    fun `should return auth token when request is valid for verify email`() = runBlocking {
+        val request = AuthVerifyEmailRequest(email = "test@example.com", code = "123456")
+        val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
 
-            val result = authTokenRemoteSource.loginAuthToken(request).first()
+        coEvery { authService.verifyEmailForResetPassword(request) } returns expectedResponse
 
-            assertEquals(expectedResponse, result)
-            coVerify(exactly = 1) { authService.login(request) }
-        }
+        val result = authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).first()
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
+    }
 
     @Test
-    fun `should return response with error when request is invalid for verify email`(): Unit =
-        runBlocking {
-            val request = AuthVerifyEmailRequest(email = "test@example.com", code = "123456")
-            val expectedResponse = Response.error<AuthTokenDto>(400, errorResponseBody)
-            coEvery { authService.verifyEmailForResetPassword(request) } returns expectedResponse
+    fun `should return error when request is invalid for login`(): Unit = runBlocking {
+        val request = AuthLoginRequest(email = "test@example.com", password = "password123")
+        val expectedResponse = Response.error<AuthTokenDto>(400, errorResponseBody)
+        coEvery { authService.login(request) } returns expectedResponse
 
-            val result = authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).first()
+        val result = authTokenRemoteSource.loginAuthToken(request).first()
 
-            assertEquals(expectedResponse, result)
-            coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
-        }
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.login(request) }
+    }
+
+    @Test
+    fun `should return error when request is invalid for verify email`(): Unit = runBlocking {
+        val request = AuthVerifyEmailRequest(email = "test@example.com", code = "123456")
+        val expectedResponse = Response.error<AuthTokenDto>(400, errorResponseBody)
+        coEvery { authService.verifyEmailForResetPassword(request) } returns expectedResponse
+
+        val result = authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).first()
+
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
+    }
 
 }
