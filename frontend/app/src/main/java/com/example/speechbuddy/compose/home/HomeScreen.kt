@@ -1,6 +1,9 @@
 package com.example.speechbuddy.compose.home
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -82,14 +86,14 @@ fun HomeScreen() {
 private fun BottomNavigationBar(
     items: List<BottomNavItem>,
     navController: NavController,
-    modifier: Modifier = Modifier,
     onItemClick: (BottomNavItem) -> Unit
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
 
     NavigationBar(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.secondaryContainer
+        modifier = Modifier.height(100.dp),
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        windowInsets = WindowInsets(top = 20.dp)
     ) {
         items.forEach { item ->
             val selected = item.route == backStackEntry.value?.destination?.route
@@ -102,6 +106,7 @@ private fun BottomNavigationBar(
                         contentDescription = stringResource(id = item.nameResId)
                     )
                 },
+                modifier = Modifier.size(40.dp),
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     unselectedIconColor = MaterialTheme.colorScheme.outline

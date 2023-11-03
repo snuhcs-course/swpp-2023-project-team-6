@@ -43,6 +43,10 @@
     <string name="nickname_length_error">닉네임을 입력해주세요</string>
     <string name="alert_dialog_login_error">로그인 오류</string>
     <string name="alert_dialog_signup_error">회원가입 오류</string>
+    <string name="search_box_placeholder">검색어를 입력하세요</string>
+    <string name="favorite">즐겨찾기</string>
+    <string name="symbol_unselect">상징 선택 취소</string>
+    <string name="clear_all">전체 삭제</string>
     <string name="tts_text">소리로 말해보아요</string>
     <string name="tts_explain">키보드로 텍스트를 입력해주세요</string>
     <string name="play_text">재생하기</string>
