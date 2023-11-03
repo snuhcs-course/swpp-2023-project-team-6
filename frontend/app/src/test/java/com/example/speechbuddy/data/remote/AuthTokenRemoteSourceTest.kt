@@ -70,7 +70,7 @@ class AuthTokenRemoteSourceTest {
         }
 
     @Test
-    fun `should return response with error when request is invalid`(): Unit = runBlocking {
+    fun `should return response with error when request is invalid for verify email`(): Unit = runBlocking {
         val request = AuthVerifyEmailRequest(email = "test@example.com", code = "123456")
         val expectedResponse = Response.error<AuthTokenDto>(400, errorResponseBody)
         coEvery { authService.verifyEmailForResetPassword(request) } returns expectedResponse
