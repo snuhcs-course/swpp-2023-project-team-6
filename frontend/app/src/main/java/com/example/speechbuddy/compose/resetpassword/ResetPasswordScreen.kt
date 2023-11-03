@@ -25,7 +25,7 @@ import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
+import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.ui.models.ResetPasswordErrorType
 import com.example.speechbuddy.viewmodel.ResetPasswordViewModel
 
@@ -48,7 +48,7 @@ fun ResetPasswordScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBarUi(
+                AuthTopAppBarUi(
                     onBackClick = onBackClick
                 )
             }

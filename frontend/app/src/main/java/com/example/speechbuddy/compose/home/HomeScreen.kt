@@ -1,6 +1,6 @@
 package com.example.speechbuddy.compose.home
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -28,7 +28,7 @@ import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
-import com.example.speechbuddy.compose.utils.TopAppBarUi
+import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 data class BottomNavItem(
@@ -37,22 +37,19 @@ data class BottomNavItem(
     val iconResId: Int
 )
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-
-) {
+fun HomeScreen() {
     val navController = rememberNavController()
     val navItems = listOf(
         BottomNavItem(
             "symbol_selection",
-            R.string.symbol_selection,
+            R.string.talk_with_symbols,
             R.drawable.outline_touch_app_24
         ),
         BottomNavItem(
             "text_to_speech",
-            R.string.text_to_speech,
+            R.string.talk_with_speech,
             R.drawable.outline_volume_up_24
         ),
         BottomNavItem(
@@ -68,10 +65,6 @@ fun HomeScreen(
     )
 
     Scaffold(
-        topBar = {
-            /* TODO: TopAppBar for HomeScreen */
-            TopAppBarUi(onBackClick = { navController.navigateUp() })
-        },
         bottomBar = {
             BottomNavigationBar(
                 items = navItems,
@@ -81,9 +74,10 @@ fun HomeScreen(
                 }
             )
         }
-    ) {
+    ) { paddingValues ->
         HomeScreenNavHost(
-            navController = navController
+            navController = navController,
+            bottomPaddingValues = paddingValues
         )
     }
 }
@@ -116,7 +110,8 @@ private fun BottomNavigationBar(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     unselectedIconColor = MaterialTheme.colorScheme.outline
-                )
+                ),
+                interactionSource = NoRippleInteractionSource()
             )
         }
     }
@@ -124,20 +119,29 @@ private fun BottomNavigationBar(
 
 @Composable
 private fun HomeScreenNavHost(
-    navController: NavHostController
+    navController: NavHostController,
+    bottomPaddingValues: PaddingValues
 ) {
     NavHost(navController = navController, startDestination = "symbol_selection") {
         composable("symbol_selection") {
-            SymbolSelectionScreen()
+            SymbolSelectionScreen(
+                bottomPaddingValues = bottomPaddingValues
+            )
         }
         composable("text_to_speech") {
-            TextToSpeechScreen()
+            TextToSpeechScreen(
+                bottomPaddingValues = bottomPaddingValues
+            )
         }
         composable("symbol_creation") {
-            SymbolCreationScreen()
+            SymbolCreationScreen(
+                bottomPaddingValues = bottomPaddingValues
+            )
         }
         composable("settings") {
-            SettingsScreen()
+            SettingsScreen(
+                bottomPaddingValues = bottomPaddingValues
+            )
         }
     }
 }
