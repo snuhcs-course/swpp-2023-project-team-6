@@ -7,178 +7,188 @@ import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
 import com.example.speechbuddy.service.AuthService
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
-
 import org.junit.Test
-import org.mockito.Mockito
 import retrofit2.Response
 
 class AuthTokenRemoteSourceTest {
 
+    private lateinit var authService: AuthService
     private lateinit var authTokenRemoteSource: AuthTokenRemoteSource
-    private val authService: AuthService = Mockito.mock(AuthService::class.java)
 
     @Before
     fun setUp() {
+        authService = mockk()
         authTokenRemoteSource = AuthTokenRemoteSource(authService)
     }
 
+
     @Test
-    fun `signupAuthToken emits correct response`(): Unit = runBlocking {
+    fun signupAuthToken_AuthSignupRequest_returnFlowResponse() = runBlocking {
         // Arrange
-        val request = AuthSignupRequest(email = "test@example.com", password = "password123", nickname = "testUser")
-        val expectedResponse: Response<Void> = Mockito.mock(Response::class.java) as Response<Void>
-        Mockito.`when`(authService.signup(request)).thenReturn(expectedResponse)
+        val request = AuthSignupRequest(
+            email = "test@example.com",
+            password = "password123",
+            nickname = "testUser"
+        )
+        val expectedResponse: Response<Void> = mockk(relaxed = true)
+        coEvery { authService.signup(request) } returns expectedResponse
 
         // Act
-        val result = authTokenRemoteSource.signupAuthToken(request).toList()
+        val result = authTokenRemoteSource.signupAuthToken(request).first()
 
         // Assert
-        assertEquals(listOf(expectedResponse), result)
-        Mockito.verify(authService).signup(request)
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.signup(request) }
     }
 
     @Test
-    fun `loginAuthToken emits correct response`(): Unit = runBlocking {
-        // Arrange
+    fun loginAuthToken_AuthLoginRequest_returnFlowResponse() = runBlocking {
         val request = AuthLoginRequest(email = "test@example.com", password = "password123")
-        val expectedResponse: Response<AuthTokenDto> = Mockito.mock(Response::class.java) as Response<AuthTokenDto>
-        Mockito.`when`(authService.login(request)).thenReturn(expectedResponse)
+        val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
 
-        // Act
-        val result = authTokenRemoteSource.loginAuthToken(request).toList()
+        coEvery { authService.login(request) } returns expectedResponse
 
-        // Assert
-        assertEquals(listOf(expectedResponse), result)
-        Mockito.verify(authService).login(request)
+        val result = authTokenRemoteSource.loginAuthToken(request).first()
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.login(request) }
     }
 
     @Test
-    fun `verifySendSignupAuthToken emits correct response`(): Unit = runBlocking {
+    fun verifySendSignupAuthToken_AuthVerifyEmailSendRequest_returnFlowResponse() = runBlocking {
         val request = AuthVerifyEmailSendRequest(email = "test@example.com")
-        val expectedResponse: Response<Void> = Mockito.mock(Response::class.java) as Response<Void>
-        Mockito.`when`(authService.verifySendSignup(request)).thenReturn(expectedResponse)
+        val expectedResponse: Response<Void> = mockk(relaxed = true)
 
-        val result = authTokenRemoteSource.verifySendSignupAuthToken(request).toList()
+        coEvery { authService.verifySendSignup(request) } returns expectedResponse
 
-        assertEquals(listOf(expectedResponse), result)
-        Mockito.verify(authService).verifySendSignup(request)
+        val result = authTokenRemoteSource.verifySendSignupAuthToken(request).first()
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.verifySendSignup(request) }
     }
 
     @Test
-    fun `verifySendPWAuthToken emits correct response`(): Unit = runBlocking {
+    fun verifySendPWAuthToken_AuthVerifyEmailSendRequest_returnFlowResponse() = runBlocking {
         val request = AuthVerifyEmailSendRequest(email = "test@example.com")
-        val expectedResponse: Response<Void> = Mockito.mock(Response::class.java) as Response<Void>
-        Mockito.`when`(authService.verifySendPW(request)).thenReturn(expectedResponse)
+        val expectedResponse: Response<Void> = mockk(relaxed = true)
 
-        val result = authTokenRemoteSource.verifySendPWAuthToken(request).toList()
+        coEvery { authService.verifySendPW(request) } returns expectedResponse
 
-        assertEquals(listOf(expectedResponse), result)
-        Mockito.verify(authService).verifySendPW(request)
+        val result = authTokenRemoteSource.verifySendPWAuthToken(request).first()
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.verifySendPW(request) }
     }
 
     @Test
-    fun `verifyAcceptSignupAuthToken emits correct response`(): Unit = runBlocking {
+    fun verifyAcceptSignupAuthToken_AuthVerifyEmailAcceptRequest_returnFlowResponse() =
+        runBlocking {
+            val request = AuthVerifyEmailAcceptRequest(email = "test@example.com", code = "123456")
+            val expectedResponse: Response<Void> = mockk(relaxed = true)
+
+            coEvery { authService.verifyAcceptSignup(request) } returns expectedResponse
+
+            val result = authTokenRemoteSource.verifyAcceptSignupAuthToken(request).first()
+            assertEquals(expectedResponse, result)
+            coVerify(exactly = 1) { authService.verifyAcceptSignup(request) }
+        }
+
+    @Test
+    fun verifyAcceptPWAuthToken_AuthVerifyEmailAcceptRequest_returnFlowResponse() = runBlocking {
         val request = AuthVerifyEmailAcceptRequest(email = "test@example.com", code = "123456")
-        val expectedResponse: Response<Void> = Mockito.mock(Response::class.java) as Response<Void>
-        Mockito.`when`(authService.verifyAcceptSignup(request)).thenReturn(expectedResponse)
+        val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
 
-        val result = authTokenRemoteSource.verifyAcceptSignupAuthToken(request).toList()
+        coEvery { authService.verifyAcceptPW(request) } returns expectedResponse
 
-        assertEquals(listOf(expectedResponse), result)
-        Mockito.verify(authService).verifyAcceptSignup(request)
+        val result = authTokenRemoteSource.verifyAcceptPWAuthToken(request).first()
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.verifyAcceptPW(request) }
     }
 
     @Test
-    fun `verifyAcceptPWAuthToken emits correct response`(): Unit = runBlocking {
-        val request = AuthVerifyEmailAcceptRequest(email = "test@example.com", code = "123456")
-        val expectedResponse: Response<AuthTokenDto> = Mockito.mock(Response::class.java) as Response<AuthTokenDto>
-        Mockito.`when`(authService.verifyAcceptPW(request)).thenReturn(expectedResponse)
-
-        val result = authTokenRemoteSource.verifyAcceptPWAuthToken(request).toList()
-
-        assertEquals(listOf(expectedResponse), result)
-        Mockito.verify(authService).verifyAcceptPW(request)
-    }
-
-    @Test
-    fun `resetPasswordAuthToken emits correct response`(): Unit = runBlocking {
+    fun resetPasswordAuthToken_AuthResetPasswordRequest_returnFlowResponse() = runBlocking {
         val request = AuthResetPasswordRequest(password = "newPassword123")
-        val expectedResponse: Response<Void> = Mockito.mock(Response::class.java) as Response<Void>
-        Mockito.`when`(authService.resetPassword(request)).thenReturn(expectedResponse)
+        val expectedResponse: Response<Void> = mockk(relaxed = true)
 
-        val result = authTokenRemoteSource.resetPasswordAuthToken(request).toList()
+        coEvery { authService.resetPassword(request) } returns expectedResponse
 
-        assertEquals(listOf(expectedResponse), result)
-        Mockito.verify(authService).resetPassword(request)
+        val result = authTokenRemoteSource.resetPasswordAuthToken(request).first()
+        assertEquals(expectedResponse, result)
+        coVerify(exactly = 1) { authService.resetPassword(request) }
     }
 
 
-
-    // Exception Test
+    // Test Exception
     @Test(expected = Exception::class)
-    fun `signupAuthToken throws Exception on failure`(): Unit = runBlocking {
-        val request = AuthSignupRequest(email = "test@example.com", password = "password123", nickname = "testUser")
-        val exception = RuntimeException("Signup failed")
-        Mockito.`when`(authService.signup(request)).thenThrow(exception)
+    fun signupAuthToken_AuthSignupRequest_returnException(): Unit = runBlocking {
+        val request = AuthSignupRequest(
+            email = "test@example.com",
+            password = "password123",
+            nickname = "testUser"
+        )
+        coEvery { authService.signup(request) } throws Exception("Signup failed")
 
         authTokenRemoteSource.signupAuthToken(request).toList()
+        coVerify(exactly = 1) { authTokenRemoteSource.signupAuthToken(request) }
     }
 
     @Test(expected = Exception::class)
-    fun `loginAuthToken throws Exception on failure`(): Unit = runBlocking {
+    fun loginAuthToken_AuthLoginRequest_returnException(): Unit = runBlocking {
         val request = AuthLoginRequest(email = "test@example.com", password = "password123")
-        val exception = RuntimeException("Login failed")
-        Mockito.`when`(authService.login(request)).thenThrow(exception)
+        coEvery { authService.login(request) } throws Exception("Login failed")
 
         authTokenRemoteSource.loginAuthToken(request).toList()
+        coVerify(exactly = 1) { authTokenRemoteSource.loginAuthToken(request) }
     }
 
     @Test(expected = Exception::class)
-    fun `verifySendSignupAuthToken throws Exception on failure`(): Unit = runBlocking {
+    fun verifySendSignupAuthToken_AuthVerifyEmailSendRequest_returnException(): Unit = runBlocking {
         val request = AuthVerifyEmailSendRequest(email = "test@example.com")
-        val exception = RuntimeException("Email verification send failed")
-        Mockito.`when`(authService.verifySendSignup(request)).thenThrow(exception)
+        coEvery { authService.verifySendSignup(request) } throws Exception("Email verification send failed")
 
         authTokenRemoteSource.verifySendSignupAuthToken(request).toList()
+        coVerify(exactly = 1) { authTokenRemoteSource.verifySendSignupAuthToken(request) }
     }
 
     @Test(expected = Exception::class)
-    fun `verifySendPWAuthToken throws Exception on failure`(): Unit = runBlocking {
+    fun verifySendPWAuthToken_AuthVerifyEmailSendRequest_returnException(): Unit = runBlocking {
         val request = AuthVerifyEmailSendRequest(email = "test@example.com")
-        val exception = RuntimeException("Password verification send failed")
-        Mockito.`when`(authService.verifySendPW(request)).thenThrow(exception)
+        coEvery { authService.verifySendPW(request) } throws Exception("Password verification send failed")
 
         authTokenRemoteSource.verifySendPWAuthToken(request).toList()
+        coVerify(exactly = 1) { authTokenRemoteSource.verifySendPWAuthToken(request) }
     }
 
     @Test(expected = Exception::class)
-    fun `verifyAcceptSignupAuthToken throws Exception on failure`(): Unit = runBlocking {
-        val request = AuthVerifyEmailAcceptRequest(email = "test@example.com", code = "123456")
-        val exception = RuntimeException("Email verification accept failed")
-        Mockito.`when`(authService.verifyAcceptSignup(request)).thenThrow(exception)
+    fun verifyAcceptSignupAuthTokenAuthVerifyEmailAcceptRequest_returnException(): Unit =
+        runBlocking {
+            val request = AuthVerifyEmailAcceptRequest(email = "test@example.com", code = "123456")
+            coEvery { authService.verifyAcceptSignup(request) } throws Exception("Email verification accept failed")
 
-        authTokenRemoteSource.verifyAcceptSignupAuthToken(request).toList()
-    }
+            authTokenRemoteSource.verifyAcceptSignupAuthToken(request).toList()
+            coVerify(exactly = 1) { authTokenRemoteSource.verifyAcceptSignupAuthToken(request) }
+        }
 
     @Test(expected = Exception::class)
-    fun `verifyAcceptPWAuthToken throws Exception on failure`(): Unit = runBlocking {
+    fun verifyAcceptPWAuthToken_AuthVerifyEmailAcceptRequest_returnException(): Unit = runBlocking {
         val request = AuthVerifyEmailAcceptRequest(email = "test@example.com", code = "123456")
-        val exception = RuntimeException("Password verification accept failed")
-        Mockito.`when`(authService.verifyAcceptPW(request)).thenThrow(exception)
+        coEvery { authService.verifyAcceptPW(request) } throws Exception("Password verification accept failed")
 
         authTokenRemoteSource.verifyAcceptPWAuthToken(request).toList()
+        coVerify(exactly = 1) { authTokenRemoteSource.verifyAcceptPWAuthToken(request) }
     }
 
     @Test(expected = Exception::class)
-    fun `resetPasswordAuthToken throws Exception on failure`(): Unit = runBlocking {
+    fun resetPasswordAuthToken_AuthResetPasswordRequest_returnException(): Unit = runBlocking {
         val request = AuthResetPasswordRequest(password = "newPassword123")
-        val exception = RuntimeException("Password reset failed")
-        Mockito.`when`(authService.resetPassword(request)).thenThrow(exception)
+        coEvery { authService.resetPassword(request) } throws Exception("Password reset failed")
 
         authTokenRemoteSource.resetPasswordAuthToken(request).toList()
+        coVerify(exactly = 1) { authTokenRemoteSource.resetPasswordAuthToken(request) }
     }
 }
