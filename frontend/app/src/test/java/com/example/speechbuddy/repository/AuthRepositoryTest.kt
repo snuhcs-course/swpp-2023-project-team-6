@@ -144,8 +144,35 @@ class AuthRepositoryTest {
         }
     }
 
-//    @Test
-//    fun testVerifyAcceptPWSuccess() {}
+    @Test
+    fun testVerifyAcceptPWSuccess(){
+        runBlocking {
+            val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
+                email = "testemail@google.com",
+                code = "sample"
+            )
+            val authTokenDto = AuthTokenDto(
+                accessToken = "test_access_token",
+                refreshToken = null
+            )
+            val expectedAuthToken = AuthToken(
+                accessToken = "test_access_token",
+                refreshToken = null
+            )
+            val successResponse = Response.success<AuthTokenDto>(200, authTokenDto)
+
+            coEvery { authTokenRemoteSource.verifyAcceptPWAuthToken(authVerifyEmailAcceptRequest) } returns flowOf(successResponse)
+
+            val result = authRepository.verifyAcceptPW(authVerifyEmailAcceptRequest)
+
+            // 아래 resource는 Resource<AuthToken> 타입
+            result.collect { resource ->
+                assert(resource.status == Status.SUCCESS)
+                assert(resource.data == expectedAuthToken)
+                assert(resource.message == null)
+            }
+        }
+    }
 
     @Test
     fun testResetPasswordSuccess() {
