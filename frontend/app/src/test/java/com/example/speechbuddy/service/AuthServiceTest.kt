@@ -19,11 +19,14 @@ import org.junit.Test
 import retrofit2.Response
 
 class AuthServiceTest {
+
     private lateinit var authService: AuthService
+    
     private val mockEmail = "test@example.com"
     private val mockPassword = "password123"
     private val mockNickname = "TestUser"
     private val mockCode = "123456"
+    
     private val errorResponseBody =
         "{\"error\":\"Something went wrong\"}".toResponseBody("application/json".toMediaType())
 
@@ -136,7 +139,7 @@ class AuthServiceTest {
 
     @Test
     fun `should return response with error when login request is invalid`() = runBlocking {
-        val loginRequest = AuthLoginRequest(mockEmail, "wrongpassword")
+        val loginRequest = AuthLoginRequest(mockEmail, "wrong_password")
         coEvery { authService.login(loginRequest) } returns Response.error(401, errorResponseBody)
 
         val response = authService.login(loginRequest)
@@ -146,7 +149,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun `should return response with error when reques temail send is invalid for signup`() = runBlocking {
+    fun `should return response with error when request email send is invalid for signup`() = runBlocking {
         val verifyEmailSendRequest = AuthVerifyEmailSendRequest("invalid_email")
         coEvery { authService.verifySendSignup(verifyEmailSendRequest) } returns Response.error(
             400,
@@ -175,7 +178,7 @@ class AuthServiceTest {
 
     @Test
     fun `should return response with error when request code is invalid for signup`() = runBlocking {
-        val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, "wrongcode")
+        val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, "wrong_code")
         coEvery { authService.verifyAcceptSignup(verifyEmailAcceptRequest) } returns Response.error(
             400,
             errorResponseBody
@@ -189,7 +192,7 @@ class AuthServiceTest {
 
     @Test
     fun `should return response with error when request code is invalid for password reset`() = runBlocking {
-        val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, "wrongcode")
+        val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, "wrong_code")
         coEvery { authService.verifyAcceptPW(verifyEmailAcceptRequest) } returns Response.error(
             400,
             errorResponseBody
@@ -214,4 +217,5 @@ class AuthServiceTest {
         coVerify(exactly = 1) { authService.resetPassword(resetPasswordRequest) }
         assertFalse(response.isSuccessful)
     }
+    
 }
