@@ -8,7 +8,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class ErrorResponseMapper {
-
     fun mapToDomainModel(response: ResponseBody): ErrorResponse {
         try {
             val errorJson = JSONObject(response.charStream().readText()).optJSONObject("error")
@@ -28,7 +27,8 @@ class ErrorResponseMapper {
                             return ErrorResponse(code, key, description)
                         }
                     }
-                } // if "message" in the ResponseBody is a single json
+                }
+                // if "message" in the ResponseBody is a single json
                 else if (messageJson is JSONObject) {
                     val keys = messageJson.keys()
                     if (keys.hasNext()) {
@@ -38,6 +38,7 @@ class ErrorResponseMapper {
                     }
                 }
             }
+
             // Return a default ErrorResponse if the responseBody structure doesn't match predefined cases
             return ErrorResponse()
         } catch (e: JSONException) {

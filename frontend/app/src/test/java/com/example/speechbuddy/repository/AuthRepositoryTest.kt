@@ -60,6 +60,11 @@ class AuthRepositoryTest {
         authRepository = AuthRepository(authTokenRemoteSource, authTokenDtoMapper, errorResponseMapper)
     }
 
+    @After
+    fun tearDown(){
+        clearAllMocks()
+    }
+
     @Test
     fun `should return SUCCESS Resource when signup request is valid`() {
         runBlocking {
@@ -362,11 +367,6 @@ class AuthRepositoryTest {
                 assert(resource.message == "key of message")
             }
         }
-    }
-
-    @After
-    fun tearDown(){
-        clearAllMocks()
     }
 
 }
