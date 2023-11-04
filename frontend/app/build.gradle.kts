@@ -63,7 +63,6 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.test:monitor:1.6.1")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("org.mockito:mockito-core:5.5.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
@@ -73,6 +72,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
     // Lifecycle
     val lifecycleVersion = "2.6.2"
     implementation("androidx.lifecycle:lifecycle-common:$lifecycleVersion")
@@ -87,7 +87,6 @@ dependencies {
     val coroutinesVersion = "1.7.1"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
     // Preference
@@ -119,7 +118,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 
     // Hilt
-    val hiltVersion = "2.46.1"
+    val hiltVersion = "2.48.1"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
@@ -127,6 +126,7 @@ dependencies {
 
     // MockK
     val mockkVersion = "1.13.8"
+    testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
 }
