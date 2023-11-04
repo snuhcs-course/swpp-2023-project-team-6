@@ -15,7 +15,7 @@ import com.example.speechbuddy.worker.SeedDatabaseWorker
 /**
  * Room Database for SpeechBuddy App
  */
-@Database(entities = [SymbolEntity::class, CategoryEntity::class], version = 1)
+@Database(entities = [SymbolEntity::class, CategoryEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun symbolDao(): SymbolDao
     abstract fun categoryDao(): CategoryDao

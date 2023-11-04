@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SymbolSelectionViewModel @Inject internal constructor(
-    repository: SymbolRepository
+    private val repository: SymbolRepository
 ) : ViewModel() {
 
     var queryInput by mutableStateOf("")
@@ -25,6 +25,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     var selectedSymbols by mutableStateOf(listOf<Symbol>())
         private set
+
+    private var selectedCategory by mutableStateOf<Category?>(null)
 
     private val _entries = MutableLiveData<List<Entry>>()
     val entries: LiveData<List<Entry>> get() = _entries
@@ -58,7 +60,21 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun selectCategory(category: Category) {
-        /* TODO */
+        if (category != selectedCategory) {
+            selectedCategory = category
+            viewModelScope.launch {
+                repository.getSymbolsFromCategory(category).collect { symbols ->
+                    _entries.postValue(listOf(category) + symbols)
+                }
+            }
+        } else {
+            selectedCategory = null
+            viewModelScope.launch {
+                repository.getCategories().collect { categories ->
+                    _entries.postValue(categories)
+                }
+            }
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolMapper
+import com.example.speechbuddy.domain.models.Category
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,11 +17,11 @@ class SymbolRepository @Inject constructor(
     private val symbolMapper = SymbolMapper()
     private val categoryMapper = CategoryMapper()
 
-    fun getSymbols() = symbolDao.getSymbols().map { symbolEntities ->
-        symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
-    }
-
     fun getCategories() = categoryDao.getCategories().map { categoryEntities ->
         categoryEntities.map { categoryEntity -> categoryMapper.mapToDomainModel(categoryEntity) }
+    }
+
+    fun getSymbolsFromCategory(category: Category) = symbolDao.getSymbolsFromCategoryId(category.id).map { symbolEntities ->
+        symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
     }
 }

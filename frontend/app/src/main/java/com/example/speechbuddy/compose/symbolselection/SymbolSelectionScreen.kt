@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ import com.example.speechbuddy.compose.utils.SymbolUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +41,10 @@ fun SymbolSelectionScreen(
     viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
     val entries by viewModel.entries.observeAsState(initial = emptyList())
+
+    // Used for automatic scroll
+    val coroutineScope = rememberCoroutineScope()
+    val lazyGridState = rememberLazyGridState()
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -79,6 +86,7 @@ fun SymbolSelectionScreen(
                 ) {
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(140.dp),
+                        state = lazyGridState,
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -97,7 +105,12 @@ fun SymbolSelectionScreen(
 
                                 is Category -> CategoryUi(
                                     category = entry,
-                                    onSelect = { viewModel.selectCategory(entry) }
+                                    onSelect = {
+                                        coroutineScope.launch {
+                                            viewModel.selectCategory(entry)
+                                            lazyGridState.scrollToItem(0)
+                                        }
+                                    }
                                 )
                             }
                         }
