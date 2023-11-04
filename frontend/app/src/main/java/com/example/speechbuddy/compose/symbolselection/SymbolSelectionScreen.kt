@@ -23,8 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.utils.CategoryUi
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.SymbolUi
+import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 
@@ -81,7 +83,11 @@ fun SymbolSelectionScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(entries) { entry ->
+                        /**
+                         * Without the elvis operator, null pointer exception arises.
+                         * Do NOT erase the seemingly useless elvis operator!
+                         */
+                        items(entries ?: emptyList()) { entry ->
                             when (entry) {
                                 is Symbol -> SymbolUi(
                                     symbol = entry,
@@ -89,12 +95,10 @@ fun SymbolSelectionScreen(
                                     onFavoriteChange = { viewModel.toggleFavorite(entry, it) }
                                 )
 
-                                /*
                                 is Category -> CategoryUi(
                                     category = entry,
                                     onSelect = { viewModel.selectCategory(entry) }
                                 )
-                                 */
                             }
                         }
                     }

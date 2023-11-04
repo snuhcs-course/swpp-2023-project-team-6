@@ -20,22 +20,7 @@ class SymbolRepository @Inject constructor(
         symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
     }
 
-    fun getCategories() = categoryDao.getCategories()
-
-    companion object {
-        // For Singleton Instantiation
-        @Volatile
-        private var instance: SymbolRepository? = null
-
-        fun getInstance(
-            symbolDao: SymbolDao,
-            categoryDao: CategoryDao
-        ) =
-            instance ?: synchronized(this) {
-                instance ?: SymbolRepository(
-                    symbolDao,
-                    categoryDao
-                ).also { instance = it }
-            }
+    fun getCategories() = categoryDao.getCategories().map { categoryEntities ->
+        categoryEntities.map { categoryEntity -> categoryMapper.mapToDomainModel(categoryEntity) }
     }
 }
