@@ -12,7 +12,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -51,7 +55,14 @@ fun SymbolSelectionScreen(
     ) {
         Scaffold(
             topBar = {
-                HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_symbols))
+                HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_symbols), actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = stringResource(id = R.string.menu)
+                        )
+                    }
+                })
             }
         ) { topPaddingValues ->
             Column(
