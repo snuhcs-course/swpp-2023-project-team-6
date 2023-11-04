@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.speechbuddy.MainApplication.Companion.token_prefs
 import com.example.speechbuddy.R
-import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
-import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
+import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
+import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationError
@@ -77,11 +77,13 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     fun verifySend(source: String?) {
+        /* TODO: 나중에 고쳐야 함 */
+
         // What function(ultimately, API call) to use
-        val verifySendFunction = if (source == "signup") {
-            repository::verifySendSignup
+        val sendCode = if (source == "signup") {
+            repository::sendCodeForSignup
         } else { // source == "reset_password"
-            repository::verifySendPW
+            repository::sendCodeForResetPassword
         }
 
         // Prior validation of email input
@@ -98,13 +100,13 @@ class EmailVerificationViewModel @Inject internal constructor(
         }
 
         viewModelScope.launch {
-            verifySendFunction(
-                AuthVerifyEmailSendRequest(
+            sendCode(
+                AuthSendCodeRequest(
                     email = emailInput
                 )
             ).collect { result ->
-                when (result.status) {
-                    Status.SUCCESS -> {
+                when (result.code()) {
+                    200 -> {
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isSuccessfulSend = true,
@@ -113,8 +115,8 @@ class EmailVerificationViewModel @Inject internal constructor(
                         }
                     }
 
-                    Status.ERROR -> {
-                        val messageId = when (result.message) {
+                    400 -> {
+                        val messageId = when (result.message()) {
                             "email" -> R.string.false_email
                             "already_taken" -> R.string.email_already_taken
                             "no_user" -> R.string.no_such_user
@@ -130,19 +132,18 @@ class EmailVerificationViewModel @Inject internal constructor(
                             )
                         }
                     }
-
-                    Status.LOADING -> {
-                    }
                 }
             }
         }
     }
 
     fun verifyAccept(source: String?, navController: NavHostController) {
-        val verifyAcceptFunction = if (source == "signup") {
-            repository::verifyAcceptSignup
+        /* TODO: 나중에 고쳐야 함 */
+
+        val verifyEmail = if (source == "signup") {
+            repository::verifyEmailForSignup
         } else { // source == "reset_password"
-            repository::verifyAcceptPW
+            repository::verifyEmailForResetPassword
         }
 
         if (!isValidVerifyCode(verifyCodeInput)) {
@@ -158,18 +159,18 @@ class EmailVerificationViewModel @Inject internal constructor(
         }
 
         viewModelScope.launch {
-            verifyAcceptFunction(
-                AuthVerifyEmailAcceptRequest(
+            verifyEmail(
+                AuthVerifyEmailRequest(
                     email = emailInput,
                     code = verifyCodeInput
                 )
             ).collect { result ->
-                when (result.status) {
+                when (result) {
                     Status.SUCCESS -> {
                         if (source == "signup") {
                             navController.navigate("signup/$emailInput")
                         } else {
-                            val authToken = result.data as AuthToken
+                            val authToken = result as AuthToken /* TODO: 나중에 고쳐야 함 */
                             token_prefs.setAccessToken(authToken.accessToken!!)
                             navController.navigate("reset_password")
                         }
@@ -187,9 +188,6 @@ class EmailVerificationViewModel @Inject internal constructor(
                                 )
                             )
                         }
-                    }
-
-                    Status.LOADING -> {
                     }
                 }
             }

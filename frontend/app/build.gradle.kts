@@ -43,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -61,7 +61,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.test:monitor:1.6.1")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.5.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -105,20 +108,20 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
 
     // Room
-    val roomVersion = "2.5.2"
+    val roomVersion = "2.6.0"
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
 
     // Navigation
-    val navigationVersion = "2.7.4"
+    val navigationVersion = "2.7.5"
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-compose:$navigationVersion")
     implementation("androidx.navigation:navigation-runtime-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 
     // Hilt
-    val hiltVersion = "2.46.1"
+    val hiltVersion = "2.48.1"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
@@ -126,6 +129,7 @@ dependencies {
 
     // MockK
     val mockkVersion = "1.13.8"
+    testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
 }
