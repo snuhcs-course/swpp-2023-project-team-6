@@ -3,16 +3,19 @@ package com.example.speechbuddy.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.speechbuddy.R
+import androidx.lifecycle.asLiveData
 import com.example.speechbuddy.domain.models.Category
-import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.repository.SymbolRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SymbolSelectionViewModel @Inject internal constructor() : ViewModel() {
+class SymbolSelectionViewModel @Inject internal constructor(
+    repository: SymbolRepository
+) : ViewModel() {
 
     var queryInput by mutableStateOf("")
         private set
@@ -20,51 +23,7 @@ class SymbolSelectionViewModel @Inject internal constructor() : ViewModel() {
     var selectedSymbols by mutableStateOf(listOf<Symbol>())
         private set
 
-    var entries by mutableStateOf(listOf<Entry>())
-        private set
-
-    /* TODO: 나중에 삭제 */
-    private val initialEntries = listOf(
-        Symbol(
-            id = 0,
-            text = "119에 전화해주세요",
-            imageResId = R.drawable.symbol_1,
-            categoryId = 0,
-            isFavorite = true,
-            isMine = false
-        ),
-        Symbol(
-            id = 0,
-            text = "119에 전화해주세요",
-            imageResId = R.drawable.symbol_1,
-            categoryId = 0,
-            isFavorite = true,
-            isMine = false
-        )
-    )
-
-    private val secondaryEntries = listOf(
-        Symbol(
-            id = 0,
-            text = "119에 전화해주세요",
-            imageResId = R.drawable.symbol_1,
-            categoryId = 0,
-            isFavorite = true,
-            isMine = false
-        ),
-        Symbol(
-            id = 0,
-            text = "우와",
-            imageResId = R.drawable.symbol_1,
-            categoryId = 0,
-            isFavorite = true,
-            isMine = false
-        )
-    )
-
-    init {
-        entries = initialEntries
-    }
+    val entries: LiveData<List<Symbol>> = repository.getSymbols().asLiveData()
 
     fun setQuery(input: String) {
         queryInput = input
@@ -78,12 +37,10 @@ class SymbolSelectionViewModel @Inject internal constructor() : ViewModel() {
 
     fun clearAll() {
         selectedSymbols = listOf()
-        entries = initialEntries
     }
 
     fun selectSymbol(symbol: Symbol) {
         selectedSymbols = selectedSymbols.plus(symbol)
-        entries = secondaryEntries
     }
 
     fun toggleFavorite(symbol: Symbol, value: Boolean) {

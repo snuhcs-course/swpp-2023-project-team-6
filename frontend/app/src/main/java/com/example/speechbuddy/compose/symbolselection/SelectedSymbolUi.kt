@@ -1,7 +1,6 @@
 package com.example.speechbuddy.compose.symbolselection
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,16 +23,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.utils.Constants
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun SelectedSymbolUi(
@@ -66,8 +67,8 @@ fun SelectedSymbolUi(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(id = symbol.imageResId),
+                GlideImage(
+                    model = symbol.imageUrl ?: Constants.SYMBOL_IMAGE_PATH.plus("symbol_${symbol.id}.png"),
                     contentDescription = symbol.text,
                     modifier = Modifier.height(65.dp),
                     contentScale = ContentScale.FillHeight
@@ -100,7 +101,7 @@ fun SelectedSymbolUiPreview() {
     val previewSymbol = Symbol(
         id = 1,
         text = "119에 전화해주세요",
-        imageResId = R.drawable.symbol_1,
+        imageUrl = null,
         categoryId = 1,
         isFavorite = true,
         isMine = false

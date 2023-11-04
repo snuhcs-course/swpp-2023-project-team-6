@@ -99,7 +99,7 @@ fun SelectedSymbolsBoxPreview() {
     val previewSymbol = Symbol(
         id = 1,
         text = "119에 전화해주세요",
-        imageResId = R.drawable.symbol_1,
+        imageUrl = null,
         categoryId = 1,
         isFavorite = true,
         isMine = false

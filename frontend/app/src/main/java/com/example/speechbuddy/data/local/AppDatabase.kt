@@ -7,21 +7,20 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.speechbuddy.data.local.models.Category
-import com.example.speechbuddy.data.local.models.Symbol
+import com.example.speechbuddy.data.local.models.CategoryEntity
+import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.utils.Constants.Companion.DATABASE_NAME
 import com.example.speechbuddy.worker.SeedDatabaseWorker
 
 /**
  * Room Database for SpeechBuddy App
  */
-@Database(entities = [Symbol::class, Category::class], version = 1)
+@Database(entities = [SymbolEntity::class, CategoryEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun symbolDao(): SymbolDao
     abstract fun categoryDao(): CategoryDao
 
     companion object {
-
         // For Singleton Instantiation
         @Volatile
         private var instance: AppDatabase? = null

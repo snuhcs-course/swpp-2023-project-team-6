@@ -16,15 +16,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.CategoryUi
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.SymbolUi
-import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 
@@ -35,6 +35,8 @@ fun SymbolSelectionScreen(
     bottomPaddingValues: PaddingValues,
     viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
+    val entries by viewModel.entries.observeAsState(initial = emptyList())
+
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
@@ -50,7 +52,7 @@ fun SymbolSelectionScreen(
                         top = topPaddingValues.calculateTopPadding(),
                         bottom = bottomPaddingValues.calculateBottomPadding()
                     )
-                    .padding(24.dp),
+                    .padding(start = 24.dp, top = 24.dp, end = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 /* TODO: ViewModel 연결 */
@@ -72,14 +74,14 @@ fun SymbolSelectionScreen(
                             color = MaterialTheme.colorScheme.surfaceVariant,
                             shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                         )
-                        .padding(16.dp)
                 ) {
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(140.dp),
+                        contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(viewModel.entries) { entry ->
+                        items(entries) { entry ->
                             when (entry) {
                                 is Symbol -> SymbolUi(
                                     symbol = entry,
@@ -87,10 +89,12 @@ fun SymbolSelectionScreen(
                                     onFavoriteChange = { viewModel.toggleFavorite(entry, it) }
                                 )
 
+                                /*
                                 is Category -> CategoryUi(
                                     category = entry,
                                     onSelect = { viewModel.selectCategory(entry) }
                                 )
+                                 */
                             }
                         }
                     }

@@ -3,6 +3,10 @@ package com.example.speechbuddy.utils
 class Constants {
     companion object {
         const val BASE_URL = "http://54.180.112.72:8000/"
+
+        const val SYMBOL_IMAGE_PATH = "file:///android_asset/images/symbol/"
+        const val CATEGORY_IMAGE_PATH = "file:///android_asset/images/category/"
+
         const val DATABASE_NAME = "speechbuddy-db"
         const val SYMBOL_DATA_FILENAME = "symbols.json"
         const val CATEGORY_DATA_FILENAME = "categories.json"
