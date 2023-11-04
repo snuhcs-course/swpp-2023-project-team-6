@@ -2,8 +2,7 @@ package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
-import com.example.speechbuddy.data.remote.models.ErrorResponseDto
-import com.example.speechbuddy.data.remote.models.ErrorResponseDtoMapper
+import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
@@ -13,10 +12,6 @@ import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import okhttp3.ResponseBody
-import org.json.JSONObject
-import retrofit2.Converter
-import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,14 +19,8 @@ import javax.inject.Singleton
 class AuthRepository @Inject constructor(
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
-    private val errorResponseDtoMapper: ErrorResponseDtoMapper,
-    private val retrofit : Retrofit
+    private val errorResponseMapper: ErrorResponseMapper,
 ) {
-
-    // convert API responseBody to errorResponseMsgDto
-    private val converter: Converter<ResponseBody, ErrorResponseDto> = retrofit.responseBodyConverter(
-        ErrorResponseDto::class.java, ErrorResponseDto::class.java.annotations
-    )
 
     suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Resource<Void>> {
         return authTokenRemoteSource.signupAuthToken(authSignupRequest).map { response ->
@@ -39,10 +28,9 @@ class AuthRepository @Inject constructor(
                 Resource.success(null)
             } else {
                 response.errorBody()?.let { responseBody ->
-                    val errorResponseMsgDto = converter.convert(responseBody)
-                    val errorMsgKey = errorResponseDtoMapper.mapToDomainModel(errorResponseMsgDto!!).key
+                    val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                     Resource.error(
-                        errorMsgKey ?: "Unknown Error",
+                        errorMsgKey,
                         null
                     )
                 } ?: Resource.error("Unknown Error", null)
@@ -61,11 +49,9 @@ class AuthRepository @Inject constructor(
                     } ?: returnUnknownError()
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorJson = JSONObject(responseBody.charStream().readText())
-                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                         Resource.error(
-                            firstKeyOfMessage,
+                            errorMsgKey,
                             null
                         )
                     } ?: returnUnknownError()
@@ -80,11 +66,9 @@ class AuthRepository @Inject constructor(
                     Resource.success(null)
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorJson = JSONObject(responseBody.charStream().readText())
-                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                         Resource.error(
-                            firstKeyOfMessage,
+                            errorMsgKey,
                             null
                         )
                     } ?: Resource.error("Unknown Error", null)
@@ -99,11 +83,9 @@ class AuthRepository @Inject constructor(
                     Resource.success(null)
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorJson = JSONObject(responseBody.charStream().readText())
-                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                         Resource.error(
-                            firstKeyOfMessage,
+                            errorMsgKey,
                             null
                         )
                     } ?: Resource.error("Unknown Error", null)
@@ -118,11 +100,9 @@ class AuthRepository @Inject constructor(
                     Resource.success(null)
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorJson = JSONObject(responseBody.charStream().readText())
-                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                         Resource.error(
-                            firstKeyOfMessage,
+                            errorMsgKey,
                             null
                         )
                     } ?: Resource.error("Unknown Error", null)
@@ -141,11 +121,9 @@ class AuthRepository @Inject constructor(
                     } ?: returnUnknownError()
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorJson = JSONObject(responseBody.charStream().readText())
-                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                         Resource.error(
-                            firstKeyOfMessage,
+                            errorMsgKey,
                             null
                         )
                     } ?: returnUnknownError()
@@ -160,11 +138,9 @@ class AuthRepository @Inject constructor(
                     Resource.success(null)
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorJson = JSONObject(responseBody.charStream().readText())
-                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                         Resource.error(
-                            firstKeyOfMessage,
+                            errorMsgKey,
                             null
                         )
                     } ?: Resource.error("Unknown Error", null)
