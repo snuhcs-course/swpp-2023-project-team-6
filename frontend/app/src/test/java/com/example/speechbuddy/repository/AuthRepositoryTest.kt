@@ -258,7 +258,7 @@ class AuthRepositoryTest {
             }
         }
     }
-//
+
     @Test
     fun `should return error response when verifyEmailForSignup request is invalid`() {
         runBlocking{
