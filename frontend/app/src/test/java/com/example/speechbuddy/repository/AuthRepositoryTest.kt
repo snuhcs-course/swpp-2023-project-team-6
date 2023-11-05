@@ -5,6 +5,7 @@ import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
@@ -318,44 +319,41 @@ class AuthRepositoryTest {
             }
         }
     }
-//
-//    @Test
-//    fun `should return SUCCESS Resource when resetPassword request is valid`() {
-//        runBlocking {
-//            val authResetPasswordRequest = AuthResetPasswordRequest(
-//                password = "newPassword"
-//            )
-//            val successResponse = Response.success<Void>(200, null)
-//
-//            coEvery { authTokenRemoteSource.resetPasswordAuthToken(authResetPasswordRequest) } returns flowOf(successResponse)
-//
-//            val result = authRepository.resetPassword(authResetPasswordRequest)
-//            // 아래 resource는 Resource<Void> 타입
-//            result.collect { resource ->
-//                assert(resource.status == Status.SUCCESS)
-//                assert(resource.data == null)
-//                assert(resource.message == null)
-//            }
-//        }
-//    }
-//
-//    @Test
-//    fun `should return ERROR Resource when resetPassword request is invalid`() {
-//        runBlocking{
-//            val authResetPasswordRequest = AuthResetPasswordRequest(
-//                password = "invalid"
-//            )
-//            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
-//
-//            coEvery { authTokenRemoteSource.resetPasswordAuthToken(authResetPasswordRequest) } returns flowOf(errorResponse)
-//
-//            val result = authRepository.resetPassword(authResetPasswordRequest)
-//            result.collect { resource ->
-//                assert(resource.status == Status.ERROR)
-//                assert(resource.data == null)
-//                assert(resource.message == "key of message")
-//            }
-//        }
-//    }
-//
+
+    @Test
+    fun `should return successful response when resetPassword request is valid`() {
+        runBlocking {
+            val authResetPasswordRequest = AuthResetPasswordRequest(
+                password = "newPassword"
+            )
+            val successResponse = Response.success<Void>(200, null)
+
+            coEvery { authService.resetPassword(authResetPasswordRequest) } returns successResponse
+
+            val result = authRepository.resetPassword(authResetPasswordRequest)
+            // 아래 resource는 Response<Void> 타입
+            result.collect { resource ->
+                assert(resource.isSuccessful)
+                assert(resource.body()==null)
+            }
+        }
+    }
+
+    @Test
+    fun `should return error response when resetPassword request is invalid`() {
+        runBlocking{
+            val authResetPasswordRequest = AuthResetPasswordRequest(
+                password = "invalid"
+            )
+            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
+
+            coEvery { authService.resetPassword(authResetPasswordRequest) } returns errorResponse
+
+            val result = authRepository.resetPassword(authResetPasswordRequest)
+            result.collect { resource ->
+                assert(!resource.isSuccessful)
+            }
+        }
+    }
+
 }
