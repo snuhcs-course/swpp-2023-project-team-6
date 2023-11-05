@@ -27,9 +27,10 @@ import javax.inject.Inject
 class ResetPasswordViewModel @Inject internal constructor(
     private val repository: AuthRepository,
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(ResetPasswordUiState())
     val uiState: StateFlow<ResetPasswordUiState> = _uiState.asStateFlow()
-    
+
     var passwordInput by mutableStateOf("")
         private set
     var passwordCheckInput by mutableStateOf("")
@@ -98,15 +99,13 @@ class ResetPasswordViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect { result ->
-                    Log.d("test", result.toString())
-                    when (result.status) {
-                        Status.LOADING -> {}
-
-                        Status.SUCCESS -> {
+                    /* TODO: 나중에 고쳐야 함 */
+                    when (result.code()) {
+                        200 -> {
                             navController.navigate("login")
                         }
 
-                        Status.ERROR -> {
+                        400 -> {
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,

@@ -21,11 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.viewmodel.EmailVerificationViewModel
 
@@ -47,7 +47,9 @@ fun EmailVerificationScreen(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(topBar = { TopAppBarUi(onBackClick = onBackClick) }) {
+        Scaffold(
+            topBar = { AuthTopAppBarUi(onBackClick = onBackClick) }
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -72,7 +74,7 @@ fun EmailVerificationScreen(
                 // Email Text Field
                 TextFieldUi(value = viewModel.emailInput,
                     onValueChange = { viewModel.setEmail(it) },
-                    label = { Text(text = stringResource(id = R.string.email_field)) },
+                    label = { Text(text = stringResource(id = R.string.email)) },
                     supportingButton = {
                         ButtonUi(
                             text = stringResource(id = R.string.send_validation_code),
