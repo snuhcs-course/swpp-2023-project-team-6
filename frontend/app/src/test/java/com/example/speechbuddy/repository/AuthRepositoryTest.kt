@@ -7,9 +7,10 @@ import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
-import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
-import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
+import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
+import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.domain.models.AuthToken
+import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Status
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -29,6 +30,7 @@ class AuthRepositoryTest {
     private lateinit var authRepository: AuthRepository
 
     @MockK
+    private val authService = mockk<AuthService>()
     private val authTokenRemoteSource = mockk<AuthTokenRemoteSource>()
     private val authTokenDtoMapper = AuthTokenDtoMapper()
     private val errorResponseMapper = ErrorResponseMapper()
@@ -57,7 +59,7 @@ class AuthRepositoryTest {
 
     @Before
     fun setup() {
-        authRepository = AuthRepository(authTokenRemoteSource, authTokenDtoMapper, errorResponseMapper)
+        authRepository = AuthRepository(authService, authTokenRemoteSource, authTokenDtoMapper, errorResponseMapper)
     }
 
     @After
@@ -164,7 +166,7 @@ class AuthRepositoryTest {
     @Test
     fun `should return SUCCESS Resource when verifySendSignup request is valid`() {
         runBlocking {
-            val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
+            val authVerifyEmailSendRequest = AuthSendCodeRequest(
                 email = mockEmail
             )
             val successResponse = Response.success<Void>(200, null)
@@ -184,7 +186,7 @@ class AuthRepositoryTest {
     @Test
     fun `should return ERROR Resource when verifySendSignup request is invalid`() {
         runBlocking{
-            val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
+            val authVerifyEmailSendRequest = AuthSendCodeRequest(
                 email = "invalid@example.com"
             )
             val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
@@ -203,7 +205,7 @@ class AuthRepositoryTest {
     @Test
     fun `should return SUCCESS Resource when verifySendPW request is valid`() {
         runBlocking {
-            val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
+            val authVerifyEmailSendRequest = AuthSendCodeRequest(
                 email = mockEmail
             )
             val successResponse = Response.success<Void>(200, null)
@@ -223,7 +225,7 @@ class AuthRepositoryTest {
     @Test
     fun `should return ERROR Resource when verifySendPW request is invalid`() {
         runBlocking{
-            val authVerifyEmailSendRequest = AuthVerifyEmailSendRequest(
+            val authVerifyEmailSendRequest = AuthSendCodeRequest(
                 email = "invalid@example.com"
             )
             val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
@@ -242,7 +244,7 @@ class AuthRepositoryTest {
     @Test
     fun `should return SUCCESS Resource when verifyAcceptSignup request is valid`() {
         runBlocking {
-            val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
+            val authVerifyEmailAcceptRequest = AuthVerifyEmailRequest(
                 email = mockEmail,
                 code = mockCode
             )
@@ -263,7 +265,7 @@ class AuthRepositoryTest {
     @Test
     fun `should return ERROR Resource when verifyAcceptSignup request is invalid`() {
         runBlocking{
-            val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
+            val authVerifyEmailAcceptRequest = AuthVerifyEmailRequest(
                 email = mockEmail,
                 code = "invalid"
             )
@@ -283,7 +285,7 @@ class AuthRepositoryTest {
     @Test
     fun `should return SUCCESS Resource when verifyAcceptPW request is valid`(){
         runBlocking {
-            val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
+            val authVerifyEmailAcceptRequest = AuthVerifyEmailRequest(
                 email = mockEmail,
                 code = mockCode
             )
@@ -313,7 +315,7 @@ class AuthRepositoryTest {
     @Test
     fun `should return ERROR Resource when verifyAcceptPW request is invalid`() {
         runBlocking{
-            val authVerifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(
+            val authVerifyEmailAcceptRequest = AuthVerifyEmailRequest(
                 email = mockEmail,
                 code = "invalid"
             )
