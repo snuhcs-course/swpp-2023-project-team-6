@@ -54,9 +54,9 @@ class AuthRepository @Inject constructor(
             }
     }
 
-    suspend fun sendCodeForSignup(authVerifyEmailSendRequest: AuthSendCodeRequest): Flow<Response<Void>> =
+    suspend fun sendCodeForSignup(authSendCodeRequest: AuthSendCodeRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.sendCodeForSignup(authVerifyEmailSendRequest)
+            val result = authService.sendCodeForSignup(authSendCodeRequest)
             emit(result)
         }
 
