@@ -194,45 +194,42 @@ class AuthRepositoryTest {
         }
     }
 
-//    @Test
-//    fun `should return SUCCESS Resource when verifySendPW request is valid`() {
-//        runBlocking {
-//            val authVerifyEmailSendRequest = AuthSendCodeRequest(
-//                email = mockEmail
-//            )
-//            val successResponse = Response.success<Void>(200, null)
-//
-//            coEvery { authTokenRemoteSource.verifySendPWAuthToken(authVerifyEmailSendRequest) } returns flowOf(successResponse)
-//
-//            val result = authRepository.verifySendPW(authVerifyEmailSendRequest)
-//            // 아래 resource는 Resource<Void> 타입
-//            result.collect { resource ->
-//                assert(resource.status == Status.SUCCESS)
-//                assert(resource.data == null)
-//                assert(resource.message == null)
-//            }
-//        }
-//    }
-//
-//    @Test
-//    fun `should return ERROR Resource when verifySendPW request is invalid`() {
-//        runBlocking{
-//            val authVerifyEmailSendRequest = AuthSendCodeRequest(
-//                email = "invalid@example.com"
-//            )
-//            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
-//
-//            coEvery { authTokenRemoteSource.verifySendPWAuthToken(authVerifyEmailSendRequest) } returns flowOf(errorResponse)
-//
-//            val result = authRepository.verifySendPW(authVerifyEmailSendRequest)
-//            result.collect { resource ->
-//                assert(resource.status == Status.ERROR)
-//                assert(resource.data == null)
-//                assert(resource.message == "key of message")
-//            }
-//        }
-//    }
-//
+    @Test
+    fun `should return successful response when sendCodeForResetPassword request is valid`() {
+        runBlocking {
+            val authSendCodeRequest = AuthSendCodeRequest(
+                email = mockEmail
+            )
+            val successResponse = Response.success<Void>(200, null)
+
+            coEvery { authService.sendCodeForResetPassword(authSendCodeRequest) } returns successResponse
+
+            val result = authRepository.sendCodeForResetPassword(authSendCodeRequest)
+            // 아래 resource는 Response<Void> 타입
+            result.collect { resource ->
+                assert(resource.isSuccessful)
+                assert(resource.body()==null)
+            }
+        }
+    }
+
+    @Test
+    fun `should return error response when sendCodeForResetPassword request is invalid`() {
+        runBlocking{
+            val authSendCodeRequest = AuthSendCodeRequest(
+                email = "invalid@example.com"
+            )
+            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
+
+            coEvery { authService.sendCodeForResetPassword(authSendCodeRequest) } returns errorResponse
+
+            val result = authRepository.sendCodeForResetPassword(authSendCodeRequest)
+            result.collect { resource ->
+                assert(!resource.isSuccessful)
+            }
+        }
+    }
+
 //    @Test
 //    fun `should return SUCCESS Resource when verifyAcceptSignup request is valid`() {
 //        runBlocking {
