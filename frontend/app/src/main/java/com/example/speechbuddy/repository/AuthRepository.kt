@@ -66,9 +66,9 @@ class AuthRepository @Inject constructor(
             emit(result)
         }
 
-    suspend fun verifyEmailForSignup(authVerifyEmailAcceptRequest: AuthVerifyEmailRequest): Flow<Response<Void>> =
+    suspend fun verifyEmailForSignup(authVerifyEmailRequest: AuthVerifyEmailRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.verifyEmailForSignup(authVerifyEmailAcceptRequest)
+            val result = authService.verifyEmailForSignup(authVerifyEmailRequest)
             emit(result)
         }
 

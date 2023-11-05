@@ -7,6 +7,7 @@ import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
+import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Status
@@ -230,46 +231,43 @@ class AuthRepositoryTest {
         }
     }
 
-//    @Test
-//    fun `should return SUCCESS Resource when verifyAcceptSignup request is valid`() {
-//        runBlocking {
-//            val authVerifyEmailAcceptRequest = AuthVerifyEmailRequest(
-//                email = mockEmail,
-//                code = mockCode
-//            )
-//            val successResponse = Response.success<Void>(200, null)
+    @Test
+    fun `should return successful response when verifyEmailForSignup request is valid`() {
+        runBlocking {
+            val authVerifyEmailRequest = AuthVerifyEmailRequest(
+                email = mockEmail,
+                code = mockCode
+            )
+            val successResponse = Response.success<Void>(200, null)
+
+            coEvery { authService.verifyEmailForSignup(authVerifyEmailRequest) } returns successResponse
+
+            val result = authRepository.verifyEmailForSignup(authVerifyEmailRequest)
+            // 아래 resource는 Response<Void> 타입
+            result.collect { resource ->
+                assert(resource.isSuccessful)
+                assert(resource.body()==null)
+            }
+        }
+    }
 //
-//            coEvery { authTokenRemoteSource.verifyAcceptSignupAuthToken(authVerifyEmailAcceptRequest) } returns flowOf(successResponse)
-//
-//            val result = authRepository.verifyAcceptSignup(authVerifyEmailAcceptRequest)
-//            // 아래 resource는 Resource<Void> 타입
-//            result.collect { resource ->
-//                assert(resource.status == Status.SUCCESS)
-//                assert(resource.data == null)
-//                assert(resource.message == null)
-//            }
-//        }
-//    }
-//
-//    @Test
-//    fun `should return ERROR Resource when verifyAcceptSignup request is invalid`() {
-//        runBlocking{
-//            val authVerifyEmailAcceptRequest = AuthVerifyEmailRequest(
-//                email = mockEmail,
-//                code = "invalid"
-//            )
-//            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
-//
-//            coEvery { authTokenRemoteSource.verifyAcceptSignupAuthToken(authVerifyEmailAcceptRequest) } returns flowOf(errorResponse)
-//
-//            val result = authRepository.verifyAcceptSignup(authVerifyEmailAcceptRequest)
-//            result.collect { resource ->
-//                assert(resource.status == Status.ERROR)
-//                assert(resource.data == null)
-//                assert(resource.message == "key of message")
-//            }
-//        }
-//    }
+    @Test
+    fun `should return error response when verifyEmailForSignup request is invalid`() {
+        runBlocking{
+            val authVerifyEmailRequest = AuthVerifyEmailRequest(
+                email = mockEmail,
+                code = "invalid"
+            )
+            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
+
+            coEvery { authService.verifyEmailForSignup(authVerifyEmailRequest) } returns errorResponse
+
+            val result = authRepository.verifyEmailForSignup(authVerifyEmailRequest)
+            result.collect { resource ->
+                assert(!resource.isSuccessful)
+            }
+        }
+    }
 //
 //    @Test
 //    fun `should return SUCCESS Resource when verifyAcceptPW request is valid`(){
