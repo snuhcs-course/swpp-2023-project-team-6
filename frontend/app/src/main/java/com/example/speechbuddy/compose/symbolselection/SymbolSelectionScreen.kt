@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -38,6 +39,8 @@ import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.SymbolUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.ui.models.DisplayMode
+import com.example.speechbuddy.ui.models.SymbolSelectionUiState
 import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 import kotlinx.coroutines.launch
 
@@ -67,14 +70,11 @@ fun SymbolSelectionScreen(
                             contentDescription = stringResource(id = R.string.menu)
                         )
                     }
-                    DropdownMenu(
-                        expanded = uiState.isMenuExpanded,
-                        onDismissRequest = { viewModel.dismissMenu() }
-                    ) {
-                        DropdownMenuItem(text = { Text("hi") }, onClick = { /*TODO*/ })
-                        DropdownMenuItem(text = { Text("my name is") }, onClick = { /*TODO*/ })
-                        DropdownMenuItem(text = { Text("peter") }, onClick = { /*TODO*/ })
-                    }
+                    DropdownMenuUi(
+                        uiState = uiState,
+                        onDismissRequest = { viewModel.dismissMenu() },
+                        onSelectDisplayMode = { viewModel.selectDisplayMode(it) }
+                    )
                 })
             }
         ) { topPaddingValues ->
@@ -141,6 +141,44 @@ fun SymbolSelectionScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+data class DisplayModeItem(
+    val textResId: Int,
+    val displayMode: DisplayMode
+)
+
+@Composable
+private fun DropdownMenuUi(
+    uiState: SymbolSelectionUiState,
+    onDismissRequest: () -> Unit,
+    onSelectDisplayMode: (DisplayMode) -> Unit
+) {
+    val displayModeItems = listOf(
+        DisplayModeItem(R.string.display_all, DisplayMode.ALL),
+        DisplayModeItem(R.string.display_symbols, DisplayMode.SYMBOL),
+        DisplayModeItem(R.string.display_categories, DisplayMode.CATEGORY),
+        DisplayModeItem(R.string.display_favorites, DisplayMode.FAVORITE)
+    )
+    DropdownMenu(
+        expanded = uiState.isMenuExpanded,
+        onDismissRequest = onDismissRequest
+    ) {
+        displayModeItems.forEach { item ->
+            val selected = item.displayMode == uiState.displayMode
+            DropdownMenuItem(
+                text = { Text(text = stringResource(id = item.textResId)) },
+                onClick = { onSelectDisplayMode(item.displayMode) },
+                trailingIcon = {
+                    if (selected)
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = stringResource(id = R.string.currently_selected_menu)
+                        )
+                }
+            )
         }
     }
 }

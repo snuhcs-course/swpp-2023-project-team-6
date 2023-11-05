@@ -11,6 +11,7 @@ import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.ui.models.DisplayMode
 import com.example.speechbuddy.ui.models.SymbolSelectionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,6 +60,15 @@ class SymbolSelectionViewModel @Inject internal constructor(
         _uiState.update { currentState ->
             currentState.copy(
                 isMenuExpanded = false
+            )
+        }
+    }
+
+    fun selectDisplayMode(displayMode: DisplayMode) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isMenuExpanded = false,
+                displayMode = displayMode
             )
         }
     }
