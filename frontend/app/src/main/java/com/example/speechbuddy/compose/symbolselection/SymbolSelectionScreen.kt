@@ -14,13 +14,17 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,6 +48,7 @@ fun SymbolSelectionScreen(
     bottomPaddingValues: PaddingValues,
     viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     val entries by viewModel.entries.observeAsState(initial = emptyList())
 
     // Used for automatic scroll
@@ -56,11 +61,19 @@ fun SymbolSelectionScreen(
         Scaffold(
             topBar = {
                 HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_symbols), actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.expandMenu() }) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = stringResource(id = R.string.menu)
                         )
+                    }
+                    DropdownMenu(
+                        expanded = uiState.isMenuExpanded,
+                        onDismissRequest = { viewModel.dismissMenu() }
+                    ) {
+                        DropdownMenuItem(text = { Text("hi") }, onClick = { /*TODO*/ })
+                        DropdownMenuItem(text = { Text("my name is") }, onClick = { /*TODO*/ })
+                        DropdownMenuItem(text = { Text("peter") }, onClick = { /*TODO*/ })
                     }
                 })
             }
