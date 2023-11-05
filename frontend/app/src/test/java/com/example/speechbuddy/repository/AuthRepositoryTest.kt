@@ -84,6 +84,7 @@ class AuthRepositoryTest {
             // 아래 resource는 Response<Void> 타입
             result.collect { resource ->
                 assert(resource.isSuccessful)
+                assert(resource.code()==201)
                 assert(resource.body()==null)
             }
         }
@@ -105,6 +106,7 @@ class AuthRepositoryTest {
             val result = authRepository.signup(authSignupRequest)
             result.collect { resource ->
                 assert(!resource.isSuccessful)
+                assert(resource.code()==400)
             }
         }
     }
@@ -174,6 +176,7 @@ class AuthRepositoryTest {
             // 아래 resource는 Response<Void> 타입
             result.collect { resource ->
                 assert(resource.isSuccessful)
+                assert(resource.code()==200)
                 assert(resource.body()==null)
             }
         }
@@ -192,6 +195,7 @@ class AuthRepositoryTest {
             val result = authRepository.sendCodeForSignup(authSendCodeRequest)
             result.collect { resource ->
                 assert(!resource.isSuccessful)
+                assert(resource.code()==400)
             }
         }
     }
@@ -210,6 +214,7 @@ class AuthRepositoryTest {
             // 아래 resource는 Response<Void> 타입
             result.collect { resource ->
                 assert(resource.isSuccessful)
+                assert(resource.code()==200)
                 assert(resource.body()==null)
             }
         }
@@ -228,6 +233,7 @@ class AuthRepositoryTest {
             val result = authRepository.sendCodeForResetPassword(authSendCodeRequest)
             result.collect { resource ->
                 assert(!resource.isSuccessful)
+                assert(resource.code()==400)
             }
         }
     }
@@ -247,6 +253,7 @@ class AuthRepositoryTest {
             // 아래 resource는 Response<Void> 타입
             result.collect { resource ->
                 assert(resource.isSuccessful)
+                assert(resource.code()==200)
                 assert(resource.body()==null)
             }
         }
@@ -266,6 +273,7 @@ class AuthRepositoryTest {
             val result = authRepository.verifyEmailForSignup(authVerifyEmailRequest)
             result.collect { resource ->
                 assert(!resource.isSuccessful)
+                assert(resource.code()==400)
             }
         }
     }
@@ -334,6 +342,7 @@ class AuthRepositoryTest {
             // 아래 resource는 Response<Void> 타입
             result.collect { resource ->
                 assert(resource.isSuccessful)
+                assert(resource.code()==200)
                 assert(resource.body()==null)
             }
         }
@@ -352,6 +361,7 @@ class AuthRepositoryTest {
             val result = authRepository.resetPassword(authResetPasswordRequest)
             result.collect { resource ->
                 assert(!resource.isSuccessful)
+                assert(resource.code()==400)
             }
         }
     }
