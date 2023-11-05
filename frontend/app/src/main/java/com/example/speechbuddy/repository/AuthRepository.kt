@@ -72,9 +72,9 @@ class AuthRepository @Inject constructor(
             emit(result)
         }
 
-    suspend fun verifyEmailForResetPassword(authVerifyEmailAcceptRequest: AuthVerifyEmailRequest): Flow<Resource<AuthToken>> {
+    suspend fun verifyEmailForResetPassword(authVerifyEmailRequest: AuthVerifyEmailRequest): Flow<Resource<AuthToken>> {
         return authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(
-            authVerifyEmailAcceptRequest
+            authVerifyEmailRequest
         ).map { response ->
                 if (response.isSuccessful && response.code() == 200) {
                     response.body()?.let { authTokenDto ->

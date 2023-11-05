@@ -268,56 +268,56 @@ class AuthRepositoryTest {
             }
         }
     }
-//
-//    @Test
-//    fun `should return SUCCESS Resource when verifyAcceptPW request is valid`(){
-//        runBlocking {
-//            val authVerifyEmailAcceptRequest = AuthVerifyEmailRequest(
-//                email = mockEmail,
-//                code = mockCode
-//            )
-//            val authTokenDto = AuthTokenDto(
-//                accessToken = mockAccessToken,
-//                refreshToken = null
-//            )
-//            val expectedAuthToken = AuthToken(
-//                accessToken = mockAccessToken,
-//                refreshToken = null
-//            )
-//            val successResponse = Response.success<AuthTokenDto>(200, authTokenDto)
-//
-//            coEvery { authTokenRemoteSource.verifyAcceptPWAuthToken(authVerifyEmailAcceptRequest) } returns flowOf(successResponse)
-//
-//            val result = authRepository.verifyAcceptPW(authVerifyEmailAcceptRequest)
-//
-//            // 아래 resource는 Resource<AuthToken> 타입
-//            result.collect { resource ->
-//                assert(resource.status == Status.SUCCESS)
-//                assert(resource.data == expectedAuthToken)
-//                assert(resource.message == null)
-//            }
-//        }
-//    }
-//
-//    @Test
-//    fun `should return ERROR Resource when verifyAcceptPW request is invalid`() {
-//        runBlocking{
-//            val authVerifyEmailAcceptRequest = AuthVerifyEmailRequest(
-//                email = mockEmail,
-//                code = "invalid"
-//            )
-//            val errorResponse = Response.error<AuthTokenDto>(400, mockErrorResponseBody)
-//
-//            coEvery { authTokenRemoteSource.verifyAcceptPWAuthToken(authVerifyEmailAcceptRequest) } returns flowOf(errorResponse)
-//
-//            val result = authRepository.verifyAcceptPW(authVerifyEmailAcceptRequest)
-//            result.collect { resource ->
-//                assert(resource.status == Status.ERROR)
-//                assert(resource.data == null)
-//                assert(resource.message == "key of message")
-//            }
-//        }
-//    }
+
+    @Test
+    fun `should return SUCCESS Resource when verifyEmailForResetPassword request is valid`(){
+        runBlocking {
+            val authVerifyEmailRequest = AuthVerifyEmailRequest(
+                email = mockEmail,
+                code = mockCode
+            )
+            val authTokenDto = AuthTokenDto(
+                accessToken = mockAccessToken,
+                refreshToken = null
+            )
+            val expectedAuthToken = AuthToken(
+                accessToken = mockAccessToken,
+                refreshToken = null
+            )
+            val successResponse = Response.success<AuthTokenDto>(200, authTokenDto)
+
+            coEvery { authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(authVerifyEmailRequest) } returns flowOf(successResponse)
+
+            val result = authRepository.verifyEmailForResetPassword(authVerifyEmailRequest)
+
+            // 아래 resource는 Resource<AuthToken> 타입
+            result.collect { resource ->
+                assert(resource.status == Status.SUCCESS)
+                assert(resource.data == expectedAuthToken)
+                assert(resource.message == null)
+            }
+        }
+    }
+
+    @Test
+    fun `should return ERROR Resource when verifyEmailForResetPassword request is invalid`() {
+        runBlocking{
+            val authVerifyEmailRequest = AuthVerifyEmailRequest(
+                email = mockEmail,
+                code = "invalid"
+            )
+            val errorResponse = Response.error<AuthTokenDto>(400, mockErrorResponseBody)
+
+            coEvery { authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(authVerifyEmailRequest) } returns flowOf(errorResponse)
+
+            val result = authRepository.verifyEmailForResetPassword(authVerifyEmailRequest)
+            result.collect { resource ->
+                assert(resource.status == Status.ERROR)
+                assert(resource.data == null)
+                assert(resource.message == "key of message")
+            }
+        }
+    }
 //
 //    @Test
 //    fun `should return SUCCESS Resource when resetPassword request is valid`() {
