@@ -63,6 +63,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.test:monitor:1.6.1")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20210307")
     testImplementation("org.mockito:mockito-core:5.5.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
@@ -72,8 +73,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    testImplementation("io.mockk:mockk:1.13.8")
 
     // Lifecycle
     val lifecycleVersion = "2.6.2"
@@ -89,7 +88,6 @@ dependencies {
     val coroutinesVersion = "1.7.1"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
     // Preference

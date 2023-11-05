@@ -4,8 +4,8 @@ import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
-import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailAcceptRequest
-import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailSendRequest
+import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
+import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -62,52 +62,52 @@ class AuthServiceTest {
 
     @Test
     fun `should return response success when request email send is valid for signup`() = runBlocking {
-        val verifyEmailSendRequest = AuthVerifyEmailSendRequest(mockEmail)
-        coEvery { authService.verifySendSignup(verifyEmailSendRequest) } returns Response.success(
+        val verifyEmailSendRequest = AuthSendCodeRequest(mockEmail)
+        coEvery { authService.sendCodeForSignup(verifyEmailSendRequest) } returns Response.success(
             null
         )
 
-        val response = authService.verifySendSignup(verifyEmailSendRequest)
+        val response = authService.sendCodeForSignup(verifyEmailSendRequest)
 
-        coVerify(exactly = 1) { authService.verifySendSignup(verifyEmailSendRequest) }
+        coVerify(exactly = 1) { authService.sendCodeForSignup(verifyEmailSendRequest) }
         assertTrue(response.isSuccessful)
     }
 
     @Test
     fun `should return response success when request email send is valid for password reset`() = runBlocking {
-        val verifyEmailSendRequest = AuthVerifyEmailSendRequest(mockEmail)
-        coEvery { authService.verifySendPW(verifyEmailSendRequest) } returns Response.success(null)
+        val verifyEmailSendRequest = AuthSendCodeRequest(mockEmail)
+        coEvery { authService.sendCodeForResetPassword(verifyEmailSendRequest) } returns Response.success(null)
 
-        val response = authService.verifySendPW(verifyEmailSendRequest)
+        val response = authService.sendCodeForResetPassword(verifyEmailSendRequest)
 
-        coVerify(exactly = 1) { authService.verifySendPW(verifyEmailSendRequest) }
+        coVerify(exactly = 1) { authService.sendCodeForResetPassword(verifyEmailSendRequest) }
         assertTrue(response.isSuccessful)
     }
 
     @Test
     fun `should return response with success when request code is valid for signup`() = runBlocking {
-        val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, mockCode)
-        coEvery { authService.verifyAcceptSignup(verifyEmailAcceptRequest) } returns Response.success(
+        val verifyEmailAcceptRequest = AuthVerifyEmailRequest(mockEmail, mockCode)
+        coEvery { authService.verifyEmailForSignup(verifyEmailAcceptRequest) } returns Response.success(
             null
         )
 
-        val response = authService.verifyAcceptSignup(verifyEmailAcceptRequest)
+        val response = authService.verifyEmailForSignup(verifyEmailAcceptRequest)
 
-        coVerify(exactly = 1) { authService.verifyAcceptSignup(verifyEmailAcceptRequest) }
+        coVerify(exactly = 1) { authService.verifyEmailForSignup(verifyEmailAcceptRequest) }
         assertTrue(response.isSuccessful)
     }
 
     @Test
     fun `should return response with auth token dto when request code is valid for password reset`() = runBlocking {
-        val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, mockCode)
+        val verifyEmailAcceptRequest = AuthVerifyEmailRequest(mockEmail, mockCode)
         val authTokenDto = AuthTokenDto("AccessToken", "RefreshToken")
-        coEvery { authService.verifyAcceptPW(verifyEmailAcceptRequest) } returns Response.success(
+        coEvery { authService.verifyEmailForResetPassword(verifyEmailAcceptRequest) } returns Response.success(
             authTokenDto
         )
 
-        val response = authService.verifyAcceptPW(verifyEmailAcceptRequest)
+        val response = authService.verifyEmailForResetPassword(verifyEmailAcceptRequest)
 
-        coVerify(exactly = 1) { authService.verifyAcceptPW(verifyEmailAcceptRequest) }
+        coVerify(exactly = 1) { authService.verifyEmailForResetPassword(verifyEmailAcceptRequest) }
         assertTrue(response.isSuccessful)
         assertTrue(response.body()?.accessToken == "AccessToken")
         assertTrue(response.body()?.refreshToken == "RefreshToken")
@@ -150,57 +150,57 @@ class AuthServiceTest {
 
     @Test
     fun `should return response with error when request email send is invalid for signup`() = runBlocking {
-        val verifyEmailSendRequest = AuthVerifyEmailSendRequest("invalid_email")
-        coEvery { authService.verifySendSignup(verifyEmailSendRequest) } returns Response.error(
+        val verifyEmailSendRequest = AuthSendCodeRequest("invalid_email")
+        coEvery { authService.sendCodeForSignup(verifyEmailSendRequest) } returns Response.error(
             400,
             errorResponseBody
         )
 
-        val response = authService.verifySendSignup(verifyEmailSendRequest)
+        val response = authService.sendCodeForSignup(verifyEmailSendRequest)
 
-        coVerify(exactly = 1) { authService.verifySendSignup(verifyEmailSendRequest) }
+        coVerify(exactly = 1) { authService.sendCodeForSignup(verifyEmailSendRequest) }
         assertFalse(response.isSuccessful)
     }
 
     @Test
     fun `should return response with error when request email send is invalid for password reset`() = runBlocking {
-        val verifyEmailSendRequest = AuthVerifyEmailSendRequest("invalid_email")
-        coEvery { authService.verifySendPW(verifyEmailSendRequest) } returns Response.error(
+        val verifyEmailSendRequest = AuthSendCodeRequest("invalid_email")
+        coEvery { authService.sendCodeForResetPassword(verifyEmailSendRequest) } returns Response.error(
             400,
             errorResponseBody
         )
 
-        val response = authService.verifySendPW(verifyEmailSendRequest)
+        val response = authService.sendCodeForResetPassword(verifyEmailSendRequest)
 
-        coVerify(exactly = 1) { authService.verifySendPW(verifyEmailSendRequest) }
+        coVerify(exactly = 1) { authService.sendCodeForResetPassword(verifyEmailSendRequest) }
         assertFalse(response.isSuccessful)
     }
 
     @Test
     fun `should return response with error when request code is invalid for signup`() = runBlocking {
-        val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, "wrong_code")
-        coEvery { authService.verifyAcceptSignup(verifyEmailAcceptRequest) } returns Response.error(
+        val verifyEmailAcceptRequest = AuthVerifyEmailRequest(mockEmail, "wrong_code")
+        coEvery { authService.verifyEmailForSignup(verifyEmailAcceptRequest) } returns Response.error(
             400,
             errorResponseBody
         )
 
-        val response = authService.verifyAcceptSignup(verifyEmailAcceptRequest)
+        val response = authService.verifyEmailForSignup(verifyEmailAcceptRequest)
 
-        coVerify(exactly = 1) { authService.verifyAcceptSignup(verifyEmailAcceptRequest) }
+        coVerify(exactly = 1) { authService.verifyEmailForSignup(verifyEmailAcceptRequest) }
         assertFalse(response.isSuccessful)
     }
 
     @Test
     fun `should return response with error when request code is invalid for password reset`() = runBlocking {
-        val verifyEmailAcceptRequest = AuthVerifyEmailAcceptRequest(mockEmail, "wrong_code")
-        coEvery { authService.verifyAcceptPW(verifyEmailAcceptRequest) } returns Response.error(
+        val verifyEmailAcceptRequest = AuthVerifyEmailRequest(mockEmail, "wrong_code")
+        coEvery { authService.verifyEmailForResetPassword(verifyEmailAcceptRequest) } returns Response.error(
             400,
             errorResponseBody
         )
 
-        val response = authService.verifyAcceptPW(verifyEmailAcceptRequest)
+        val response = authService.verifyEmailForResetPassword(verifyEmailAcceptRequest)
 
-        coVerify(exactly = 1) { authService.verifyAcceptPW(verifyEmailAcceptRequest) }
+        coVerify(exactly = 1) { authService.verifyEmailForResetPassword(verifyEmailAcceptRequest) }
         assertFalse(response.isSuccessful)
     }
 

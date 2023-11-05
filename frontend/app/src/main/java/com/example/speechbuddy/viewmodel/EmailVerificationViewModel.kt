@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.speechbuddy.MainApplication.Companion.token_prefs
 import com.example.speechbuddy.R
+import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import com.example.speechbuddy.domain.models.AuthToken
@@ -33,6 +34,7 @@ class EmailVerificationViewModel @Inject internal constructor(
 
     private val _uiState = MutableStateFlow(EmailVerificationUiState())
     val uiState: StateFlow<EmailVerificationUiState> = _uiState.asStateFlow()
+    private val errorResponseMapper = ErrorResponseMapper()
 
     var emailInput by mutableStateOf("")
         private set
@@ -77,8 +79,6 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     fun verifySend(source: String?) {
-        /* TODO: 나중에 고쳐야 함 */
-
         // What function(ultimately, API call) to use
         val sendCode = if (source == "signup") {
             repository::sendCodeForSignup
@@ -116,7 +116,8 @@ class EmailVerificationViewModel @Inject internal constructor(
                     }
 
                     400 -> {
-                        val messageId = when (result.message()) {
+                        val errorKey = errorResponseMapper.mapToDomainModel(result.errorBody()!!).key
+                        val messageId = when (errorKey) {
                             "email" -> R.string.false_email
                             "already_taken" -> R.string.email_already_taken
                             "no_user" -> R.string.no_such_user

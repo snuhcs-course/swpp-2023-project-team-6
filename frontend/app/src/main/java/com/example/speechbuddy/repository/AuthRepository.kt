@@ -2,6 +2,7 @@ package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
@@ -13,7 +14,6 @@ import com.example.speechbuddy.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import org.json.JSONObject
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,74 +22,75 @@ import javax.inject.Singleton
 class AuthRepository @Inject constructor(
     private val authService: AuthService,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
-    private val authTokenDtoMapper: AuthTokenDtoMapper
+    private val authTokenDtoMapper: AuthTokenDtoMapper,
+    private val errorResponseMapper: ErrorResponseMapper,
 ) {
 
-    suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Response<Void>> =
-        flow {
-            val result = authService.signup(authSignupRequest)
-            emit(result)
-        }
+    suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Response<Void>> = flow {
+        val result = authService.signup(authSignupRequest)
+        emit(result)
+    }
 
     suspend fun login(authLoginRequest: AuthLoginRequest): Flow<Resource<AuthToken>> {
-        return authTokenRemoteSource.loginAuthToken(authLoginRequest)
-            .map { response ->
+        return authTokenRemoteSource.loginAuthToken(authLoginRequest).map { response ->
                 if (response.isSuccessful && response.code() == 200) {
                     response.body()?.let { authTokenDto ->
                         authTokenDto.let {
-                            Resource.success(authTokenDtoMapper.mapToDomainModel(authTokenDto))
+                            Resource.success(
+                                authTokenDtoMapper.mapToDomainModel(
+                                    authTokenDto
+                                )
+                            )
                         }
                     } ?: returnUnknownError()
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorMessage =
-                            JSONObject(responseBody.charStream().readText()).getString("error")
+                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                         Resource.error(
-                            errorMessage,
-                            null
+                            errorMsgKey, null
                         )
                     } ?: returnUnknownError()
                 }
             }
     }
 
-    suspend fun sendCodeForSignup(authVerifyEmailSendRequest: AuthSendCodeRequest): Flow<Response<Void>> =
+    suspend fun sendCodeForSignup(authSendCodeRequest: AuthSendCodeRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.sendCodeForSignup(authVerifyEmailSendRequest)
+            val result = authService.sendCodeForSignup(authSendCodeRequest)
             emit(result)
         }
 
-    suspend fun sendCodeForResetPassword(authVerifyEmailSendRequest: AuthSendCodeRequest): Flow<Response<Void>> =
+    suspend fun sendCodeForResetPassword(authSendCodeRequest: AuthSendCodeRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.sendCodeForResetPassword(authVerifyEmailSendRequest)
+            val result = authService.sendCodeForResetPassword(authSendCodeRequest)
             emit(result)
         }
 
-    suspend fun verifyEmailForSignup(authVerifyEmailAcceptRequest: AuthVerifyEmailRequest): Flow<Response<Void>> =
+    suspend fun verifyEmailForSignup(authVerifyEmailRequest: AuthVerifyEmailRequest): Flow<Response<Void>> =
         flow {
-            val result = authService.verifyEmailForSignup(authVerifyEmailAcceptRequest)
+            val result = authService.verifyEmailForSignup(authVerifyEmailRequest)
             emit(result)
         }
 
-    suspend fun verifyEmailForResetPassword(authVerifyEmailAcceptRequest: AuthVerifyEmailRequest): Flow<Resource<AuthToken>> {
+    suspend fun verifyEmailForResetPassword(authVerifyEmailRequest: AuthVerifyEmailRequest): Flow<Resource<AuthToken>> {
         return authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(
-            authVerifyEmailAcceptRequest
-        )
-            .map { response ->
+            authVerifyEmailRequest
+        ).map { response ->
                 if (response.isSuccessful && response.code() == 200) {
                     response.body()?.let { authTokenDto ->
                         authTokenDto.let {
-                            Resource.success(authTokenDtoMapper.mapToDomainModel(authTokenDto))
+                            Resource.success(
+                                authTokenDtoMapper.mapToDomainModel(
+                                    authTokenDto
+                                )
+                            )
                         }
                     } ?: returnUnknownError()
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorJson = JSONObject(responseBody.charStream().readText())
-                        val messageJson = errorJson.getJSONObject("error").getJSONObject("message")
-                        val firstKeyOfMessage = messageJson.keys().next().toString()
+                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
                         Resource.error(
-                            firstKeyOfMessage,
-                            null
+                            errorMsgKey, null
                         )
                     } ?: returnUnknownError()
                 }
@@ -104,8 +105,7 @@ class AuthRepository @Inject constructor(
 
     private fun returnUnknownError(): Resource<AuthToken> {
         return Resource.error(
-            "Unknown error",
-            null
+            "Unknown error", null
         )
     }
 
