@@ -42,9 +42,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     init {
         viewModelScope.launch {
-            repository.getCategories().collect { categories ->
-                _entries.postValue(categories)
-            }
+            getEntries()
         }
     }
 
@@ -70,6 +68,9 @@ class SymbolSelectionViewModel @Inject internal constructor(
                 isMenuExpanded = false,
                 displayMode = displayMode
             )
+        }
+        viewModelScope.launch {
+            getEntries()
         }
     }
 
@@ -97,7 +98,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
         if (category != selectedCategory) {
             selectedCategory = category
             viewModelScope.launch {
-                repository.getSymbolsFromCategory(category).collect { symbols ->
+                repository.getSymbolsByCategory(category).collect { symbols ->
                     _entries.postValue(listOf(category) + symbols)
                 }
             }
@@ -108,6 +109,27 @@ class SymbolSelectionViewModel @Inject internal constructor(
                     _entries.postValue(categories)
                 }
             }
+        }
+    }
+
+    private suspend fun getEntries() {
+        when (_uiState.value.displayMode) {
+            DisplayMode.ALL -> {
+                repository.getSymbolsAndCategories().collect { entries ->
+                    _entries.postValue(entries)
+                }
+            }
+            DisplayMode.SYMBOL -> {
+                repository.getSymbols().collect { symbols ->
+                    _entries.postValue(symbols)
+                }
+            }
+            DisplayMode.CATEGORY -> {
+                repository.getCategories().collect { categories ->
+                    _entries.postValue(categories)
+                }
+            }
+            DisplayMode.FAVORITE -> {}
         }
     }
 

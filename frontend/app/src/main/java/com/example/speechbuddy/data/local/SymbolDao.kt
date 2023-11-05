@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface SymbolDao {
+    @Query("SELECT * FROM symbols")
+    fun getSymbols(): Flow<List<SymbolEntity>>
+
     @Query("SELECT * FROM symbols WHERE categoryId = :categoryId")
-    fun getSymbolsFromCategoryId(categoryId: Int): Flow<List<SymbolEntity>>
+    fun getSymbolsByCategoryId(categoryId: Int): Flow<List<SymbolEntity>>
 
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)
