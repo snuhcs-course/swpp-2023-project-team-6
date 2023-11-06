@@ -2,6 +2,7 @@ package com.example.speechbuddy.data.local
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Update
 import androidx.room.Upsert
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +26,9 @@ interface SymbolDao {
 
     @Query("SELECT * FROM symbols WHERE categoryId = :categoryId")
     fun getSymbolsByCategoryId(categoryId: Int): Flow<List<SymbolEntity>>
+
+    @Update
+    suspend fun updateSymbol(symbolEntity: SymbolEntity)
 
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)

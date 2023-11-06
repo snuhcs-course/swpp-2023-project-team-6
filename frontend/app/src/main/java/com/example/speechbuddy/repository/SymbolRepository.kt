@@ -3,9 +3,11 @@ package com.example.speechbuddy.repository
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.models.CategoryMapper
+import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
+import com.example.speechbuddy.domain.models.Symbol
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -66,4 +68,16 @@ class SymbolRepository @Inject constructor(
         symbolDao.getSymbolsByCategoryId(category.id).map { symbolEntities ->
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
+
+    suspend fun updateFavorite(symbol: Symbol, value: Boolean) {
+        val symbolEntity = SymbolEntity(
+            id = symbol.id,
+            text = symbol.text,
+            imageUrl = symbol.imageUrl,
+            categoryId = symbol.categoryId,
+            isFavorite = value,
+            isMine = symbol.isMine
+        )
+        symbolDao.updateSymbol(symbolEntity)
+    }
 }

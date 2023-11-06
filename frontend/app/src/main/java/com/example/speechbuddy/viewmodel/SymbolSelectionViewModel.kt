@@ -94,7 +94,10 @@ class SymbolSelectionViewModel @Inject internal constructor(
             selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
     }
 
-    fun toggleFavorite(symbol: Symbol, value: Boolean) {/* TODO */
+    fun updateFavorite(symbol: Symbol, value: Boolean) {
+        viewModelScope.launch {
+            repository.updateFavorite(symbol, value)
+        }
     }
 
     fun selectCategory(category: Category) {

@@ -128,7 +128,7 @@ fun SymbolSelectionScreen(
                                 is Symbol -> SymbolUi(
                                     symbol = entry,
                                     onSelect = { viewModel.selectSymbol(entry) },
-                                    onFavoriteChange = { viewModel.toggleFavorite(entry, it) }
+                                    onFavoriteChange = { viewModel.updateFavorite(entry, it) }
                                 )
 
                                 is Category -> CategoryUi(
