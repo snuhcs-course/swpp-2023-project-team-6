@@ -93,7 +93,6 @@ fun SymbolSelectionScreen(
                     .padding(start = 24.dp, top = 24.dp, end = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                /* TODO: ViewModel 연결 */
                 SymbolSearchTextField(
                     value = viewModel.queryInput,
                     onValueChange = { viewModel.setQuery(it) }

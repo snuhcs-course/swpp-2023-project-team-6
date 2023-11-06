@@ -12,6 +12,7 @@ import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.ui.models.DisplayMode
+import com.example.speechbuddy.ui.models.SymbolItem
 import com.example.speechbuddy.ui.models.SymbolSelectionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,14 +21,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-/**
- * This data class is necessary to distinguish multiple same symbols
- * within the selected symbols list.
- */
-data class SymbolItem(
-    val id: Int, val symbol: Symbol
-)
 
 @HiltViewModel
 class SymbolSelectionViewModel @Inject internal constructor(

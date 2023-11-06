@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.viewmodel.SymbolItem
+import com.example.speechbuddy.ui.models.SymbolItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
