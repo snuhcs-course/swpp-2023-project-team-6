@@ -2,6 +2,7 @@ package com.example.speechbuddy.di
 
 import com.example.speechbuddy.MainApplication
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Constants
 import com.squareup.moshi.Moshi
@@ -47,6 +48,12 @@ class NetworkModule {
     @Provides
     fun provideAuthTokenDtoMapper(): AuthTokenDtoMapper {
         return AuthTokenDtoMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideErrorResponseMapper(): ErrorResponseMapper {
+        return ErrorResponseMapper()
     }
 
 }
