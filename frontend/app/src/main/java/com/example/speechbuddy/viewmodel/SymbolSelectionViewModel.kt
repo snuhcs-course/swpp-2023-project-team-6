@@ -21,6 +21,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * This data class is necessary to distinguish multiple same symbols
+ * within the selected symbols list.
+ */
+data class SymbolItem(
+    val id: Int, val symbol: Symbol
+)
+
 @HiltViewModel
 class SymbolSelectionViewModel @Inject internal constructor(
     private val repository: SymbolRepository
@@ -32,7 +40,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     var queryInput by mutableStateOf("")
         private set
 
-    var selectedSymbols by mutableStateOf(listOf<Symbol>())
+    var selectedSymbols by mutableStateOf(listOf<SymbolItem>())
         private set
 
     private var selectedCategory by mutableStateOf<Category?>(null)
@@ -65,8 +73,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun selectDisplayMode(displayMode: DisplayMode) {
         _uiState.update { currentState ->
             currentState.copy(
-                isMenuExpanded = false,
-                displayMode = displayMode
+                isMenuExpanded = false, displayMode = displayMode
             )
         }
         viewModelScope.launch {
@@ -81,8 +88,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
         }
     }
 
-    fun clear(symbol: Symbol) {
-        selectedSymbols = selectedSymbols.minus(symbol)
+    fun clear(symbolItem: SymbolItem) {
+        selectedSymbols = selectedSymbols.minus(symbolItem)
     }
 
     fun clearAll() {
@@ -90,11 +97,11 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun selectSymbol(symbol: Symbol) {
-        selectedSymbols = selectedSymbols.plus(symbol)
+        selectedSymbols =
+            selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
     }
 
-    fun toggleFavorite(symbol: Symbol, value: Boolean) {
-        /* TODO */
+    fun toggleFavorite(symbol: Symbol, value: Boolean) {/* TODO */
     }
 
     fun selectCategory(category: Category) {

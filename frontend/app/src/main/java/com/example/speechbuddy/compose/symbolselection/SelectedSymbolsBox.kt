@@ -29,12 +29,13 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodel.SymbolItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectedSymbolsBox(
-    selectedSymbols: List<Symbol>,
-    onClear: (Symbol) -> Unit,
+    selectedSymbols: List<SymbolItem>,
+    onClear: (SymbolItem) -> Unit,
     onClearAll: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -59,8 +60,11 @@ fun SelectedSymbolsBox(
                 contentPadding = PaddingValues(10.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                items(selectedSymbols) { symbol ->
-                    SelectedSymbolUi(symbol = symbol, onClear = { onClear(symbol) })
+                items(selectedSymbols) { symbolItem ->
+                    SelectedSymbolUi(
+                        symbol = symbolItem.symbol,
+                        onClear = { onClear(symbolItem) }
+                    )
                 }
             }
         }
@@ -104,7 +108,11 @@ fun SelectedSymbolsBoxPreview() {
         isFavorite = true,
         isMine = false
     )
-    val selectedSymbols = List(size = 10, init = { previewSymbol })
+    val previewSymbolItem = SymbolItem(
+        id = 1,
+        symbol = previewSymbol
+    )
+    val selectedSymbols = List(size = 10, init = { previewSymbolItem })
 
     SpeechBuddyTheme {
         SelectedSymbolsBox(selectedSymbols = selectedSymbols, onClear = {}, onClearAll = {})
