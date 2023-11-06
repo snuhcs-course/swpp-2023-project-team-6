@@ -7,8 +7,8 @@ import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,18 +20,46 @@ class SymbolRepository @Inject constructor(
     private val symbolMapper = SymbolMapper()
     private val categoryMapper = CategoryMapper()
 
-    fun getSymbols() = symbolDao.getSymbols().map { symbolEntities ->
+    fun getSymbols(query: String) =
+        if (query.isBlank()) getAllSymbols()
+        else symbolDao.getSymbolsByQuery(query).map { symbolEntities ->
+            symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+        }
+
+    fun getCategories(query: String) =
+        if (query.isBlank()) getAllCategories()
+        else categoryDao.getCategoriesByQuery(query).map { categoryEntities ->
+            categoryEntities.map { categoryEntity -> categoryMapper.mapToDomainModel(categoryEntity) }
+        }
+
+    fun getEntries(query: String): Flow<List<Entry>> {
+        val symbolsFlow = getSymbols(query)
+        val categoriesFlow = getCategories(query)
+
+        return symbolsFlow.combine(categoriesFlow) { symbols, categories ->
+            val entries = mutableListOf<Entry>()
+            entries.addAll(categories)
+            entries.addAll(symbols)
+            return@combine entries
+        }
+    }
+
+    fun getFavoriteSymbols(query: String) =
+        if (query.isBlank()) getAllFavoriteSymbols()
+        else symbolDao.getFavoriteSymbolsByQuery(query).map { symbolEntities ->
+            symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+        }
+
+    private fun getAllSymbols() = symbolDao.getSymbols().map { symbolEntities ->
         symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
     }
 
-    fun getCategories() = categoryDao.getCategories().map { categoryEntities ->
+    private fun getAllCategories() = categoryDao.getCategories().map { categoryEntities ->
         categoryEntities.map { categoryEntity -> categoryMapper.mapToDomainModel(categoryEntity) }
     }
 
-    fun getSymbolsAndCategories(): Flow<List<Entry>> {
-        val symbols = getSymbols()
-        val categories = getCategories()
-        return merge(symbols, categories)
+    private fun getAllFavoriteSymbols() = symbolDao.getFavoriteSymbols().map { symbolEntities ->
+        symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
     }
 
     fun getSymbolsByCategory(category: Category) =

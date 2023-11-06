@@ -76,10 +76,13 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     fun setQuery(input: String) {
         queryInput = input
+        viewModelScope.launch {
+            getEntries()
+        }
     }
 
     fun clear(symbol: Symbol) {
-        selectedSymbols = selectedSymbols - symbol
+        selectedSymbols = selectedSymbols.minus(symbol)
     }
 
     fun clearAll() {
@@ -105,9 +108,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
         } else {
             selectedCategory = null
             viewModelScope.launch {
-                repository.getCategories().collect { categories ->
-                    _entries.postValue(categories)
-                }
+                getEntries()
             }
         }
     }
@@ -115,21 +116,28 @@ class SymbolSelectionViewModel @Inject internal constructor(
     private suspend fun getEntries() {
         when (_uiState.value.displayMode) {
             DisplayMode.ALL -> {
-                repository.getSymbolsAndCategories().collect { entries ->
+                repository.getEntries(queryInput).collect { entries ->
                     _entries.postValue(entries)
                 }
             }
+
             DisplayMode.SYMBOL -> {
-                repository.getSymbols().collect { symbols ->
+                repository.getSymbols(queryInput).collect { symbols ->
                     _entries.postValue(symbols)
                 }
             }
+
             DisplayMode.CATEGORY -> {
-                repository.getCategories().collect { categories ->
+                repository.getCategories(queryInput).collect { categories ->
                     _entries.postValue(categories)
                 }
             }
-            DisplayMode.FAVORITE -> {}
+
+            DisplayMode.FAVORITE -> {
+                repository.getFavoriteSymbols(queryInput).collect { symbols ->
+                    _entries.postValue(symbols)
+                }
+            }
         }
     }
 

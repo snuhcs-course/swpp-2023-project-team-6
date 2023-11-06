@@ -73,7 +73,12 @@ fun SymbolSelectionScreen(
                     DropdownMenuUi(
                         uiState = uiState,
                         onDismissRequest = { viewModel.dismissMenu() },
-                        onSelectDisplayMode = { viewModel.selectDisplayMode(it) }
+                        onSelectDisplayMode = {
+                            coroutineScope.launch {
+                                viewModel.selectDisplayMode(it)
+                                lazyGridState.scrollToItem(0)
+                            }
+                        }
                     )
                 })
             }

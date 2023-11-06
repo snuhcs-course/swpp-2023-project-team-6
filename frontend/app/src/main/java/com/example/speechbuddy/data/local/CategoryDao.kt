@@ -14,6 +14,9 @@ interface CategoryDao {
     @Query("SELECT * FROM categories ORDER BY id")
     fun getCategories(): Flow<List<CategoryEntity>>
 
+    @Query("SELECT * FROM categories WHERE text LIKE '%' || :query || '%'")
+    fun getCategoriesByQuery(query: String): Flow<List<CategoryEntity>>
+
     @Upsert
     suspend fun upsertAll(categories: List<CategoryEntity>)
 }
