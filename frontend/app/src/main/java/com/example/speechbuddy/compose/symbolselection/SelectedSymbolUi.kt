@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.speechbuddy.R
@@ -56,6 +57,7 @@ fun SelectedSymbolUi(
                 modifier = Modifier
                     .size(22.dp)
                     .padding(5.dp)
+                    .zIndex(1f)
             ) {
                 Icon(
                     imageVector = Icons.Default.Clear,
