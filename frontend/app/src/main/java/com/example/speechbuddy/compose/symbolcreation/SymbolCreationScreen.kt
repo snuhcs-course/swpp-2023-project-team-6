@@ -4,23 +4,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.utils.DropdownTextFieldUi
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 
@@ -30,6 +31,15 @@ fun SymbolCreationScreen(
     modifier: Modifier = Modifier,
     bottomPaddingValues: PaddingValues
 ) {
+    val myItemsList = listOf(
+        "Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6",
+        "Option 7", "Option 8", "Option 9", "Option 10", "Option 11", "Option 12",
+        "Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6",
+        "Option 7", "Option 8", "Option 9", "Option 10", "Option 11", "Option 12"
+    )
+
+    // State to hold the currently selected value
+    var selectedValue by remember { mutableStateOf("") }
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
@@ -56,14 +66,17 @@ fun SymbolCreationScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .defaultMinSize(minHeight = 300.dp),
-                    textStyle = MaterialTheme.typography.bodyMedium,
-                    shape = RoundedCornerShape(10.dp)
+
+                // ... other code ...
+
+                DropdownTextFieldUi(
+                    selectedValue = selectedValue,
+                    onValueChange = { newValue -> selectedValue = newValue },
+                    items = myItemsList,
+                    modifier = Modifier.padding(16.dp),
+                    label = { Text("Choose an option") },
+                    isError = false,
+                    isValid = true
                 )
             }
         }
