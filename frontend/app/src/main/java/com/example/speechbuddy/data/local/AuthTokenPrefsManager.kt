@@ -58,6 +58,12 @@ class AuthTokenPrefsManager @Inject constructor(context: Context) {
         }
     }
 
+    suspend fun clearAuthToken() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+
     private object PreferencesKeys {
         val ACCESS = stringPreferencesKey(ACCESS_TOKEN_PREF)
         val REFRESH = stringPreferencesKey(REFRESH_TOKEN_PREF)
