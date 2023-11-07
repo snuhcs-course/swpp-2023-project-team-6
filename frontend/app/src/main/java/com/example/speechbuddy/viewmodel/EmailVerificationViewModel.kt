@@ -180,14 +180,26 @@ class EmailVerificationViewModel @Inject internal constructor(
                     Status.ERROR -> {
                         // All error cases from this API call can
                         // boil down to 'false_validation_code'
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidVerifyCode = false,
-                                error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.VERIFY_CODE,
-                                    messageId = R.string.false_validation_code
+                        if (result.toString().contains("600")){
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidVerifyCode = false,
+                                    error = EmailVerificationError(
+                                        type = EmailVerificationErrorType.VERIFY_CODE,
+                                        messageId = R.string.internet_error
+                                    )
                                 )
-                            )
+                            }
+                        } else {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidVerifyCode = false,
+                                    error = EmailVerificationError(
+                                        type = EmailVerificationErrorType.VERIFY_CODE,
+                                        messageId = R.string.false_validation_code
+                                    )
+                                )
+                            }
                         }
                     }
                 }
@@ -196,4 +208,3 @@ class EmailVerificationViewModel @Inject internal constructor(
         clearVerifyCodeInput()
     }
 }
-

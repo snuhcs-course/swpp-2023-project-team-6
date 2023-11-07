@@ -116,6 +116,18 @@ class ResetPasswordViewModel @Inject internal constructor(
                                 )
                             }
                         }
+
+                        600 -> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidPassword = false,
+                                    error = ResetPasswordError(
+                                        type = ResetPasswordErrorType.PASSWORD_CHECK,
+                                        messageId = R.string.internet_error
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
                 clearInputs()

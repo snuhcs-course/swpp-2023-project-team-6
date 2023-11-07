@@ -134,6 +134,19 @@ class LoginViewModel @Inject internal constructor(
                                     )
                                 )
                             }
+                            //check status code
+                        } else if (it.message?.contains("Unknown", ignoreCase = true) == true) {
+                            _uiState.update{
+                                currentState ->
+                                currentState.copy(
+                                    isValidEmail = false,
+                                    error = LoginError(
+                                        type = LoginErrorType.EMAIL,
+                                        messageId = R.string.internet_error
+                                    )
+                                )
+
+                            }
                         }
                         _loginResult.postValue(it)
                     }
