@@ -24,11 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
-import com.example.speechbuddy.domain.models.Symbol
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.models.SymbolItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,27 +91,5 @@ fun SelectedSymbolsBox(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun SelectedSymbolsBoxPreview() {
-    val previewSymbol = Symbol(
-        id = 1,
-        text = "119에 전화해주세요",
-        imageUrl = null,
-        categoryId = 1,
-        isFavorite = true,
-        isMine = false
-    )
-    val previewSymbolItem = SymbolItem(
-        id = 1,
-        symbol = previewSymbol
-    )
-    val selectedSymbols = List(size = 10, init = { previewSymbolItem })
-
-    SpeechBuddyTheme {
-        SelectedSymbolsBox(selectedSymbols = selectedSymbols, onClear = {}, onClearAll = {})
     }
 }

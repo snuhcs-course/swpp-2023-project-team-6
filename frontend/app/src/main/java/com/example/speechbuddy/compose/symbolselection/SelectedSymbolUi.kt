@@ -25,14 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Symbol
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.utils.Constants
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -93,23 +91,5 @@ fun SelectedSymbolUi(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@ExperimentalMaterial3Api
-@Composable
-fun SelectedSymbolUiPreview() {
-    val previewSymbol = Symbol(
-        id = 1,
-        text = "119에 전화해주세요",
-        imageUrl = null,
-        categoryId = 1,
-        isFavorite = true,
-        isMine = false
-    )
-
-    SpeechBuddyTheme {
-        SelectedSymbolUi(symbol = previewSymbol, onClear = {})
     }
 }
