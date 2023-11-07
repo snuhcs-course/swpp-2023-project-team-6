@@ -25,8 +25,8 @@ class AuthRepository @Inject constructor(
     private val authTokenPrefsManager: AuthTokenPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
-    private val errorResponseMapper: ErrorResponseMapper,
 ) {
+    private val errorResponseMapper = ErrorResponseMapper()
 
     suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Response<Void>> = flow {
         val result = authService.signup(authSignupRequest)
@@ -110,5 +110,4 @@ class AuthRepository @Inject constructor(
             "Unknown error", null
         )
     }
-
 }

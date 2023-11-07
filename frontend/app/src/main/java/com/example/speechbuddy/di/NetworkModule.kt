@@ -50,12 +50,6 @@ class NetworkModule {
         return AuthTokenDtoMapper()
     }
 
-    @Singleton
-    @Provides
-    fun provideErrorResponseMapper(): ErrorResponseMapper {
-        return ErrorResponseMapper()
-    }
-
 }
 
 class AuthInterceptor: Interceptor {
