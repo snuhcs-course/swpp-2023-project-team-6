@@ -26,7 +26,9 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun subscribeObservers() {
-        // TODO
+        sessionManager.cachedToken.observe(this) { authToken ->
+            if (authToken == null) navAuthActivity()
+        }
     }
 
     private fun navAuthActivity() {

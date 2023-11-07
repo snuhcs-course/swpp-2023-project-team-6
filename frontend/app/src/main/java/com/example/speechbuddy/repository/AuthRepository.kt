@@ -26,6 +26,7 @@ class AuthRepository @Inject constructor(
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
 ) {
+
     private val errorResponseMapper = ErrorResponseMapper()
 
     suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Response<Void>> = flow {
@@ -38,11 +39,9 @@ class AuthRepository @Inject constructor(
             if (response.isSuccessful && response.code() == 200) {
                 response.body()?.let { authTokenDto ->
                     authTokenDto.let {
-                        Resource.success(
-                            authTokenDtoMapper.mapToDomainModel(
-                                authTokenDto
-                            )
-                        )
+                        val authToken = authTokenDtoMapper.mapToDomainModel(authTokenDto)
+                        authTokenPrefsManager.saveAuthToken(authToken)
+                        Resource.success(authToken)
                     }
                 } ?: returnUnknownError()
             } else {
@@ -105,9 +104,19 @@ class AuthRepository @Inject constructor(
             emit(result)
         }
 
+    /* TODO: 자동 로그인 */
+    fun checkPreviousUser(): Flow<Resource<AuthToken>> {
+        return authTokenPrefsManager.preferencesFlow.map { authToken ->
+            if (!authToken.accessToken.isNullOrEmpty() && !authToken.refreshToken.isNullOrEmpty()) {
+                Resource.success(authToken)
+            } else Resource.error("Couldn't find previous user", null)
+        }
+    }
+
     private fun returnUnknownError(): Resource<AuthToken> {
         return Resource.error(
             "Unknown error", null
         )
     }
+
 }

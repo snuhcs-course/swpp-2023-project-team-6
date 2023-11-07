@@ -27,7 +27,7 @@ fun SpeechBuddyAuthNavHost(
         composable("landing") {
             LandingScreen(
                 onGuestClick = {
-                    navController.navigate("home")
+                    // TODO: 게스트 모드 처리
                 },
                 onLoginClick = {
                     navController.navigate("login")

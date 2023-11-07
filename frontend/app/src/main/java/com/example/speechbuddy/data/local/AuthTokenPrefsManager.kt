@@ -21,7 +21,7 @@ class AuthTokenPrefsManager @Inject constructor(context: Context) {
 
     private val dataStore = context.createDataStore(name = AUTH_TOKEN_PREFS)
 
-    val accessTokenFlow: Flow<String> = dataStore.data
+    val preferencesFlow: Flow<AuthToken> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -30,19 +30,10 @@ class AuthTokenPrefsManager @Inject constructor(context: Context) {
             }
         }
         .map { preferences ->
-            preferences[ACCESS] ?: ""
-        }
-
-    val refreshTokenFlow: Flow<String> = dataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            } else {
-                throw exception
-            }
-        }
-        .map { preferences ->
-            preferences[REFRESH] ?: ""
+            AuthToken(
+                accessToken = preferences[ACCESS] ?: "",
+                refreshToken = preferences[REFRESH] ?: ""
+            )
         }
 
     suspend fun saveAccessToken(token: String) {

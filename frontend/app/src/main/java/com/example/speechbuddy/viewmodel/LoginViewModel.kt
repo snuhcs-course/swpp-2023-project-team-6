@@ -3,13 +3,11 @@ package com.example.speechbuddy.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
-import com.example.speechbuddy.domain.models.AuthToken
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
@@ -28,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject internal constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -39,9 +38,6 @@ class LoginViewModel @Inject internal constructor(
 
     var passwordInput by mutableStateOf("")
         private set
-
-    private var _loginResult = MutableLiveData<Resource<AuthToken>>()
-    val loginResult: LiveData<Resource<AuthToken>> = _loginResult
 
     fun setEmail(input: String) {
         emailInput = input
@@ -109,8 +105,9 @@ class LoginViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect {
+                    /* TODO: 수정 필요 */
                     if (it.status == Resource(Status.SUCCESS, "", "").status) { // 200
-                        _loginResult.postValue(it)
+                        sessionManager.login(it.data!!)
                     } else { // status:error
                         // when password is wrong
                         if (it.message?.contains("password", ignoreCase = true) == true) {
@@ -135,11 +132,20 @@ class LoginViewModel @Inject internal constructor(
                                 )
                             }
                         }
-                        _loginResult.postValue(it)
                     }
                 }
             }
         }
         //clearInputs()
     }
+
+    /* TODO: 자동 로그인 */
+    fun checkPreviousUser() {
+        viewModelScope.launch {
+            repository.checkPreviousUser().collect { resource ->
+                sessionManager.login(resource.data!!)
+            }
+        }
+    }
+
 }

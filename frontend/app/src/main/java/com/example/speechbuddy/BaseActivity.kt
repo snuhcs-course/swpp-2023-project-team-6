@@ -1,13 +1,12 @@
 package com.example.speechbuddy
 
 import androidx.appcompat.app.AppCompatActivity
+import com.example.speechbuddy.domain.SessionManager
+import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity() {
 
-    /**
-     * TODO
-     *
-     * inject session manager
-     */
+    @Inject
+    lateinit var sessionManager: SessionManager
 
 }
