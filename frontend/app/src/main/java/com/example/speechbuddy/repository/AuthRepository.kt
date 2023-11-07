@@ -22,7 +22,7 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
     private val authService: AuthService,
-    private val authTokenDataStore: AuthTokenPrefsManager,
+    private val authTokenPrefsManager: AuthTokenPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
     private val errorResponseMapper: ErrorResponseMapper,
