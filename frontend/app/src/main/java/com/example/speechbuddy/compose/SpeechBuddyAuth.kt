@@ -6,25 +6,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.compose.emailverification.EmailVerificationScreen
-import com.example.speechbuddy.compose.home.HomeScreen
 import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
 
 @Composable
-fun SpeechBuddyApp() {
+fun SpeechBuddyAuth() {
     val navController = rememberNavController()
-    SpeechBuddyNavHost(
+    SpeechBuddyAuthNavHost(
         navController = navController
     )
 }
 
 @Composable
-fun SpeechBuddyNavHost(
+fun SpeechBuddyAuthNavHost(
     navController: NavHostController
 ) {
-    // val activity = (LocalContext.current as Activity)
     NavHost(navController = navController, startDestination = "landing") {
         composable("landing") {
             LandingScreen(
@@ -75,9 +73,6 @@ fun SpeechBuddyNavHost(
                 },
                 navController = navController
             )
-        }
-        composable("home") {
-            HomeScreen()
         }
     }
 }
