@@ -19,12 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.speechbuddy.domain.models.Category
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.utils.Constants.Companion.CATEGORY_IMAGE_PATH
 
 /**
@@ -75,19 +73,5 @@ fun CategoryUi(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0)
-@ExperimentalMaterial3Api
-@Composable
-fun CategoryUiPreview() {
-    val previewCategory = Category(
-        id = 1,
-        text = "인사사회어"
-    )
-
-    SpeechBuddyTheme {
-        CategoryUi(category = previewCategory, onSelect = {})
     }
 }
