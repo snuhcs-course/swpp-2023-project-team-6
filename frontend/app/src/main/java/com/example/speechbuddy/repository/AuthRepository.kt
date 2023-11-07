@@ -1,5 +1,6 @@
 package com.example.speechbuddy.repository
 
+import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
@@ -21,6 +22,7 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
     private val authService: AuthService,
+    private val authTokenDataStore: AuthTokenPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
     private val errorResponseMapper: ErrorResponseMapper,
@@ -33,25 +35,25 @@ class AuthRepository @Inject constructor(
 
     suspend fun login(authLoginRequest: AuthLoginRequest): Flow<Resource<AuthToken>> {
         return authTokenRemoteSource.loginAuthToken(authLoginRequest).map { response ->
-                if (response.isSuccessful && response.code() == 200) {
-                    response.body()?.let { authTokenDto ->
-                        authTokenDto.let {
-                            Resource.success(
-                                authTokenDtoMapper.mapToDomainModel(
-                                    authTokenDto
-                                )
+            if (response.isSuccessful && response.code() == 200) {
+                response.body()?.let { authTokenDto ->
+                    authTokenDto.let {
+                        Resource.success(
+                            authTokenDtoMapper.mapToDomainModel(
+                                authTokenDto
                             )
-                        }
-                    } ?: returnUnknownError()
-                } else {
-                    response.errorBody()?.let { responseBody ->
-                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
-                        Resource.error(
-                            errorMsgKey, null
                         )
-                    } ?: returnUnknownError()
-                }
+                    }
+                } ?: returnUnknownError()
+            } else {
+                response.errorBody()?.let { responseBody ->
+                    val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
+                    Resource.error(
+                        errorMsgKey, null
+                    )
+                } ?: returnUnknownError()
             }
+        }
     }
 
     suspend fun sendCodeForSignup(authSendCodeRequest: AuthSendCodeRequest): Flow<Response<Void>> =
@@ -76,25 +78,25 @@ class AuthRepository @Inject constructor(
         return authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(
             authVerifyEmailRequest
         ).map { response ->
-                if (response.isSuccessful && response.code() == 200) {
-                    response.body()?.let { authTokenDto ->
-                        authTokenDto.let {
-                            Resource.success(
-                                authTokenDtoMapper.mapToDomainModel(
-                                    authTokenDto
-                                )
+            if (response.isSuccessful && response.code() == 200) {
+                response.body()?.let { authTokenDto ->
+                    authTokenDto.let {
+                        Resource.success(
+                            authTokenDtoMapper.mapToDomainModel(
+                                authTokenDto
                             )
-                        }
-                    } ?: returnUnknownError()
-                } else {
-                    response.errorBody()?.let { responseBody ->
-                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
-                        Resource.error(
-                            errorMsgKey, null
                         )
-                    } ?: returnUnknownError()
-                }
+                    }
+                } ?: returnUnknownError()
+            } else {
+                response.errorBody()?.let { responseBody ->
+                    val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
+                    Resource.error(
+                        errorMsgKey, null
+                    )
+                } ?: returnUnknownError()
             }
+        }
     }
 
     suspend fun resetPassword(authResetPasswordRequest: AuthResetPasswordRequest): Flow<Response<Void>> =

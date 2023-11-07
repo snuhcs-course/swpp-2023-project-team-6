@@ -89,9 +89,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
-    // Preference
-    implementation("androidx.preference:preference-ktx:1.2.1")
-
     // Moshi
     val moshiVersion = "1.10.0"
     implementation("com.squareup.moshi:moshi:$moshiVersion")
@@ -103,6 +100,11 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
+
+    // DataStore
+    val dataStoreVersion = "1.0.0-alpha06"
+    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+    implementation("androidx.datastore:datastore-preferences-core:$dataStoreVersion")
 
     // Room
     val roomVersion = "2.6.0"
