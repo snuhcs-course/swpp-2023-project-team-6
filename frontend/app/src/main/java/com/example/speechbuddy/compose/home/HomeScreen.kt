@@ -2,7 +2,6 @@ package com.example.speechbuddy.compose.home
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -15,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -29,7 +27,6 @@ import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 data class BottomNavItem(
     val route: String,
@@ -91,7 +88,6 @@ private fun BottomNavigationBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
 
     NavigationBar(
-        modifier = Modifier.height(100.dp),
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         windowInsets = WindowInsets(top = 20.dp)
     ) {
@@ -143,13 +139,5 @@ private fun HomeScreenNavHost(
                 bottomPaddingValues = bottomPaddingValues
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun HomeScreenPreview() {
-    SpeechBuddyTheme {
-        HomeScreen()
     }
 }
