@@ -121,8 +121,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
         }
     }
 
-    private suspend fun getSuggestion(symbol: Symbol){
-        repository.provideSuggestion(symbol).collect{symbols ->
+    private suspend fun getSuggestion(symbol: Symbol) {
+        repository.provideSuggestion(symbol).collect { symbols ->
             _entries.postValue(symbols)
         }
     }

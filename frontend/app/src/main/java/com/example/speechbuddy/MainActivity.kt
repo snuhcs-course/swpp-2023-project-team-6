@@ -1,6 +1,5 @@
 package com.example.speechbuddy
 
-import android.content.res.AssetManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -14,8 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -40,7 +37,7 @@ class MainActivity : ComponentActivity() {
     // has probability to halt the process if file too large
     private fun copyFileFromAssetsToInternalStorage(filename: String) {
         val file = File(filesDir, filename)
-        Log.d("test","installed weight_table")
+        Log.d("test", "installed weight_table")
         if (!file.exists()) {
             try {
                 assets.open(filename).use { inputStream ->
