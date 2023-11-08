@@ -1,7 +1,6 @@
 package com.example.speechbuddy
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
@@ -37,7 +36,6 @@ class MainActivity : ComponentActivity() {
     // has probability to halt the process if file too large
     private fun copyFileFromAssetsToInternalStorage(filename: String) {
         val file = File(filesDir, filename)
-//        Log.d("test", "installed weight_table")
         if (!file.exists()) {
             try {
                 assets.open(filename).use { inputStream ->
@@ -46,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             } catch (e: IOException) {
-                e.printStackTrace() // Handle the exception
+                e.printStackTrace()
             }
         }
     }
