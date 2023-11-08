@@ -5,6 +5,8 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
+//
+//    id ("com.chaquo.python")
 }
 
 android {
@@ -145,5 +147,5 @@ dependencies {
     // multik
     val multikVersion = "0.2.2"
     implementation("org.jetbrains.kotlinx:multik-core:$multikVersion")
-//    implementation("org.jetbrains.kotlinx:multik-default:$multikVersion")
+    implementation("org.jetbrains.kotlinx:multik-kotlin:$multikVersion")
 }
