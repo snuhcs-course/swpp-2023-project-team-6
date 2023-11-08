@@ -29,10 +29,15 @@ data class AuthResetPasswordRequest(
 
 @JsonClass(generateAdapter = true)
 data class AuthRefreshRequest(
-    val refreshToken: String
+    val refresh: String
 )
 
 @JsonClass(generateAdapter = true)
 data class AuthLogoutRequest(
+    val refresh: String
+)
+
+@JsonClass(generateAdapter = true)
+data class AuthWithdrawRequest(
     val refresh: String
 )

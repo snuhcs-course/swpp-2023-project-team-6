@@ -64,4 +64,10 @@ interface AuthService {
         @Body logoutRequest: AuthLogoutRequest
     ): Response<Void>
 
+    @POST("/user/withdraw/")
+    suspend fun withdraw(
+        @Header("Authorization") header: String,
+        @Body withdrawRequest: AuthWithdrawRequest
+    ): Response<Void>
+
 }

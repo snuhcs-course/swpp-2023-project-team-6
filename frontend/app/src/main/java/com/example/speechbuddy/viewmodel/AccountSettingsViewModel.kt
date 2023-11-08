@@ -66,9 +66,23 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
     }
 
-    fun deleteAccount() {
+    fun withdraw() {
+        changeLoading()
         viewModelScope.launch {
-            //repository.deleteAccount()
+            repository.withdraw().collect { result ->
+                when (result.code()) {
+                    ResponseCode.SUCCESS.value -> {
+                        changeLoading()
+                        /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
+                        /* TODO: logout이랑 이름 정리 */
+                        sessionManager.logout()
+                    }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        changeLoading()
+                        showAlert(AccountSettingsAlert.INTERNET_ERROR)
+                    }
+                }
+            }
         }
     }
 }

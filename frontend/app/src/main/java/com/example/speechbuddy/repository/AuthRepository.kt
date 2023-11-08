@@ -11,6 +11,7 @@ import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
+import com.example.speechbuddy.data.remote.requests.AuthWithdrawRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AccessToken
 import com.example.speechbuddy.domain.models.AuthToken
@@ -142,6 +143,21 @@ class AuthRepository @Inject constructor(
                 val refreshToken = sessionManager.cachedToken.value?.refreshToken!!
                 val authLogoutRequest = AuthLogoutRequest(refreshToken)
                 val result = authService.logout(getAuthHeader(), authLogoutRequest)
+                emit(result)
+                CoroutineScope(Dispatchers.IO).launch {
+                    authTokenPrefsManager.clearAuthToken()
+                }
+            } catch (e: Exception) {
+                emit(noInternetResponse())
+            }
+        }
+
+    suspend fun withdraw(): Flow<Response<Void>> =
+        flow {
+            try {
+                val refreshToken = sessionManager.cachedToken.value?.refreshToken!!
+                val authWithdrawRequest = AuthWithdrawRequest(refreshToken)
+                val result = authService.withdraw(getAuthHeader(), authWithdrawRequest)
                 emit(result)
                 CoroutineScope(Dispatchers.IO).launch {
                     authTokenPrefsManager.clearAuthToken()
