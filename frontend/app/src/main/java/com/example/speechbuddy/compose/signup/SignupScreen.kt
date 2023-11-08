@@ -58,7 +58,7 @@ fun SignupScreen(
                     description = stringResource(id = R.string.signup_explain)
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Email Text Field
                 TextFieldUi(
@@ -108,12 +108,12 @@ fun SignupScreen(
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = isPasswordCheckError,
+                    isError = isPasswordError || isPasswordCheckError,
                     isValid = uiState.isValidPassword,
                     isHidden = true
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 ButtonUi(
                     text = stringResource(id = R.string.signup),

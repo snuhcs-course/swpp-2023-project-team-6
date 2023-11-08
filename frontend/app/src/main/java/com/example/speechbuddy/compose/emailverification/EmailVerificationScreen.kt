@@ -70,7 +70,7 @@ fun EmailVerificationScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Email Text Field
                 TextFieldUi(value = viewModel.emailInput,
@@ -111,7 +111,7 @@ fun EmailVerificationScreen(
                     isEnabled = uiState.isSuccessfulSend
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 ButtonUi(
                     text = stringResource(id = R.string.next),

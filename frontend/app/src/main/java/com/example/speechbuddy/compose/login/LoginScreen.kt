@@ -94,24 +94,25 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Login Button
-                ButtonUi(
-                    text = stringResource(id = R.string.login_text),
-                    onClick = {
-                        viewModel.login()
-                    },
-                    isEnabled = !isError,
-                    isError = isError
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                // Forgot Password Button
-                ButtonUi(
-                    text = stringResource(id = R.string.forgot_password),
-                    onClick = onResetPasswordClick,
-                    level = ButtonLevel.SECONDARY
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    // Login Button
+                    ButtonUi(
+                        text = stringResource(id = R.string.login_text),
+                        onClick = {
+                            viewModel.login()
+                        },
+                        isEnabled = !isError,
+                        isError = isError
+                    )
+                    // Forgot Password Button
+                    ButtonUi(
+                        text = stringResource(id = R.string.forgot_password),
+                        onClick = onResetPasswordClick,
+                        level = ButtonLevel.SECONDARY
+                    )
+                }
 
                 // Signup Button
                 ButtonUi(
