@@ -94,6 +94,12 @@ class SignupViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoading(){
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     fun clearInputs() {
         nicknameInput = ""
         passwordInput = ""
@@ -132,6 +138,7 @@ class SignupViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoading()
             viewModelScope.launch {
                 repository.signup(
                     AuthSignupRequest(
@@ -140,7 +147,21 @@ class SignupViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect {
-                    _signupResult.postValue(it)
+                    if (it.code()==600) {
+                        changeLoading()
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidEmail = false,
+                                error = SignupError(
+                                    type = SignupErrorType.PASSWORD_CHECK,
+                                    messageId = R.string.internet_error
+                                )
+                            )
+                        }
+                    } else {
+                        changeLoading()
+                        _signupResult.postValue(it)
+                    }
                 }
             }
             //clearInputs()

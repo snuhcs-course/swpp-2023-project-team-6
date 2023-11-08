@@ -18,10 +18,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
@@ -55,6 +56,7 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
+import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +116,7 @@ fun SymbolCreationScreen(
                     viewModel = viewModel
                 )
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 // Symbol Text Field
                 TextFieldUi(
@@ -135,11 +137,10 @@ fun SymbolCreationScreen(
                     label = { Text(stringResource(R.string.category)) }
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
-
                 ButtonUi(
                     text = stringResource(id = R.string.register),
                     onClick = { viewModel.createSymbol() },
+                    modifier = Modifier.offset(y = 50.dp),
                     isEnabled = true,
                     isError = false
                 )
@@ -161,63 +162,61 @@ private fun DropdownUi(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentSize(Alignment.Center)
+            .border(
+                1.dp,
+                if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
+                RoundedCornerShape(10.dp)
+            )
+            .clickable { expanded = true }
+            .defaultMinSize(minHeight = 48.dp)
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    1.dp,
-                    if (isError) Color.Red else Color.Black,
-                    RoundedCornerShape(10.dp)
-                )
-                .clickable { expanded = true }
-                .defaultMinSize(minHeight = 48.dp)
-                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                if (selectedValue.isNotEmpty()) {
+            if (selectedValue.isNotEmpty()) {
+                Text(
+                    text = selectedValue,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            } else {
+                label?.invoke() ?: Text(
+                    "Select an option",
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = stringResource(R.string.dropdown_icon_description)
+            )
+        }
+    }
+
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
+        modifier = Modifier
+            .width(300.dp)
+            .heightIn(max = 200.dp),
+    ) {
+        items.forEach { item ->
+            DropdownMenuItem(
+                text = {
                     Text(
-                        text = selectedValue,
+                        text = item,
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium
                     )
-                } else {
-                    label?.invoke() ?: Text("Select an option", color = Color.Gray)
+                },
+                onClick = {
+                    onValueChange(item)
+                    expanded = false
                 }
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = stringResource(R.string.dropdown_icon_description)
-                )
-            }
-        }
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .width(360.dp)
-                .heightIn(max = 200.dp) // Adjust as needed
-        ) {
-            items.forEach { item ->
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = item,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    },
-                    onClick = {
-                        onValueChange(item)
-                        expanded = false
-                    }
-                )
-            }
+            )
         }
     }
 }
@@ -250,5 +249,16 @@ private fun AddPhotoButton(
                 contentDescription = stringResource(R.string.symbol_creation)
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SymbolCreationScreenPreview() {
+    SpeechBuddyTheme {
+        SymbolCreationScreen(
+            modifier = Modifier,
+            bottomPaddingValues = PaddingValues(16.dp)
+        )
     }
 }
