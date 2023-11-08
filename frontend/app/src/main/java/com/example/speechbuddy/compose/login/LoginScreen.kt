@@ -42,7 +42,8 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isEmailError = uiState.error?.type == LoginErrorType.EMAIL
     val isPasswordError = uiState.error?.type == LoginErrorType.PASSWORD
-    val isError = isEmailError || isPasswordError
+    val isError = (isEmailError || isPasswordError) &&
+            (uiState.error?.messageId != R.string.internet_error)
 
     Surface(modifier = modifier.fillMaxSize()) {
         Scaffold(
@@ -109,7 +110,6 @@ fun LoginScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_password),
                     onClick = onResetPasswordClick,
-                    isError = isError,
                     level = ButtonLevel.SECONDARY
                 )
 
