@@ -188,7 +188,6 @@ class SymbolRepository @Inject constructor(
         val matrix = mk.ndarray(lines.map { line ->
             line.trim().split(",").map { it.toInt() }.toIntArray()
         }.toTypedArray())
-        var result: D1Array<Int>
 
         for (i in 0 until symbolList.size - 1) {
             val preSymbol = mk.ndarray(matrix[symbolList[i].id].toIntArray())
@@ -200,7 +199,7 @@ class SymbolRepository @Inject constructor(
             val aftSymbol = preSymbol
             val newString = aftSymbol.toList().toString().drop(1).dropLast(1)
 
-            weigthTableOperations.replaceFileContent("weight_table.txt", oldString, newString)
+            weigthTableOperations.replaceFileContent("weight_table.txt", symbolList[i].id, newString)
 
 
 

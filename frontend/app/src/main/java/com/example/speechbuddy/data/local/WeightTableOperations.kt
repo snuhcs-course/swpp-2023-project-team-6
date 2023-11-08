@@ -5,5 +5,5 @@ import java.io.File
 interface WeigthTableOperations {
     fun readFromFile(filename: String): File
     fun writeToFile(filename: String, content: String)
-    fun replaceFileContent(filename: String, oldString: String, newString: String)
+    fun replaceFileContent(filename: String, lineNo: Int, newString: String)
 }

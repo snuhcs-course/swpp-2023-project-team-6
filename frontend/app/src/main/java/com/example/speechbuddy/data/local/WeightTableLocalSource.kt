@@ -14,22 +14,20 @@ class WeightTableImpl(private val context: Context) : WeigthTableOperations {
         file.appendText(content)
     }
 
-    override fun replaceFileContent(filename: String, oldString: String, newString: String) {
+    override fun replaceFileContent(filename: String, lineNo: Int, newString: String) {
         val file = File(context.filesDir, filename)
-        val reader = file.inputStream().bufferedReader()
-        val writer = file.outputStream().bufferedWriter()
 
+        // Step 1: Read the file content into memory
+        val lines = file.readLines().toMutableList()
 
-        val con = file.readLines()
-        var cnt = 1
-        for (line in con){
-
+        // Step 2: Process the content while not interacting with the file
+        for ((cnt, i) in (0 until lines.size).withIndex()){
+            if(lineNo == cnt){
+                lines[i] = newString
+            }
         }
 
-
-
-        val content = file.readText()
-        val updateContent = content.replace(oldString, newString)
-        file.writeText(updateContent)
+        // Step 3: Write the new content back to the file
+        file.writeText(lines.joinToString(System.lineSeparator()).replace(" ",""))
     }
 }
