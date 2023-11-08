@@ -100,7 +100,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun selectCategory(category: Category) {
         if (category != selectedCategory) {
             selectedCategory = category
-            viewModelScope.launch {
+            getEntriesJob?.cancel()
+            getEntriesJob = viewModelScope.launch {
                 repository.getSymbolsByCategory(category).collect { symbols ->
                     _entries.postValue(listOf(category) + symbols)
                 }
@@ -112,7 +113,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     private fun getEntries() {
-        if (getEntriesJob?.isActive == true) getEntriesJob?.cancel()
+        getEntriesJob?.cancel()
         getEntriesJob = viewModelScope.launch {
             when (_uiState.value.displayMode) {
                 DisplayMode.ALL -> {
