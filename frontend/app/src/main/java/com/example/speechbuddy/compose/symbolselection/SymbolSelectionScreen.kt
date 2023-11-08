@@ -63,6 +63,7 @@ fun SymbolSelectionScreen(
     val coroutineScope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
 
+    // Used for focus
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 

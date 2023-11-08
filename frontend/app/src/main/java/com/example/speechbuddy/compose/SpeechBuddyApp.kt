@@ -1,8 +1,6 @@
 package com.example.speechbuddy.compose
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,7 +11,6 @@ import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
-import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 
 @Composable
 fun SpeechBuddyApp() {
@@ -28,7 +25,7 @@ fun SpeechBuddyNavHost(
     navController: NavHostController
 ) {
     // val activity = (LocalContext.current as Activity)
-    NavHost(navController = navController, startDestination = "symbol_selection") {
+    NavHost(navController = navController, startDestination = "landing") {
         composable("landing") {
             LandingScreen(
                 onGuestClick = {
@@ -81,9 +78,6 @@ fun SpeechBuddyNavHost(
         }
         composable("home") {
             HomeScreen()
-        }
-        composable("symbol_selection"){
-            SymbolSelectionScreen(bottomPaddingValues = PaddingValues(10.dp))
         }
     }
 }
