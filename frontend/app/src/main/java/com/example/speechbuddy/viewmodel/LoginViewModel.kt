@@ -156,7 +156,7 @@ class LoginViewModel @Inject internal constructor(
     fun checkPreviousUser() {
         viewModelScope.launch {
             repository.checkPreviousUser().collect { resource ->
-                sessionManager.login(resource.data!!)
+                if (resource.data != null) sessionManager.login(resource.data)
             }
         }
     }

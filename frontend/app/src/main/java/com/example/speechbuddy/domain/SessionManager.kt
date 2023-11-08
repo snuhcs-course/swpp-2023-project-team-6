@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.domain.models.AuthToken
+import com.example.speechbuddy.repository.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

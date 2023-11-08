@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.compose.SpeechBuddyHome
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
@@ -16,6 +18,8 @@ class HomeActivity : BaseActivity() {
 
         // Displaying edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+
         setContent {
             SpeechBuddyTheme {
                 SpeechBuddyHome()

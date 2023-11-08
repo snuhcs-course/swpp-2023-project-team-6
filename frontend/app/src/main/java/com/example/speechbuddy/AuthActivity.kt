@@ -20,13 +20,16 @@ class AuthActivity : BaseActivity() {
 
         // Displaying edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        subscribeObservers()
+        checkPreviousAuthUser()
+
         setContent {
             SpeechBuddyTheme {
                 SpeechBuddyAuth()
             }
         }
 
-        subscribeObservers()
     }
 
     private fun subscribeObservers() {
@@ -39,6 +42,10 @@ class AuthActivity : BaseActivity() {
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun checkPreviousAuthUser() {
+        loginViewModel.checkPreviousUser()
     }
 
 }
