@@ -101,6 +101,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun selectCategory(category: Category) {
+        repository.sort()
         if (category != selectedCategory) {
             selectedCategory = category
             viewModelScope.launch {
