@@ -67,7 +67,7 @@ fun ResetPasswordScreen(
                     description = stringResource(id = R.string.reset_password_subtitle2)
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Password Text Field
                 TextFieldUi(

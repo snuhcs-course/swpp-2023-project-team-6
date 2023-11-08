@@ -71,7 +71,7 @@ fun EmailVerificationScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Email Text Field
                 TextFieldUi(value = viewModel.emailInput,
@@ -80,7 +80,7 @@ fun EmailVerificationScreen(
                     supportingButton = {
                         ButtonUi(
                             text = stringResource(id = R.string.send_validation_code),
-                            onClick = { viewModel.verifySend(source) },
+                            onClick = { viewModel.sendCode(source) },
                             level = ButtonLevel.TERTIARY
                         )
                     },
@@ -112,11 +112,11 @@ fun EmailVerificationScreen(
                     isEnabled = uiState.isSuccessfulSend
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 ButtonUi(
                     text = stringResource(id = R.string.next),
-                    onClick = { viewModel.verifyAccept(source, navController) },
+                    onClick = { viewModel.verifyEmail(source, navController) },
                     isEnabled = uiState.isSuccessfulSend
                 )
             }

@@ -13,5 +13,6 @@ data class ResetPasswordError(
 
 enum class ResetPasswordErrorType {
     PASSWORD,
-    PASSWORD_CHECK
+    PASSWORD_CHECK,
+    CONNECTION
 }

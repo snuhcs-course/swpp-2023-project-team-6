@@ -22,6 +22,7 @@ import com.example.speechbuddy.compose.utils.AlertDialogUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
@@ -100,6 +101,12 @@ fun AccountSettings(
         }
     }
 
+    uiState.loading.let{
+        if (it) {
+            ProgressIndicatorUi()
+        }
+    }
+
     uiState.alert?.let { alert ->
         when (alert) {
             AccountSettingsAlert.LOGOUT -> {
@@ -134,6 +141,17 @@ fun AccountSettings(
                     confirmButtonText = stringResource(id = R.string.withdraw),
                     onDismiss = { viewModel.hideAlert() },
                     onConfirm = { viewModel.deleteAccount() }
+                )
+            }
+
+            AccountSettingsAlert.INTERNET_ERROR -> {
+                AlertDialogUi(
+                    title = stringResource(id = R.string.internet_error_title),
+                    text = stringResource(id = R.string.internet_error),
+                    dismissButtonText = stringResource(id = R.string.dismiss),
+                    confirmButtonText = stringResource(id = R.string.confirm),
+                    onDismiss = { viewModel.hideAlert() },
+                    onConfirm = { viewModel.hideAlert() }
                 )
             }
         }

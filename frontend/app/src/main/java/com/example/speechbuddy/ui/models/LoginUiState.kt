@@ -14,5 +14,6 @@ data class LoginError(
 
 enum class LoginErrorType {
     EMAIL,
-    PASSWORD
+    PASSWORD,
+    CONNECTION
 }
