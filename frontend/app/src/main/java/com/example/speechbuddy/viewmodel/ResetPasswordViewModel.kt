@@ -72,6 +72,12 @@ class ResetPasswordViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoading(){
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     fun resetPassword(navController: NavHostController) {
         if (!isValidPassword(passwordInput)) { // Check password length
             _uiState.update { currentState ->
@@ -102,10 +108,12 @@ class ResetPasswordViewModel @Inject internal constructor(
                     /* TODO: 나중에 고쳐야 함 */
                     when (result.code()) {
                         200 -> {
+                            changeLoading()
                             navController.navigate("login")
                         }
 
                         400 -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
@@ -118,6 +126,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                         }
 
                         600 -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,

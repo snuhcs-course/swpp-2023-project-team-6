@@ -58,6 +58,12 @@ class EmailVerificationViewModel @Inject internal constructor(
         verifyCodeInput = ""
     }
 
+    private fun changeLoading(){
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     private fun validateEmail() {
         if (isValidEmail(emailInput)) {
             _uiState.update { currentState ->
@@ -100,6 +106,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoading()
             viewModelScope.launch {
                 sendCode(
                     AuthSendCodeRequest(
@@ -108,6 +115,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                 ).collect { result ->
                     when (result.code()) {
                         200 -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isSuccessfulSend = true,
@@ -117,6 +125,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                         }
 
                         400 -> {
+                            changeLoading()
                             val errorKey = errorResponseMapper.mapToDomainModel(result.errorBody()!!).key
                             val messageId = when (errorKey) {
                                 "email" -> R.string.false_email
@@ -136,6 +145,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                         }
 
                         600 -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
@@ -173,6 +183,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                 )
             }
         } else if (source == "signup") {
+            changeLoading()
             viewModelScope.launch {
                 repository.verifyEmailForSignup(
                     AuthVerifyEmailRequest(
@@ -182,10 +193,12 @@ class EmailVerificationViewModel @Inject internal constructor(
                 ).collect {result ->
                     when(result.code()) {
                         200 -> {
+                            changeLoading()
                             navController.navigate("signup/$emailInput")
                         }
 
                         400 -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidVerifyCode = false,
@@ -198,6 +211,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                         }
 
                         600 -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidVerifyCode = false,
@@ -212,6 +226,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                 }
             }
         } else {
+            changeLoading()
             viewModelScope.launch {
                 repository.verifyEmailForResetPassword(
                     AuthVerifyEmailRequest(
@@ -220,10 +235,12 @@ class EmailVerificationViewModel @Inject internal constructor(
                     )
                 ).collect {
                     if (it.status == Resource(Status.SUCCESS, "", "").status) {
+                        changeLoading()
                         val authToken = it as AuthToken /* TODO: 나중에 고쳐야 함 */
                         token_prefs.setAccessToken(authToken.accessToken!!)
                         navController.navigate("reset_password")
                     } else if (it.message?.contains("Unknown") == true) {
+                        changeLoading()
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidVerifyCode = false,
@@ -234,6 +251,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                             )
                         }
                     } else {
+                        changeLoading()
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidVerifyCode = false,

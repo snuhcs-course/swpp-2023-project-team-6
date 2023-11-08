@@ -80,6 +80,12 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoading(){
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     fun login() {
         if (!isValidEmail(emailInput)) {
             _uiState.update { currentState ->
@@ -102,6 +108,7 @@ class LoginViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoading()
             viewModelScope.launch {
                 repository.login(
                     AuthLoginRequest(
@@ -110,10 +117,12 @@ class LoginViewModel @Inject internal constructor(
                     )
                 ).collect {
                     if (it.status == Resource(Status.SUCCESS, "", "").status) { // 200
+                        changeLoading()
                         _loginResult.postValue(it)
                     } else { // status:error
                         // when password is wrong
                         if (it.message?.contains("password", ignoreCase = true) == true) {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
@@ -125,6 +134,7 @@ class LoginViewModel @Inject internal constructor(
                             }
                         } else if (it.message?.contains("email", ignoreCase = true) == true
                         ) { // email is wrong
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
@@ -136,6 +146,7 @@ class LoginViewModel @Inject internal constructor(
                             }
                             //check status code
                         } else if (it.message?.contains("Unknown", ignoreCase = true) == true) {
+                            changeLoading()
                             _uiState.update{
                                 currentState ->
                                 currentState.copy(
