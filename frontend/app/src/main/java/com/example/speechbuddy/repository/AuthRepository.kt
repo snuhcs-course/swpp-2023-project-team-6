@@ -12,10 +12,11 @@ import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.ResponseCode
+import com.example.speechbuddy.utils.ResponseHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,8 +28,8 @@ class AuthRepository @Inject constructor(
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
 ) {
-
     private val errorResponseMapper = ErrorResponseMapper()
+    private val responseHandler = ResponseHandler()
 
     suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Response<Void>> =
         flow {
@@ -126,7 +127,6 @@ class AuthRepository @Inject constructor(
             }
         }
 
-    /* TODO: 자동 로그인 */
     fun checkPreviousUser(): Flow<Resource<AuthToken>> {
         return authTokenPrefsManager.preferencesFlow.map { authToken ->
             if (!authToken.accessToken.isNullOrEmpty() && !authToken.refreshToken.isNullOrEmpty()) {
@@ -143,8 +143,8 @@ class AuthRepository @Inject constructor(
 
     private fun noInternetResponse(): Response<Void> {
         return Response.error(
-            600,
-            "{\"code\": 600, \"message\": \"No Internet Connection\"}".toResponseBody()
+            ResponseCode.NO_INTERNET_CONNECTION.value,
+            responseHandler.getResponseBody(ResponseCode.NO_INTERNET_CONNECTION)
         )
     }
 
