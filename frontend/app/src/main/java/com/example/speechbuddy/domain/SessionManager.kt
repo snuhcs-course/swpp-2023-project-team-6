@@ -33,7 +33,6 @@ class SessionManager @Inject constructor(
     fun logout() {
         CoroutineScope(Dispatchers.IO).launch {
             setValue(null)
-            authTokenPrefsManager.clearAuthToken()
         }
     }
 

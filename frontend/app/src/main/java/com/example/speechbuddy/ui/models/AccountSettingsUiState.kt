@@ -13,5 +13,6 @@ data class AccountSettingsUiState(
 enum class AccountSettingsAlert {
     LOGOUT,
     WITHDRAW,
-    WITHDRAW_PROCEED
+    WITHDRAW_PROCEED,
+    INTERNET_ERROR
 }

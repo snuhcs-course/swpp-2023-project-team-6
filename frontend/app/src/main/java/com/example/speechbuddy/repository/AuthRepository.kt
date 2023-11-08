@@ -1,14 +1,17 @@
 package com.example.speechbuddy.repository
 
+import android.util.Log
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthLogoutRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Resource
@@ -121,6 +124,17 @@ class AuthRepository @Inject constructor(
         flow {
             try {
                 val result = authService.resetPassword(authResetPasswordRequest)
+                emit(result)
+            } catch (e: Exception) {
+                emit(noInternetResponse())
+            }
+        }
+
+    suspend fun logout(header: String, authLogoutRequest: AuthLogoutRequest): Flow<Response<Void>> =
+        flow {
+            try {
+                val result = authService.logout(header, authLogoutRequest)
+                authTokenPrefsManager.clearAuthToken()
                 emit(result)
             } catch (e: Exception) {
                 emit(noInternetResponse())
