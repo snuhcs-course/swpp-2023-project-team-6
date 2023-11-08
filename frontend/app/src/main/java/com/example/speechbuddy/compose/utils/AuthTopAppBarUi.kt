@@ -30,6 +30,7 @@ fun AuthTopAppBarUi(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit
 ) {
+    /*
     CenterAlignedTopAppBar(
         modifier = modifier,
         title = {
@@ -49,6 +50,7 @@ fun AuthTopAppBarUi(
             }
         },
     )
+     */
 }
 
 @Preview

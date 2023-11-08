@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,7 +28,6 @@ import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.LoginErrorType
-import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.viewmodel.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -114,6 +112,7 @@ fun LoginScreen(
                     ButtonUi(
                         text = stringResource(id = R.string.forgot_password),
                         onClick = onResetPasswordClick,
+                        isError = isError,
                         level = ButtonLevel.SECONDARY
                     )
                 }
@@ -122,13 +121,13 @@ fun LoginScreen(
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
                     onClick = onSignupClick,
-                    modifier = Modifier.offset(y = 160.dp),
+                    modifier = Modifier.offset(y = 110.dp),
                 )
             }
         }
     }
 
-    uiState.loading.let{
+    uiState.loading.let {
         if (it) {
             ProgressIndicatorUi()
         }

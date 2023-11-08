@@ -2,6 +2,8 @@ package com.example.speechbuddy.compose
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,6 +64,7 @@ fun SpeechBuddyHome() {
     )
 
     Scaffold(
+        modifier = Modifier.padding(bottom = 48.dp), // System Bar Padding
         bottomBar = {
             BottomNavigationBar(
                 items = navItems,
@@ -88,8 +91,9 @@ private fun BottomNavigationBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
 
     NavigationBar(
+        modifier = Modifier.height(64.dp),
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        windowInsets = WindowInsets(top = 20.dp)
+        windowInsets = WindowInsets(top = 16.dp)
     ) {
         items.forEach { item ->
             val selected = item.route == backStackEntry.value?.destination?.route
@@ -102,10 +106,10 @@ private fun BottomNavigationBar(
                         contentDescription = stringResource(id = item.nameResId)
                     )
                 },
-                modifier = Modifier.size(40.dp),
+                modifier = Modifier.size(32.dp),
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    unselectedIconColor = MaterialTheme.colorScheme.outline
+                    selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = .5f)
                 ),
                 interactionSource = NoRippleInteractionSource()
             )
