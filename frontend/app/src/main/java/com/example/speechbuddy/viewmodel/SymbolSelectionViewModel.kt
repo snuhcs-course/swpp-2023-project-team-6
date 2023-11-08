@@ -3,94 +3,145 @@ package com.example.speechbuddy.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.speechbuddy.R
+import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.ui.models.DisplayMode
+import com.example.speechbuddy.ui.models.SymbolItem
+import com.example.speechbuddy.ui.models.SymbolSelectionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SymbolSelectionViewModel @Inject internal constructor() : ViewModel() {
+class SymbolSelectionViewModel @Inject internal constructor(
+    private val repository: SymbolRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(SymbolSelectionUiState())
+    val uiState: StateFlow<SymbolSelectionUiState> = _uiState.asStateFlow()
 
     var queryInput by mutableStateOf("")
         private set
 
-    var selectedSymbols by mutableStateOf(listOf<Symbol>())
+    var selectedSymbols by mutableStateOf(listOf<SymbolItem>())
         private set
 
-    var entries by mutableStateOf(listOf<Entry>())
-        private set
+    private var selectedCategory by mutableStateOf<Category?>(null)
 
-    /* TODO: 나중에 삭제 */
-    private val initialEntries = listOf(
-        Symbol(
-            id = 0,
-            text = "119에 전화해주세요",
-            imageResId = R.drawable.symbol_1,
-            categoryId = 0,
-            isFavorite = true,
-            isMine = false
-        ),
-        Symbol(
-            id = 0,
-            text = "119에 전화해주세요",
-            imageResId = R.drawable.symbol_1,
-            categoryId = 0,
-            isFavorite = true,
-            isMine = false
-        )
-    )
-
-    private val secondaryEntries = listOf(
-        Symbol(
-            id = 0,
-            text = "119에 전화해주세요",
-            imageResId = R.drawable.symbol_1,
-            categoryId = 0,
-            isFavorite = true,
-            isMine = false
-        ),
-        Symbol(
-            id = 0,
-            text = "우와",
-            imageResId = R.drawable.symbol_1,
-            categoryId = 0,
-            isFavorite = true,
-            isMine = false
-        )
-    )
+    private val _entries = MutableLiveData<List<Entry>>()
+    val entries: LiveData<List<Entry>> get() = _entries
 
     init {
-        entries = initialEntries
+        viewModelScope.launch {
+            getEntries()
+        }
+    }
+
+    fun expandMenu() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isMenuExpanded = true
+            )
+        }
+    }
+
+    fun dismissMenu() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isMenuExpanded = false
+            )
+        }
+    }
+
+    fun selectDisplayMode(displayMode: DisplayMode) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isMenuExpanded = false, displayMode = displayMode
+            )
+        }
+        viewModelScope.launch {
+            getEntries()
+        }
     }
 
     fun setQuery(input: String) {
         queryInput = input
+        viewModelScope.launch {
+            getEntries()
+        }
     }
 
-    fun clear(symbol: Symbol) {
-        val mutableSelectedSymbols = selectedSymbols.toMutableList()
-        mutableSelectedSymbols.remove(symbol)
-        selectedSymbols = mutableSelectedSymbols.toList()
+    fun clear(symbolItem: SymbolItem) {
+        selectedSymbols = selectedSymbols.minus(symbolItem)
     }
 
     fun clearAll() {
-        selectedSymbols = listOf()
-        entries = initialEntries
+        selectedSymbols = emptyList()
     }
 
     fun selectSymbol(symbol: Symbol) {
-        selectedSymbols = selectedSymbols.plus(symbol)
-        entries = secondaryEntries
+        selectedSymbols =
+            selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
     }
 
-    fun toggleFavorite(symbol: Symbol, value: Boolean) {
-        /* TODO */
+    fun updateFavorite(symbol: Symbol, value: Boolean) {
+        viewModelScope.launch {
+            repository.updateFavorite(symbol, value)
+        }
     }
 
     fun selectCategory(category: Category) {
-        /* TODO */
+        if (category != selectedCategory) {
+            selectedCategory = category
+            viewModelScope.launch {
+                repository.getSymbolsByCategory(category).collect { symbols ->
+                    _entries.postValue(listOf(category) + symbols)
+                }
+            }
+        } else {
+            selectedCategory = null
+            viewModelScope.launch {
+                getEntries()
+            }
+        }
     }
+
+    private suspend fun getEntries() {
+        when (_uiState.value.displayMode) {
+            DisplayMode.ALL -> {
+                repository.getEntries(queryInput).collect { entries ->
+                    _entries.postValue(entries)
+                }
+            }
+
+            DisplayMode.SYMBOL -> {
+                repository.getSymbols(queryInput).collect { symbols ->
+                    _entries.postValue(symbols)
+                }
+            }
+
+            DisplayMode.CATEGORY -> {
+                repository.getCategories(queryInput).collect { categories ->
+                    _entries.postValue(categories)
+                }
+            }
+
+            DisplayMode.FAVORITE -> {
+                repository.getFavoriteSymbols(queryInput).collect { symbols ->
+                    _entries.postValue(symbols)
+                }
+            }
+        }
+    }
+
 }

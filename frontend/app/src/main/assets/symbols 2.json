@@ -1,0 +1,4002 @@
+[
+  {
+    "id": 1,
+    "text": "119에 전화해주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 2,
+    "text": "TV 보고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 3,
+    "text": "가게",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 4,
+    "text": "가다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 5,
+    "text": "가방",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 6,
+    "text": "가수",
+    "imageUrl": null,
+    "categoryId": 20,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 7,
+    "text": "가슴",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 8,
+    "text": "가운데",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 9,
+    "text": "가을",
+    "imageUrl": null,
+    "categoryId": 2,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 10,
+    "text": "가져와주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 11,
+    "text": "가족",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 12,
+    "text": "간호사",
+    "imageUrl": null,
+    "categoryId": 20,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 13,
+    "text": "갈비",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 14,
+    "text": "감사합니다",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 15,
+    "text": "갑자기",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 16,
+    "text": "강",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 17,
+    "text": "같아요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 18,
+    "text": "같이",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 19,
+    "text": "개",
+    "imageUrl": null,
+    "categoryId": 7,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 20,
+    "text": "거기",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 21,
+    "text": "거리",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 22,
+    "text": "거울",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 23,
+    "text": "걷다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 24,
+    "text": "게임",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 25,
+    "text": "겨울",
+    "imageUrl": null,
+    "categoryId": 2,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 26,
+    "text": "결혼식",
+    "imageUrl": null,
+    "categoryId": 4,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 27,
+    "text": "경찰관",
+    "imageUrl": null,
+    "categoryId": 20,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 28,
+    "text": "경찰서",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 29,
+    "text": "계란",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 30,
+    "text": "계속해요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 31,
+    "text": "계절",
+    "imageUrl": null,
+    "categoryId": 2,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 32,
+    "text": "고기",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 33,
+    "text": "고등학교",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 34,
+    "text": "고양이",
+    "imageUrl": null,
+    "categoryId": 7,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 35,
+    "text": "곳",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 36,
+    "text": "공",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 37,
+    "text": "공부",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 38,
+    "text": "공책",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 39,
+    "text": "과일",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 40,
+    "text": "과자",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 41,
+    "text": "괜찮아요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 42,
+    "text": "교과서",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 43,
+    "text": "교실",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 44,
+    "text": "교통",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 45,
+    "text": "교회",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 46,
+    "text": "구두",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 47,
+    "text": "구름",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 48,
+    "text": "군인",
+    "imageUrl": null,
+    "categoryId": 20,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 49,
+    "text": "귀",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 50,
+    "text": "그거",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 51,
+    "text": "그동안",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 52,
+    "text": "그렇지만",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 53,
+    "text": "그릇",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 54,
+    "text": "그리다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 55,
+    "text": "그림",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 56,
+    "text": "그만할래요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 57,
+    "text": "근처",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 58,
+    "text": "금요일",
+    "imageUrl": null,
+    "categoryId": 15,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 59,
+    "text": "기뻐요",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 60,
+    "text": "기숙사",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 61,
+    "text": "기차",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 62,
+    "text": "길",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 63,
+    "text": "길어요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 64,
+    "text": "김밥",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 65,
+    "text": "김치",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 66,
+    "text": "꽃",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 67,
+    "text": "꿈",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 68,
+    "text": "끄다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 69,
+    "text": "끝",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 70,
+    "text": "나",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 71,
+    "text": "나가다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 72,
+    "text": "나무",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 73,
+    "text": "나오다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 74,
+    "text": "나중에",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 75,
+    "text": "날씨",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 76,
+    "text": "날짜",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 77,
+    "text": "남동생",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 78,
+    "text": "남자",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 79,
+    "text": "남자아이",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 80,
+    "text": "남편",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 81,
+    "text": "낮아요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 82,
+    "text": "내거예요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 83,
+    "text": "내년",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 84,
+    "text": "내일",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 85,
+    "text": "냉면",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 86,
+    "text": "냉장고",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 87,
+    "text": "너",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 88,
+    "text": "너무",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 89,
+    "text": "넣다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 90,
+    "text": "네",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 91,
+    "text": "넥타이",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 92,
+    "text": "노래하다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 93,
+    "text": "놀고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 94,
+    "text": "놀다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 95,
+    "text": "높아요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 96,
+    "text": "놓다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 97,
+    "text": "누구",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 98,
+    "text": "누나",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 99,
+    "text": "눈",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 100,
+    "text": "눈",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 101,
+    "text": "눈물",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 102,
+    "text": "뉴스",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 103,
+    "text": "다른얘기 하고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 104,
+    "text": "다리",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 105,
+    "text": "다리",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 106,
+    "text": "다시",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 107,
+    "text": "다시 말해주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 108,
+    "text": "다시 보고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 109,
+    "text": "다음",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 110,
+    "text": "달",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 111,
+    "text": "달라요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 112,
+    "text": "달력",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 113,
+    "text": "달아요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 114,
+    "text": "닭",
+    "imageUrl": null,
+    "categoryId": 7,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 115,
+    "text": "닭고기",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 116,
+    "text": "대답하고 싶지 않아요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 117,
+    "text": "대학교",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 118,
+    "text": "대한민국",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 119,
+    "text": "더",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 120,
+    "text": "더워요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 121,
+    "text": "더주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 122,
+    "text": "도서관",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 123,
+    "text": "도시",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 124,
+    "text": "도와주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 125,
+    "text": "독일",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 126,
+    "text": "돈",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 127,
+    "text": "동물",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 128,
+    "text": "동생",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 129,
+    "text": "돼지",
+    "imageUrl": null,
+    "categoryId": 7,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 130,
+    "text": "돼지고기",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 131,
+    "text": "뒤",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 132,
+    "text": "듣다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 133,
+    "text": "들다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 134,
+    "text": "들어갈래요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 135,
+    "text": "등산",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 136,
+    "text": "따뜻해요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 137,
+    "text": "딸",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 138,
+    "text": "딸기",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 139,
+    "text": "때리다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 140,
+    "text": "떠올라요",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 141,
+    "text": "떡",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 142,
+    "text": "또",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 143,
+    "text": "또 듣고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 144,
+    "text": "뛰다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 145,
+    "text": "라디오",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 146,
+    "text": "라면",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 147,
+    "text": "러시아",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 148,
+    "text": "마시다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 149,
+    "text": "마음",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 150,
+    "text": "만들다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 151,
+    "text": "많아요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 152,
+    "text": "많이",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 153,
+    "text": "말",
+    "imageUrl": null,
+    "categoryId": 7,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 154,
+    "text": "맛보다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 155,
+    "text": "맛없어요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 156,
+    "text": "맛있어요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 157,
+    "text": "매워요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 158,
+    "text": "매일",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 159,
+    "text": "맥주",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 160,
+    "text": "머리",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 161,
+    "text": "먹고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 162,
+    "text": "먹다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 163,
+    "text": "먼저",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 164,
+    "text": "몇개",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 165,
+    "text": "몇명",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 166,
+    "text": "몇번",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 167,
+    "text": "몇시몇분",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 168,
+    "text": "몇층이에요",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 169,
+    "text": "모두",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 170,
+    "text": "모든",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 171,
+    "text": "모르겠어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 172,
+    "text": "모자",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 173,
+    "text": "목",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 174,
+    "text": "목소리",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 175,
+    "text": "목요일",
+    "imageUrl": null,
+    "categoryId": 15,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 176,
+    "text": "몰라요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 177,
+    "text": "몸",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 178,
+    "text": "못",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 179,
+    "text": "무서워요",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 180,
+    "text": "무슨 말인지 잘 모르겠어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 181,
+    "text": "무슨일이에요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 182,
+    "text": "무엇",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 183,
+    "text": "무엇이든 물어보세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 184,
+    "text": "문",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 185,
+    "text": "문제",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 186,
+    "text": "물",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 187,
+    "text": "물론",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 188,
+    "text": "물음표",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 189,
+    "text": "뭐예요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 190,
+    "text": "미국",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 191,
+    "text": "미소",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 192,
+    "text": "바꿔주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 193,
+    "text": "바나나",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 194,
+    "text": "바다",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 195,
+    "text": "바람",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 196,
+    "text": "바지",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 197,
+    "text": "박물관",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 198,
+    "text": "밖에 나가고 싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 199,
+    "text": "받다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 200,
+    "text": "발",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 201,
+    "text": "밤",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 202,
+    "text": "밥",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 203,
+    "text": "방",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 204,
+    "text": "배",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 205,
+    "text": "배",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 206,
+    "text": "배",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 207,
+    "text": "배고파요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 208,
+    "text": "백화점",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 209,
+    "text": "버스",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 210,
+    "text": "벌써 시간이 다 되었네요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 211,
+    "text": "별",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 212,
+    "text": "별로예요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 213,
+    "text": "병원",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 214,
+    "text": "보다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 215,
+    "text": "보통",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 216,
+    "text": "볼펜",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 217,
+    "text": "봄",
+    "imageUrl": null,
+    "categoryId": 2,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 218,
+    "text": "부모님",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 219,
+    "text": "부엌",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 220,
+    "text": "불",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 221,
+    "text": "불고기",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 222,
+    "text": "비",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 223,
+    "text": "비누",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 224,
+    "text": "비디오",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 225,
+    "text": "비빔밥",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 226,
+    "text": "비행기",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 227,
+    "text": "빨리",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 228,
+    "text": "빵",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 229,
+    "text": "사과",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 230,
+    "text": "사다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 231,
+    "text": "사람",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 232,
+    "text": "사랑해요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 233,
+    "text": "사무실",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 234,
+    "text": "사장",
+    "imageUrl": null,
+    "categoryId": 20,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 235,
+    "text": "사전",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 236,
+    "text": "사주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 237,
+    "text": "사진",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 238,
+    "text": "사탕",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 239,
+    "text": "산",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 240,
+    "text": "새",
+    "imageUrl": null,
+    "categoryId": 7,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 241,
+    "text": "새로워요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 242,
+    "text": "색",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 243,
+    "text": "샌드위치",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 244,
+    "text": "생일",
+    "imageUrl": null,
+    "categoryId": 4,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 245,
+    "text": "서다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 246,
+    "text": "서울역",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 247,
+    "text": "서점",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 248,
+    "text": "선물",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 249,
+    "text": "선생님",
+    "imageUrl": null,
+    "categoryId": 20,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 250,
+    "text": "설날",
+    "imageUrl": null,
+    "categoryId": 4,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 251,
+    "text": "설탕",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 252,
+    "text": "세수",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 253,
+    "text": "세탁기",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 254,
+    "text": "셔요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 255,
+    "text": "셔츠",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 256,
+    "text": "소금",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 257,
+    "text": "소파",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 258,
+    "text": "소풍",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 259,
+    "text": "손",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 260,
+    "text": "손가락",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 261,
+    "text": "손님",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 262,
+    "text": "수건",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 263,
+    "text": "수박",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 264,
+    "text": "수영",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 265,
+    "text": "수요일",
+    "imageUrl": null,
+    "categoryId": 15,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 266,
+    "text": "숙제",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 267,
+    "text": "숟가락",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 268,
+    "text": "술",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 269,
+    "text": "쉬고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 270,
+    "text": "쉬다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 271,
+    "text": "스포츠",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 272,
+    "text": "슬퍼요",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 273,
+    "text": "시간",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 274,
+    "text": "시계",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 275,
+    "text": "시작",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 276,
+    "text": "시장",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 277,
+    "text": "시험",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 278,
+    "text": "식당",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 279,
+    "text": "식탁",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 280,
+    "text": "신문",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 281,
+    "text": "신발",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 282,
+    "text": "싫어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 283,
+    "text": "써요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 284,
+    "text": "쓰다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 285,
+    "text": "쓰레기",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 286,
+    "text": "씻다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 287,
+    "text": "아기",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 288,
+    "text": "아내",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 289,
+    "text": "아니오",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 290,
+    "text": "아들",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 291,
+    "text": "아래",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 292,
+    "text": "아빠",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 293,
+    "text": "아이스크림",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 294,
+    "text": "아저씨",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 295,
+    "text": "아주머니",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 296,
+    "text": "아줌마",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 297,
+    "text": "아침",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 298,
+    "text": "아파요",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 299,
+    "text": "안",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 300,
+    "text": "안",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 301,
+    "text": "안경",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 302,
+    "text": "안녕하세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 303,
+    "text": "안녕히가세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 304,
+    "text": "안돼",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 305,
+    "text": "앉다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 306,
+    "text": "알아요",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 307,
+    "text": "앞",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 308,
+    "text": "야구",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 309,
+    "text": "약",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 310,
+    "text": "약국",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 311,
+    "text": "약속",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 312,
+    "text": "양말",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 313,
+    "text": "양복",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 314,
+    "text": "어깨",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 315,
+    "text": "어디",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 316,
+    "text": "어떻게",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 317,
+    "text": "어른",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 318,
+    "text": "어린이",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 319,
+    "text": "어제",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 320,
+    "text": "언니",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 321,
+    "text": "언제",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 322,
+    "text": "언제끝나요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 323,
+    "text": "언제나",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 324,
+    "text": "얼굴",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 325,
+    "text": "얼마예요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 326,
+    "text": "엄마",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 327,
+    "text": "없어요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 328,
+    "text": "에어컨",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 329,
+    "text": "여기",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 330,
+    "text": "여동생",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 331,
+    "text": "여러분",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 332,
+    "text": "여름",
+    "imageUrl": null,
+    "categoryId": 2,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 333,
+    "text": "여자",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 334,
+    "text": "여자아이",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 335,
+    "text": "여행",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 336,
+    "text": "연필",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 337,
+    "text": "열쇠",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 338,
+    "text": "열심히",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 339,
+    "text": "영국",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 340,
+    "text": "영어",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 341,
+    "text": "영화",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 342,
+    "text": "예뻐요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 343,
+    "text": "오늘",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 344,
+    "text": "오늘 무슨 요일이예요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 345,
+    "text": "오다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 346,
+    "text": "오렌지",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 347,
+    "text": "오른쪽",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 348,
+    "text": "오빠",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 349,
+    "text": "오전",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 350,
+    "text": "오후",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 351,
+    "text": "올라가다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 352,
+    "text": "올해",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 353,
+    "text": "옷",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 354,
+    "text": "왜",
+    "imageUrl": null,
+    "categoryId": 10,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 355,
+    "text": "왜냐하면",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 356,
+    "text": "외국",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 357,
+    "text": "외국인",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 358,
+    "text": "왼쪽",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 359,
+    "text": "우리",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 360,
+    "text": "우산",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 361,
+    "text": "우유",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 362,
+    "text": "우체국",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 363,
+    "text": "운동",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 364,
+    "text": "운동장",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 365,
+    "text": "운동화",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 366,
+    "text": "운전하다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 367,
+    "text": "원해요",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 368,
+    "text": "월요일",
+    "imageUrl": null,
+    "categoryId": 15,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 369,
+    "text": "위",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 370,
+    "text": "위험",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 371,
+    "text": "은행",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 372,
+    "text": "-을 보고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 373,
+    "text": "음식",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 374,
+    "text": "음악",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 375,
+    "text": "의사",
+    "imageUrl": null,
+    "categoryId": 20,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 376,
+    "text": "의자",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 377,
+    "text": "이",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 378,
+    "text": "이거",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 379,
+    "text": "이름표",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 380,
+    "text": "이야기",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 381,
+    "text": "이전",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 382,
+    "text": "이쪽",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 383,
+    "text": "이해했어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 384,
+    "text": "일본",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 385,
+    "text": "일요일",
+    "imageUrl": null,
+    "categoryId": 15,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 386,
+    "text": "일찍",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 387,
+    "text": "읽다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 388,
+    "text": "입",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 389,
+    "text": "있어요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 390,
+    "text": "자고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 391,
+    "text": "자다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 392,
+    "text": "자동차",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 393,
+    "text": "자리가 불편해요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 394,
+    "text": "자장면",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 395,
+    "text": "자전거",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 396,
+    "text": "작년",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 397,
+    "text": "작아요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 398,
+    "text": "잘됐네요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 399,
+    "text": "잘래요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 400,
+    "text": "잘먹었습니다",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 401,
+    "text": "잘생겼어요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 402,
+    "text": "잠깐",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 403,
+    "text": "잠깐만요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 404,
+    "text": "잡다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 405,
+    "text": "잡지",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 406,
+    "text": "장미",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 407,
+    "text": "재미있어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 408,
+    "text": "저거",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 409,
+    "text": "저기",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 410,
+    "text": "저녁",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 411,
+    "text": "저는 말하는데 어려움이 있어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 412,
+    "text": "저는 그거 하고 싶지 않아요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 413,
+    "text": "저쪽",
+    "imageUrl": null,
+    "categoryId": 11,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 414,
+    "text": "적어요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 415,
+    "text": "전체",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 416,
+    "text": "전화",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 417,
+    "text": "점심",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 418,
+    "text": "젓가락",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 419,
+    "text": "정말로",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 420,
+    "text": "제가 심하게 움직이니까 놀라지마세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 421,
+    "text": "제가 천천히 말해도 기다려주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 422,
+    "text": "조금",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 423,
+    "text": "종이",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 424,
+    "text": "좋아요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 425,
+    "text": "죄송합니다",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 426,
+    "text": "주말",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 427,
+    "text": "주세요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 428,
+    "text": "주소",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 429,
+    "text": "주스",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 430,
+    "text": "주인",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 431,
+    "text": "중국",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 432,
+    "text": "지갑",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 433,
+    "text": "지금",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 434,
+    "text": "지난주",
+    "imageUrl": null,
+    "categoryId": 13,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 435,
+    "text": "지도",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 436,
+    "text": "지우개",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 437,
+    "text": "지하",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 438,
+    "text": "지하철",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 439,
+    "text": "질문있어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 440,
+    "text": "집",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 441,
+    "text": "짜요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 442,
+    "text": "짜증나요",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 443,
+    "text": "찌개",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 444,
+    "text": "차",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 445,
+    "text": "창문",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 446,
+    "text": "찾다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 447,
+    "text": "책",
+    "imageUrl": null,
+    "categoryId": 22,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 448,
+    "text": "책상",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 449,
+    "text": "천천히",
+    "imageUrl": null,
+    "categoryId": 24,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 450,
+    "text": "청바지",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 451,
+    "text": "최고예요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 452,
+    "text": "추석",
+    "imageUrl": null,
+    "categoryId": 4,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 453,
+    "text": "추워요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 454,
+    "text": "축구",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 455,
+    "text": "축하해요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 456,
+    "text": "춤",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 457,
+    "text": "층",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 458,
+    "text": "치마",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 459,
+    "text": "치약",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 460,
+    "text": "친구",
+    "imageUrl": null,
+    "categoryId": 12,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 461,
+    "text": "침대",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 462,
+    "text": "칫솔",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 463,
+    "text": "카메라",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 464,
+    "text": "칼",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 465,
+    "text": "캐나다",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 466,
+    "text": "커요",
+    "imageUrl": null,
+    "categoryId": 23,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 467,
+    "text": "컴퓨터",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 468,
+    "text": "켜다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 469,
+    "text": "코",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 470,
+    "text": "크리스마스",
+    "imageUrl": null,
+    "categoryId": 4,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 471,
+    "text": "키",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 472,
+    "text": "타다",
+    "imageUrl": null,
+    "categoryId": 8,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 473,
+    "text": "태권도",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 474,
+    "text": "택시",
+    "imageUrl": null,
+    "categoryId": 3,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 475,
+    "text": "테이블",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 476,
+    "text": "텔레비전",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 477,
+    "text": "토요일",
+    "imageUrl": null,
+    "categoryId": 15,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 478,
+    "text": "팔",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 479,
+    "text": "표정",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 480,
+    "text": "프랑스",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 481,
+    "text": "피아노",
+    "imageUrl": null,
+    "categoryId": 6,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 482,
+    "text": "하고싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 483,
+    "text": "하고싶지 않아요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 484,
+    "text": "하늘",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 485,
+    "text": "학교",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 486,
+    "text": "한복",
+    "imageUrl": null,
+    "categoryId": 14,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 487,
+    "text": "할머니",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 488,
+    "text": "할아버지",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 489,
+    "text": "해",
+    "imageUrl": null,
+    "categoryId": 18,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 490,
+    "text": "햄버거",
+    "imageUrl": null,
+    "categoryId": 16,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 491,
+    "text": "허리",
+    "imageUrl": null,
+    "categoryId": 9,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 492,
+    "text": "형",
+    "imageUrl": null,
+    "categoryId": 1,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 493,
+    "text": "호주",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 494,
+    "text": "혼자 있고 싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 495,
+    "text": "화나요",
+    "imageUrl": null,
+    "categoryId": 5,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 496,
+    "text": "화요일",
+    "imageUrl": null,
+    "categoryId": 15,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 497,
+    "text": "화장실",
+    "imageUrl": null,
+    "categoryId": 19,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 498,
+    "text": "화장실 가고 싶어요",
+    "imageUrl": null,
+    "categoryId": 17,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 499,
+    "text": "휴지",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  },
+  {
+    "id": 500,
+    "text": "휴지통",
+    "imageUrl": null,
+    "categoryId": 21,
+    "isFavorite": false,
+    "isMine": false
+  }
+]

@@ -101,8 +101,11 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
 
+    // Gson
+    implementation("com.google.code.gson:gson:2.9.0")
+
     // DataStore
-    val dataStoreVersion = "1.0.0-alpha06"
+    val dataStoreVersion = "1.1.0-alpha06"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
     implementation("androidx.datastore:datastore-preferences-core:$dataStoreVersion")
 
@@ -111,6 +114,11 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
+
+    // Work
+    val workVersion = "2.8.1"
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    testImplementation("androidx.work:work-testing:$workVersion")
 
     // Navigation
     val navigationVersion = "2.7.5"
@@ -124,11 +132,15 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // MockK
     val mockkVersion = "1.13.8"
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
+
+    // Glide
+    val glideVersion = "1.0.0-alpha.3"
+    implementation("com.github.bumptech.glide:compose:$glideVersion")
 }

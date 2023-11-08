@@ -1,6 +1,5 @@
 package com.example.speechbuddy.compose.utils
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,15 +24,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Symbol
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.utils.Constants.Companion.MAXIMUM_LINES_FOR_SYMBOL_TEXT
+import com.example.speechbuddy.utils.Constants.Companion.SYMBOL_IMAGE_PATH
 
 /**
  * Custom UI designed for Symbol
@@ -43,6 +43,7 @@ import com.example.speechbuddy.utils.Constants.Companion.MAXIMUM_LINES_FOR_SYMBO
  * @param onSelect called when this Symbol is clicked
  * @param onFavoriteChange called when the upper left icon of this Symbol is clicked
  */
+@OptIn(ExperimentalGlideComposeApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun SymbolUi(
@@ -65,7 +66,8 @@ fun SymbolUi(
                 onCheckedChange = onFavoriteChange,
                 modifier = Modifier
                     .size(24.dp)
-                    .padding(4.dp),
+                    .padding(4.dp)
+                    .zIndex(1f),
                 colors = IconButtonDefaults.iconToggleButtonColors(
                     contentColor = MaterialTheme.colorScheme.onBackground,
                     checkedContentColor = MaterialTheme.colorScheme.error
@@ -84,8 +86,8 @@ fun SymbolUi(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(id = symbol.imageResId),
+                GlideImage(
+                    model = symbol.imageUrl ?: SYMBOL_IMAGE_PATH.plus("symbol_${symbol.id}.png"),
                     contentDescription = symbol.text,
                     modifier = Modifier.height(95.dp),
                     contentScale = ContentScale.FillHeight
@@ -108,23 +110,5 @@ fun SymbolUi(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0)
-@ExperimentalMaterial3Api
-@Composable
-fun SymbolUiPreview() {
-    val previewSymbol = Symbol(
-        id = 1,
-        text = "119에 전화해주세요",
-        imageResId = R.drawable.symbol_1,
-        categoryId = 1,
-        isFavorite = true,
-        isMine = false
-    )
-
-    SpeechBuddyTheme {
-        SymbolUi(symbol = previewSymbol, onSelect = {}, onFavoriteChange = {})
     }
 }

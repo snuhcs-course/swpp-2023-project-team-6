@@ -2,7 +2,6 @@ package com.example.speechbuddy.compose
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -89,7 +88,6 @@ private fun BottomNavigationBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
 
     NavigationBar(
-        modifier = Modifier.height(100.dp),
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         windowInsets = WindowInsets(top = 20.dp)
     ) {
