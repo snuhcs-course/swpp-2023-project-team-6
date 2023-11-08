@@ -50,7 +50,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
 }
 
 dependencies {
@@ -105,11 +104,19 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
 
+    // Gson
+    implementation("com.google.code.gson:gson:2.9.0")
+
     // Room
     val roomVersion = "2.6.0"
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
+
+    // Work
+    val workVersion = "2.8.1"
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    testImplementation("androidx.work:work-testing:$workVersion")
 
     // Navigation
     val navigationVersion = "2.7.5"
@@ -130,4 +137,8 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
+
+    // Glide
+    val glideVersion = "1.0.0-alpha.3"
+    implementation("com.github.bumptech.glide:compose:$glideVersion")
 }

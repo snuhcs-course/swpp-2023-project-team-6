@@ -84,4 +84,11 @@
     <string name="category">분류</string>
     <string name="dropdown_icon_description">드롭다운</string>
     <string name="register">등록</string>
+    <string name="internet_error">인터넷 연결을 확인하세요</string>
+    <string name="menu">메뉴</string>
+    <string name="display_all">모두 보기</string>
+    <string name="display_symbols">상징 보기</string>
+    <string name="display_categories">대분류로 보기</string>
+    <string name="display_favorites">즐겨찾기만 보기</string>
+    <string name="currently_selected_menu">현재 선택된 메뉴</string>
 </resources>

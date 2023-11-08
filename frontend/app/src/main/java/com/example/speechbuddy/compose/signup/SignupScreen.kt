@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.SignupErrorType
@@ -41,6 +42,8 @@ fun SignupScreen(
     val isNicknameError = uiState.error?.type == SignupErrorType.NICKNAME
     val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORD_CHECK
+    val isError = (isNicknameError || isPasswordError || isPasswordCheckError) &&
+            (uiState.error?.messageId != R.string.internet_error)
 
     Surface(modifier = modifier.fillMaxSize()) {
         Scaffold(topBar = { AuthTopAppBarUi(onBackClick = onBackClick) }) {
@@ -115,11 +118,18 @@ fun SignupScreen(
 
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
+                    isError = isError,
                     onClick = {
                         viewModel.signup(email)
                     },
                 )
             }
+        }
+    }
+
+    uiState.loading.let{
+        if (it) {
+            ProgressIndicatorUi()
         }
     }
 }
