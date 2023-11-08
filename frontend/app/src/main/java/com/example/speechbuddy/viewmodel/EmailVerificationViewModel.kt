@@ -15,7 +15,6 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationError
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.ui.models.EmailVerificationUiState
-import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
@@ -59,6 +58,12 @@ class EmailVerificationViewModel @Inject internal constructor(
         verifyCodeInput = ""
     }
 
+    private fun changeLoading() {
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     private fun validateEmail() {
         if (isValidEmail(emailInput)) {
             _uiState.update { currentState ->
@@ -99,6 +104,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoading()
             viewModelScope.launch {
                 sendCode(
                     AuthSendCodeRequest(
@@ -107,6 +113,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                 ).collect { result ->
                     when (result.code()) {
                         ResponseCode.SUCCESS.value -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isSuccessfulSend = true,
@@ -115,7 +122,9 @@ class EmailVerificationViewModel @Inject internal constructor(
                             }
                         }
 
+
                         ResponseCode.BAD_REQUEST.value -> {
+                            changeLoading()
                             val messageId =
                                 when (errorResponseMapper.mapToDomainModel(result.errorBody()!!).key) {
                                     "email" -> R.string.false_email
@@ -135,6 +144,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                         }
 
                         ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
@@ -164,6 +174,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoading()
             if (source == "signup") verifyEmailForSignup(navController)
             else verifyEmailForResetPassword(navController)
         }
@@ -180,10 +191,12 @@ class EmailVerificationViewModel @Inject internal constructor(
             ).collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
+                        changeLoading()
                         navController.navigate("signup/$emailInput")
                     }
 
                     ResponseCode.BAD_REQUEST.value -> {
+                        changeLoading()
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidVerifyCode = false,
@@ -196,6 +209,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                     }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        changeLoading()
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidVerifyCode = false,
@@ -220,10 +234,12 @@ class EmailVerificationViewModel @Inject internal constructor(
                 )
             ).collect { resource ->
                 if (resource.status == Status.SUCCESS) {
+                    changeLoading()
                     val temporaryToken = resource.data?.accessToken
                     sessionManager.setTemporaryToken(temporaryToken)
                     navController.navigate("reset_password")
                 } else if (resource.message?.contains("Unknown") == true) {
+                    changeLoading()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidVerifyCode = false,
@@ -234,6 +250,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                         )
                     }
                 } else {
+                    changeLoading()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidVerifyCode = false,

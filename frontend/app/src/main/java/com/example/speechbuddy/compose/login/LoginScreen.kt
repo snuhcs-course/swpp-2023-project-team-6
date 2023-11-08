@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,9 +25,11 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.LoginErrorType
+import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.viewmodel.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -40,6 +43,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
     val isEmailError = uiState.error?.type == LoginErrorType.EMAIL
     val isPasswordError = uiState.error?.type == LoginErrorType.PASSWORD
     val isError = (isEmailError || isPasswordError) &&
@@ -121,6 +125,12 @@ fun LoginScreen(
                     modifier = Modifier.offset(y = 160.dp),
                 )
             }
+        }
+    }
+
+    uiState.loading.let{
+        if (it) {
+            ProgressIndicatorUi()
         }
     }
 }

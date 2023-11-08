@@ -92,6 +92,12 @@ class SignupViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoading() {
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     fun clearInputs() {
         nicknameInput = ""
         passwordInput = ""
@@ -130,6 +136,7 @@ class SignupViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoading()
             viewModelScope.launch {
                 repository.signup(
                     AuthSignupRequest(
@@ -140,10 +147,12 @@ class SignupViewModel @Inject internal constructor(
                 ).collect { result ->
                     when (result.code()) {
                         ResponseCode.CREATED.value -> {
+                            changeLoading()
                             navController.navigate("login")
                         }
 
                         ResponseCode.BAD_REQUEST.value -> {
+                            changeLoading()
                             val messageId =
                                 when (errorResponseMapper.mapToDomainModel(result.errorBody()!!).key) {
                                     "email" -> R.string.false_email
@@ -162,6 +171,7 @@ class SignupViewModel @Inject internal constructor(
                         }
 
                         ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,

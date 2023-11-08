@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.SignupErrorType
@@ -125,6 +126,12 @@ fun SignupScreen(
                     },
                 )
             }
+        }
+    }
+
+    uiState.loading.let{
+        if (it) {
+            ProgressIndicatorUi()
         }
     }
 }

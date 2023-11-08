@@ -26,6 +26,7 @@ import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.ui.models.ResetPasswordErrorType
 import com.example.speechbuddy.viewmodel.ResetPasswordViewModel
 
@@ -108,6 +109,12 @@ fun ResetPasswordScreen(
                     level = ButtonLevel.PRIMARY
                 )
             }
+        }
+    }
+
+    uiState.loading.let{
+        if (it) {
+            ProgressIndicatorUi()
         }
     }
 }

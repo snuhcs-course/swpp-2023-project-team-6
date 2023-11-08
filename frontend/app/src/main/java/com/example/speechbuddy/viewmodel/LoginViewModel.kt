@@ -75,6 +75,12 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoading() {
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     fun login() {
         if (!isValidEmail(emailInput)) {
             _uiState.update { currentState ->
@@ -97,6 +103,7 @@ class LoginViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoading()
             viewModelScope.launch {
                 repository.login(
                     AuthLoginRequest(
@@ -108,6 +115,7 @@ class LoginViewModel @Inject internal constructor(
                         sessionManager.login(resource.data!!)
                     } else {
                         if (resource.message?.contains("password", ignoreCase = true) == true) {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
@@ -119,6 +127,7 @@ class LoginViewModel @Inject internal constructor(
                             }
                         } else if (resource.message?.contains("email", ignoreCase = true) == true
                         ) {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
@@ -134,6 +143,7 @@ class LoginViewModel @Inject internal constructor(
                             ) == true
                         ) {
                             _uiState.update { currentState ->
+                                changeLoading()
                                 currentState.copy(
                                     isValidEmail = false,
                                     error = LoginError(

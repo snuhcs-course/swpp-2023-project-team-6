@@ -73,6 +73,12 @@ class ResetPasswordViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoading() {
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     fun resetPassword(navController: NavHostController) {
         if (!isValidPassword(passwordInput)) {
             _uiState.update { currentState ->
@@ -102,11 +108,13 @@ class ResetPasswordViewModel @Inject internal constructor(
                 ).collect { result ->
                     when (result.code()) {
                         ResponseCode.SUCCESS.value -> {
+                            changeLoading()
                             sessionManager.setTemporaryToken(null)
                             navController.navigate("login")
                         }
 
                         ResponseCode.BAD_REQUEST.value -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
@@ -119,6 +127,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                         }
 
                         ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
