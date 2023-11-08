@@ -105,7 +105,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.9.0")
 
     // DataStore
-    val dataStoreVersion = "1.1.0-alpha06"
+    val dataStoreVersion = "1.0.0-alpha06"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
     implementation("androidx.datastore:datastore-preferences-core:$dataStoreVersion")
 
