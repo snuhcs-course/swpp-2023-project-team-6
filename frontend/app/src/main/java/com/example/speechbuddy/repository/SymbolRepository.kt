@@ -162,8 +162,8 @@ class SymbolRepository @Inject constructor(
         }
         */
 
-        for (i in 0 until allSymbolList.size-1) {
-            listOfSymCntPairs.add(Pair(allSymbolList[i], matrix[symbol.id][i]))
+        for (i in 0 until allSymbolList.size) {
+            listOfSymCntPairs.add(Pair(allSymbolList[i], matrix[symbol.id - 1][i]))
         }
 
         val sortedByNumberDescending = listOfSymCntPairs.sortedByDescending { it.second }
@@ -191,7 +191,6 @@ class SymbolRepository @Inject constructor(
 
         for (i in 0 until symbolList.size - 1) {
             val preSymbol = mk.ndarray(matrix[symbolList[i].id].toIntArray())
-            val oldString = preSymbol.toList().toString().drop(1).dropLast(1)
             val aftSymbolId = symbolList[i + 1].symbol.id - 1
             // purposely slpitted into two line
             // preSymbol[aftSymbolId] + 1 result in int
@@ -199,9 +198,11 @@ class SymbolRepository @Inject constructor(
             val aftSymbol = preSymbol
             val newString = aftSymbol.toList().toString().drop(1).dropLast(1)
 
-            weigthTableOperations.replaceFileContent("weight_table.txt", symbolList[i].id, newString)
-
-
+            weigthTableOperations.replaceFileContent(
+                "weight_table.txt",
+                symbolList[i].id,
+                newString
+            )
 
             Log.d("test", "preSymbol: " + preSymbol.toString())
             Log.d("test", "aftSymbolId: " + aftSymbolId.toString())
