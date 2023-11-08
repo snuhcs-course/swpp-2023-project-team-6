@@ -7,7 +7,8 @@ data class AccountSettingsUiState(
      */
     val email: String = "example@gmail.com",
     val nickname: String = "nickname",
-    val alert: AccountSettingsAlert? = null
+    val alert: AccountSettingsAlert? = null,
+    val loading: Boolean = false
 )
 
 enum class AccountSettingsAlert {

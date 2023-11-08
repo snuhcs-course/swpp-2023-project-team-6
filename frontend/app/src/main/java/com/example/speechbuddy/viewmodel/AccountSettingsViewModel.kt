@@ -40,17 +40,25 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoading() {
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
 
     fun logout() {
+        changeLoading()
         viewModelScope.launch {
             repository.logout().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
+                        changeLoading()
                         /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
                         sessionManager.logout()
                     }
-
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        changeLoading()
                         showAlert(AccountSettingsAlert.INTERNET_ERROR)
                     }
                 }
