@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,6 +53,7 @@ import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
@@ -63,7 +65,10 @@ fun SymbolCreationScreen(
     viewModel: SymbolCreationViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+
     val uiState by viewModel.uiState.collectAsState()
+    val categories by viewModel.categories.observeAsState(emptyList())
+
     val isSymbolTextError = uiState.error?.type == SymbolCreationErrorType.SYMBOL_TEXT
     val isCategoryError = uiState.error?.type == SymbolCreationErrorType.CATEGORY
     val isPhotoInputError = uiState.error?.type == SymbolCreationErrorType.PHOTO_INPUT
@@ -71,25 +76,16 @@ fun SymbolCreationScreen(
 
     // Get photo from gallery
     val galleryLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri : Uri? ->
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             viewModel.setPhotoInputUri(uri, context)
         }
-
-    val myItemsList = listOf(
-        "형용사", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6",
-        "Option 7", "Option 8", "Option 9", "Option 10", "Option 11", "Option 12",
-        "Option 13", "Option 14", "Option 15", "Option 16", "Option 17", "Option 18",
-        "Option 19", "Option 20", "Option 21", "Option 22", "Option 23", "Option 24"
-    )
 
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            topBar = {
-                HomeTopAppBarUi(title = stringResource(id = R.string.symbol_creation))
-            }
-        ) { topPaddingValues ->
+        Scaffold(topBar = {
+            HomeTopAppBarUi(title = stringResource(id = R.string.symbol_creation))
+        }) { topPaddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -135,7 +131,7 @@ fun SymbolCreationScreen(
                 DropdownUi(
                     selectedValue = viewModel.categoryInput,
                     onValueChange = { viewModel.setCategory(it) },
-                    items = myItemsList,
+                    items = categories,
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(stringResource(R.string.category)) },
                     isError = isCategoryError
@@ -155,42 +151,36 @@ fun SymbolCreationScreen(
 
 @Composable
 private fun DropdownUi(
-    selectedValue: String,
-    onValueChange: (String) -> Unit,
-    items: List<String>,
+    selectedValue: Category?,
+    onValueChange: (Category) -> Unit,
+    items: List<Category>,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
     isError: Boolean = false
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(
-                1.dp,
-                if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
-                RoundedCornerShape(10.dp)
-            )
-            .clickable { expanded = true }
-            .defaultMinSize(minHeight = 48.dp)
-            .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = modifier
+        .fillMaxWidth()
+        .border(
+            1.dp,
+            if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
+            RoundedCornerShape(10.dp)
+        )
+        .clickable { expanded = true }
+        .defaultMinSize(minHeight = 48.dp)
+        .padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (selectedValue.isNotEmpty()) {
+            if (selectedValue != null) {
                 Text(
-                    text = selectedValue,
+                    text = selectedValue.text,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )
             } else {
                 label?.invoke() ?: Text(
-                    "Select an option",
-                    color = MaterialTheme.colorScheme.onSurface
+                    "Select an option", color = MaterialTheme.colorScheme.onSurface
                 )
             }
             Icon(
@@ -208,41 +198,34 @@ private fun DropdownUi(
             .heightIn(max = 200.dp),
     ) {
         items.forEach { item ->
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = item,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                },
-                onClick = {
-                    onValueChange(item)
-                    expanded = false
-                }
-            )
+            DropdownMenuItem(text = {
+                Text(
+                    text = item.text,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }, onClick = {
+                onValueChange(item)
+                expanded = false
+            })
         }
     }
 }
 
 @Composable
 private fun AddPhotoButton(
-    onClick: () -> Unit,
-    isError: Boolean = false,
-    viewModel: SymbolCreationViewModel
+    onClick: () -> Unit, isError: Boolean = false, viewModel: SymbolCreationViewModel
 ) {
-    val color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant
+    val color =
+        if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant
 
-    Box(
-        contentAlignment = Alignment.Center,
+    Box(contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(120.dp)
             .clickable { onClick() }
             .border(
-                border = BorderStroke(1.dp, color),
-                shape = RoundedCornerShape(10.dp)
-            )
-    ) {
+                border = BorderStroke(1.dp, color), shape = RoundedCornerShape(10.dp)
+            )) {
         if (viewModel.photoInputBitmap != null) {
             // Display the loaded image if the photo input bitmap is not null
             Image(

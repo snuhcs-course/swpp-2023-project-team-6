@@ -33,7 +33,7 @@ interface SymbolDao {
     suspend fun updateSymbol(symbolEntity: SymbolEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertSymbol(symbolEntity: SymbolEntity)
+    suspend fun insertSymbol(symbolEntity: SymbolEntity)
 
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)

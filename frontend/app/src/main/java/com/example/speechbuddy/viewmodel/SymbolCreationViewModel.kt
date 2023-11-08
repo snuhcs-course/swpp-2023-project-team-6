@@ -10,8 +10,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
+import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolCreationRepository
 import com.example.speechbuddy.repository.SymbolRepository
@@ -41,6 +43,8 @@ class SymbolCreationViewModel @Inject internal constructor(
     private val _uiState = MutableStateFlow(SymbolCreationUiState())
     val uiState: StateFlow<SymbolCreationUiState> = _uiState.asStateFlow()
 
+    val categories = local_repository.getAllCategories().asLiveData()
+
     var photoInputUri by mutableStateOf<Uri?>(null)
 
     var photoInputBitmap by mutableStateOf<Bitmap?>(null)
@@ -48,28 +52,28 @@ class SymbolCreationViewModel @Inject internal constructor(
     var symbolTextInput by mutableStateOf("")
         private set
 
-    var categoryInput by mutableStateOf("")
+    var categoryInput by mutableStateOf<Category?>(null)
         private set
 
     @JvmName("callFromUri")
-    fun setPhotoInputUri(input: Uri?, context: Context){
+    fun setPhotoInputUri(input: Uri?, context: Context) {
         photoInputUri = input
-        if (_uiState.value.error?.type==SymbolCreationErrorType.PHOTO_INPUT) validatePhotoInput()
-        if(photoInputUri!=null) photoInputBitmap = uriToBitmap(photoInputUri, context)
+        if (_uiState.value.error?.type == SymbolCreationErrorType.PHOTO_INPUT) validatePhotoInput()
+        if (photoInputUri != null) photoInputBitmap = uriToBitmap(photoInputUri, context)
     }
 
-    fun setSymbolText(input: String){
+    fun setSymbolText(input: String) {
         symbolTextInput = input
-        if (_uiState.value.error?.type==SymbolCreationErrorType.SYMBOL_TEXT) validateSymbolText()
+        if (_uiState.value.error?.type == SymbolCreationErrorType.SYMBOL_TEXT) validateSymbolText()
     }
 
-    fun setCategory(input: String){
+    fun setCategory(input: Category) {
         categoryInput = input
-        if (_uiState.value.error?.type==SymbolCreationErrorType.CATEGORY) validateCategory()
+        if (_uiState.value.error?.type == SymbolCreationErrorType.CATEGORY) validateCategory()
     }
 
-    private fun validatePhotoInput(){
-        if(photoInputUri!=null){
+    private fun validatePhotoInput() {
+        if (photoInputUri != null) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = true,
@@ -79,8 +83,8 @@ class SymbolCreationViewModel @Inject internal constructor(
         }
     }
 
-    private fun validateCategory(){
-        if (categoryInput.isNotBlank()){
+    private fun validateCategory() {
+        if (categoryInput != null) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidCategory = true,
@@ -108,6 +112,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                 val source = ImageDecoder.createSource(context.contentResolver, uri!!)
                 ImageDecoder.decodeBitmap(source)
             }
+
             else -> {
                 MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
             }
@@ -132,7 +137,7 @@ class SymbolCreationViewModel @Inject internal constructor(
         return MultipartBody.Part.createFormData(paramName, file.name, requestFile)
     }
 
-    fun createSymbol(context:Context){
+    fun createSymbol(context: Context) {
 //        var categoryId = 0
 //         category Id processing
 //        viewModelScope.launch {
@@ -140,10 +145,10 @@ class SymbolCreationViewModel @Inject internal constructor(
 //                if (categories.isNotEmpty()) {
 //                    val category = categories.first()
 //                    categoryId = category.id
-//                }
+//
 //            }
 //        }
-        if (!isValidSymbolText(symbolTextInput)){
+        if (!isValidSymbolText(symbolTextInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidSymbolText = false,
@@ -153,7 +158,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else if(categoryInput.isBlank()){
+        } else if (categoryInput == null) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidCategory = false,
@@ -173,8 +178,7 @@ class SymbolCreationViewModel @Inject internal constructor(
 //                    )
 //                )
 //            }
-        }
-        else if(photoInputUri==null || photoInputBitmap==null){
+        } else if (photoInputUri == null || photoInputBitmap == null) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = false,
