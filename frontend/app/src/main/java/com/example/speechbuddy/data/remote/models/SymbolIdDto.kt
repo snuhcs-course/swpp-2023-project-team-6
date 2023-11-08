@@ -6,4 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SymbolIdDto (
     @Json(name="id") val id: Int? = null
+//    @Json(name="image") val imageUrl : String? = null
 )

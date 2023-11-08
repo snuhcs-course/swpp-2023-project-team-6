@@ -56,7 +56,7 @@ class SymbolRepository @Inject constructor(
         symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
     }
 
-    private fun getAllCategories() = categoryDao.getCategories().map { categoryEntities ->
+    fun getAllCategories() = categoryDao.getCategories().map { categoryEntities ->
         categoryEntities.map { categoryEntity -> categoryMapper.mapToDomainModel(categoryEntity) }
     }
 

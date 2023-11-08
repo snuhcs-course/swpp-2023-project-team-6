@@ -41,12 +41,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
@@ -56,7 +54,6 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,7 +76,7 @@ fun SymbolCreationScreen(
         }
 
     val myItemsList = listOf(
-        "Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6",
+        "형용사", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6",
         "Option 7", "Option 8", "Option 9", "Option 10", "Option 11", "Option 12",
         "Option 13", "Option 14", "Option 15", "Option 16", "Option 17", "Option 18",
         "Option 19", "Option 20", "Option 21", "Option 22", "Option 23", "Option 24"
@@ -249,16 +246,5 @@ private fun AddPhotoButton(
                 contentDescription = stringResource(R.string.symbol_creation)
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun SymbolCreationScreenPreview() {
-    SpeechBuddyTheme {
-        SymbolCreationScreen(
-            modifier = Modifier,
-            bottomPaddingValues = PaddingValues(16.dp)
-        )
     }
 }

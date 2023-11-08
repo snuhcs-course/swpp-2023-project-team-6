@@ -13,10 +13,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
 import com.example.speechbuddy.repository.SymbolCreationRepository
+import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
-import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.isValidSymbolText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,11 +24,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 import javax.inject.Inject
 
 @HiltViewModel
 class SymbolCreationViewModel @Inject internal constructor(
-    private val repository: SymbolCreationRepository
+    private val repository: SymbolCreationRepository,
+    private val local_repository: SymbolRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SymbolCreationUiState())
@@ -47,7 +55,7 @@ class SymbolCreationViewModel @Inject internal constructor(
     @JvmName("callFromUri")
     fun setPhotoInputUri(input: Uri?, context: Context){
         photoInputUri = input
-        if(photoInputUri!=null) photoInputBitmap = convertUriToBitmap(photoInputUri, context)
+        if(photoInputUri!=null) photoInputBitmap = uriToBitmap(photoInputUri, context)
     }
 
     fun setSymbolText(input: String){
@@ -71,8 +79,8 @@ class SymbolCreationViewModel @Inject internal constructor(
     }
 
     @Suppress("DEPRECATION", "NewApi")
-    private fun convertUriToBitmap(uri: Uri?, context: Context): Bitmap {
-        return when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // 28
+    private fun uriToBitmap(uri: Uri?, context: Context): Bitmap {
+        return when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // version 28
             true -> {
                 val source = ImageDecoder.createSource(context.contentResolver, uri!!)
                 ImageDecoder.decodeBitmap(source)
@@ -83,7 +91,35 @@ class SymbolCreationViewModel @Inject internal constructor(
         }
     }
 
-    fun createSymbol(){
+    fun bitmapToFile(context: Context, bitmap: Bitmap, fileName: String): File {
+        // Get the app's internal storage directory
+        val internalDir = context.filesDir
+        val imageFile = File(internalDir, "$fileName.png")
+
+        var out: OutputStream? = null
+        try{
+            if (imageFile.createNewFile()){
+                out = FileOutputStream(imageFile)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+            }
+        } catch(e: Exception){
+            e.printStackTrace()
+        } finally {
+            try {
+                out?.close()
+            } catch(e: IOException){
+                e.printStackTrace()
+            }
+        }
+        return imageFile
+    }
+
+    private fun fileToMultipartBodyPart(file: File, paramName: String): MultipartBody.Part {
+        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(paramName, file.name, requestFile)
+    }
+
+    fun createSymbol(context:Context){
         if (!isValidSymbolText(symbolTextInput)){
             _uiState.update { currentState ->
                 currentState.copy(
@@ -115,11 +151,27 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else {
+            var categoryId = 1
+            // category processing
+//            viewModelScope.launch {
+//                local_repository.getCategories(categoryInput).collect { categories ->
+//                    Log.d("asdfasdf", "$categories")
+//                    if (categories.isNotEmpty()) {
+//                        val category = categories.first()
+//                        categoryId = category.id
+//                    }
+//                }
+//            }
+            // file processing
+            val uniqueFileName = "symbol_${System.currentTimeMillis()}"
+            val imageFile = bitmapToFile(context, photoInputBitmap!!, uniqueFileName)
+            val imagePart = fileToMultipartBodyPart(imageFile, "image")
+
             viewModelScope.launch {
                 repository.createSymbolBackup(
                     symbolText = symbolTextInput,
-                    categoryId = 1 /*To be changed*/,
-                    image = , /*To be changed*/
+                    categoryId = categoryId,
+                    image = imagePart
                 ).collect{
 
                 }
