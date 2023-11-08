@@ -21,10 +21,12 @@ class WeightTableImpl(private val context: Context) : WeigthTableOperations {
         val lines = file.readLines().toMutableList()
 
         // Step 2: Process the content while not interacting with the file
-        for ((cnt, i) in (0 until lines.size).withIndex()){
+        var cnt = 0
+        for (i in (0 until lines.size)){
             if(lineNo == cnt){
                 lines[i] = newString
             }
+            cnt++
         }
 
         // Step 3: Write the new content back to the file

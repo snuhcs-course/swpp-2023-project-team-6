@@ -190,7 +190,7 @@ class SymbolRepository @Inject constructor(
         }.toTypedArray())
 
         for (i in 0 until symbolList.size - 1) {
-            val preSymbol = mk.ndarray(matrix[symbolList[i].id].toIntArray())
+            val preSymbol = mk.ndarray(matrix[symbolList[i].symbol.id-1].toIntArray())
             val aftSymbolId = symbolList[i + 1].symbol.id - 1
             // purposely slpitted into two line
             // preSymbol[aftSymbolId] + 1 result in int
@@ -200,13 +200,13 @@ class SymbolRepository @Inject constructor(
 
             weigthTableOperations.replaceFileContent(
                 "weight_table.txt",
-                symbolList[i].id,
+                symbolList[i].symbol.id-1, // the matrix index starts from 0 so it should -1
                 newString
             )
 
-            Log.d("test", "preSymbol: " + preSymbol.toString())
-            Log.d("test", "aftSymbolId: " + aftSymbolId.toString())
-            Log.d("test", "preSymbol after add: " + preSymbol.toString())
+//            Log.d("test", "preSymbol: " + preSymbol.toString())
+//            Log.d("test", "aftSymbolId: " + aftSymbolId.toString())
+//            Log.d("test", "preSymbol after add: " + preSymbol.toString())
         }
     }
 
