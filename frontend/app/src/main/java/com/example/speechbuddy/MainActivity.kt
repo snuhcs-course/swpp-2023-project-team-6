@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
     // has probability to halt the process if file too large
     private fun copyFileFromAssetsToInternalStorage(filename: String) {
         val file = File(filesDir, filename)
-        Log.d("test", "installed weight_table")
+//        Log.d("test", "installed weight_table")
         if (!file.exists()) {
             try {
                 assets.open(filename).use { inputStream ->
