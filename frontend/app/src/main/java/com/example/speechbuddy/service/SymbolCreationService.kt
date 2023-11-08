@@ -1,6 +1,6 @@
 package com.example.speechbuddy.service
 
-import com.example.speechbuddy.data.remote.models.SymbolIdDto
+import com.example.speechbuddy.data.remote.models.MySymbolDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -15,5 +15,5 @@ interface SymbolCreationService {
         @Part("text") symbolText: RequestBody,
         @Part("category") categoryId: RequestBody,
         @Part image: MultipartBody.Part
-    ): Response<SymbolIdDto>
+    ): Response<MySymbolDto>
 }

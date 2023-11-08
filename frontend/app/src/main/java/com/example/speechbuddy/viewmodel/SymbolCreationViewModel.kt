@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
+import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolCreationRepository
 import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.ui.models.SymbolCreationError
@@ -24,13 +25,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,6 +54,7 @@ class SymbolCreationViewModel @Inject internal constructor(
     @JvmName("callFromUri")
     fun setPhotoInputUri(input: Uri?, context: Context){
         photoInputUri = input
+        if (_uiState.value.error?.type==SymbolCreationErrorType.PHOTO_INPUT) validatePhotoInput()
         if(photoInputUri!=null) photoInputBitmap = uriToBitmap(photoInputUri, context)
     }
 
@@ -65,6 +65,29 @@ class SymbolCreationViewModel @Inject internal constructor(
 
     fun setCategory(input: String){
         categoryInput = input
+        if (_uiState.value.error?.type==SymbolCreationErrorType.CATEGORY) validateCategory()
+    }
+
+    private fun validatePhotoInput(){
+        if(photoInputUri!=null){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPhotoInput = true,
+                    error = null
+                )
+            }
+        }
+    }
+
+    private fun validateCategory(){
+        if (categoryInput.isNotBlank()){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidCategory = true,
+                    error = null
+                )
+            }
+        }
     }
 
     private fun validateSymbolText() {
@@ -96,30 +119,30 @@ class SymbolCreationViewModel @Inject internal constructor(
         val internalDir = context.filesDir
         val imageFile = File(internalDir, "$fileName.png")
 
-        var out: OutputStream? = null
-        try{
-            if (imageFile.createNewFile()){
-                out = FileOutputStream(imageFile)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-            }
-        } catch(e: Exception){
-            e.printStackTrace()
-        } finally {
-            try {
-                out?.close()
-            } catch(e: IOException){
-                e.printStackTrace()
-            }
+        // Compress the bitmap as PNG and write it to the file
+        FileOutputStream(imageFile).use { outputStream ->
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
         }
+
         return imageFile
     }
 
     private fun fileToMultipartBodyPart(file: File, paramName: String): MultipartBody.Part {
-        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+        val requestFile = file.asRequestBody("image/*".toMediaType())
         return MultipartBody.Part.createFormData(paramName, file.name, requestFile)
     }
 
     fun createSymbol(context:Context){
+//        var categoryId = 0
+//         category Id processing
+//        viewModelScope.launch {
+//            local_repository.getCategories(categoryInput).collect { categories ->
+//                if (categories.isNotEmpty()) {
+//                    val category = categories.first()
+//                    categoryId = category.id
+//                }
+//            }
+//        }
         if (!isValidSymbolText(symbolTextInput)){
             _uiState.update { currentState ->
                 currentState.copy(
@@ -140,7 +163,18 @@ class SymbolCreationViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else if(photoInputUri==null || photoInputBitmap==null){
+//        } else if(categoryId<1 || categoryId >24){
+//            _uiState.update { currentState ->
+//                currentState.copy(
+//                    isValidCategory = false,
+//                    error = SymbolCreationError(
+//                        type = SymbolCreationErrorType.CATEGORY,
+//                        messageId = R.string.wrong_category
+//                    )
+//                )
+//            }
+        }
+        else if(photoInputUri==null || photoInputBitmap==null){
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = false,
@@ -151,31 +185,54 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else {
-            var categoryId = 1
-            // category processing
-//            viewModelScope.launch {
-//                local_repository.getCategories(categoryInput).collect { categories ->
-//                    Log.d("asdfasdf", "$categories")
-//                    if (categories.isNotEmpty()) {
-//                        val category = categories.first()
-//                        categoryId = category.id
+            val symbol = Symbol(
+                id = 503,
+                text = "test",
+                imageUrl = "https://speechbuddy-bucket.s3.ap-northeast-2.amazonaws.com/media/symbol/user_25/202311081c9b0f83b83b4868912f11a4c4f81c85.jpeg",
+                categoryId = 1,
+                isFavorite = false,
+                isMine = true
+            )
+            viewModelScope.launch { local_repository.insertSymbol(symbol) }
+
+
+            // file processing
+//            val uniqueFileName = "symbol_${System.currentTimeMillis()}"
+//            val imageFile = bitmapToFile(context, photoInputBitmap!!, uniqueFileName)
+//            val imagePart = fileToMultipartBodyPart(imageFile, "image")
+
+//            viewModelScope.launch(Dispatchers.IO) {
+//                repository.createSymbolBackup(
+//                    symbolText = symbolTextInput,
+//                    categoryId = categoryId,
+//                    image = imagePart
+//                ).collect{
+//                    if(it.status == Resource(Status.SUCCESS, "", "").status){
+//                        // Store new symbol in local db
+//                        val symbolId = it.data!!.id
+//                        val imageUrl = it.data!!.imageUrl
+//                        val symbol = Symbol(
+//                            id = 503,
+//                            text = "test",
+//                            imageUrl = "https://speechbuddy-bucket.s3.ap-northeast-2.amazonaws.com/media/symbol/user_25/202311081c9b0f83b83b4868912f11a4c4f81c85.jpeg",
+//                            categoryId = 1,
+//                            isFavorite = false,
+//                            isMine = true
+//                        )
+//                        local_repository.insertSymbol(symbol)
+//                    } else if (it.message?.contains("Unknown")==true){
+//                        _uiState.update { currentState ->
+//                            currentState.copy(
+//                                isValidSymbolText = false,
+//                                error = SymbolCreationError(
+//                                    type = SymbolCreationErrorType.SYMBOL_TEXT,
+//                                    messageId = R.string.internet_error
+//                                )
+//                            )
+//                        }
 //                    }
 //                }
 //            }
-            // file processing
-            val uniqueFileName = "symbol_${System.currentTimeMillis()}"
-            val imageFile = bitmapToFile(context, photoInputBitmap!!, uniqueFileName)
-            val imagePart = fileToMultipartBodyPart(imageFile, "image")
-
-            viewModelScope.launch {
-                repository.createSymbolBackup(
-                    symbolText = symbolTextInput,
-                    categoryId = categoryId,
-                    image = imagePart
-                ).collect{
-
-                }
-            }
         }
     }
 }

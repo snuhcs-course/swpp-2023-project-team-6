@@ -80,4 +80,9 @@ class SymbolRepository @Inject constructor(
         )
         symbolDao.updateSymbol(symbolEntity)
     }
+
+    suspend fun insertSymbol(symbol: Symbol) {
+        val symbolEntity = symbolMapper.mapFromDomainModel(symbol)
+        symbolDao.insertSymbol(symbolEntity)
+    }
 }

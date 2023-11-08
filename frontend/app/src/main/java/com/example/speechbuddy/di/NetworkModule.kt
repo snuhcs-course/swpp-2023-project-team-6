@@ -4,11 +4,10 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.util.Log
 import com.example.speechbuddy.MainApplication
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
-import com.example.speechbuddy.data.remote.models.SymbolIdDtoMapper
+import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.service.SymbolCreationService
 import com.example.speechbuddy.utils.Constants
@@ -68,8 +67,8 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideSymbolIdDtoMapper(): SymbolIdDtoMapper {
-        return SymbolIdDtoMapper()
+    fun provideMySymbolDtoMapper(): MySymbolDtoMapper {
+        return MySymbolDtoMapper()
     }
 
     @Singleton

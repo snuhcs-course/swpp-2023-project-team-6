@@ -110,6 +110,7 @@ fun SymbolCreationScreen(
 
                 AddPhotoButton(
                     onClick = { galleryLauncher.launch("image/*") },
+                    isError = isPhotoInputError,
                     viewModel = viewModel
                 )
 
@@ -120,18 +121,24 @@ fun SymbolCreationScreen(
                     value = viewModel.symbolTextInput,
                     onValueChange = { viewModel.setSymbolText(it) },
                     label = { Text(stringResource(R.string.new_symbol_name)) },
+                    supportingText = {
+                        if (isSymbolTextError) {
+                            Text(stringResource(id = uiState.error!!.messageId))
+                        }
+                    },
                     isError = isSymbolTextError,
                     isValid = uiState.isValidSymbolText
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
                 DropdownUi(
                     selectedValue = viewModel.categoryInput,
                     onValueChange = { viewModel.setCategory(it) },
                     items = myItemsList,
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(R.string.category)) }
+                    label = { Text(stringResource(R.string.category)) },
+                    isError = isCategoryError
                 )
 
                 ButtonUi(
@@ -221,15 +228,18 @@ private fun DropdownUi(
 @Composable
 private fun AddPhotoButton(
     onClick: () -> Unit,
+    isError: Boolean = false,
     viewModel: SymbolCreationViewModel
 ) {
+    val color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(120.dp)
             .clickable { onClick() }
             .border(
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimaryContainer),
+                border = BorderStroke(1.dp, color),
                 shape = RoundedCornerShape(10.dp)
             )
     ) {
