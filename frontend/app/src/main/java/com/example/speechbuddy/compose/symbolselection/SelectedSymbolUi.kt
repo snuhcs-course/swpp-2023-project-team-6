@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,12 @@ fun SelectedSymbolUi(
     modifier: Modifier = Modifier,
     onClear: () -> Unit
 ) {
+    val filepath = if(symbol.id>500){
+        LocalContext.current.filesDir.toString()  // needs to be modified
+    } else{
+        Constants.DEFAULT_SYMBOL_IMAGE_PATH
+    }
+
     Card(
         modifier = modifier.size(100.dp),
         shape = RoundedCornerShape(10.dp),
@@ -68,7 +75,7 @@ fun SelectedSymbolUi(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 GlideImage(
-                    model = symbol.imageUrl ?: Constants.SYMBOL_IMAGE_PATH.plus("symbol_${symbol.id}.png"),
+                    model = filepath.plus("symbol_${symbol.id}.png"),
                     contentDescription = symbol.text,
                     modifier = Modifier.height(65.dp),
                     contentScale = ContentScale.FillHeight
