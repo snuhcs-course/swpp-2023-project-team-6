@@ -1,7 +1,9 @@
 package com.example.speechbuddy.service
 
+import com.example.speechbuddy.data.remote.models.AccessTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
@@ -47,5 +49,10 @@ interface AuthService {
     suspend fun resetPassword(
         @Body resetPasswordRequest: AuthResetPasswordRequest
     ): Response<Void>
+
+    @POST("/user/refresh/")
+    suspend fun refresh(
+        @Body refreshRequest: AuthRefreshRequest
+    ): Response<AccessTokenDto>
 
 }

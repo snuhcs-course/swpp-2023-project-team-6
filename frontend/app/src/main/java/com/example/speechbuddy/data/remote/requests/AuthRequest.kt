@@ -26,3 +26,8 @@ data class AuthVerifyEmailRequest(
 data class AuthResetPasswordRequest(
     val password: String
 )
+
+@JsonClass(generateAdapter = true)
+data class AuthRefreshRequest(
+    val refreshToken: String
+)
