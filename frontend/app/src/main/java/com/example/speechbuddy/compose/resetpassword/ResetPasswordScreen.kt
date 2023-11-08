@@ -41,7 +41,8 @@ fun ResetPasswordScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isPasswordError = uiState.error?.type == ResetPasswordErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == ResetPasswordErrorType.PASSWORD_CHECK
-    val isError = isPasswordError || isPasswordCheckError
+    val isError = (isPasswordError || isPasswordCheckError) &&
+            (uiState.error?.messageId != R.string.internet_error)
 
     Surface(
         modifier = modifier.fillMaxSize()

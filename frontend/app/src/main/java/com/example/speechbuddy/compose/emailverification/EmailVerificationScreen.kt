@@ -42,7 +42,8 @@ fun EmailVerificationScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isEmailError = uiState.error?.type == EmailVerificationErrorType.EMAIL
     val isVerifyCodeError = uiState.error?.type == EmailVerificationErrorType.VERIFY_CODE
-    val isError = isEmailError || isVerifyCodeError
+    val isError = (isEmailError || isVerifyCodeError) &&
+            (uiState.error?.messageId != R.string.internet_error)
 
     Surface(
         modifier = modifier.fillMaxSize()

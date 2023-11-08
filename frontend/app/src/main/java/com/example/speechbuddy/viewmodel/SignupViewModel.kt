@@ -140,7 +140,19 @@ class SignupViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect {
-                    _signupResult.postValue(it)
+                    if (it.code()==600) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidEmail = false,
+                                error = SignupError(
+                                    type = SignupErrorType.PASSWORD_CHECK,
+                                    messageId = R.string.internet_error
+                                )
+                            )
+                        }
+                    } else {
+                        _signupResult.postValue(it)
+                    }
                 }
             }
             //clearInputs()
