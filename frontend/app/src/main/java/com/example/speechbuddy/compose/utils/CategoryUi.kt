@@ -42,7 +42,7 @@ fun CategoryUi(
 ) {
     Card(
         onClick = onSelect,
-        modifier = modifier.size(140.dp),
+        modifier = modifier.fillMaxSize(),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
