@@ -15,7 +15,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
-import com.example.speechbuddy.repository.SymbolCreationRepository
 import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
@@ -36,14 +35,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SymbolCreationViewModel @Inject internal constructor(
-    private val repository: SymbolCreationRepository,
-    private val local_repository: SymbolRepository
+    private val repository: SymbolRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SymbolCreationUiState())
     val uiState: StateFlow<SymbolCreationUiState> = _uiState.asStateFlow()
 
-    val categories = local_repository.getAllCategories().asLiveData()
+    val categories = repository.getAllCategories().asLiveData()
 
     var photoInputUri by mutableStateOf<Uri?>(null)
 
@@ -104,6 +102,12 @@ class SymbolCreationViewModel @Inject internal constructor(
             }
         }
     }
+    private fun clearInput() {
+        symbolTextInput = ""
+        categoryInput = null
+        photoInputUri = null
+        photoInputBitmap = null
+    }
 
     @Suppress("DEPRECATION", "NewApi")
     private fun uriToBitmap(uri: Uri?, context: Context): Bitmap {
@@ -138,16 +142,6 @@ class SymbolCreationViewModel @Inject internal constructor(
     }
 
     fun createSymbol(context: Context) {
-//        var categoryId = 0
-//         category Id processing
-//        viewModelScope.launch {
-//            local_repository.getCategories(categoryInput).collect { categories ->
-//                if (categories.isNotEmpty()) {
-//                    val category = categories.first()
-//                    categoryId = category.id
-//
-//            }
-//        }
         if (!isValidSymbolText(symbolTextInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -168,16 +162,6 @@ class SymbolCreationViewModel @Inject internal constructor(
                     )
                 )
             }
-//        } else if(categoryId<1 || categoryId >24){
-//            _uiState.update { currentState ->
-//                currentState.copy(
-//                    isValidCategory = false,
-//                    error = SymbolCreationError(
-//                        type = SymbolCreationErrorType.CATEGORY,
-//                        messageId = R.string.wrong_category
-//                    )
-//                )
-//            }
         } else if (photoInputUri == null || photoInputBitmap == null) {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -189,22 +173,27 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else {
+            val id = (System.currentTimeMillis() % 10000 + 500).toInt()
+            val uniqueFileName = "symbol_${id}"
+            bitmapToFile(context, photoInputBitmap!!, uniqueFileName)
             val symbol = Symbol(
-                id = 503,
-                text = "test",
-                imageUrl = "https://speechbuddy-bucket.s3.ap-northeast-2.amazonaws.com/media/symbol/user_25/202311081c9b0f83b83b4868912f11a4c4f81c85.jpeg",
-                categoryId = 1,
+                id = id,
+                text = symbolTextInput,
+                imageUrl = null,
+                categoryId = categoryInput!!.id,
                 isFavorite = false,
                 isMine = true
             )
-            viewModelScope.launch { local_repository.insertSymbol(symbol) }
+            viewModelScope.launch { repository.insertSymbol(symbol) }
+
+            clearInput()
 
 
             // file processing
 //            val uniqueFileName = "symbol_${System.currentTimeMillis()}"
 //            val imageFile = bitmapToFile(context, photoInputBitmap!!, uniqueFileName)
 //            val imagePart = fileToMultipartBodyPart(imageFile, "image")
-
+//
 //            viewModelScope.launch(Dispatchers.IO) {
 //                repository.createSymbolBackup(
 //                    symbolText = symbolTextInput,
@@ -223,7 +212,7 @@ class SymbolCreationViewModel @Inject internal constructor(
 //                            isFavorite = false,
 //                            isMine = true
 //                        )
-//                        local_repository.insertSymbol(symbol)
+//                        repository.insertSymbol(symbol)
 //                    } else if (it.message?.contains("Unknown")==true){
 //                        _uiState.update { currentState ->
 //                            currentState.copy(

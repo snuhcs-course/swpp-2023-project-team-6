@@ -43,7 +43,7 @@ fun SelectedSymbolUi(
     onClear: () -> Unit
 ) {
     val filepath = if(symbol.id>500){
-        LocalContext.current.filesDir.toString()  // needs to be modified
+        LocalContext.current.filesDir.toString().plus("/")  // needs to be modified
     } else{
         Constants.DEFAULT_SYMBOL_IMAGE_PATH
     }

@@ -37,4 +37,5 @@ interface SymbolDao {
 
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)
+
 }
