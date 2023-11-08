@@ -10,6 +10,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationError
@@ -29,7 +30,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EmailVerificationViewModel @Inject internal constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EmailVerificationUiState())
@@ -219,8 +221,8 @@ class EmailVerificationViewModel @Inject internal constructor(
                     )
                 ).collect {
                     if (it.status == Resource(Status.SUCCESS, "", "").status) {
-                        val authToken = it as AuthToken /* TODO: 나중에 고쳐야 함 */
-                        // token_prefs.setAccessToken(authToken.accessToken!!)
+                        val authToken = it.data
+                        sessionManager.setTemporaryToken(authToken)
                         navController.navigate("reset_password")
                     } else if (it.message?.contains("Unknown") == true) {
                         _uiState.update { currentState ->

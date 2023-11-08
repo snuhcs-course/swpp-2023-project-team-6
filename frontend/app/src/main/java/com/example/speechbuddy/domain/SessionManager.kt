@@ -16,9 +16,13 @@ class SessionManager @Inject constructor(
 ) {
 
     private val _cachedToken = MutableLiveData<AuthToken?>()
+    private val _temporaryToken = MutableLiveData<AuthToken?>()
 
     val cachedToken: LiveData<AuthToken?>
         get() = _cachedToken
+
+    val temporaryToken: LiveData<AuthToken?>
+        get() = _temporaryToken
 
     fun login(authToken: AuthToken) {
         setValue(authToken)
@@ -38,6 +42,10 @@ class SessionManager @Inject constructor(
                 _cachedToken.value = value
             }
         }
+    }
+
+    fun setTemporaryToken(authToken: AuthToken?) {
+        _temporaryToken.value = authToken
     }
 
 }

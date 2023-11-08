@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.repository.AuthRepository
@@ -100,7 +101,7 @@ class SignupViewModel @Inject internal constructor(
         passwordCheckInput = ""
     }
 
-    fun signup(emailInput: String) {
+    fun signup(emailInput: String, navController: NavHostController) {
         if (nicknameInput.isBlank() || nicknameInput.length > Constants.MAXIMUM_NICKNAME_LENGTH) { // Check nickname
             _uiState.update { currentState ->
                 currentState.copy(
@@ -152,6 +153,7 @@ class SignupViewModel @Inject internal constructor(
                         }
                     } else {
                         _signupResult.postValue(it)
+                        navController.navigate("login")
                     }
                 }
             }

@@ -63,7 +63,8 @@ fun SpeechBuddyAuthNavHost(
                 onBackClick = {
                     navController.navigateUp()
                 },
-                email = emailInput ?: ""
+                email = emailInput ?: "",
+                navController = navController
             )
         }
         composable("reset_password") {

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonUi
@@ -35,6 +36,7 @@ fun SignupScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     email: String,
+    navController: NavHostController,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -119,7 +121,7 @@ fun SignupScreen(
                     text = stringResource(id = R.string.signup),
                     isError = isError,
                     onClick = {
-                        viewModel.signup(email)
+                        viewModel.signup(email, navController)
                     },
                 )
             }

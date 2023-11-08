@@ -4,15 +4,22 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.example.speechbuddy.AuthActivity
+import com.example.speechbuddy.BaseActivity
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -68,7 +75,14 @@ class AuthInterceptor(private val context: Context) : Interceptor {
         }
 
         val builder = chain.request().newBuilder()
+
         // val accessToken = BaseApplication.token_prefs.getAccessToken()
+        /*
+        var accessToken = authActivity.sessionManager.cachedToken.value?.accessToken
+        if (accessToken == null) {
+            accessToken = authActivity.sessionManager.temporaryToken.value?.accessToken
+        }
+         */
         val accessToken = null
         if (accessToken != null && requiresAuth(chain.request())) {
             builder.addHeader("Authorization", "Bearer $accessToken")
