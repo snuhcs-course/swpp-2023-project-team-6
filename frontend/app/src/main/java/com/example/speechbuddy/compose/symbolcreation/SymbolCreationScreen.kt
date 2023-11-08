@@ -1,6 +1,10 @@
 package com.example.speechbuddy.compose.symbolcreation
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,21 +42,40 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.ui.models.SymbolCreationErrorType
+import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SymbolCreationScreen(
     modifier: Modifier = Modifier,
-    bottomPaddingValues: PaddingValues
+    bottomPaddingValues: PaddingValues,
+    viewModel: SymbolCreationViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
+    val isSymbolTextError = uiState.error?.type == SymbolCreationErrorType.SYMBOL_TEXT
+    val isCategoryError = uiState.error?.type == SymbolCreationErrorType.CATEGORY
+    val isPhotoInputError = uiState.error?.type == SymbolCreationErrorType.PHOTO_INPUT
+    val isError = isSymbolTextError || isCategoryError || isPhotoInputError
+
+    // Get photo from gallery
+    val galleryLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri : Uri? ->
+            viewModel.setPhotoInputUri(uri, context)
+        }
+
     val myItemsList = listOf(
         "Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6",
         "Option 7", "Option 8", "Option 9", "Option 10", "Option 11", "Option 12",
@@ -59,8 +83,6 @@ fun SymbolCreationScreen(
         "Option 19", "Option 20", "Option 21", "Option 22", "Option 23", "Option 24"
     )
 
-    // State to hold the currently selected value
-    var selectedValue by remember { mutableStateOf("") }
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
@@ -87,34 +109,37 @@ fun SymbolCreationScreen(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                AddPhotoButton(onClick = {})
+                AddPhotoButton(
+                    onClick = { galleryLauncher.launch("image/*") },
+                    viewModel = viewModel
+                )
 
                 Spacer(modifier = Modifier.height(40.dp))
 
+                // Symbol Text Field
                 TextFieldUi(
-                    value = "blablabla",
-                    onValueChange = {},
+                    value = viewModel.symbolTextInput,
+                    onValueChange = { viewModel.setSymbolText(it) },
                     label = { Text(stringResource(R.string.new_symbol_name)) },
-                    isError = false,
-                    isValid = true
+                    isError = isSymbolTextError,
+                    isValid = uiState.isValidSymbolText
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 DropdownUi(
-                    selectedValue = selectedValue,
-                    onValueChange = { newValue -> selectedValue = newValue },
+                    selectedValue = viewModel.categoryInput,
+                    onValueChange = { viewModel.setCategory(it) },
                     items = myItemsList,
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(R.string.category)) },
-                    isError = false
+                    label = { Text(stringResource(R.string.category)) }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 ButtonUi(
                     text = stringResource(id = R.string.register),
-                    onClick = {},
+                    onClick = { viewModel.createSymbol() },
                     isEnabled = true,
                     isError = false
                 )
@@ -199,7 +224,8 @@ private fun DropdownUi(
 
 @Composable
 private fun AddPhotoButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    viewModel: SymbolCreationViewModel
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -211,9 +237,18 @@ private fun AddPhotoButton(
                 shape = RoundedCornerShape(10.dp)
             )
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.outline_add_a_photo_24),
-            contentDescription = stringResource(R.string.symbol_creation)
-        )
+        if (viewModel.photoInputBitmap != null) {
+            // Display the loaded image if the photo input bitmap is not null
+            Image(
+                bitmap = viewModel.photoInputBitmap!!.asImageBitmap(),
+                contentDescription = stringResource(R.string.new_symbol_photo),
+                modifier = Modifier.fillMaxSize()
+            )
+        } else {
+            Icon(
+                painter = painterResource(id = R.drawable.outline_add_a_photo_24),
+                contentDescription = stringResource(R.string.symbol_creation)
+            )
+        }
     }
 }

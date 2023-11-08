@@ -15,5 +15,6 @@ class Constants {
         const val MAXIMUM_NICKNAME_LENGTH = 15
         const val CODE_LENGTH = 6
         const val MAXIMUM_LINES_FOR_SYMBOL_TEXT = 2
+        const val MAXIMUM_SYMBOL_TEXT_LENGTH = 20
     }
 }
