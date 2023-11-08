@@ -31,3 +31,8 @@ data class AuthResetPasswordRequest(
 data class AuthRefreshRequest(
     val refreshToken: String
 )
+
+@JsonClass(generateAdapter = true)
+data class AuthLogoutRequest(
+    val refresh: String
+)

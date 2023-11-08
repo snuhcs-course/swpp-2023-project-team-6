@@ -3,6 +3,7 @@ package com.example.speechbuddy.service
 import com.example.speechbuddy.data.remote.models.AccessTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthLogoutRequest
 import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
@@ -10,6 +11,7 @@ import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 
@@ -54,5 +56,11 @@ interface AuthService {
     suspend fun refresh(
         @Body refreshRequest: AuthRefreshRequest
     ): Response<AccessTokenDto>
+
+    @POST("/user/logout/")
+    suspend fun logout(
+        @Header("Authorization") header: String,
+        @Body logoutRequest: AuthLogoutRequest
+    ): Response<Void>
 
 }
