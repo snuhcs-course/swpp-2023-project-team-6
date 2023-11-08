@@ -1,7 +1,6 @@
 package com.example.speechbuddy.compose.symbolselection
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,12 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,14 +58,8 @@ fun SymbolSelectionScreen(
     val coroutineScope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
 
-    // Used for focus
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-
     Surface(
-        modifier = modifier
-            .fillMaxSize()
-            .clickable { focusManager.clearFocus() }
+        modifier = modifier.fillMaxSize()
     ) {
         Scaffold(
             topBar = {
@@ -106,8 +95,7 @@ fun SymbolSelectionScreen(
             ) {
                 SymbolSearchTextField(
                     value = viewModel.queryInput,
-                    onValueChange = { viewModel.setQuery(it) },
-                    modifier = Modifier.focusRequester(focusRequester)
+                    onValueChange = { viewModel.setQuery(it) }
                 )
 
                 SelectedSymbolsBox(
