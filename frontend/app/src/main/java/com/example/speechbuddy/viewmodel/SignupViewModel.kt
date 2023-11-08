@@ -139,7 +139,7 @@ class SignupViewModel @Inject internal constructor(
                     )
                 ).collect { result ->
                     when (result.code()) {
-                        ResponseCode.SUCCESS.value -> {
+                        ResponseCode.CREATED.value -> {
                             navController.navigate("login")
                         }
 

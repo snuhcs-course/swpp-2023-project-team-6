@@ -49,6 +49,7 @@ interface AuthService {
 
     @PATCH("/user/profile/password/")
     suspend fun resetPassword(
+        @Header("Authorization") header: String,
         @Body resetPasswordRequest: AuthResetPasswordRequest
     ): Response<Void>
 

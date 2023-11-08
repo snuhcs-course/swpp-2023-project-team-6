@@ -18,9 +18,12 @@ import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -126,19 +129,23 @@ class AuthRepository @Inject constructor(
     suspend fun resetPassword(authResetPasswordRequest: AuthResetPasswordRequest): Flow<Response<Void>> =
         flow {
             try {
-                val result = authService.resetPassword(authResetPasswordRequest)
+                val result = authService.resetPassword(getTemporaryAuthHeader(), authResetPasswordRequest)
                 emit(result)
             } catch (e: Exception) {
                 emit(noInternetResponse())
             }
         }
 
-    suspend fun logout(header: String, authLogoutRequest: AuthLogoutRequest): Flow<Response<Void>> =
+    suspend fun logout(): Flow<Response<Void>> =
         flow {
             try {
-                val result = authService.logout(header, authLogoutRequest)
-                authTokenPrefsManager.clearAuthToken()
+                val refreshToken = sessionManager.cachedToken.value?.refreshToken!!
+                val authLogoutRequest = AuthLogoutRequest(refreshToken)
+                val result = authService.logout(getAuthHeader(), authLogoutRequest)
                 emit(result)
+                CoroutineScope(Dispatchers.IO).launch {
+                    authTokenPrefsManager.clearAuthToken()
+                }
             } catch (e: Exception) {
                 emit(noInternetResponse())
             }
@@ -150,6 +157,16 @@ class AuthRepository @Inject constructor(
                 Resource.success(authToken)
             } else Resource.error("Couldn't find previous user", null)
         }
+    }
+
+    private fun getTemporaryAuthHeader(): String {
+        val temporaryToken = sessionManager.temporaryToken.value
+        return "Bearer $temporaryToken"
+    }
+
+    private fun getAuthHeader(): String {
+        val accessToken = sessionManager.cachedToken.value?.accessToken
+        return "Bearer $accessToken"
     }
 
     private fun <T> returnUnknownError(): Resource<T> {

@@ -1,13 +1,12 @@
 package com.example.speechbuddy.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.speechbuddy.data.remote.requests.AuthLogoutRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.ui.models.AccountSettingsUiState
+import com.example.speechbuddy.utils.ResponseCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,16 +43,14 @@ class AccountSettingsViewModel @Inject internal constructor(
 
     fun logout() {
         viewModelScope.launch {
-            repository.logout(
-                "Bearer " + sessionManager.cachedToken.value?.accessToken,
-                AuthLogoutRequest(sessionManager.cachedToken.value?.refreshToken!!)
-            ).collect { result ->
-                when (result.code()){
-                    200 -> {
+            repository.logout().collect { result ->
+                when (result.code()) {
+                    ResponseCode.SUCCESS.value -> {
                         /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
                         sessionManager.logout()
                     }
-                    600 ->{
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         showAlert(AccountSettingsAlert.INTERNET_ERROR)
                     }
                 }

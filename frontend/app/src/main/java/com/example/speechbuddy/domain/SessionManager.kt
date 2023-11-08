@@ -31,9 +31,7 @@ class SessionManager @Inject constructor(
 
     // TODO: 나중에 SettingsScreen에서 이 logout() 호출
     fun logout() {
-        CoroutineScope(Dispatchers.IO).launch {
-            setValue(null)
-        }
+        setValue(null)
     }
 
     private fun setValue(value: AuthToken?) {
