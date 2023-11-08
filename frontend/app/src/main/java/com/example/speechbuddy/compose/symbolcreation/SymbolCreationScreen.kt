@@ -139,7 +139,7 @@ fun SymbolCreationScreen(
 
                 ButtonUi(
                     text = stringResource(id = R.string.register),
-                    onClick = { viewModel.createSymbol() },
+                    onClick = { viewModel.createSymbol(context) },
                     modifier = Modifier.offset(y = 50.dp),
                     isEnabled = true,
                     isError = false
