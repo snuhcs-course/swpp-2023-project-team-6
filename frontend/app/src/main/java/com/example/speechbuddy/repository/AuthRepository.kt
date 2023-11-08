@@ -2,6 +2,7 @@ package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
+import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
@@ -9,6 +10,8 @@ import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
+import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.domain.models.AccessToken
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Resource
@@ -27,6 +30,8 @@ class AuthRepository @Inject constructor(
     private val authTokenPrefsManager: AuthTokenPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
+    private val accessTokenDtoMapper: AccessTokenDtoMapper,
+    private val sessionManager: SessionManager
 ) {
     private val errorResponseMapper = ErrorResponseMapper()
     private val responseHandler = ResponseHandler()
@@ -43,7 +48,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun login(authLoginRequest: AuthLoginRequest): Flow<Resource<AuthToken>> {
         return authTokenRemoteSource.loginAuthToken(authLoginRequest).map { response ->
-            if (response.isSuccessful && response.code() == 200) {
+            if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                 response.body()?.let { authTokenDto ->
                     authTokenDto.let {
                         val authToken = authTokenDtoMapper.mapToDomainModel(authTokenDto)
@@ -92,16 +97,16 @@ class AuthRepository @Inject constructor(
             }
         }
 
-    suspend fun verifyEmailForResetPassword(authVerifyEmailRequest: AuthVerifyEmailRequest): Flow<Resource<AuthToken>> {
+    suspend fun verifyEmailForResetPassword(authVerifyEmailRequest: AuthVerifyEmailRequest): Flow<Resource<AccessToken>> {
         return authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(
             authVerifyEmailRequest
         ).map { response ->
-            if (response.isSuccessful && response.code() == 200) {
-                response.body()?.let { authTokenDto ->
-                    authTokenDto.let {
+            if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
+                response.body()?.let { accessTokenDto ->
+                    accessTokenDto.let {
                         Resource.success(
-                            authTokenDtoMapper.mapToDomainModel(
-                                authTokenDto
+                            accessTokenDtoMapper.mapToDomainModel(
+                                accessTokenDto
                             )
                         )
                     }
@@ -135,7 +140,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    private fun returnUnknownError(): Resource<AuthToken> {
+    private fun <T> returnUnknownError(): Resource<T> {
         return Resource.error(
             "Unknown error", null
         )

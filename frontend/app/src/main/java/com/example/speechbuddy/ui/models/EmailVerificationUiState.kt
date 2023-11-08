@@ -15,5 +15,6 @@ data class EmailVerificationError(
 
 enum class EmailVerificationErrorType {
     EMAIL,
-    VERIFY_CODE
+    VERIFY_CODE,
+    CONNECTION
 }

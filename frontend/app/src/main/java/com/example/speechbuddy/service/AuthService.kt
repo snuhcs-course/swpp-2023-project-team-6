@@ -43,7 +43,7 @@ interface AuthService {
     @POST("/user/validateemail/pw/accept/")
     suspend fun verifyEmailForResetPassword(
         @Body verifyEmailRequest: AuthVerifyEmailRequest
-    ): Response<AuthTokenDto>
+    ): Response<AccessTokenDto>
 
     @PATCH("/user/profile/password/")
     suspend fun resetPassword(

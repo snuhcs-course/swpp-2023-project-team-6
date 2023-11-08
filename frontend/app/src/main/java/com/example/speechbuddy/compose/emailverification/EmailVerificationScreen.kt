@@ -79,7 +79,7 @@ fun EmailVerificationScreen(
                     supportingButton = {
                         ButtonUi(
                             text = stringResource(id = R.string.send_validation_code),
-                            onClick = { viewModel.verifySend(source) },
+                            onClick = { viewModel.sendCode(source) },
                             level = ButtonLevel.TERTIARY
                         )
                     },
@@ -115,7 +115,7 @@ fun EmailVerificationScreen(
 
                 ButtonUi(
                     text = stringResource(id = R.string.next),
-                    onClick = { viewModel.verifyAccept(source, navController) },
+                    onClick = { viewModel.verifyEmail(source, navController) },
                     isEnabled = uiState.isSuccessfulSend
                 )
             }

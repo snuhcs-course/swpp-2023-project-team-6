@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.domain.models.AuthToken
-import com.example.speechbuddy.repository.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,12 +16,13 @@ class SessionManager @Inject constructor(
 ) {
 
     private val _cachedToken = MutableLiveData<AuthToken?>()
-    private val _temporaryToken = MutableLiveData<AuthToken?>()
+    private val _temporaryToken =
+        MutableLiveData<String?>() // Temporary access token used for reset password
 
     val cachedToken: LiveData<AuthToken?>
         get() = _cachedToken
 
-    val temporaryToken: LiveData<AuthToken?>
+    val temporaryToken: LiveData<String?>
         get() = _temporaryToken
 
     fun login(authToken: AuthToken) {
@@ -45,8 +45,12 @@ class SessionManager @Inject constructor(
         }
     }
 
-    fun setTemporaryToken(authToken: AuthToken?) {
-        _temporaryToken.value = authToken
+    fun setTemporaryToken(token: String?) {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (_temporaryToken.value != token) {
+                _temporaryToken.value = token
+            }
+        }
     }
 
 }

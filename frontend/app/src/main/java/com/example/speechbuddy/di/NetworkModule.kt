@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Constants
@@ -52,6 +53,12 @@ class NetworkModule {
     @Provides
     fun provideAuthTokenDtoMapper(): AuthTokenDtoMapper {
         return AuthTokenDtoMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAccessTokenDtoMapper(): AccessTokenDtoMapper {
+        return AccessTokenDtoMapper()
     }
 
 }

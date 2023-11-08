@@ -1,6 +1,5 @@
 package com.example.speechbuddy.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,6 +13,7 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.ResetPasswordError
 import com.example.speechbuddy.ui.models.ResetPasswordErrorType
 import com.example.speechbuddy.ui.models.ResetPasswordUiState
+import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -74,7 +74,7 @@ class ResetPasswordViewModel @Inject internal constructor(
     }
 
     fun resetPassword(navController: NavHostController) {
-        if (!isValidPassword(passwordInput)) { // Check password length
+        if (!isValidPassword(passwordInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPassword = false,
@@ -84,7 +84,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else if (passwordInput != passwordCheckInput) { // Check password equality
+        } else if (passwordInput != passwordCheckInput) {
             _uiState.update { currentState ->
                 currentState.copy(
                     error = ResetPasswordError(
@@ -100,15 +100,13 @@ class ResetPasswordViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect { result ->
-                    /* TODO: 나중에 고쳐야 함 */
                     when (result.code()) {
-                        200 -> {
-                            Log.d("resetpassword", result.code().toString())
+                        ResponseCode.SUCCESS.value -> {
                             sessionManager.setTemporaryToken(null)
                             navController.navigate("login")
                         }
 
-                        400 -> {
+                        ResponseCode.BAD_REQUEST.value -> {
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
@@ -120,12 +118,12 @@ class ResetPasswordViewModel @Inject internal constructor(
                             }
                         }
 
-                        600 -> {
+                        ResponseCode.NO_INTERNET_CONNECTION.value -> {
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
                                     error = ResetPasswordError(
-                                        type = ResetPasswordErrorType.PASSWORD_CHECK,
+                                        type = ResetPasswordErrorType.CONNECTION,
                                         messageId = R.string.internet_error
                                     )
                                 )

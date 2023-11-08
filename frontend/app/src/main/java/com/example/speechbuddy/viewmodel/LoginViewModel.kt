@@ -12,7 +12,6 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.LoginUiState
-import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
 import com.example.speechbuddy.utils.isValidPassword
@@ -104,13 +103,11 @@ class LoginViewModel @Inject internal constructor(
                         email = emailInput,
                         password = passwordInput
                     )
-                ).collect {
-                    /* TODO: 수정 필요 */
-                    if (it.status == Resource(Status.SUCCESS, "", "").status) { // 200
-                        sessionManager.login(it.data!!)
-                    } else { // status:error
-                        // when password is wrong
-                        if (it.message?.contains("password", ignoreCase = true) == true) {
+                ).collect { resource ->
+                    if (resource.status == Status.SUCCESS) {
+                        sessionManager.login(resource.data!!)
+                    } else {
+                        if (resource.message?.contains("password", ignoreCase = true) == true) {
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
@@ -120,8 +117,8 @@ class LoginViewModel @Inject internal constructor(
                                     )
                                 )
                             }
-                        } else if (it.message?.contains("email", ignoreCase = true) == true
-                        ) { // email is wrong
+                        } else if (resource.message?.contains("email", ignoreCase = true) == true
+                        ) {
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
@@ -131,28 +128,28 @@ class LoginViewModel @Inject internal constructor(
                                     )
                                 )
                             }
-                            //check status code
-                        } else if (it.message?.contains("Unknown", ignoreCase = true) == true) {
-                            _uiState.update{
-                                currentState ->
+                        } else if (resource.message?.contains(
+                                "Unknown",
+                                ignoreCase = true
+                            ) == true
+                        ) {
+                            _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
                                     error = LoginError(
-                                        type = LoginErrorType.EMAIL,
+                                        type = LoginErrorType.CONNECTION,
                                         messageId = R.string.internet_error
                                     )
                                 )
-
                             }
                         }
                     }
                 }
             }
         }
-        //clearInputs()
+        clearInputs()
     }
 
-    /* TODO: 자동 로그인 */
     fun checkPreviousUser() {
         viewModelScope.launch {
             repository.checkPreviousUser().collect { resource ->
