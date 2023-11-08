@@ -28,8 +28,12 @@ class AuthTokenRemoteSource @Inject constructor(private val authService: AuthSer
 
     suspend fun verifyEmailForResetPasswordAuthToken(authVerifyEmailRequest: AuthVerifyEmailRequest): Flow<Response<AuthTokenDto>> =
         flow {
-            val result = authService.verifyEmailForResetPassword(authVerifyEmailRequest)
-            emit(result)
+            try {
+                val result = authService.verifyEmailForResetPassword(authVerifyEmailRequest)
+                emit(result)
+            } catch (e: Exception) {
+                emit(noInternetResponse())
+            }
         }
 
     private fun noInternetResponse(): Response<AuthTokenDto> {
