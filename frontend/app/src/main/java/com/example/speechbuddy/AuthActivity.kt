@@ -9,6 +9,9 @@ import com.example.speechbuddy.compose.SpeechBuddyAuth
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 @AndroidEntryPoint
 class AuthActivity : BaseActivity() {
@@ -30,6 +33,9 @@ class AuthActivity : BaseActivity() {
             }
         }
 
+        // Call method to copy the file
+        copyFileFromAssetsToInternalStorage("weight_table.txt")
+
     }
 
     private fun subscribeObservers() {
@@ -46,6 +52,23 @@ class AuthActivity : BaseActivity() {
 
     private fun checkPreviousAuthUser() {
         loginViewModel.checkPreviousUser()
+    }
+
+    // need to move to sub thread later.
+    // has probability to halt the process if file too large
+    private fun copyFileFromAssetsToInternalStorage(filename: String) {
+        val file = File(filesDir, filename)
+        if (!file.exists()) {
+            try {
+                assets.open(filename).use { inputStream ->
+                    FileOutputStream(file).use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
     }
 
 }

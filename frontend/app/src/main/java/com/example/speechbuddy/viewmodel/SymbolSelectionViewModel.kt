@@ -83,12 +83,17 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun clearAll() {
+        repository.update(selectedSymbols)
         selectedSymbols = emptyList()
     }
 
     fun selectSymbol(symbol: Symbol) {
         selectedSymbols =
             selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
+        // provide next symbol suggestion
+        viewModelScope.launch {
+            getSuggestion(symbol)
+        }
     }
 
     fun updateFavorite(symbol: Symbol, value: Boolean) {
@@ -109,6 +114,12 @@ class SymbolSelectionViewModel @Inject internal constructor(
         } else {
             selectedCategory = null
             getEntries()
+        }
+    }
+
+    private suspend fun getSuggestion(symbol: Symbol) {
+        repository.provideSuggestion(symbol).collect { symbols ->
+            _entries.postValue(symbols)
         }
     }
 
