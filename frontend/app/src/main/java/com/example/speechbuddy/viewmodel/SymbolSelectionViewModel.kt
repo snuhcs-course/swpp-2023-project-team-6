@@ -22,6 +22,22 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
+import androidx.lifecycle.viewModelScope
+
+import kotlinx.coroutines.Job
+
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+
+
+
 @HiltViewModel
 class SymbolSelectionViewModel @Inject internal constructor(
     private val repository: SymbolRepository
@@ -40,6 +56,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     private val _entries = MutableLiveData<List<Entry>>()
     val entries: LiveData<List<Entry>> get() = _entries
+
+    private var getEntriesJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -86,12 +104,24 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun clearAll() {
+        repository.update(selectedSymbols)
         selectedSymbols = emptyList()
     }
 
     fun selectSymbol(symbol: Symbol) {
         selectedSymbols =
             selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
+
+        // TODO: 추후 수정 필요
+        if (uiState.value.displayMode == DisplayMode.SYMBOL) {
+            getEntriesJob?.cancel()
+            getEntriesJob = viewModelScope.launch {
+                repository.provideSuggestion(symbol).collect { symbols ->
+                    _entries.postValue(symbols)
+                }
+            }
+        }
+
     }
 
     fun updateFavorite(symbol: Symbol, value: Boolean) {
