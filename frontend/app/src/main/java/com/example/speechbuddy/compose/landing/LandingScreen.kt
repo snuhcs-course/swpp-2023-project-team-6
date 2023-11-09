@@ -40,7 +40,7 @@ fun LandingScreen(
             )
         }
         Box(
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 64.dp),
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 104.dp),
             contentAlignment = Alignment.BottomCenter
         ) {
             Column(

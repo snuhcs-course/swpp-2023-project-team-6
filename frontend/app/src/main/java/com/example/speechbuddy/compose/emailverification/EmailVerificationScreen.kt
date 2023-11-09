@@ -24,6 +24,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
@@ -42,7 +43,8 @@ fun EmailVerificationScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isEmailError = uiState.error?.type == EmailVerificationErrorType.EMAIL
     val isVerifyCodeError = uiState.error?.type == EmailVerificationErrorType.VERIFY_CODE
-    val isError = isEmailError || isVerifyCodeError
+    val isError = (isEmailError || isVerifyCodeError) &&
+            (uiState.error?.messageId != R.string.internet_error)
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -69,7 +71,7 @@ fun EmailVerificationScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Email Text Field
                 TextFieldUi(value = viewModel.emailInput,
@@ -78,7 +80,7 @@ fun EmailVerificationScreen(
                     supportingButton = {
                         ButtonUi(
                             text = stringResource(id = R.string.send_validation_code),
-                            onClick = { viewModel.verifySend(source) },
+                            onClick = { viewModel.sendCode(source) },
                             level = ButtonLevel.TERTIARY
                         )
                     },
@@ -110,14 +112,20 @@ fun EmailVerificationScreen(
                     isEnabled = uiState.isSuccessfulSend
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 ButtonUi(
                     text = stringResource(id = R.string.next),
-                    onClick = { viewModel.verifyAccept(source, navController) },
+                    onClick = { viewModel.verifyEmail(source, navController) },
                     isEnabled = uiState.isSuccessfulSend
                 )
             }
+        }
+    }
+
+    uiState.loading.let{
+        if (it) {
+            ProgressIndicatorUi()
         }
     }
 }

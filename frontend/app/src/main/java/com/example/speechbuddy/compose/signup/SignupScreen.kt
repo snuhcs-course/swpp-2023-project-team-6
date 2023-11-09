@@ -19,9 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.SignupErrorType
@@ -35,12 +37,15 @@ fun SignupScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     email: String,
+    navController: NavHostController,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isNicknameError = uiState.error?.type == SignupErrorType.NICKNAME
     val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORD_CHECK
+    val isError = (isNicknameError || isPasswordError || isPasswordCheckError) &&
+            (uiState.error?.messageId != R.string.internet_error)
 
     Surface(modifier = modifier.fillMaxSize()) {
         Scaffold(topBar = { AuthTopAppBarUi(onBackClick = onBackClick) }) {
@@ -56,7 +61,7 @@ fun SignupScreen(
                     description = stringResource(id = R.string.signup_explain)
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Email Text Field
                 TextFieldUi(
@@ -106,20 +111,27 @@ fun SignupScreen(
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = isPasswordCheckError,
+                    isError = isPasswordError || isPasswordCheckError,
                     isValid = uiState.isValidPassword,
                     isHidden = true
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
+                    isError = isError,
                     onClick = {
-                        viewModel.signup(email)
+                        viewModel.signup(email, navController)
                     },
                 )
             }
+        }
+    }
+
+    uiState.loading.let{
+        if (it) {
+            ProgressIndicatorUi()
         }
     }
 }

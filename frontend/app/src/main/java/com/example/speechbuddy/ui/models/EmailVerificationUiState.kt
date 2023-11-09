@@ -5,7 +5,8 @@ data class EmailVerificationUiState(
     val isValidVerifyCode: Boolean = false,
     // whether verification email send API was successful
     val isSuccessfulSend: Boolean = false,
-    val error: EmailVerificationError? = null
+    val error: EmailVerificationError? = null,
+    val loading: Boolean = false
 )
 
 data class EmailVerificationError(
@@ -15,5 +16,6 @@ data class EmailVerificationError(
 
 enum class EmailVerificationErrorType {
     EMAIL,
-    VERIFY_CODE
+    VERIFY_CODE,
+    CONNECTION
 }

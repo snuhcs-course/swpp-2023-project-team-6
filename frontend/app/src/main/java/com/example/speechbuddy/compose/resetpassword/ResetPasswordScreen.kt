@@ -26,6 +26,7 @@ import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.ui.models.ResetPasswordErrorType
 import com.example.speechbuddy.viewmodel.ResetPasswordViewModel
 
@@ -41,7 +42,8 @@ fun ResetPasswordScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isPasswordError = uiState.error?.type == ResetPasswordErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == ResetPasswordErrorType.PASSWORD_CHECK
-    val isError = isPasswordError || isPasswordCheckError
+    val isError = (isPasswordError || isPasswordCheckError) &&
+            (uiState.error?.messageId != R.string.internet_error)
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -65,7 +67,7 @@ fun ResetPasswordScreen(
                     description = stringResource(id = R.string.reset_password_subtitle2)
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Password Text Field
                 TextFieldUi(
@@ -107,6 +109,12 @@ fun ResetPasswordScreen(
                     level = ButtonLevel.PRIMARY
                 )
             }
+        }
+    }
+
+    uiState.loading.let{
+        if (it) {
+            ProgressIndicatorUi()
         }
     }
 }

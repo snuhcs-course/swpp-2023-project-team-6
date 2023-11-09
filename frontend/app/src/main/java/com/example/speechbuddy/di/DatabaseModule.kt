@@ -2,6 +2,7 @@ package com.example.speechbuddy.di
 
 import android.content.Context
 import com.example.speechbuddy.data.local.AppDatabase
+import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import dagger.Module
@@ -29,6 +30,12 @@ class DatabaseModule {
     @Provides
     fun provideCategoryDao(appDatabase: AppDatabase): CategoryDao {
         return appDatabase.categoryDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthTokenPrefsManager(@ApplicationContext context: Context): AuthTokenPrefsManager {
+        return AuthTokenPrefsManager(context)
     }
 
 }
