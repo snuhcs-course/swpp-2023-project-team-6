@@ -96,4 +96,5 @@
     <string name="empty_category">대분류를 선택해주세요</string>
     <string name="wrong_category">대분류를 확인해주세요</string>
     <string name="empty_photo">사진을 선택해주세요</string>
-</resources>
+    <string name="internet_error_title">인터넷 연결 없음</string>
+    <string name="confirm">확인</string>
