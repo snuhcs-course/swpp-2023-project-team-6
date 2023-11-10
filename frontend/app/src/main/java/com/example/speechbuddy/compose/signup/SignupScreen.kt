@@ -74,6 +74,8 @@ fun SignupScreen(
                     supportingText = {
                         if (isNicknameError) {
                             Text(stringResource(id = uiState.error!!.messageId))
+                        } else {
+                            Text(stringResource(id = R.string.nickname_qualification))
                         }
                     },
                     isError = isNicknameError,
@@ -85,15 +87,10 @@ fun SignupScreen(
                     value = viewModel.passwordInput,
                     onValueChange = { viewModel.setPassword(it) },
                     label = { Text(text = stringResource(id = R.string.password_field)) },
-                    supportingText = {
-                        if (isPasswordError) {
-                            Text(stringResource(id = uiState.error!!.messageId))
-                        }
-                    },
+                    supportingText = { Text(stringResource(id = R.string.false_new_password)) },
                     isError = isPasswordError,
                     isValid = uiState.isValidPassword,
                     isHidden = true
-
                 )
 
                 // Password Check Text Field
