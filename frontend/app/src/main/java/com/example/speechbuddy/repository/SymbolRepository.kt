@@ -2,13 +2,17 @@ package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
+import com.example.speechbuddy.data.local.WeightRowDao
 import com.example.speechbuddy.data.local.WeigthTableOperations
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
+import com.example.speechbuddy.data.local.models.WeightRowEntity
+import com.example.speechbuddy.data.local.models.WeightRowMapper
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.domain.models.WeightRow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,16 +31,19 @@ import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
 import org.jetbrains.kotlinx.multik.ndarray.operations.toIntArray
 import org.jetbrains.kotlinx.multik.ndarray.operations.toList
+import java.sql.RowId
 
 
 @Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
     private val categoryDao: CategoryDao,
-    private val weightTableOperations: WeigthTableOperations
+    private val weightTableOperations: WeigthTableOperations,
+    private val weightRowDao: WeightRowDao
 ) {
     private val symbolMapper = SymbolMapper()
     private val categoryMapper = CategoryMapper()
+    private val weightRowMapper = WeightRowMapper()
 
 
     fun getSymbols(query: String) =
@@ -96,6 +103,25 @@ class SymbolRepository @Inject constructor(
             isMine = symbol.isMine
         )
         symbolDao.updateSymbol(symbolEntity)
+    }
+
+    // Below for weight table logic
+    fun getAllWeightRows() =
+        weightRowDao.getAllWeightRows().map { weightRowEntities ->
+            weightRowEntities.map { weightRowEntity -> weightRowMapper.mapToDomainModel(weightRowEntity) }
+        }
+
+    fun getWeightRowById(rowId: Int) =
+        weightRowDao.getWeightRowById(rowId).map { weightRowEntities ->
+            weightRowEntities.map { weightRowEntity -> weightRowMapper.mapToDomainModel(weightRowEntity) }
+        }
+
+    suspend fun updateWeightRow(weightRow: WeightRow, value: List<Int>) {
+        val weightRowEntity = WeightRowEntity(
+            id = weightRow.id,
+            weights = value
+        )
+        weightRowDao.upsetWeightRow(weightRowEntity) // may change to updateWeightRow function
     }
 
     /**
