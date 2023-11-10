@@ -6,6 +6,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,6 +20,8 @@ import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
+import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidSymbolText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -141,6 +144,23 @@ class SymbolCreationViewModel @Inject internal constructor(
         return MultipartBody.Part.createFormData(paramName, file.name, requestFile)
     }
 
+    fun changeFileName(oldFileName: String, newFileName: String, context: Context) {
+        val internalStorageDir = context.filesDir
+        val oldFile = File(internalStorageDir, oldFileName)
+
+        if (oldFile.exists()) {
+            val newFile = File(internalStorageDir, newFileName)
+            val success = oldFile.renameTo(newFile)
+            if (success) {
+                Log.d("FileRename", "File name changed from $oldFileName to $newFileName")
+            } else {
+                Log.e("FileRename", "Failed to change file name")
+            }
+        } else {
+            Log.e("FileRename", "File with the name $oldFileName does not exist")
+        }
+    }
+
     fun createSymbol(context: Context) {
         if (!isValidSymbolText(symbolTextInput)) {
             _uiState.update { currentState ->
@@ -173,59 +193,49 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else {
-            val id = (System.currentTimeMillis() % 10000 + 500).toInt()
-            val uniqueFileName = "symbol_${id}"
-            bitmapToFile(context, photoInputBitmap!!, uniqueFileName)
-            val symbol = Symbol(
-                id = id,
-                text = symbolTextInput,
-                imageUrl = null,
-                categoryId = categoryInput!!.id,
-                isFavorite = false,
-                isMine = true
-            )
-            viewModelScope.launch { repository.insertSymbol(symbol) }
-
-            clearInput()
-
-
             // file processing
-//            val uniqueFileName = "symbol_${System.currentTimeMillis()}"
-//            val imageFile = bitmapToFile(context, photoInputBitmap!!, uniqueFileName)
-//            val imagePart = fileToMultipartBodyPart(imageFile, "image")
-//
-//            viewModelScope.launch(Dispatchers.IO) {
-//                repository.createSymbolBackup(
-//                    symbolText = symbolTextInput,
-//                    categoryId = categoryId,
-//                    image = imagePart
-//                ).collect{
-//                    if(it.status == Resource(Status.SUCCESS, "", "").status){
-//                        // Store new symbol in local db
-//                        val symbolId = it.data!!.id
-//                        val imageUrl = it.data!!.imageUrl
-//                        val symbol = Symbol(
-//                            id = 503,
-//                            text = "test",
-//                            imageUrl = "https://speechbuddy-bucket.s3.ap-northeast-2.amazonaws.com/media/symbol/user_25/202311081c9b0f83b83b4868912f11a4c4f81c85.jpeg",
-//                            categoryId = 1,
-//                            isFavorite = false,
-//                            isMine = true
-//                        )
-//                        repository.insertSymbol(symbol)
-//                    } else if (it.message?.contains("Unknown")==true){
-//                        _uiState.update { currentState ->
-//                            currentState.copy(
-//                                isValidSymbolText = false,
-//                                error = SymbolCreationError(
-//                                    type = SymbolCreationErrorType.SYMBOL_TEXT,
-//                                    messageId = R.string.internet_error
-//                                )
-//                            )
-//                        }
-//                    }
-//                }
-//            }
+            val tempFileName = "symbol_${System.currentTimeMillis()}"
+            val imageFile = bitmapToFile(context, photoInputBitmap!!, tempFileName)
+            val imagePart = fileToMultipartBodyPart(imageFile, "image")
+
+            viewModelScope.launch() {
+                repository.createSymbolBackup(
+                    symbolText = symbolTextInput,
+                    categoryId = categoryInput!!.id,
+                    image = imagePart
+                ).collect{
+                    if(it.status == Resource(Status.SUCCESS, "", "").status){
+                        // Store new symbol in local db
+                        val symbolId = it.data!!.id
+                        val imageUrl = it.data!!.imageUrl
+                        val symbol = Symbol(
+                            id = symbolId!!,
+                            text = symbolTextInput,
+                            imageUrl = imageUrl,
+                            categoryId = categoryInput!!.id,
+                            isFavorite = false,
+                            isMine = true
+                        )
+                        // change file name in internal storage
+                        changeFileName("$tempFileName.png", "symbol_$symbolId.png", context)
+                        // store symbol locally
+                        viewModelScope.launch { repository.insertSymbol(symbol) }
+                        clearInput()
+
+                        // TODO : Notify user that the creation was successful
+                    } else if (it.message?.contains("Unknown")==true){
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidSymbolText = false,
+                                error = SymbolCreationError(
+                                    type = SymbolCreationErrorType.SYMBOL_TEXT,
+                                    messageId = R.string.internet_error
+                                )
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
