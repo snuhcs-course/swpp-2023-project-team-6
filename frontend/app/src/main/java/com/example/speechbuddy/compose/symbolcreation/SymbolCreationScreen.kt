@@ -1,6 +1,7 @@
 package com.example.speechbuddy.compose.symbolcreation
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -80,6 +81,8 @@ fun SymbolCreationScreen(
     val isPhotoInputError = uiState.error?.type == SymbolCreationErrorType.PHOTO_INPUT
     val isError = isSymbolTextError || isCategoryError || isPhotoInputError
 
+    val creationResultMessage by viewModel.creationResultMessage.observeAsState()
+
     // Get photo from gallery
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -152,6 +155,10 @@ fun SymbolCreationScreen(
                 )
             }
         }
+    }
+    if (creationResultMessage != null) {
+        val toastMessage = stringResource(id = creationResultMessage!!)
+        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
     }
 }
 

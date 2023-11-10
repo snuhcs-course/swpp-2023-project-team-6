@@ -95,4 +95,7 @@
     <string name="empty_category">대분류를 선택해주세요</string>
     <string name="wrong_category">대분류를 확인해주세요</string>
     <string name="empty_photo">사진을 선택해주세요</string>
+    <string name="internet_error">인터넷 연결을 확인하세요</string>
+    <string name="create_symbol_success">상징이 성공적으로 추가되었습니다</string>
+    <string name="create_symbol_error">상징 생성에 실패하였습니다\n다시 시도해 주세요</string>
 </resources>
