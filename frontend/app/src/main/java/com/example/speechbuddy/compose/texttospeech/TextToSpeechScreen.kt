@@ -3,6 +3,7 @@ package com.example.speechbuddy.compose.texttospeech
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -83,7 +85,7 @@ fun TextToSpeechScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .verticalScroll(rememberScrollState())
-                        .height(300.dp),
+                        .height(200.dp),
                     textStyle = MaterialTheme.typography.bodyMedium,
                     shape = RoundedCornerShape(10.dp),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -94,9 +96,19 @@ fun TextToSpeechScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                TextToSpeechButton(buttonStatus = uiState.buttonStatus,
-                    onPlay = { viewModel.ttsStart(context) },
-                    onStop = { viewModel.ttsStop() })
+                Row {
+                    TextToSpeechButton(
+                        buttonStatus = uiState.buttonStatus,
+                        onPlay = { viewModel.ttsStart(context) },
+                        onStop = { viewModel.ttsStop() }
+                    )
+
+                    TextClearButton(
+                        buttonStatus = uiState.buttonStatus,
+                        onPlay = { viewModel.clearText() },
+                        onStop = {}
+                    )
+                }
             }
         }
     }
@@ -107,16 +119,22 @@ private fun TextToSpeechButton(
     buttonStatus: ButtonStatusType, onPlay: () -> Unit, onStop: () -> Unit
 ) {
     val textToSpeechButtonColors = ButtonDefaults.buttonColors(
-        containerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.onBackground
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground
     )
 
     when (buttonStatus) {
         ButtonStatusType.PLAY -> Button(
-            onClick = onPlay, colors = textToSpeechButtonColors
+            onClick = onPlay,
+            modifier = Modifier.size(
+                width = 200.dp,
+                height = 50.dp
+            ),
+            colors = textToSpeechButtonColors
         ) {
             Text(
-                style = MaterialTheme.typography.headlineMedium,
-                text = stringResource(id = R.string.play_text)
+                text = stringResource(id = R.string.play_text),
+                style = MaterialTheme.typography.headlineMedium
             )
             Icon(
                 Icons.Filled.PlayArrow,
@@ -126,15 +144,71 @@ private fun TextToSpeechButton(
         }
 
         ButtonStatusType.STOP -> Button(
-            onClick = onStop, colors = textToSpeechButtonColors
+            onClick = onStop,
+            modifier = Modifier.size(
+                width = 200.dp,
+                height = 50.dp
+            ),
+            colors = textToSpeechButtonColors
         ) {
             Text(
-                style = MaterialTheme.typography.headlineMedium,
-                text = stringResource(id = R.string.stop_text)
+                text = stringResource(id = R.string.stop_text),
+                style = MaterialTheme.typography.headlineMedium
             )
             Icon(
                 painterResource(R.drawable.stop_icon),
                 contentDescription = stringResource(id = R.string.stop_text),
+                modifier = Modifier.size(36.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun TextClearButton(
+    buttonStatus: ButtonStatusType, onPlay: () -> Unit, onStop: () -> Unit
+) {
+    when (buttonStatus) {
+        ButtonStatusType.PLAY -> Button(
+            onClick = onPlay,
+            modifier = Modifier.size(
+                width = 200.dp,
+                height = 50.dp
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = MaterialTheme.colorScheme.onBackground
+            )
+        ) {
+            Text(
+                text = stringResource(id = R.string.clear_text),
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Icon(
+                Icons.Filled.Delete,
+                contentDescription = stringResource(id = R.string.clear_text),
+                modifier = Modifier.size(36.dp)
+            )
+        }
+
+        ButtonStatusType.STOP -> Button(
+            onClick = onStop,
+            modifier = Modifier.size(
+                width = 200.dp,
+                height = 50.dp
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = MaterialTheme.colorScheme.outline
+            )
+        ) {
+            Text(
+                text = stringResource(id = R.string.clear_text),
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Icon(
+                Icons.Filled.Delete,
+                contentDescription = stringResource(id = R.string.clear_text),
                 modifier = Modifier.size(36.dp)
             )
         }
