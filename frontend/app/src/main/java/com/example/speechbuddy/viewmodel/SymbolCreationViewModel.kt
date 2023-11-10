@@ -7,9 +7,12 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -43,6 +46,9 @@ class SymbolCreationViewModel @Inject internal constructor(
 
     private val _uiState = MutableStateFlow(SymbolCreationUiState())
     val uiState: StateFlow<SymbolCreationUiState> = _uiState.asStateFlow()
+
+    private val _creationResultMessage = MutableLiveData<Int>()
+    val creationResultMessage: LiveData<Int> = _creationResultMessage
 
     val categories = repository.getAllCategories().asLiveData()
 
@@ -221,8 +227,8 @@ class SymbolCreationViewModel @Inject internal constructor(
                         // store symbol locally
                         viewModelScope.launch { repository.insertSymbol(symbol) }
                         clearInput()
-
-                        // TODO : Notify user that the creation was successful
+                        // Notify user that the creation was successful
+                        _creationResultMessage.postValue(R.string.create_symbol_success)
                     } else if (it.message?.contains("Unknown")==true){
                         _uiState.update { currentState ->
                             currentState.copy(
@@ -233,6 +239,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                                 )
                             )
                         }
+                        _creationResultMessage.postValue(R.string.create_symbol_error)
                     }
                 }
             }
