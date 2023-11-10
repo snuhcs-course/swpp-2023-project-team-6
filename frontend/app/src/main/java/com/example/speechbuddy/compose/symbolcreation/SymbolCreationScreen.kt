@@ -121,6 +121,17 @@ fun SymbolCreationScreen(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
+                DropdownUi(
+                    selectedValue = viewModel.categoryInput,
+                    onValueChange = { viewModel.setCategory(it) },
+                    items = categories,
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(stringResource(R.string.category)) },
+                    isError = isCategoryError
+                )
+
+                Spacer(modifier = Modifier.height(15.dp))
+
                 // Symbol Text Field
                 TextFieldUi(
                     value = viewModel.symbolTextInput,
@@ -133,17 +144,6 @@ fun SymbolCreationScreen(
                     },
                     isError = isSymbolTextError,
                     isValid = uiState.isValidSymbolText
-                )
-
-                Spacer(modifier = Modifier.height(15.dp))
-
-                DropdownUi(
-                    selectedValue = viewModel.categoryInput,
-                    onValueChange = { viewModel.setCategory(it) },
-                    items = categories,
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(R.string.category)) },
-                    isError = isCategoryError
                 )
 
                 ButtonUi(
@@ -210,7 +210,7 @@ private fun DropdownUi(
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .width(300.dp)
-                .heightIn(max = 150.dp)
+                .heightIn(max = 230.dp)
         ) {
             items.forEach { item ->
                 DropdownMenuItem(text = {
