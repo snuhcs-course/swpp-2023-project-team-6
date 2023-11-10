@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,10 +45,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
@@ -55,6 +60,7 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
+import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -168,7 +174,8 @@ private fun DropdownUi(
         )
         .clickable { expanded = true }
         .defaultMinSize(minHeight = 48.dp)
-        .padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
+        .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center) {
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -214,30 +221,73 @@ private fun DropdownUi(
 
 @Composable
 private fun AddPhotoButton(
-    onClick: () -> Unit, isError: Boolean = false, viewModel: SymbolCreationViewModel
+    onClick: () -> Unit,
+    isError: Boolean = false,
+    viewModel: SymbolCreationViewModel
 ) {
     val color =
         if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant
 
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(120.dp)
+            .size(140.dp)
             .clickable { onClick() }
             .border(
                 border = BorderStroke(1.dp, color), shape = RoundedCornerShape(10.dp)
             )) {
         if (viewModel.photoInputBitmap != null) {
             // Display the loaded image if the photo input bitmap is not null
-            Image(
+            SymbolPreview(
                 bitmap = viewModel.photoInputBitmap!!.asImageBitmap(),
-                contentDescription = stringResource(R.string.new_symbol_photo),
-                modifier = Modifier.fillMaxSize()
+                text = viewModel.symbolTextInput
             )
         } else {
             Icon(
                 painter = painterResource(id = R.drawable.outline_add_a_photo_24),
                 contentDescription = stringResource(R.string.symbol_creation)
             )
+        }
+    }
+}
+
+@Composable
+private fun SymbolPreview(
+    bitmap: ImageBitmap,
+    text: String
+) {
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background
+        )
+    ) {
+        Box(contentAlignment = Alignment.TopEnd) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    bitmap = bitmap,
+                    contentDescription = stringResource(R.string.new_symbol_photo),
+                    modifier = Modifier
+                        .height(95.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp)
+                        .background(color = MaterialTheme.colorScheme.secondaryContainer)
+                        .padding(horizontal = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = text,
+                        textAlign = TextAlign.Center,
+                        maxLines = Constants.MAXIMUM_LINES_FOR_SYMBOL_TEXT,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         }
     }
 }
