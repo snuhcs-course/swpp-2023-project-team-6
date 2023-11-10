@@ -165,56 +165,58 @@ private fun DropdownUi(
     isError: Boolean = false
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .border(
-            1.dp,
-            if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
-            RoundedCornerShape(10.dp)
-        )
-        .clickable { expanded = true }
-        .defaultMinSize(minHeight = 48.dp)
-        .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.Center) {
-        Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            if (selectedValue != null) {
-                Text(
-                    text = selectedValue.text,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            } else {
-                label?.invoke() ?: Text(
-                    "Select an option", color = MaterialTheme.colorScheme.onSurface
+    Column {
+        Box(modifier = modifier
+            .fillMaxWidth()
+            .border(
+                1.dp,
+                if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
+                RoundedCornerShape(10.dp)
+            )
+            .clickable { expanded = true }
+            .defaultMinSize(minHeight = 48.dp)
+            .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center) {
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if (selectedValue != null) {
+                    Text(
+                        text = selectedValue.text,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                } else {
+                    label?.invoke() ?: Text(
+                        "Select an option", color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = stringResource(R.string.dropdown_icon_description)
                 )
             }
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = stringResource(R.string.dropdown_icon_description)
-            )
         }
-    }
 
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false },
-        modifier = Modifier
-            .width(300.dp)
-            .heightIn(max = 200.dp),
-    ) {
-        items.forEach { item ->
-            DropdownMenuItem(text = {
-                Text(
-                    text = item.text,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }, onClick = {
-                onValueChange(item)
-                expanded = false
-            })
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(300.dp)
+                .heightIn(max = 150.dp)
+        ) {
+            items.forEach { item ->
+                DropdownMenuItem(text = {
+                    Text(
+                        text = item.text,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }, onClick = {
+                    onValueChange(item)
+                    expanded = false
+                })
+            }
         }
     }
 }

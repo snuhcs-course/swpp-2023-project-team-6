@@ -65,8 +65,8 @@ fun TextToSpeechScreen(
                         bottom = bottomPaddingValues.calculateBottomPadding()
                     )
                     .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleUi(
                     title = stringResource(id = R.string.tts_text),
