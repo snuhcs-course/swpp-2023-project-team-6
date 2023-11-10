@@ -1,6 +1,8 @@
 package com.example.speechbuddy.data.local
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
@@ -29,6 +31,9 @@ interface SymbolDao {
 
     @Update
     suspend fun updateSymbol(symbolEntity: SymbolEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertSymbol(symbolEntity: SymbolEntity)
 
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)
