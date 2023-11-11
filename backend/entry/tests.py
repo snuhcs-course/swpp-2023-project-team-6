@@ -1,3 +1,4 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from rest_framework import status
 
@@ -51,6 +52,53 @@ class SymbolTest(TestCase):
         response = self.client.post('/symbol/favorite/backup/?id=501', **headers)
 
         response = self.client.get('/symbol/favorite/backup/', **headers)
-        data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
         self.assertEqual(data.get('results')[0], expected_response)
+
+    def test_enable_my_symbols_success(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        # Enable user-created symbols
+        response = self.client.post('/symbol/enable/?id=501', **headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_enable_my_symbols_fail_no_such_symbol(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        # Enable user-created symbols
+        response = self.client.post('/symbol/enable/?id=505', **headers)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_my_symbols_success(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        # Get all of the user-created symbols
+        self.client.post('/symbol/enable/?id=501', **headers)  # since ONLY enabled symbols can be retrieved
+        response = self.client.get('/symbol/', **headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        self.assertEqual(len(data.get('my_symbols')), 1)  # since only one symbol is enabled
+
+    def test_get_my_specific_symbol_success(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        # Get all of the user-created symbols
+        self.client.post('/symbol/enable/?id=501', **headers)  # since ONLY enabled symbols can be retrieved
+        response = self.client.get('/symbol/501/', **headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        self.assertIsNotNone(data.get('my_symbol'))
+
+    def test_get_my_specific_symbol_fail_invalid_symbol(self):
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'
+        }
+        # Get all of the user-created symbols
+        response = self.client.get('/symbol/501/', **headers)
+        # Since symbol 501 is not valid yet
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
