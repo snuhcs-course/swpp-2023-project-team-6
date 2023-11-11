@@ -38,6 +38,10 @@ class TextToSpeechViewModel @Inject internal constructor(
         textInput = ""
     }
 
+    fun isEmptyText(): Boolean {
+        return textInput == ""
+    }
+
     fun ttsStop() {
         textToSpeech?.stop()
     }

@@ -35,11 +35,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.models.ButtonStatusType
 import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
 
@@ -100,13 +102,15 @@ fun TextToSpeechScreen(
                     TextToSpeechButton(
                         buttonStatus = uiState.buttonStatus,
                         onPlay = { viewModel.ttsStart(context) },
-                        onStop = { viewModel.ttsStop() }
+                        onStop = { viewModel.ttsStop() },
+                        viewModel = viewModel
                     )
 
                     TextClearButton(
                         buttonStatus = uiState.buttonStatus,
                         onPlay = { viewModel.clearText() },
-                        onStop = {}
+                        onStop = {},
+                        viewModel = viewModel
                     )
                 }
             }
@@ -116,15 +120,18 @@ fun TextToSpeechScreen(
 
 @Composable
 private fun TextToSpeechButton(
-    buttonStatus: ButtonStatusType, onPlay: () -> Unit, onStop: () -> Unit
+    buttonStatus: ButtonStatusType,
+    onPlay: () -> Unit,
+    onStop: () -> Unit,
+    viewModel: TextToSpeechViewModel
 ) {
     val textToSpeechButtonColors = ButtonDefaults.buttonColors(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground
     )
 
-    when (buttonStatus) {
-        ButtonStatusType.PLAY -> Button(
+    if (buttonStatus == ButtonStatusType.PLAY && !viewModel.isEmptyText()) {
+        Button(
             onClick = onPlay,
             modifier = Modifier.size(
                 width = 200.dp,
@@ -142,8 +149,30 @@ private fun TextToSpeechButton(
                 modifier = Modifier.size(36.dp)
             )
         }
-
-        ButtonStatusType.STOP -> Button(
+    } else if (buttonStatus == ButtonStatusType.PLAY && viewModel.isEmptyText()) {
+        Button(
+            onClick = {},
+            modifier = Modifier.size(
+                width = 200.dp,
+                height = 50.dp
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = MaterialTheme.colorScheme.outline
+            )
+        ) {
+            Text(
+                text = stringResource(id = R.string.play_text),
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Icon(
+                Icons.Filled.PlayArrow,
+                contentDescription = stringResource(id = R.string.play_text),
+                modifier = Modifier.size(36.dp)
+            )
+        }
+    } else {
+        Button(
             onClick = onStop,
             modifier = Modifier.size(
                 width = 200.dp,
@@ -166,10 +195,13 @@ private fun TextToSpeechButton(
 
 @Composable
 fun TextClearButton(
-    buttonStatus: ButtonStatusType, onPlay: () -> Unit, onStop: () -> Unit
+    buttonStatus: ButtonStatusType,
+    onPlay: () -> Unit,
+    onStop: () -> Unit,
+    viewModel: TextToSpeechViewModel
 ) {
-    when (buttonStatus) {
-        ButtonStatusType.PLAY -> Button(
+    if (buttonStatus == ButtonStatusType.PLAY && !viewModel.isEmptyText()) {
+        Button(
             onClick = onPlay,
             modifier = Modifier.size(
                 width = 200.dp,
@@ -190,8 +222,8 @@ fun TextClearButton(
                 modifier = Modifier.size(36.dp)
             )
         }
-
-        ButtonStatusType.STOP -> Button(
+    } else {
+        Button(
             onClick = onStop,
             modifier = Modifier.size(
                 width = 200.dp,
@@ -212,5 +244,15 @@ fun TextClearButton(
                 modifier = Modifier.size(36.dp)
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun TextToSpeechScreenPreview() {
+    SpeechBuddyTheme {
+        TextToSpeechScreen(
+            bottomPaddingValues = PaddingValues(16.dp)
+        )
     }
 }
