@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -54,6 +55,14 @@ fun TextToSpeechScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val activatedButtonColor: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground
+    )
+    val deactivatedButtonColor: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.outline
+    )
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -101,6 +110,8 @@ fun TextToSpeechScreen(
                 Row {
                     TextToSpeechButton(
                         buttonStatus = uiState.buttonStatus,
+                        activatedButtonColor = activatedButtonColor,
+                        deactivatedButtonColor = deactivatedButtonColor,
                         onPlay = { viewModel.ttsStart(context) },
                         onStop = { viewModel.ttsStop() },
                         viewModel = viewModel
@@ -108,6 +119,8 @@ fun TextToSpeechScreen(
 
                     TextClearButton(
                         buttonStatus = uiState.buttonStatus,
+                        activatedButtonColor = activatedButtonColor,
+                        deactivatedButtonColor = deactivatedButtonColor,
                         onPlay = { viewModel.clearText() },
                         onStop = {},
                         viewModel = viewModel
@@ -121,15 +134,12 @@ fun TextToSpeechScreen(
 @Composable
 private fun TextToSpeechButton(
     buttonStatus: ButtonStatusType,
+    activatedButtonColor: ButtonColors,
+    deactivatedButtonColor: ButtonColors,
     onPlay: () -> Unit,
     onStop: () -> Unit,
     viewModel: TextToSpeechViewModel
 ) {
-    val textToSpeechButtonColors = ButtonDefaults.buttonColors(
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onBackground
-    )
-
     if (buttonStatus == ButtonStatusType.PLAY && !viewModel.isEmptyText()) {
         Button(
             onClick = onPlay,
@@ -137,7 +147,7 @@ private fun TextToSpeechButton(
                 width = 200.dp,
                 height = 50.dp
             ),
-            colors = textToSpeechButtonColors
+            colors = activatedButtonColor
         ) {
             Text(
                 text = stringResource(id = R.string.play_text),
@@ -156,10 +166,7 @@ private fun TextToSpeechButton(
                 width = 200.dp,
                 height = 50.dp
             ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = MaterialTheme.colorScheme.outline
-            )
+            colors = deactivatedButtonColor
         ) {
             Text(
                 text = stringResource(id = R.string.play_text),
@@ -178,7 +185,7 @@ private fun TextToSpeechButton(
                 width = 200.dp,
                 height = 50.dp
             ),
-            colors = textToSpeechButtonColors
+            colors = activatedButtonColor
         ) {
             Text(
                 text = stringResource(id = R.string.stop_text),
@@ -196,6 +203,8 @@ private fun TextToSpeechButton(
 @Composable
 fun TextClearButton(
     buttonStatus: ButtonStatusType,
+    activatedButtonColor: ButtonColors,
+    deactivatedButtonColor: ButtonColors,
     onPlay: () -> Unit,
     onStop: () -> Unit,
     viewModel: TextToSpeechViewModel
@@ -207,10 +216,7 @@ fun TextClearButton(
                 width = 200.dp,
                 height = 50.dp
             ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = MaterialTheme.colorScheme.onBackground
-            )
+            colors = activatedButtonColor
         ) {
             Text(
                 text = stringResource(id = R.string.clear_text),
@@ -229,10 +235,7 @@ fun TextClearButton(
                 width = 200.dp,
                 height = 50.dp
             ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = MaterialTheme.colorScheme.outline
-            )
+            colors = deactivatedButtonColor
         ) {
             Text(
                 text = stringResource(id = R.string.clear_text),
