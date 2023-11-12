@@ -1,5 +1,6 @@
 package com.example.speechbuddy.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -104,7 +105,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun clearAll() {
-        repository.update(selectedSymbols)
+        repository.update2(selectedSymbols)
         selectedSymbols = emptyList()
     }
 
@@ -114,9 +115,10 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
         // TODO: 추후 수정 필요
         if (uiState.value.displayMode == DisplayMode.SYMBOL) {
+            Log.d("weight", "into_context")
             getEntriesJob?.cancel()
             getEntriesJob = viewModelScope.launch {
-                repository.provideSuggestion(symbol).collect { symbols ->
+                repository.provideSuggestion2(symbol).collect { symbols ->
                     _entries.postValue(symbols)
                 }
             }

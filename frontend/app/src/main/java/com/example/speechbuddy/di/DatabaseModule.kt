@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
+import com.example.speechbuddy.data.local.WeightRowDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +30,11 @@ class DatabaseModule {
     @Provides
     fun provideCategoryDao(appDatabase: AppDatabase): CategoryDao {
         return appDatabase.categoryDao()
+    }
+
+    @Provides
+    fun provideWeightRowDao(appDatabase: AppDatabase): WeightRowDao {
+        return appDatabase.weightRowDao()
     }
 
 }

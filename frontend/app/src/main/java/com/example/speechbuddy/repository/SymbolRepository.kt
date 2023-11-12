@@ -49,6 +49,7 @@ class SymbolRepository @Inject constructor(
     private val weightRowMapper = WeightRowMapper()
 
 
+
     fun getSymbols(query: String) =
         if (query.isBlank()) getAllSymbols()
         else symbolDao.getSymbolsByQuery(query).map { symbolEntities ->
@@ -109,17 +110,17 @@ class SymbolRepository @Inject constructor(
     }
 
     // Below for weight table logic
-    fun getAllWeightRows() =
+    private fun getAllWeightRows() =
         weightRowDao.getAllWeightRows().map { weightRowEntities ->
             weightRowEntities.map { weightRowEntity -> weightRowMapper.mapToDomainModel(weightRowEntity) }
         }
 
-    fun getWeightRowById(rowId: Int) =
+    private fun getWeightRowById(rowId: Int) =
         weightRowDao.getWeightRowById(rowId).map { weightRowEntities ->
             weightRowEntities.map { weightRowEntity -> weightRowMapper.mapToDomainModel(weightRowEntity) }
         }
 
-    suspend fun updateWeightRow(weightRow: WeightRow, value: List<Int>) {
+    private fun updateWeightRow(weightRow: WeightRow, value: List<Int>) {
         val weightRowEntity = WeightRowEntity(
             id = weightRow.id,
             weights = value
@@ -136,13 +137,13 @@ class SymbolRepository @Inject constructor(
             }
         }
 
-        val allWeightRowList = mutableListOf<WeightRow>()
-        CoroutineScope(Dispatchers.IO).launch {
-            getAllWeightRows().collect{ weightRowList ->
-                allWeightRowList.clear()
-                allWeightRowList.addAll(weightRowList)
-            }
-        }
+//        val allWeightRowList = mutableListOf<WeightRow>()
+//        CoroutineScope(Dispatchers.IO).launch {
+//            getAllWeightRows().collect{ weightRowList ->
+//                allWeightRowList.clear()
+//                allWeightRowList.addAll(weightRowList)
+//            }
+//        }
 
         val oneWeightRow = mutableListOf<Int>()
         CoroutineScope(Dispatchers.IO).launch {
@@ -172,7 +173,7 @@ class SymbolRepository @Inject constructor(
         }
     }
 
-    suspend fun update2(symbolList: List<SymbolItem>){
+    fun update2(symbolList: List<SymbolItem>){
 
         for(i in 0 until symbolList.size - 1){
             val symbol = symbolList[i]
@@ -200,64 +201,64 @@ class SymbolRepository @Inject constructor(
     /**
      * Symbol object에서 id는 1부터 시작하기 때문에 list manipulation시 주의
      */
-    fun provideSuggestion(symbol: Symbol): Flow<List<Symbol>> {
-        val file = weightTableOperations.readFromFile("weight_table.txt")
-        val allSymbolList = mutableListOf<Symbol>()
-        // Launch a coroutine to collect the flow
-        CoroutineScope(Dispatchers.IO).launch {
-            getAllSymbols().collect { symbolList ->
-                allSymbolList.clear()
-                allSymbolList.addAll(symbolList)
-            }
-        }
-        val newSymbolList = mutableListOf<Symbol>()
-        val listOfSymCntPairs = mutableListOf<Pair<Symbol, Int>>()
-
-        val lines = file.readLines()
-        val matrix = mk.ndarray(lines.map { line ->
-            line.trim().split(",").map { it.toInt() }.toIntArray()
-        }.toTypedArray())
-
-        for (i in 0 until allSymbolList.size) {
-            listOfSymCntPairs.add(Pair(allSymbolList[i], matrix[symbol.id - 1][i]))
-        }
-
-        val sortedByNumberDescending = listOfSymCntPairs.sortedByDescending { it.second }
-
-        for (i in sortedByNumberDescending) {
-            newSymbolList.add(i.first)
-        }
-
-        return flow {
-            val newSymbols = newSymbolList.toList()
-            emit(newSymbols)
-        }
-    }
-
-    /**
-     * Symbol object에서 id는 1부터 시작하기 때문에 list manipulation시 주의
-     */
-    fun update(symbolList: List<SymbolItem>) {
-        val file = weightTableOperations.readFromFile("weight_table.txt")
-        val lines = file.readLines()
-        val matrix = mk.ndarray(lines.map { line ->
-            line.trim().split(",").map { it.toInt() }.toIntArray()
-        }.toTypedArray())
-
-        for (i in 0 until symbolList.size - 1) {
-            val preSymbol = mk.ndarray(matrix[symbolList[i].symbol.id - 1].toIntArray())
-            val aftSymbolId = symbolList[i + 1].symbol.id - 1
-            // purposely slpitted into two line
-            // preSymbol[aftSymbolId] + 1 result in int
-            preSymbol[aftSymbolId] += 1
-            val aftSymbol = preSymbol
-            val newString = aftSymbol.toList().toString().drop(1).dropLast(1)
-
-            weightTableOperations.replaceFileContent(
-                "weight_table.txt",
-                symbolList[i].symbol.id - 1, // the matrix index starts from 0 so it should -1
-                newString
-            )
-        }
-    }
+//    fun provideSuggestion(symbol: Symbol): Flow<List<Symbol>> {
+//        val file = weightTableOperations.readFromFile("weight_table.txt")
+//        val allSymbolList = mutableListOf<Symbol>()
+//        // Launch a coroutine to collect the flow
+//        CoroutineScope(Dispatchers.IO).launch {
+//            getAllSymbols().collect { symbolList ->
+//                allSymbolList.clear()
+//                allSymbolList.addAll(symbolList)
+//            }
+//        }
+//        val newSymbolList = mutableListOf<Symbol>()
+//        val listOfSymCntPairs = mutableListOf<Pair<Symbol, Int>>()
+//
+//        val lines = file.readLines()
+//        val matrix = mk.ndarray(lines.map { line ->
+//            line.trim().split(",").map { it.toInt() }.toIntArray()
+//        }.toTypedArray())
+//
+//        for (i in 0 until allSymbolList.size) {
+//            listOfSymCntPairs.add(Pair(allSymbolList[i], matrix[symbol.id - 1][i]))
+//        }
+//
+//        val sortedByNumberDescending = listOfSymCntPairs.sortedByDescending { it.second }
+//
+//        for (i in sortedByNumberDescending) {
+//            newSymbolList.add(i.first)
+//        }
+//
+//        return flow {
+//            val newSymbols = newSymbolList.toList()
+//            emit(newSymbols)
+//        }
+//    }
+//
+//    /**
+//     * Symbol object에서 id는 1부터 시작하기 때문에 list manipulation시 주의
+//     */
+//    fun update(symbolList: List<SymbolItem>) {
+//        val file = weightTableOperations.readFromFile("weight_table.txt")
+//        val lines = file.readLines()
+//        val matrix = mk.ndarray(lines.map { line ->
+//            line.trim().split(",").map { it.toInt() }.toIntArray()
+//        }.toTypedArray())
+//
+//        for (i in 0 until symbolList.size - 1) {
+//            val preSymbol = mk.ndarray(matrix[symbolList[i].symbol.id - 1].toIntArray())
+//            val aftSymbolId = symbolList[i + 1].symbol.id - 1
+//            // purposely slpitted into two line
+//            // preSymbol[aftSymbolId] + 1 result in int
+//            preSymbol[aftSymbolId] += 1
+//            val aftSymbol = preSymbol
+//            val newString = aftSymbol.toList().toString().drop(1).dropLast(1)
+//
+//            weightTableOperations.replaceFileContent(
+//                "weight_table.txt",
+//                symbolList[i].symbol.id - 1, // the matrix index starts from 0 so it should -1
+//                newString
+//            )
+//        }
+//    }
 }
