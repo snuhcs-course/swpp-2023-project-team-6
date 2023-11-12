@@ -36,7 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.ButtonStatusType
 import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
@@ -55,7 +55,7 @@ fun TextToSpeechScreen(
         modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
-            HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_speech))
+            TopAppBarUi(title = stringResource(id = R.string.talk_with_speech))
         }) { topPaddingValues ->
             Column(
                 modifier = Modifier

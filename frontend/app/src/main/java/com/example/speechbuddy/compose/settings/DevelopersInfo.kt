@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +27,7 @@ fun DevelopersInfo(
         modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
-            HomeTopAppBarUi(
+            TopAppBarUi(
                 title = stringResource(id = R.string.settings),
                 onBackClick = onBackClick,
                 isBackClickEnabled = true

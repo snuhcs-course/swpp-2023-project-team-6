@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +33,7 @@ fun MainSettings(
         modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
-            HomeTopAppBarUi(title = stringResource(id = R.string.settings))
+            TopAppBarUi(title = stringResource(id = R.string.settings))
         }) { topPaddingValues ->
             Column(
                 modifier = Modifier

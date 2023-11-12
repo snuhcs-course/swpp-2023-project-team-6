@@ -27,7 +27,7 @@ fun SpeechBuddyAuthNavHost(
         composable("landing") {
             LandingScreen(
                 onGuestClick = {
-                    navController.navigate("home")
+                    /* TODO: Implement guest mode */
                 },
                 onLoginClick = {
                     navController.navigate("login")
@@ -36,9 +36,6 @@ fun SpeechBuddyAuthNavHost(
         }
         composable("login") {
             LoginScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
                 onResetPasswordClick = {
                     navController.navigate("email_verification/reset_password")
                 },
@@ -51,27 +48,18 @@ fun SpeechBuddyAuthNavHost(
             val source = backStackEntry.arguments?.getString("source")
             EmailVerificationScreen(
                 source = source,
-                onBackClick = {
-                    navController.navigateUp()
-                },
-                navController = navController,
+                navController = navController
             )
         }
         composable("signup/{emailInput}") { backStackEntry ->
             val emailInput = backStackEntry.arguments?.getString("emailInput")
             SignupScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
                 email = emailInput ?: "",
                 navController = navController
             )
         }
         composable("reset_password") {
             ResetPasswordScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
                 navController = navController
             )
         }
