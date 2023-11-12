@@ -101,13 +101,23 @@ class SignupViewModel @Inject internal constructor(
     }
 
     fun signup(emailInput: String) {
-        if (nicknameInput.isBlank() || nicknameInput.length > Constants.MAXIMUM_NICKNAME_LENGTH) { // Check nickname
+        if (nicknameInput.isBlank()) { // Check nickname
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidNickname = false,
                     error = SignupError(
                         type = SignupErrorType.NICKNAME,
                         messageId = R.string.nickname_length_error
+                    )
+                )
+            }
+        } else if (nicknameInput.length > Constants.MAXIMUM_NICKNAME_LENGTH) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidNickname = false,
+                    error = SignupError(
+                        type = SignupErrorType.NICKNAME,
+                        messageId = R.string.nickname_qualification
                     )
                 )
             }
