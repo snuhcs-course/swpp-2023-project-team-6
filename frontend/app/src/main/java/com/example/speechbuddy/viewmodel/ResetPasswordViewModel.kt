@@ -86,7 +86,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                     isValidPassword = false,
                     error = ResetPasswordError(
                         type = ResetPasswordErrorType.PASSWORD,
-                        messageId = R.string.false_new_password
+                        messageId = R.string.password_qualification
                     )
                 )
             }
