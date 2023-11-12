@@ -1,6 +1,6 @@
 package com.example.speechbuddy.di
 
-import com.example.speechbuddy.MainApplication
+import com.example.speechbuddy.BaseApplication
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.service.AuthService
@@ -64,7 +64,7 @@ class AuthInterceptor: Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request().newBuilder()
-        val accessToken = MainApplication.token_prefs.getAccessToken()
+        val accessToken = BaseApplication.token_prefs.getAccessToken()
         if (accessToken != null && requiresAuth(chain.request())) {
             builder.addHeader("Authorization", "Bearer $accessToken")
         }
