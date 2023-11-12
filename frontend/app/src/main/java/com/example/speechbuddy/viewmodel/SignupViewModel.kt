@@ -127,7 +127,7 @@ class SignupViewModel @Inject internal constructor(
                     isValidPassword = false,
                     error = SignupError(
                         type = SignupErrorType.PASSWORD,
-                        messageId = R.string.false_new_password
+                        messageId = R.string.password_qualification
                     )
                 )
             }
