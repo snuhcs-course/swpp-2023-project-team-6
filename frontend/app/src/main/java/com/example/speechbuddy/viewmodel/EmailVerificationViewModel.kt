@@ -10,11 +10,12 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
-import com.example.speechbuddy.domain.models.AuthToken
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationError
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.ui.models.EmailVerificationUiState
+import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
 import com.example.speechbuddy.utils.isValidVerifyCode
@@ -28,11 +29,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EmailVerificationViewModel @Inject internal constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EmailVerificationUiState())
     val uiState: StateFlow<EmailVerificationUiState> = _uiState.asStateFlow()
+
     private val errorResponseMapper = ErrorResponseMapper()
 
     var emailInput by mutableStateOf("")
@@ -53,6 +56,12 @@ class EmailVerificationViewModel @Inject internal constructor(
 
     private fun clearVerifyCodeInput() {
         verifyCodeInput = ""
+    }
+
+    private fun changeLoading() {
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
     }
 
     private fun validateEmail() {
@@ -77,15 +86,13 @@ class EmailVerificationViewModel @Inject internal constructor(
         }
     }
 
-    fun verifySend(source: String?) {
-        // What function(ultimately, API call) to use
-        val sendCode = if (source == "signup") {
-            repository::sendCodeForSignup
-        } else { // source == "reset_password"
-            repository::sendCodeForResetPassword
-        }
+    fun sendCode(source: String?) {
+        val sendCode =
+            if (source == "signup")
+                repository::sendCodeForSignup
+            else
+                repository::sendCodeForResetPassword
 
-        // Prior validation of email input
         if (!isValidEmail(emailInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -96,56 +103,66 @@ class EmailVerificationViewModel @Inject internal constructor(
                     )
                 )
             }
-        }
-
-        viewModelScope.launch {
-            sendCode(
-                AuthSendCodeRequest(
-                    email = emailInput
-                )
-            ).collect { result ->
-                when (result.code()) {
-                    200 -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isSuccessfulSend = true,
-                                error = null
-                            )
-                        }
-                    }
-
-                    400 -> {
-                        val errorKey = errorResponseMapper.mapToDomainModel(result.errorBody()!!).key
-                        val messageId = when (errorKey) {
-                            "email" -> R.string.false_email
-                            "already_taken" -> R.string.email_already_taken
-                            "no_user" -> R.string.no_such_user
-                            else -> R.string.false_email
-                        }
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidEmail = false,
-                                error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.EMAIL,
-                                    messageId = messageId
+        } else {
+            changeLoading()
+            viewModelScope.launch {
+                sendCode(
+                    AuthSendCodeRequest(
+                        email = emailInput
+                    )
+                ).collect { result ->
+                    when (result.code()) {
+                        ResponseCode.SUCCESS.value -> {
+                            changeLoading()
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isSuccessfulSend = true,
+                                    error = null
                                 )
-                            )
+                            }
+                        }
+
+
+                        ResponseCode.BAD_REQUEST.value -> {
+                            changeLoading()
+                            val messageId =
+                                when (errorResponseMapper.mapToDomainModel(result.errorBody()!!).key) {
+                                    "email" -> R.string.false_email
+                                    "already_taken" -> R.string.email_already_taken
+                                    "no_user" -> R.string.no_such_user
+                                    else -> R.string.false_email
+                                }
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidEmail = false,
+                                    error = EmailVerificationError(
+                                        type = EmailVerificationErrorType.EMAIL,
+                                        messageId = messageId
+                                    )
+                                )
+                            }
+                        }
+
+                        ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                            changeLoading()
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    isValidEmail = false,
+                                    error = EmailVerificationError(
+                                        type = EmailVerificationErrorType.CONNECTION,
+                                        messageId = R.string.internet_error
+                                    )
+                                )
+                            }
                         }
                     }
                 }
+
             }
         }
     }
 
-    fun verifyAccept(source: String?, navController: NavHostController) {
-        /* TODO: 나중에 고쳐야 함 */
-
-        val verifyEmail = if (source == "signup") {
-            repository::verifyEmailForSignup
-        } else { // source == "reset_password"
-            repository::verifyEmailForResetPassword
-        }
-
+    fun verifyEmail(source: String?, navController: NavHostController) {
         if (!isValidVerifyCode(verifyCodeInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -156,28 +173,30 @@ class EmailVerificationViewModel @Inject internal constructor(
                     )
                 )
             }
+        } else {
+            changeLoading()
+            if (source == "signup") verifyEmailForSignup(navController)
+            else verifyEmailForResetPassword(navController)
         }
+        clearVerifyCodeInput()
+    }
 
+    private fun verifyEmailForSignup(navController: NavHostController) {
         viewModelScope.launch {
-            verifyEmail(
+            repository.verifyEmailForSignup(
                 AuthVerifyEmailRequest(
                     email = emailInput,
                     code = verifyCodeInput
                 )
             ).collect { result ->
-                when (result) {
-                    Status.SUCCESS -> {
-                        if (source == "signup") {
-                            navController.navigate("signup/$emailInput")
-                        } else {
-                            val authToken = result as AuthToken /* TODO: 나중에 고쳐야 함 */
-                            navController.navigate("reset_password")
-                        }
+                when (result.code()) {
+                    ResponseCode.SUCCESS.value -> {
+                        changeLoading()
+                        navController.navigate("signup/$emailInput")
                     }
 
-                    Status.ERROR -> {
-                        // All error cases from this API call can
-                        // boil down to 'false_validation_code'
+                    ResponseCode.BAD_REQUEST.value -> {
+                        changeLoading()
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidVerifyCode = false,
@@ -188,10 +207,61 @@ class EmailVerificationViewModel @Inject internal constructor(
                             )
                         }
                     }
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        changeLoading()
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidVerifyCode = false,
+                                error = EmailVerificationError(
+                                    type = EmailVerificationErrorType.CONNECTION,
+                                    messageId = R.string.internet_error
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
-        clearVerifyCodeInput()
+    }
+
+    private fun verifyEmailForResetPassword(navController: NavHostController) {
+        viewModelScope.launch {
+            repository.verifyEmailForResetPassword(
+                AuthVerifyEmailRequest(
+                    email = emailInput,
+                    code = verifyCodeInput
+                )
+            ).collect { resource ->
+                if (resource.status == Status.SUCCESS) {
+                    changeLoading()
+                    val temporaryToken = resource.data?.accessToken
+                    sessionManager.setTemporaryToken(temporaryToken)
+                    navController.navigate("reset_password")
+                } else if (resource.message?.contains("Unknown") == true) {
+                    changeLoading()
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidVerifyCode = false,
+                            error = EmailVerificationError(
+                                type = EmailVerificationErrorType.VERIFY_CODE,
+                                messageId = R.string.internet_error
+                            )
+                        )
+                    }
+                } else {
+                    changeLoading()
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidVerifyCode = false,
+                            error = EmailVerificationError(
+                                type = EmailVerificationErrorType.VERIFY_CODE,
+                                messageId = R.string.false_validation_code
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 }
-

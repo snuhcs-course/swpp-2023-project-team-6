@@ -1,5 +1,6 @@
 package com.example.speechbuddy.service
 
+import com.example.speechbuddy.data.remote.models.AccessTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
@@ -8,6 +9,7 @@ import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 
@@ -41,11 +43,11 @@ interface AuthService {
     @POST("/user/validateemail/pw/accept/")
     suspend fun verifyEmailForResetPassword(
         @Body verifyEmailRequest: AuthVerifyEmailRequest
-    ): Response<AuthTokenDto>
+    ): Response<AccessTokenDto>
 
     @PATCH("/user/profile/password/")
     suspend fun resetPassword(
+        @Header("Authorization") header: String,
         @Body resetPasswordRequest: AuthResetPasswordRequest
     ): Response<Void>
-
 }

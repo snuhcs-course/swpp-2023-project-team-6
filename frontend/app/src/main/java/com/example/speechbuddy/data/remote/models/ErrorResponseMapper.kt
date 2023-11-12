@@ -23,7 +23,7 @@ class ErrorResponseMapper {
                         val keys = firstMessage.keys()
                         if (keys.hasNext()) {
                             val key = keys.next()
-                            val description = firstMessage.optJSONArray(key).optString(0)
+                            val description = firstMessage.optJSONArray(key)!!.optString(0)
                             return ErrorResponse(code, key, description)
                         }
                     }

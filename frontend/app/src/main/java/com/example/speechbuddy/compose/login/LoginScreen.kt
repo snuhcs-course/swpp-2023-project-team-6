@@ -24,6 +24,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AuthTopAppBarUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
+import com.example.speechbuddy.compose.utils.ProgressIndicatorUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.LoginErrorType
@@ -40,9 +41,11 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
     val isEmailError = uiState.error?.type == LoginErrorType.EMAIL
     val isPasswordError = uiState.error?.type == LoginErrorType.PASSWORD
-    val isError = isEmailError || isPasswordError
+    val isError = (isEmailError || isPasswordError) &&
+            (uiState.error?.messageId != R.string.internet_error)
 
     Surface(modifier = modifier.fillMaxSize()) {
         Scaffold(
@@ -93,34 +96,40 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Login Button
-                ButtonUi(
-                    text = stringResource(id = R.string.login_text),
-                    onClick = {
-                        viewModel.login()
-                    },
-                    isEnabled = !isError,
-                    isError = isError
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                // Forgot Password Button
-                ButtonUi(
-                    text = stringResource(id = R.string.forgot_password),
-                    onClick = onResetPasswordClick,
-                    isError = isError,
-                    level = ButtonLevel.SECONDARY
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    // Login Button
+                    ButtonUi(
+                        text = stringResource(id = R.string.login_text),
+                        onClick = {
+                            viewModel.login()
+                        },
+                        isEnabled = !isError,
+                        isError = isError
+                    )
+                    // Forgot Password Button
+                    ButtonUi(
+                        text = stringResource(id = R.string.forgot_password),
+                        onClick = onResetPasswordClick,
+                        isError = isError,
+                        level = ButtonLevel.SECONDARY
+                    )
+                }
 
                 // Signup Button
                 ButtonUi(
                     text = stringResource(id = R.string.signup),
                     onClick = onSignupClick,
-                    modifier = Modifier.offset(y = 160.dp),
+                    modifier = Modifier.offset(y = 110.dp),
                 )
             }
         }
     }
-}
 
+    uiState.loading.let {
+        if (it) {
+            ProgressIndicatorUi()
+        }
+    }
+}

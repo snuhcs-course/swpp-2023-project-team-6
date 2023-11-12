@@ -3,19 +3,15 @@ package com.example.speechbuddy.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.domain.SessionManager
-import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.LoginUiState
-import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
 import com.example.speechbuddy.utils.isValidPassword
@@ -41,9 +37,6 @@ class LoginViewModel @Inject internal constructor(
 
     var passwordInput by mutableStateOf("")
         private set
-
-    private var _loginResult = MutableLiveData<Resource<AuthToken>>()
-    val loginResult: LiveData<Resource<AuthToken>> = _loginResult
 
     fun setEmail(input: String) {
         emailInput = input
@@ -82,6 +75,12 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoading() {
+        _uiState.update {
+            it.copy(loading = !it.loading)
+        }
+    }
+
     fun login() {
         if (!isValidEmail(emailInput)) {
             _uiState.update { currentState ->
@@ -104,18 +103,19 @@ class LoginViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoading()
             viewModelScope.launch {
                 repository.login(
                     AuthLoginRequest(
                         email = emailInput,
                         password = passwordInput
                     )
-                ).collect {
-                    if (it.status == Resource(Status.SUCCESS, "", "").status) { // 200
-                        _loginResult.postValue(it)
-                    } else { // status:error
-                        // when password is wrong
-                        if (it.message?.contains("password", ignoreCase = true) == true) {
+                ).collect { resource ->
+                    if (resource.status == Status.SUCCESS) {
+                        sessionManager.login(resource.data!!)
+                    } else {
+                        if (resource.message?.contains("password", ignoreCase = true) == true) {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
@@ -125,8 +125,9 @@ class LoginViewModel @Inject internal constructor(
                                     )
                                 )
                             }
-                        } else if (it.message?.contains("email", ignoreCase = true) == true
-                        ) { // email is wrong
+                        } else if (resource.message?.contains("email", ignoreCase = true) == true
+                        ) {
+                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
@@ -136,8 +137,22 @@ class LoginViewModel @Inject internal constructor(
                                     )
                                 )
                             }
+                        } else if (resource.message?.contains(
+                                "Unknown",
+                                ignoreCase = true
+                            ) == true
+                        ) {
+                            _uiState.update { currentState ->
+                                changeLoading()
+                                currentState.copy(
+                                    isValidEmail = false,
+                                    error = LoginError(
+                                        type = LoginErrorType.CONNECTION,
+                                        messageId = R.string.internet_error
+                                    )
+                                )
+                            }
                         }
-                        _loginResult.postValue(it)
                     }
                 }
             }
@@ -152,5 +167,4 @@ class LoginViewModel @Inject internal constructor(
             }
         }
     }
-
 }
