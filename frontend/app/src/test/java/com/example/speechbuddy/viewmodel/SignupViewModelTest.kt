@@ -433,7 +433,7 @@ class SignupViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidPassword)
         assertEquals(false, viewModel.uiState.value.isValidEmail)
         assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_new_password, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.password_qualification, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
@@ -448,7 +448,7 @@ class SignupViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidPassword)
         assertEquals(false, viewModel.uiState.value.isValidEmail)
         assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_new_password, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.password_qualification, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
