@@ -6,6 +6,7 @@ import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
@@ -17,9 +18,12 @@ import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -132,6 +136,32 @@ class AuthRepository @Inject constructor(
             }
         }
 
+    suspend fun logout(): Flow<Response<Void>> =
+        flow {
+            try {
+                val result = authService.logout(getAuthHeader(), AuthRefreshRequest(getRefreshToken()))
+                CoroutineScope(Dispatchers.IO).launch {
+                    authTokenPrefsManager.clearAuthToken()
+                }
+                emit(result)
+            } catch (e: Exception) {
+                emit(noInternetResponse())
+            }
+        }
+
+    suspend fun withdraw(): Flow<Response<Void>> =
+        flow {
+            try {
+                val result = authService.withdraw(getAuthHeader(), AuthRefreshRequest(getRefreshToken()))
+                CoroutineScope(Dispatchers.IO).launch {
+                    authTokenPrefsManager.clearAuthToken()
+                }
+                emit(result)
+            } catch (e: Exception) {
+                emit(noInternetResponse())
+            }
+        }
+
     fun checkPreviousUser(): Flow<Resource<AuthToken>> {
         return authTokenPrefsManager.preferencesFlow.map { authToken ->
             if (!authToken.accessToken.isNullOrEmpty() && !authToken.refreshToken.isNullOrEmpty()) {
@@ -148,6 +178,10 @@ class AuthRepository @Inject constructor(
     private fun getAuthHeader(): String {
         val accessToken = sessionManager.cachedToken.value?.accessToken
         return "Bearer $accessToken"
+    }
+
+    private fun getRefreshToken(): String {
+        return sessionManager.cachedToken.value?.refreshToken!!
     }
 
     private fun <T> returnUnknownError(): Resource<T> {
