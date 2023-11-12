@@ -145,8 +145,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
                 DisplayMode.CATEGORY -> {
                     if (query != null)
-                        repository.getEntries(query).collect { symbols ->
-                            _entries.postValue(symbols)
+                        repository.getEntries(query).collect { entries ->
+                            _entries.postValue(entries)
                         }
                     else
                         repository.getCategories(queryInput).collect { categories ->
