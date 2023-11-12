@@ -1,5 +1,6 @@
 package com.example.speechbuddy.repository
 
+import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
@@ -21,6 +22,7 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
     private val authService: AuthService,
+    private val authTokenPrefsManager: AuthTokenPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
     private val errorResponseMapper: ErrorResponseMapper,
@@ -102,6 +104,14 @@ class AuthRepository @Inject constructor(
             val result = authService.resetPassword(authResetPasswordRequest)
             emit(result)
         }
+
+    fun checkPreviousUser(): Flow<Resource<AuthToken>> {
+        return authTokenPrefsManager.preferencesFlow.map { authToken ->
+            if (!authToken.accessToken.isNullOrEmpty() && !authToken.refreshToken.isNullOrEmpty()) {
+                Resource.success(authToken)
+            } else Resource.error("Couldn't find previous user", null)
+        }
+    }
 
     private fun returnUnknownError(): Resource<AuthToken> {
         return Resource.error(

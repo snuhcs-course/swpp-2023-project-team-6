@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginError
@@ -28,7 +29,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject internal constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -140,6 +142,15 @@ class LoginViewModel @Inject internal constructor(
                 }
             }
         }
-        //clearInputs()
+        clearInputs()
     }
+
+    fun checkPreviousUser() {
+        viewModelScope.launch {
+            repository.checkPreviousUser().collect { resource ->
+                if (resource.data != null) sessionManager.login(resource.data)
+            }
+        }
+    }
+
 }

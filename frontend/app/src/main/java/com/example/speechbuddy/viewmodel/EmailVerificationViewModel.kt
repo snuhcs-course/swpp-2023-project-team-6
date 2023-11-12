@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.speechbuddy.BaseApplication.Companion.token_prefs
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
@@ -172,7 +171,6 @@ class EmailVerificationViewModel @Inject internal constructor(
                             navController.navigate("signup/$emailInput")
                         } else {
                             val authToken = result as AuthToken /* TODO: 나중에 고쳐야 함 */
-                            token_prefs.setAccessToken(authToken.accessToken!!)
                             navController.navigate("reset_password")
                         }
                     }
