@@ -1,5 +1,6 @@
 package com.example.speechbuddy.repository
 
+import android.content.Context
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AccessTokenDto
@@ -65,7 +66,8 @@ class AuthRepositoryTest {
     private val mockErrorResponseBody =
         mockErrorJson.toResponseBody("application/json".toMediaType())
 
-    private val authHeader = "Bearer access"
+    private val temporaryToken = "temporary"
+    private val authHeader = "Bearer $temporaryToken"
 
     @Before
     fun setup() {
@@ -140,6 +142,10 @@ class AuthRepositoryTest {
                 accessToken = mockAccessToken,
                 refreshToken = mockRefreshToken
             )
+            val authToken = AuthToken(
+                accessToken = mockAccessToken,
+                refreshToken = mockRefreshToken
+            )
             val expectedAuthToken = AuthToken(
                 accessToken = mockAccessToken,
                 refreshToken = mockRefreshToken
@@ -150,6 +156,8 @@ class AuthRepositoryTest {
             coEvery { authTokenRemoteSource.loginAuthToken(authLoginRequest) } returns flowOf(
                 successResponse
             )
+
+            coEvery { authTokenPrefsManager.saveAuthToken(authToken) } returns Unit
 
             val result = authRepository.login(authLoginRequest)
 
@@ -361,6 +369,8 @@ class AuthRepositoryTest {
             )
             val successResponse = Response.success<Void>(200, null)
 
+            coEvery { sessionManager.temporaryToken.value } returns temporaryToken
+
             coEvery { authService.resetPassword(authHeader, authResetPasswordRequest) } returns successResponse
 
             val result = authRepository.resetPassword(authResetPasswordRequest)
@@ -380,6 +390,8 @@ class AuthRepositoryTest {
                 password = "invalid"
             )
             val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
+
+            coEvery { sessionManager.temporaryToken.value } returns temporaryToken
 
             coEvery { authService.resetPassword(authHeader, authResetPasswordRequest) } returns errorResponse
 

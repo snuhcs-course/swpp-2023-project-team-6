@@ -1,7 +1,9 @@
 package com.example.speechbuddy.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.liveData
 import com.example.speechbuddy.R
+import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AuthToken
@@ -31,7 +33,8 @@ class LoginViewModelTest {
 
     @MockK
     private val repository: AuthRepository = mockk()
-    private val sessionManager: SessionManager = mockk()
+    private val authTokenPrefsManager: AuthTokenPrefsManager = mockk()
+    private val sessionManager = SessionManager(authTokenPrefsManager)
     private lateinit var viewModel: LoginViewModel
 
     // boundary condition: 8 characters in password field
@@ -391,6 +394,7 @@ class LoginViewModelTest {
         viewModel.setPassword(validPassword)
 
         val authToken = AuthToken("access", "refresh")
+
         coEvery {
             repository.login(AuthLoginRequest(validEmail, validPassword))
         } returns flowOf(

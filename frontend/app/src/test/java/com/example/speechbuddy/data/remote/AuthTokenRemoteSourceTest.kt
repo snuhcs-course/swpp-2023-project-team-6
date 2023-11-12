@@ -39,9 +39,9 @@ class AuthTokenRemoteSourceTest {
         val expectedResponse: Response<AuthTokenDto> = mockk(relaxed = true)
         coEvery { authService.login(request) } returns expectedResponse
 
-        val result = authTokenRemoteSource.loginAuthToken(request).first()
-
-        assertEquals(expectedResponse, result)
+        authTokenRemoteSource.loginAuthToken(request).collect { result ->
+            assertEquals(expectedResponse, result)
+        }
         coVerify(exactly = 1) { authService.login(request) }
     }
 
@@ -51,9 +51,9 @@ class AuthTokenRemoteSourceTest {
         val expectedResponse: Response<AccessTokenDto> = mockk(relaxed = true)
         coEvery { authService.verifyEmailForResetPassword(request) } returns expectedResponse
 
-        val result = authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).first()
-
-        assertEquals(expectedResponse, result)
+        authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).collect { result ->
+            assertEquals(expectedResponse, result)
+        }
         coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
     }
 
@@ -63,9 +63,9 @@ class AuthTokenRemoteSourceTest {
         val expectedResponse = Response.error<AuthTokenDto>(400, errorResponseBody)
         coEvery { authService.login(request) } returns expectedResponse
 
-        val result = authTokenRemoteSource.loginAuthToken(request).first()
-
-        assertEquals(expectedResponse, result)
+        authTokenRemoteSource.loginAuthToken(request).collect { result ->
+            assertEquals(expectedResponse, result)
+        }
         coVerify(exactly = 1) { authService.login(request) }
     }
 
@@ -75,9 +75,9 @@ class AuthTokenRemoteSourceTest {
         val expectedResponse = Response.error<AccessTokenDto>(400, errorResponseBody)
         coEvery { authService.verifyEmailForResetPassword(request) } returns expectedResponse
 
-        val result = authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).first()
-
-        assertEquals(expectedResponse, result)
+        authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).collect { result ->
+            assertEquals(expectedResponse, result)
+        }
         coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
     }
 
