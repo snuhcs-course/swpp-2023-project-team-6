@@ -32,7 +32,7 @@
     <string name="reset_password_error">비밀번호를 재설정하는 도중 오류가 발생했습니다</string>
     <string name="new_password_field">새 비밀번호</string>
     <string name="new_password_check_field">새 비밀번호 확인</string>
-    <string name="false_new_password">8자 이상 입력해주세요</string>
+    <string name="password_qualification">비밀번호는 8자 이상이어야 합니다</string>
     <string name="false_new_password_check">비밀번호가 일치하지 않습니다</string>
     <string name="talk_with_symbols">상징으로 말하기</string>
     <string name="talk_with_speech">음성으로 말하기</string>

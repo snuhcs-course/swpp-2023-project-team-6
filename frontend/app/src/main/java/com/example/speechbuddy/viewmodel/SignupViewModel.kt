@@ -131,7 +131,7 @@ class SignupViewModel @Inject internal constructor(
                     isValidEmail = false,
                     error = SignupError(
                         type = SignupErrorType.PASSWORD_CHECK,
-                        messageId = R.string.false_new_password_check
+                        messageId = R.string.password_qualification
                     )
                 )
             }
