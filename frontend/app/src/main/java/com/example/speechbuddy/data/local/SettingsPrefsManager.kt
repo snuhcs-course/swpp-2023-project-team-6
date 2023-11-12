@@ -1,21 +1,28 @@
 package com.example.speechbuddy.data.local
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.createDataStore
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.SettingsPrefsManager.PreferencesKeys.AUTO_BACKUP
 import com.example.speechbuddy.data.local.SettingsPrefsManager.PreferencesKeys.DARK_MODE
 import com.example.speechbuddy.data.local.SettingsPrefsManager.PreferencesKeys.INITIAL_PAGE
 import com.example.speechbuddy.domain.models.SettingsPreferences
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.Constants.Companion.SETTINGS_PREFS
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
 class SettingsPrefsManager @Inject constructor(context: Context) {
 

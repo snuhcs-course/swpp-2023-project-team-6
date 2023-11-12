@@ -1,5 +1,6 @@
 package com.example.speechbuddy.compose.settings
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -9,23 +10,27 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun SettingsScreen(
-    bottomPaddingValues: PaddingValues
+    bottomPaddingValues: PaddingValues,
+    isBeingReloadedForDarkModeChange: Boolean
 ) {
     val navController = rememberNavController()
     SettingsScreenNavHost(
         navController = navController,
-        bottomPaddingValues = bottomPaddingValues
+        bottomPaddingValues = bottomPaddingValues,
+        isBeingReloadedForDarkModeChange = isBeingReloadedForDarkModeChange
     )
 }
 
 @Composable
 private fun SettingsScreenNavHost(
     navController: NavHostController,
-    bottomPaddingValues: PaddingValues
+    bottomPaddingValues: PaddingValues,
+    isBeingReloadedForDarkModeChange: Boolean
 ) {
+    val startDestination = if (isBeingReloadedForDarkModeChange) "display" else "main"
     val navigateToMain = { navController.navigate("main") }
 
-    NavHost(navController = navController, startDestination = "main") {
+    NavHost(navController = navController, startDestination = startDestination) {
         composable("main") {
             MainSettings(
                 navController = navController,

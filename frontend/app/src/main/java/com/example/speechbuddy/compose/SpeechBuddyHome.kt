@@ -39,7 +39,8 @@ data class BottomNavItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpeechBuddyHome(
-    initialPage: Boolean
+    initialPage: Boolean,
+    isBeingReloadedForDarkModeChange: Boolean
 ) {
     val navController = rememberNavController()
     val navItems = listOf(
@@ -80,7 +81,8 @@ fun SpeechBuddyHome(
         SpeechBuddyHomeNavHost(
             navController = navController,
             bottomPaddingValues = paddingValues,
-            initialPage = initialPage
+            initialPage = initialPage,
+            isBeingReloadedForDarkModeChange = isBeingReloadedForDarkModeChange
         )
     }
 }
@@ -124,13 +126,17 @@ private fun BottomNavigationBar(
 private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,
     bottomPaddingValues: PaddingValues,
-    initialPage: Boolean
+    initialPage: Boolean,
+    isBeingReloadedForDarkModeChange: Boolean
 ) {
-    val startDestination = if (initialPage) {
-        "symbol_selection"
-    } else {
-        "text_to_speech"
-    }
+    val startDestination = if (isBeingReloadedForDarkModeChange) {
+            "settings"
+        } else if (initialPage) {
+            "symbol_selection"
+        } else {
+            "text_to_speech"
+        }
+
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable("symbol_selection") {
@@ -150,7 +156,8 @@ private fun SpeechBuddyHomeNavHost(
         }
         composable("settings") {
             SettingsScreen(
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                isBeingReloadedForDarkModeChange = isBeingReloadedForDarkModeChange
             )
         }
     }
