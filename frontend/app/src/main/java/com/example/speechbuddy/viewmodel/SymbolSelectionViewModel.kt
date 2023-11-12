@@ -134,8 +134,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
                  */
                 DisplayMode.SYMBOL -> {
                     if (query != null) // called from setQuery()
-                        repository.getEntries(query).collect { symbols ->
-                            _entries.postValue(symbols)
+                        repository.getEntries(query).collect { entries ->
+                            _entries.postValue(entries)
                         }
                     else // called from somewhere else
                         repository.getSymbols(queryInput).collect { entries ->
