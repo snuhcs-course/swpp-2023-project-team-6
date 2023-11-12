@@ -35,7 +35,7 @@ fun ResetPasswordScreen(
     val isPasswordError = uiState.error?.type == ResetPasswordErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == ResetPasswordErrorType.PASSWORD_CHECK
     val isError = (isPasswordError || isPasswordCheckError) &&
-            (uiState.error?.messageId != R.string.internet_error)
+            (uiState.error?.messageId != R.string.connection_error)
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -48,8 +48,8 @@ fun ResetPasswordScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleUi(
-                title = stringResource(id = R.string.reset_password_title),
-                description = stringResource(id = R.string.reset_password_subtitle2)
+                title = stringResource(id = R.string.reset_password),
+                description = stringResource(id = R.string.reset_password_description)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -58,7 +58,7 @@ fun ResetPasswordScreen(
             TextFieldUi(
                 value = viewModel.passwordInput,
                 onValueChange = { viewModel.setPassword(it) },
-                label = { Text(stringResource(id = R.string.new_password_field)) },
+                label = { Text(stringResource(id = R.string.new_password)) },
                 supportingText = {
                     if (isPasswordError) {
                         Text(stringResource(id = uiState.error!!.messageId))
@@ -73,7 +73,7 @@ fun ResetPasswordScreen(
             TextFieldUi(
                 value = viewModel.passwordCheckInput,
                 onValueChange = { viewModel.setPasswordCheck(it) },
-                label = { Text(stringResource(id = R.string.new_password_check_field)) },
+                label = { Text(stringResource(id = R.string.new_password_check)) },
                 supportingText = {
                     if (isPasswordCheckError) {
                         Text(stringResource(id = uiState.error!!.messageId))
@@ -88,7 +88,7 @@ fun ResetPasswordScreen(
 
             // Set password Button
             ButtonUi(
-                text = stringResource(id = R.string.reset_password_next),
+                text = stringResource(id = R.string.next),
                 onClick = { viewModel.resetPassword(navController) },
                 isError = isError,
                 level = ButtonLevel.PRIMARY

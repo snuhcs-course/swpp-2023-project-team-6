@@ -63,7 +63,7 @@ fun VersionInfo(
                     )
 
                     SettingsRow(
-                        label = stringResource(id = R.string.email),
+                        label = stringResource(id = R.string.developers_email),
                         content = {
                             /* TODO */
                             SettingsRowText(text = "speechbuddy@gmail.com")

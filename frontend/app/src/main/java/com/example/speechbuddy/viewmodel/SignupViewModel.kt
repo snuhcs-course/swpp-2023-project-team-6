@@ -111,7 +111,7 @@ class SignupViewModel @Inject internal constructor(
                     isValidNickname = false,
                     error = SignupError(
                         type = SignupErrorType.NICKNAME,
-                        messageId = R.string.nickname_length_error
+                        messageId = R.string.nickname_too_long
                     )
                 )
             }
@@ -121,7 +121,7 @@ class SignupViewModel @Inject internal constructor(
                     isValidPassword = false,
                     error = SignupError(
                         type = SignupErrorType.PASSWORD,
-                        messageId = R.string.false_new_password
+                        messageId = R.string.wrong_password
                     )
                 )
             }
@@ -131,7 +131,7 @@ class SignupViewModel @Inject internal constructor(
                     isValidEmail = false,
                     error = SignupError(
                         type = SignupErrorType.PASSWORD_CHECK,
-                        messageId = R.string.false_new_password_check
+                        messageId = R.string.wrong_password_check
                     )
                 )
             }
@@ -155,9 +155,9 @@ class SignupViewModel @Inject internal constructor(
                             changeLoading()
                             val messageId =
                                 when (errorResponseMapper.mapToDomainModel(result.errorBody()!!).key) {
-                                    "email" -> R.string.false_email
+                                    "email" -> R.string.wrong_email
                                     "already_taken" -> R.string.email_already_taken
-                                    else -> R.string.false_email
+                                    else -> R.string.unknown_error
                                 }
                             _uiState.update { currentState ->
                                 currentState.copy(
@@ -177,7 +177,7 @@ class SignupViewModel @Inject internal constructor(
                                     isValidEmail = false,
                                     error = SignupError(
                                         type = SignupErrorType.CONNECTION,
-                                        messageId = R.string.internet_error
+                                        messageId = R.string.connection_error
                                     )
                                 )
                             }

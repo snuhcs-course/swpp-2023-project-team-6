@@ -88,7 +88,7 @@ class LoginViewModel @Inject internal constructor(
                     isValidEmail = false,
                     error = LoginError(
                         type = LoginErrorType.EMAIL,
-                        messageId = R.string.false_email
+                        messageId = R.string.wrong_email
                     )
                 )
             }
@@ -98,7 +98,7 @@ class LoginViewModel @Inject internal constructor(
                     isValidPassword = false,
                     error = LoginError(
                         type = LoginErrorType.PASSWORD,
-                        messageId = R.string.false_password
+                        messageId = R.string.wrong_password
                     )
                 )
             }
@@ -121,7 +121,7 @@ class LoginViewModel @Inject internal constructor(
                                     isValidPassword = false,
                                     error = LoginError(
                                         type = LoginErrorType.PASSWORD,
-                                        messageId = R.string.false_password
+                                        messageId = R.string.wrong_password
                                     )
                                 )
                             }
@@ -133,7 +133,7 @@ class LoginViewModel @Inject internal constructor(
                                     isValidEmail = false,
                                     error = LoginError(
                                         type = LoginErrorType.EMAIL,
-                                        messageId = R.string.false_email
+                                        messageId = R.string.wrong_email
                                     )
                                 )
                             }
@@ -148,7 +148,7 @@ class LoginViewModel @Inject internal constructor(
                                     isValidEmail = false,
                                     error = LoginError(
                                         type = LoginErrorType.CONNECTION,
-                                        messageId = R.string.internet_error
+                                        messageId = R.string.connection_error
                                     )
                                 )
                             }
@@ -156,8 +156,8 @@ class LoginViewModel @Inject internal constructor(
                     }
                 }
             }
+            clearInputs()
         }
-        clearInputs()
     }
 
     fun checkPreviousUser() {

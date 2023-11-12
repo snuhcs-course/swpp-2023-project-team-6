@@ -36,7 +36,7 @@ fun SignupScreen(
     val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORD_CHECK
     val isError = (isNicknameError || isPasswordError || isPasswordCheckError) &&
-            (uiState.error?.messageId != R.string.internet_error)
+            (uiState.error?.messageId != R.string.connection_error)
 
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
@@ -47,8 +47,8 @@ fun SignupScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleUi(
-                title = stringResource(id = R.string.signup_text),
-                description = stringResource(id = R.string.signup_explain)
+                title = stringResource(id = R.string.signup),
+                description = stringResource(id = R.string.signup_description)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -79,7 +79,7 @@ fun SignupScreen(
             TextFieldUi(
                 value = viewModel.passwordInput,
                 onValueChange = { viewModel.setPassword(it) },
-                label = { Text(text = stringResource(id = R.string.password_field)) },
+                label = { Text(text = stringResource(id = R.string.password)) },
                 supportingText = {
                     if (isPasswordError) {
                         Text(stringResource(id = uiState.error!!.messageId))
@@ -94,7 +94,7 @@ fun SignupScreen(
             TextFieldUi(
                 value = viewModel.passwordCheckInput,
                 onValueChange = { viewModel.setPasswordCheck(it) },
-                label = { Text(text = stringResource(id = R.string.password_check_field)) },
+                label = { Text(text = stringResource(id = R.string.password_check)) },
                 supportingText = {
                     if (isPasswordCheckError) {
                         Text(stringResource(id = uiState.error!!.messageId))

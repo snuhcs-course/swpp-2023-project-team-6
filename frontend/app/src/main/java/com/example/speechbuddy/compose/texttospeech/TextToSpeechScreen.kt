@@ -69,8 +69,8 @@ fun TextToSpeechScreen(
                 verticalArrangement = Arrangement.Center,
             ) {
                 TitleUi(
-                    title = stringResource(id = R.string.tts_text),
-                    description = stringResource(id = R.string.tts_explain)
+                    title = stringResource(id = R.string.talk_with_sound),
+                    description = stringResource(id = R.string.tts_description)
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -116,11 +116,11 @@ private fun TextToSpeechButton(
         ) {
             Text(
                 style = MaterialTheme.typography.headlineMedium,
-                text = stringResource(id = R.string.play_text)
+                text = stringResource(id = R.string.play)
             )
             Icon(
                 Icons.Filled.PlayArrow,
-                contentDescription = stringResource(id = R.string.play_text),
+                contentDescription = stringResource(id = R.string.play),
                 modifier = Modifier.size(36.dp)
             )
         }
@@ -130,11 +130,11 @@ private fun TextToSpeechButton(
         ) {
             Text(
                 style = MaterialTheme.typography.headlineMedium,
-                text = stringResource(id = R.string.stop_text)
+                text = stringResource(id = R.string.stop)
             )
             Icon(
                 painterResource(R.drawable.stop_icon),
-                contentDescription = stringResource(id = R.string.stop_text),
+                contentDescription = stringResource(id = R.string.stop),
                 modifier = Modifier.size(36.dp)
             )
         }

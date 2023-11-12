@@ -47,10 +47,10 @@ fun LandingScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 ButtonUi(
-                    text = stringResource(id = R.string.guess_mode_action),
+                    text = stringResource(id = R.string.start_guest_mode),
                     onClick = onGuestClick
                 )
-                ButtonUi(text = stringResource(id = R.string.login_action), onClick = onLoginClick)
+                ButtonUi(text = stringResource(id = R.string.do_login), onClick = onLoginClick)
             }
         }
     }

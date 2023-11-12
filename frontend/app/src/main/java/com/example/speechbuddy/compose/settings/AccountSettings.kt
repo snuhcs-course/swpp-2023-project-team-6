@@ -106,7 +106,7 @@ fun AccountSettings(
                 AlertDialogUi(
                     title = stringResource(id = R.string.logout),
                     text = stringResource(id = R.string.logout_warning),
-                    dismissButtonText = stringResource(id = R.string.dismiss),
+                    dismissButtonText = stringResource(id = R.string.cancel),
                     confirmButtonText = stringResource(id = R.string.logout),
                     onDismiss = { viewModel.hideAlert() },
                     onConfirm = { viewModel.logout() }
@@ -117,7 +117,7 @@ fun AccountSettings(
                 AlertDialogUi(
                     title = stringResource(id = R.string.withdraw),
                     text = stringResource(id = R.string.withdraw_warning),
-                    dismissButtonText = stringResource(id = R.string.dismiss),
+                    dismissButtonText = stringResource(id = R.string.cancel),
                     confirmButtonText = stringResource(id = R.string.proceed),
                     onDismiss = { viewModel.hideAlert() },
                     onConfirm = {
@@ -130,7 +130,7 @@ fun AccountSettings(
                 AlertDialogUi(
                     title = stringResource(id = R.string.withdraw),
                     text = stringResource(id = R.string.withdraw_proceed_warning),
-                    dismissButtonText = stringResource(id = R.string.dismiss),
+                    dismissButtonText = stringResource(id = R.string.cancel),
                     confirmButtonText = stringResource(id = R.string.withdraw),
                     onDismiss = { viewModel.hideAlert() },
                     onConfirm = { viewModel.deleteAccount() }

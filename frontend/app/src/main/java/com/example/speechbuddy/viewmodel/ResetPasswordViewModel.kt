@@ -86,7 +86,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                     isValidPassword = false,
                     error = ResetPasswordError(
                         type = ResetPasswordErrorType.PASSWORD,
-                        messageId = R.string.false_new_password
+                        messageId = R.string.wrong_password
                     )
                 )
             }
@@ -95,7 +95,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                 currentState.copy(
                     error = ResetPasswordError(
                         type = ResetPasswordErrorType.PASSWORD_CHECK,
-                        messageId = R.string.false_new_password_check
+                        messageId = R.string.wrong_password_check
                     )
                 )
             }
@@ -120,7 +120,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                                     isValidPassword = false,
                                     error = ResetPasswordError(
                                         type = ResetPasswordErrorType.PASSWORD_CHECK,
-                                        messageId = R.string.reset_password_error
+                                        messageId = R.string.unknown_error // TODO
                                     )
                                 )
                             }
@@ -133,7 +133,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                                     isValidPassword = false,
                                     error = ResetPasswordError(
                                         type = ResetPasswordErrorType.CONNECTION,
-                                        messageId = R.string.internet_error
+                                        messageId = R.string.connection_error
                                     )
                                 )
                             }

@@ -99,7 +99,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                     isValidEmail = false,
                     error = EmailVerificationError(
                         type = EmailVerificationErrorType.EMAIL,
-                        messageId = R.string.false_email
+                        messageId = R.string.wrong_email
                     )
                 )
             }
@@ -127,10 +127,10 @@ class EmailVerificationViewModel @Inject internal constructor(
                             changeLoading()
                             val messageId =
                                 when (errorResponseMapper.mapToDomainModel(result.errorBody()!!).key) {
-                                    "email" -> R.string.false_email
+                                    "email" -> R.string.wrong_email
                                     "already_taken" -> R.string.email_already_taken
-                                    "no_user" -> R.string.no_such_user
-                                    else -> R.string.false_email
+                                    "no_user" -> R.string.unregistered_email
+                                    else -> R.string.unknown_error
                                 }
                             _uiState.update { currentState ->
                                 currentState.copy(
@@ -150,14 +150,13 @@ class EmailVerificationViewModel @Inject internal constructor(
                                     isValidEmail = false,
                                     error = EmailVerificationError(
                                         type = EmailVerificationErrorType.CONNECTION,
-                                        messageId = R.string.internet_error
+                                        messageId = R.string.connection_error
                                     )
                                 )
                             }
                         }
                     }
                 }
-
             }
         }
     }
@@ -169,7 +168,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                     isValidVerifyCode = false,
                     error = EmailVerificationError(
                         type = EmailVerificationErrorType.VERIFY_CODE,
-                        messageId = R.string.false_validation_code
+                        messageId = R.string.wrong_code
                     )
                 )
             }
@@ -202,7 +201,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                                 isValidVerifyCode = false,
                                 error = EmailVerificationError(
                                     type = EmailVerificationErrorType.VERIFY_CODE,
-                                    messageId = R.string.false_validation_code
+                                    messageId = R.string.wrong_code
                                 )
                             )
                         }
@@ -215,7 +214,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                                 isValidVerifyCode = false,
                                 error = EmailVerificationError(
                                     type = EmailVerificationErrorType.CONNECTION,
-                                    messageId = R.string.internet_error
+                                    messageId = R.string.connection_error
                                 )
                             )
                         }
@@ -245,7 +244,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                             isValidVerifyCode = false,
                             error = EmailVerificationError(
                                 type = EmailVerificationErrorType.VERIFY_CODE,
-                                messageId = R.string.internet_error
+                                messageId = R.string.connection_error
                             )
                         )
                     }
@@ -256,7 +255,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                             isValidVerifyCode = false,
                             error = EmailVerificationError(
                                 type = EmailVerificationErrorType.VERIFY_CODE,
-                                messageId = R.string.false_validation_code
+                                messageId = R.string.wrong_code
                             )
                         )
                     }

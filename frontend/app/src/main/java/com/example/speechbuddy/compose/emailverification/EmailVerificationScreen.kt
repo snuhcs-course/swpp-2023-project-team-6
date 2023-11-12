@@ -36,7 +36,7 @@ fun EmailVerificationScreen(
     val isEmailError = uiState.error?.type == EmailVerificationErrorType.EMAIL
     val isVerifyCodeError = uiState.error?.type == EmailVerificationErrorType.VERIFY_CODE
     val isError = (isEmailError || isVerifyCodeError) &&
-            (uiState.error?.messageId != R.string.internet_error)
+            (uiState.error?.messageId != R.string.connection_error)
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -48,15 +48,16 @@ fun EmailVerificationScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             TitleUi(
                 title = when (source) {
-                    "reset_password" -> stringResource(id = R.string.reset_password_title)
-                    "signup" -> stringResource(id = R.string.verify_email_field)
-                    else -> stringResource(id = R.string.verify_email_field)
+                    "reset_password" -> stringResource(id = R.string.reset_password)
+                    "signup" -> stringResource(id = R.string.signup)
+                    else -> stringResource(id = R.string.email_verification)
                 }, description = when (source) {
-                    "reset_password" -> stringResource(id = R.string.reset_password_subtitle1)
-                    "signup" -> stringResource(id = R.string.verify_email_explain)
-                    else -> stringResource(id = R.string.verify_email_explain_default)
+                    "reset_password" -> stringResource(id = R.string.verify_email_for_reset_password)
+                    "signup" -> stringResource(id = R.string.verify_email_for_signup)
+                    else -> stringResource(id = R.string.email_verification_description)
                 }
             )
 
@@ -69,7 +70,7 @@ fun EmailVerificationScreen(
                 label = { Text(text = stringResource(id = R.string.email)) },
                 supportingButton = {
                     ButtonUi(
-                        text = stringResource(id = R.string.send_validation_code),
+                        text = stringResource(id = R.string.send_code),
                         onClick = { viewModel.sendCode(source) },
                         level = ButtonLevel.TERTIARY
                     )
@@ -78,7 +79,7 @@ fun EmailVerificationScreen(
                     if (isEmailError) {
                         Text(stringResource(id = uiState.error!!.messageId))
                     } else if (uiState.isSuccessfulSend) {
-                        Text(stringResource(id = R.string.verification_code_sent))
+                        Text(stringResource(id = R.string.code_successfully_sent))
                     }
                 },
                 isError = isError,
@@ -91,7 +92,7 @@ fun EmailVerificationScreen(
             TextFieldUi(
                 value = viewModel.verifyCodeInput,
                 onValueChange = { viewModel.setVerifyCode(it) },
-                label = { Text(text = stringResource(id = R.string.validation_code)) },
+                label = { Text(text = stringResource(id = R.string.code)) },
                 supportingText = {
                     if (isVerifyCodeError) {
                         Text(stringResource(id = uiState.error!!.messageId))

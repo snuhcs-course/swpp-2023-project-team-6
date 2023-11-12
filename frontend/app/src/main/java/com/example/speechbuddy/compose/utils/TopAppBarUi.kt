@@ -54,7 +54,7 @@ fun TopAppBarUi(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back)
+                        contentDescription = null
                     )
                 }
             else

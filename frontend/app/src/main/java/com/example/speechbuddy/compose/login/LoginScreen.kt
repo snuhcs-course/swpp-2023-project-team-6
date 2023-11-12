@@ -37,7 +37,7 @@ fun LoginScreen(
     val isEmailError = uiState.error?.type == LoginErrorType.EMAIL
     val isPasswordError = uiState.error?.type == LoginErrorType.PASSWORD
     val isError = (isEmailError || isPasswordError) &&
-            (uiState.error?.messageId != R.string.internet_error)
+            (uiState.error?.messageId != R.string.connection_error)
 
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
@@ -48,8 +48,8 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleUi(
-                title = stringResource(id = R.string.login_text),
-                description = stringResource(id = R.string.login_explain)
+                title = stringResource(id = R.string.login),
+                description = stringResource(id = R.string.login_description)
             )
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -72,7 +72,7 @@ fun LoginScreen(
             TextFieldUi(
                 value = viewModel.passwordInput,
                 onValueChange = { viewModel.setPassword(it) },
-                label = { Text(stringResource(id = R.string.password_field)) },
+                label = { Text(stringResource(id = R.string.password)) },
                 supportingText = {
                     if (isPasswordError) {
                         Text(stringResource(id = uiState.error!!.messageId))
@@ -90,7 +90,7 @@ fun LoginScreen(
             ) {
                 // Login Button
                 ButtonUi(
-                    text = stringResource(id = R.string.login_text),
+                    text = stringResource(id = R.string.login),
                     onClick = {
                         viewModel.login()
                     },
