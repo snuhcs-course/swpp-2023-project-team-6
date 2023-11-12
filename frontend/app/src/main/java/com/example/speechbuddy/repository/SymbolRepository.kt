@@ -24,7 +24,10 @@ import javax.inject.Singleton
 
 
 import com.example.speechbuddy.ui.models.SymbolItem
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
 import org.jetbrains.kotlinx.multik.api.mk
 import org.jetbrains.kotlinx.multik.api.ndarray
 import org.jetbrains.kotlinx.multik.ndarray.data.get
@@ -121,8 +124,78 @@ class SymbolRepository @Inject constructor(
             id = weightRow.id,
             weights = value
         )
-        weightRowDao.upsetWeightRow(weightRowEntity) // may change to updateWeightRow function
+        weightRowDao.updateWeightRow(weightRowEntity) // may change to updateWeightRow function
     }
+
+    fun provideSuggestion2(symbol: Symbol): Flow<List<Symbol>>{
+        val allSymbolList = mutableListOf<Symbol>()
+        CoroutineScope(Dispatchers.IO).launch {
+            getAllSymbols().collect { symbolList ->
+                allSymbolList.clear()
+                allSymbolList.addAll(symbolList)
+            }
+        }
+
+        val allWeightRowList = mutableListOf<WeightRow>()
+        CoroutineScope(Dispatchers.IO).launch {
+            getAllWeightRows().collect{ weightRowList ->
+                allWeightRowList.clear()
+                allWeightRowList.addAll(weightRowList)
+            }
+        }
+
+        val oneWeightRow = mutableListOf<Int>()
+        CoroutineScope(Dispatchers.IO).launch {
+            getWeightRowById(symbol.id).collect{ weightRowList ->
+                oneWeightRow.clear()
+                oneWeightRow.addAll(weightRowList[0].weights)
+            }
+        }
+
+        val newSymbolList = mutableListOf<Symbol>()
+        val listOfSymCntPairs = mutableListOf<Pair<Symbol, Int>>()
+
+        for(i in 0 until allSymbolList.size){
+            // 1 ~ 500 symbol id, 0 ~ 499 symbolList, 0 ~ 499 weight in weightRow
+            listOfSymCntPairs.add(Pair(allSymbolList[i], oneWeightRow[symbol.id - 1]))
+        }
+
+        val sortedByNumDesc = listOfSymCntPairs.sortedByDescending { it.second }
+
+        for(i in sortedByNumDesc){
+            newSymbolList.add(i.first)
+        }
+
+        return flow{
+            val newSymbols = newSymbolList.toList()
+            emit(newSymbols)
+        }
+    }
+
+    suspend fun update2(symbolList: List<SymbolItem>){
+
+        for(i in 0 until symbolList.size - 1){
+            val symbol = symbolList[i]
+            val oneWeightRowList = mutableListOf<WeightRow>()
+            CoroutineScope(Dispatchers.IO).launch {
+                getWeightRowById(symbol.id).collect{ weightRowList ->
+                    oneWeightRowList.clear()
+                    oneWeightRowList.addAll(weightRowList)
+                }
+            }
+            val oneWeightRow = oneWeightRowList[0]
+            val weights = oneWeightRow.weights
+
+            val preSymbol = weights.toIntArray()
+            val aftSymbolId = symbolList[i+1].symbol.id - 1 // weights의 iteration 0이 symbol의 id 1에 대응
+
+            preSymbol[aftSymbolId] += 1
+            val aftSymbol = preSymbol
+
+            updateWeightRow(oneWeightRow, aftSymbol.toList())
+        }
+    }
+
 
     /**
      * Symbol object에서 id는 1부터 시작하기 때문에 list manipulation시 주의

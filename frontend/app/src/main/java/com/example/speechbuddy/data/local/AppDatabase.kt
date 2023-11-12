@@ -20,6 +20,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun symbolDao(): SymbolDao
     abstract fun categoryDao(): CategoryDao
 
+    abstract fun weightRowDao(): WeightRowDao
+
     companion object {
         // For Singleton Instantiation
         @Volatile

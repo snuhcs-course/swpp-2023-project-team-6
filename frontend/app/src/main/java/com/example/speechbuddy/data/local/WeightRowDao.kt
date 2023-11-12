@@ -20,6 +20,7 @@ interface WeightRowDao {
     suspend fun updateWeightRow(weightRowEntity: WeightRowEntity)
 
     @Upsert
-    suspend fun upsetWeightRow(weightRowEntity: WeightRowEntity)
+    suspend fun upsertAll(weightRowEntities: List<WeightRowEntity>)
+
 
 }
