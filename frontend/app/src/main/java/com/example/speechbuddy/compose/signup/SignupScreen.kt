@@ -71,6 +71,8 @@ fun SignupScreen(
                 supportingText = {
                     if (isNicknameError) {
                         Text(stringResource(id = uiState.error!!.messageId))
+                    } else {
+                        Text(stringResource(id = R.string.nickname_too_long))
                     }
                 },
                 isError = isNicknameError,
@@ -84,6 +86,8 @@ fun SignupScreen(
                 supportingText = {
                     if (isPasswordError) {
                         Text(stringResource(id = uiState.error!!.messageId))
+                    } else {
+                        Text(stringResource(id = R.string.password_too_short))
                     }
                 },
                 isError = isPasswordError,

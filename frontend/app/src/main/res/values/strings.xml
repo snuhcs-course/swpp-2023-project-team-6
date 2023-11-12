@@ -81,7 +81,7 @@
     <string name="create">만들기</string>
     <string name="new_symbol_photo">새 상징 사진</string>
     <string name="no_symbol_name">상징 이름을 입력해주세요</string>
-    <string name="symbol_name_too_long">상징 이름을 20자 이하여야 합니다</string>
+    <string name="symbol_name_too_long">상징 이름은 20자 이하여야 합니다</string>
     <string name="no_category">대분류를 선택해주세요</string>
     <string name="no_photo">사진을 선택해주세요</string>
 

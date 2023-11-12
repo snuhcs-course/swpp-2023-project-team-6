@@ -15,6 +15,7 @@ import com.example.speechbuddy.ui.models.DisplayMode
 import com.example.speechbuddy.ui.models.SymbolItem
 import com.example.speechbuddy.ui.models.SymbolSelectionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,10 +42,10 @@ class SymbolSelectionViewModel @Inject internal constructor(
     private val _entries = MutableLiveData<List<Entry>>()
     val entries: LiveData<List<Entry>> get() = _entries
 
+    private var getEntriesJob: Job? = null
+
     init {
-        viewModelScope.launch {
-            getEntries()
-        }
+        getEntries()
     }
 
     fun expandMenu() {
@@ -69,16 +70,16 @@ class SymbolSelectionViewModel @Inject internal constructor(
                 isMenuExpanded = false, displayMode = displayMode
             )
         }
-        viewModelScope.launch {
-            getEntries()
-        }
+        getEntries()
     }
 
     fun setQuery(input: String) {
         queryInput = input
-        viewModelScope.launch {
-            getEntries()
-        }
+        /**
+         * Passes a new queryInput to getEntries() to ensure that
+         * getEntries() is called precisely because of a change in query
+         */
+        getEntries(input)
     }
 
     fun clear(symbolItem: SymbolItem) {
@@ -90,6 +91,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun selectSymbol(symbol: Symbol) {
+        queryInput = ""
         selectedSymbols =
             selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
     }
@@ -103,42 +105,59 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun selectCategory(category: Category) {
         if (category != selectedCategory) {
             selectedCategory = category
-            viewModelScope.launch {
+            getEntriesJob?.cancel()
+            getEntriesJob = viewModelScope.launch {
                 repository.getSymbolsByCategory(category).collect { symbols ->
                     _entries.postValue(listOf(category) + symbols)
                 }
             }
         } else {
             selectedCategory = null
-            viewModelScope.launch {
-                getEntries()
-            }
+            getEntries()
         }
     }
 
-    private suspend fun getEntries() {
-        when (_uiState.value.displayMode) {
-            DisplayMode.ALL -> {
-                repository.getEntries(queryInput).collect { entries ->
-                    _entries.postValue(entries)
+    private fun getEntries(query: String? = null) {
+        getEntriesJob?.cancel()
+        getEntriesJob = viewModelScope.launch {
+            when (_uiState.value.displayMode) {
+                DisplayMode.ALL -> {
+                    repository.getEntries(queryInput).collect { entries ->
+                        _entries.postValue(entries)
+                    }
                 }
-            }
 
-            DisplayMode.SYMBOL -> {
-                repository.getSymbols(queryInput).collect { symbols ->
-                    _entries.postValue(symbols)
+                /**
+                 * In case of DisplayMode.SYMBOL and DisplayMode.CATEGORY,
+                 * if getEntries() is called by setQuery(),
+                 * retrieve both symbols and categories from the repository
+                 */
+                DisplayMode.SYMBOL -> {
+                    if (query != null) // called from setQuery()
+                        repository.getEntries(query).collect { entries ->
+                            _entries.postValue(entries)
+                        }
+                    else // called from somewhere else
+                        repository.getSymbols(queryInput).collect { symbols ->
+                            _entries.postValue(symbols)
+                        }
                 }
-            }
 
-            DisplayMode.CATEGORY -> {
-                repository.getCategories(queryInput).collect { categories ->
-                    _entries.postValue(categories)
+                DisplayMode.CATEGORY -> {
+                    if (query != null)
+                        repository.getEntries(query).collect { entries ->
+                            _entries.postValue(entries)
+                        }
+                    else
+                        repository.getCategories(queryInput).collect { categories ->
+                            _entries.postValue(categories)
+                        }
                 }
-            }
 
-            DisplayMode.FAVORITE -> {
-                repository.getFavoriteSymbols(queryInput).collect { symbols ->
-                    _entries.postValue(symbols)
+                DisplayMode.FAVORITE -> {
+                    repository.getFavoriteSymbols(queryInput).collect { symbols ->
+                        _entries.postValue(symbols)
+                    }
                 }
             }
         }
