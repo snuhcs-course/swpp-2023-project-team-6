@@ -38,7 +38,9 @@ data class BottomNavItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpeechBuddyHome() {
+fun SpeechBuddyHome(
+    initialPage: Boolean
+) {
     val navController = rememberNavController()
     val navItems = listOf(
         BottomNavItem(
@@ -77,7 +79,8 @@ fun SpeechBuddyHome() {
     ) { paddingValues ->
         SpeechBuddyHomeNavHost(
             navController = navController,
-            bottomPaddingValues = paddingValues
+            bottomPaddingValues = paddingValues,
+            initialPage = initialPage
         )
     }
 }
@@ -120,9 +123,16 @@ private fun BottomNavigationBar(
 @Composable
 private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,
-    bottomPaddingValues: PaddingValues
+    bottomPaddingValues: PaddingValues,
+    initialPage: Boolean
 ) {
-    NavHost(navController = navController, startDestination = "symbol_selection") {
+    val startDestination = if (initialPage) {
+        "symbol_selection"
+    } else {
+        "text_to_speech"
+    }
+
+    NavHost(navController = navController, startDestination = startDestination) {
         composable("symbol_selection") {
             SymbolSelectionScreen(
                 bottomPaddingValues = bottomPaddingValues
