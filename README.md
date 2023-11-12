@@ -1,20 +1,12 @@
-# SNU-SWPP-Template
+# SpeechBuddy ![top_app_bar_ic](https://github.com/snuhcs-course/swpp-2023-project-team-6/assets/65206075/154ef236-a392-41b1-beba-208cfd44c72c)
 
-You can use the README file to showcase and promote your mobile app. The template provided below is just a starting point. Feel free to craft your README as you see fit. 
+SpeechBuddy is a AAC(Augmentative and Alternative Communication) app designed to facilitate communication for individuals with speech impairments.<br>
+Specific target users are as follows.<br>
+- People who needs more direct and straightforward communication methods due to cognitive disabilities (e.g. those with autism spectrum disorders, aphasia...)
+- People who are physically unable to produce sounds (e.g. those who had cordectomy, who has severe dysarthria...)<br>
 
-Please note that the README doesn't affect your grade and is not included in documentation(Wiki).
+Our app offers two main features: symbol-based communication and text-to-speech functionality. Users can communicate by selecting from a wide range of symbols, including the option to add personalized symbols with pictures. Additionally, SpeechBuddy incorporates next symbol prediction based on user's history, enhancing the efficiency of communication. For users who can type, SpeechBuddy also provides a text-to-speech feature, offering an alternative voice for the user. Overall, SpeechBuddy aims to enhance accessibility and communication for individuals with speech impairments through its versatile and user-friendly features.
 
-# [Your Application Name]
-
-[Short application description here]
-
-![Application Screenshot](path_to_screenshot.png)
-
-## Features
-
-- Feature 1: Brief description
-- Feature 2: Brief description
-- ...
 
 ## Getting Started
 
