@@ -87,7 +87,7 @@ fun SignupScreen(
                     value = viewModel.passwordInput,
                     onValueChange = { viewModel.setPassword(it) },
                     label = { Text(text = stringResource(id = R.string.password_field)) },
-                    supportingText = { Text(stringResource(id = R.string.false_new_password)) },
+                    supportingText = { Text(stringResource(id = R.string.password_qualification)) },
                     isError = isPasswordError,
                     isValid = uiState.isValidPassword,
                     isHidden = true
