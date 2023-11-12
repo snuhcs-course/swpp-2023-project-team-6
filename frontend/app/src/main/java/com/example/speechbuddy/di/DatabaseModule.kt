@@ -5,6 +5,7 @@ import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
+import com.example.speechbuddy.data.local.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +21,11 @@ class DatabaseModule {
     @Provides
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return AppDatabase.getInstance(context)
+    }
+
+    @Provides
+    fun provideUserDao(appDatabase: AppDatabase): UserDao {
+        return appDatabase.userDao()
     }
 
     @Provides
