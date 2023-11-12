@@ -23,7 +23,7 @@
     <string name="password_check">비밀번호 확인</string>
     <string name="code">인증번호</string>
     <string name="new_password">새 비밀번호</string>
-    <string name="new_password_check">새 비밀번호 확인</string>
+    <string name="new_password_check">새 비밀번호 확인</string>인
 
     <!-- buttons -->
     <string name="start_guest_mode">게스트 모드로 시작하기</string>
@@ -33,6 +33,7 @@
     <string name="send_code">인증번호 발송</string>
     <string name="do_signup">회원가입하기</string>
     <string name="cancel">취소</string>
+    <string name="confirm">확인</string>
     <string name="proceed">진행</string>
 
     <!-- error messages -->
@@ -95,6 +96,8 @@
     <string name="withdraw">회원탈퇴</string>
     <string name="withdraw_warning">회원탈퇴를 하면 지금까지의 이용 기록이 모두 사라지며 복구할 수 없습니다. SpeechBuddy를 다시 이용하시려면 게스트 모드를 이용하거나 회원가입을 새로 해야 합니다. 정말로 탈퇴하시겠습니까?</string>
     <string name="withdraw_proceed_warning">정말로 탈퇴하시겠습니까? 이 동작은 취소할 수 없습니다.</string>
+    <string name="no_connection">인터넷 연결 없음</string>
+    <string name="no_connection_warning">인터넷 연결을 확인하세요</string>
 
     <!-- Backup Settings -->
     <string name="backup_to_server">서버에 백업하기</string>

@@ -21,8 +21,8 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AlertDialogUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
 
@@ -133,7 +133,18 @@ fun AccountSettings(
                     dismissButtonText = stringResource(id = R.string.cancel),
                     confirmButtonText = stringResource(id = R.string.withdraw),
                     onDismiss = { viewModel.hideAlert() },
-                    onConfirm = { viewModel.deleteAccount() }
+                    onConfirm = { viewModel.withdraw() }
+                )
+            }
+
+            AccountSettingsAlert.CONNECTION -> {
+                AlertDialogUi(
+                    title = stringResource(id = R.string.no_connection),
+                    text = stringResource(id = R.string.no_connection_warning),
+                    dismissButtonText = stringResource(id = R.string.cancel),
+                    confirmButtonText = stringResource(id = R.string.confirm),
+                    onDismiss = { viewModel.hideAlert() },
+                    onConfirm = { viewModel.hideAlert() }
                 )
             }
         }
