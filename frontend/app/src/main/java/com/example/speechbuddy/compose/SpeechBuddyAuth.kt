@@ -48,19 +48,23 @@ fun SpeechBuddyAuthNavHost(
             val source = backStackEntry.arguments?.getString("source")
             EmailVerificationScreen(
                 source = source,
-                navController = navController
+                navigateCallback = { navController.navigate(it) }
             )
         }
-        composable("signup/{emailInput}") { backStackEntry ->
-            val emailInput = backStackEntry.arguments?.getString("emailInput")
+        composable("signup/{email}") { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email")
             SignupScreen(
-                email = emailInput ?: "",
-                navController = navController
+                email = email ?: "",
+                navigateToLogin = {
+                    navController.navigate("login")
+                }
             )
         }
         composable("reset_password") {
             ResetPasswordScreen(
-                navController = navController
+                navigateToLogin = {
+                    navController.navigate("login")
+                }
             )
         }
     }

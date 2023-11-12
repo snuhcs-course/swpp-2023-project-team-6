@@ -1,10 +1,10 @@
 package com.example.speechbuddy.repository
 
+import android.util.Log
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
-import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
@@ -31,10 +31,9 @@ class AuthRepository @Inject constructor(
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
     private val accessTokenDtoMapper: AccessTokenDtoMapper,
+    private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager
 ) {
-    private val errorResponseMapper = ErrorResponseMapper()
-    private val responseHandler = ResponseHandler()
 
     suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Response<Void>> =
         flow {
@@ -42,7 +41,7 @@ class AuthRepository @Inject constructor(
                 val result = authService.signup(authSignupRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -58,7 +57,7 @@ class AuthRepository @Inject constructor(
                 } ?: returnUnknownError()
             } else {
                 response.errorBody()?.let { responseBody ->
-                    val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
+                    val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
                     Resource.error(
                         errorMsgKey, null
                     )
@@ -73,7 +72,7 @@ class AuthRepository @Inject constructor(
                 val result = authService.sendCodeForSignup(authSendCodeRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -83,7 +82,7 @@ class AuthRepository @Inject constructor(
                 val result = authService.sendCodeForResetPassword(authSendCodeRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -93,7 +92,7 @@ class AuthRepository @Inject constructor(
                 val result = authService.verifyEmailForSignup(authVerifyEmailRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -113,7 +112,7 @@ class AuthRepository @Inject constructor(
                 } ?: returnUnknownError()
             } else {
                 response.errorBody()?.let { responseBody ->
-                    val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
+                    val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
                     Resource.error(
                         errorMsgKey, null
                     )
@@ -128,10 +127,13 @@ class AuthRepository @Inject constructor(
                 val result = authService.resetPassword(getTemporaryAuthHeader(), authResetPasswordRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
+    /**
+     * TODO: SessionManager-related tasks
+     */
     fun checkPreviousUser(): Flow<Resource<AuthToken>> {
         return authTokenPrefsManager.preferencesFlow.map { authToken ->
             if (!authToken.accessToken.isNullOrEmpty() && !authToken.refreshToken.isNullOrEmpty()) {
@@ -153,13 +155,6 @@ class AuthRepository @Inject constructor(
     private fun <T> returnUnknownError(): Resource<T> {
         return Resource.error(
             "Unknown error", null
-        )
-    }
-
-    private fun noInternetResponse(): Response<Void> {
-        return Response.error(
-            ResponseCode.NO_INTERNET_CONNECTION.value,
-            responseHandler.getResponseBody(ResponseCode.NO_INTERNET_CONNECTION)
         )
     }
 

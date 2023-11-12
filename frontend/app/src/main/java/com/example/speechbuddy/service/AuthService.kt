@@ -50,4 +50,5 @@ interface AuthService {
         @Header("Authorization") header: String,
         @Body resetPasswordRequest: AuthResetPasswordRequest
     ): Response<Void>
+    
 }

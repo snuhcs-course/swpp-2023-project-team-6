@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.domain.SessionManager
@@ -47,11 +46,6 @@ class ResetPasswordViewModel @Inject internal constructor(
         if (_uiState.value.error?.type == ResetPasswordErrorType.PASSWORD_CHECK) validatePasswordCheck()
     }
 
-    private fun clearInputs() {
-        passwordInput = ""
-        passwordCheckInput = ""
-    }
-
     private fun validatePassword() {
         if (isValidPassword(passwordInput)) {
             _uiState.update { currentState ->
@@ -73,14 +67,18 @@ class ResetPasswordViewModel @Inject internal constructor(
         }
     }
 
-    private fun changeLoading() {
-        _uiState.update {
-            it.copy(loading = !it.loading)
-        }
-    }
-
-    fun resetPassword(navController: NavHostController) {
-        if (!isValidPassword(passwordInput)) {
+    fun resetPassword(onSuccess: () -> Unit) {
+        if (passwordInput.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPassword = false,
+                    error = ResetPasswordError(
+                        type = ResetPasswordErrorType.PASSWORD,
+                        messageId = R.string.no_password,
+                    )
+                )
+            }
+        } else if (!isValidPassword(passwordInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPassword = false,
@@ -108,26 +106,23 @@ class ResetPasswordViewModel @Inject internal constructor(
                 ).collect { result ->
                     when (result.code()) {
                         ResponseCode.SUCCESS.value -> {
-                            changeLoading()
                             sessionManager.setTemporaryToken(null)
-                            navController.navigate("login")
+                            onSuccess()
                         }
 
                         ResponseCode.BAD_REQUEST.value -> {
-                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
                                     error = ResetPasswordError(
-                                        type = ResetPasswordErrorType.PASSWORD_CHECK,
-                                        messageId = R.string.unknown_error // TODO
+                                        type = ResetPasswordErrorType.PASSWORD,
+                                        messageId = R.string.unknown_error
                                     )
                                 )
                             }
                         }
 
                         ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
@@ -140,7 +135,6 @@ class ResetPasswordViewModel @Inject internal constructor(
                         }
                     }
                 }
-                clearInputs()
             }
         }
     }

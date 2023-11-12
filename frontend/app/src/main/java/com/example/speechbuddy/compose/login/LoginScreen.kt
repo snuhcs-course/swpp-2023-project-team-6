@@ -36,8 +36,8 @@ fun LoginScreen(
 
     val isEmailError = uiState.error?.type == LoginErrorType.EMAIL
     val isPasswordError = uiState.error?.type == LoginErrorType.PASSWORD
-    val isError = (isEmailError || isPasswordError) &&
-            (uiState.error?.messageId != R.string.connection_error)
+    val isConnectionError = uiState.error?.type == LoginErrorType.CONNECTION
+    val isError = (isEmailError || isPasswordError) && !isConnectionError
 
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
@@ -52,9 +52,8 @@ fun LoginScreen(
                 description = stringResource(id = R.string.login_description)
             )
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            // Email Text Field
             TextFieldUi(
                 value = viewModel.emailInput,
                 onValueChange = { viewModel.setEmail(it) },
@@ -68,13 +67,14 @@ fun LoginScreen(
                 isValid = uiState.isValidEmail
             )
 
-            // Password Text Field
             TextFieldUi(
                 value = viewModel.passwordInput,
                 onValueChange = { viewModel.setPassword(it) },
                 label = { Text(stringResource(id = R.string.password)) },
                 supportingText = {
                     if (isPasswordError) {
+                        Text(stringResource(id = uiState.error!!.messageId))
+                    } else if (isConnectionError) {
                         Text(stringResource(id = uiState.error!!.messageId))
                     }
                 },
@@ -88,7 +88,6 @@ fun LoginScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                // Login Button
                 ButtonUi(
                     text = stringResource(id = R.string.login),
                     onClick = {
@@ -97,7 +96,6 @@ fun LoginScreen(
                     isEnabled = !isError,
                     isError = isError
                 )
-                // Forgot Password Button
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_password),
                     onClick = onResetPasswordClick,
@@ -106,7 +104,6 @@ fun LoginScreen(
                 )
             }
 
-            // Signup Button
             ButtonUi(
                 text = stringResource(id = R.string.signup),
                 onClick = onSignupClick,

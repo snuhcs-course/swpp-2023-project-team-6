@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -16,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
@@ -28,15 +28,19 @@ import com.example.speechbuddy.viewmodel.SignupViewModel
 fun SignupScreen(
     modifier: Modifier = Modifier,
     email: String,
-    navController: NavHostController,
+    navigateToLogin: () -> Unit,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isNicknameError = uiState.error?.type == SignupErrorType.NICKNAME
     val isPasswordError = uiState.error?.type == SignupErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == SignupErrorType.PASSWORD_CHECK
-    val isError = (isNicknameError || isPasswordError || isPasswordCheckError) &&
-            (uiState.error?.messageId != R.string.connection_error)
+    val isConnectionError = uiState.error?.type == SignupErrorType.CONNECTION
+    val isError = (isNicknameError || isPasswordError || isPasswordCheckError) && !isConnectionError
+
+    LaunchedEffect(Unit) {
+        viewModel.setEmail(email)
+    }
 
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
@@ -53,7 +57,6 @@ fun SignupScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Email Text Field
             TextFieldUi(
                 value = email,
                 onValueChange = {},
@@ -61,7 +64,6 @@ fun SignupScreen(
                 isEnabled = false
             )
 
-            // Nickname Text Field
             TextFieldUi(
                 value = viewModel.nicknameInput,
                 onValueChange = { viewModel.setNickname(it) },
@@ -75,7 +77,6 @@ fun SignupScreen(
                 isValid = uiState.isValidNickname
             )
 
-            // Password Text Field
             TextFieldUi(
                 value = viewModel.passwordInput,
                 onValueChange = { viewModel.setPassword(it) },
@@ -90,13 +91,14 @@ fun SignupScreen(
                 isHidden = true
             )
 
-            // Password Check Text Field
             TextFieldUi(
                 value = viewModel.passwordCheckInput,
                 onValueChange = { viewModel.setPasswordCheck(it) },
                 label = { Text(text = stringResource(id = R.string.password_check)) },
                 supportingText = {
                     if (isPasswordCheckError) {
+                        Text(stringResource(id = uiState.error!!.messageId))
+                    } else if (isConnectionError) {
                         Text(stringResource(id = uiState.error!!.messageId))
                     }
                 },
@@ -111,7 +113,7 @@ fun SignupScreen(
                 text = stringResource(id = R.string.signup),
                 isError = isError,
                 onClick = {
-                    viewModel.signup(email, navController)
+                    viewModel.signup(onSuccess = navigateToLogin)
                 }
             )
         }

@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
@@ -28,14 +27,14 @@ import com.example.speechbuddy.viewmodel.ResetPasswordViewModel
 @Composable
 fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
+    navigateToLogin: () -> Unit,
     viewModel: ResetPasswordViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isPasswordError = uiState.error?.type == ResetPasswordErrorType.PASSWORD
     val isPasswordCheckError = uiState.error?.type == ResetPasswordErrorType.PASSWORD_CHECK
-    val isError = (isPasswordError || isPasswordCheckError) &&
-            (uiState.error?.messageId != R.string.connection_error)
+    val isConnectionError = uiState.error?.type == ResetPasswordErrorType.CONNECTION
+    val isError = (isPasswordError || isPasswordCheckError) && !isConnectionError
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -54,7 +53,6 @@ fun ResetPasswordScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Password Text Field
             TextFieldUi(
                 value = viewModel.passwordInput,
                 onValueChange = { viewModel.setPassword(it) },
@@ -69,13 +67,14 @@ fun ResetPasswordScreen(
                 isHidden = true
             )
 
-            // Password Check Text Field
             TextFieldUi(
                 value = viewModel.passwordCheckInput,
                 onValueChange = { viewModel.setPasswordCheck(it) },
                 label = { Text(stringResource(id = R.string.new_password_check)) },
                 supportingText = {
                     if (isPasswordCheckError) {
+                        Text(stringResource(id = uiState.error!!.messageId))
+                    } else if (isConnectionError) {
                         Text(stringResource(id = uiState.error!!.messageId))
                     }
                 },
@@ -86,10 +85,9 @@ fun ResetPasswordScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Set password Button
             ButtonUi(
                 text = stringResource(id = R.string.next),
-                onClick = { viewModel.resetPassword(navController) },
+                onClick = { viewModel.resetPassword(onSuccess = navigateToLogin) },
                 isError = isError,
                 level = ButtonLevel.PRIMARY
             )

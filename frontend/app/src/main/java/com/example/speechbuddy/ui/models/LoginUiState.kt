@@ -3,8 +3,7 @@ package com.example.speechbuddy.ui.models
 data class LoginUiState(
     val isValidEmail: Boolean = false,
     val isValidPassword: Boolean = false,
-    val error: LoginError? = null,
-    val loading: Boolean = false
+    val error: LoginError? = null
 )
 
 data class LoginError(

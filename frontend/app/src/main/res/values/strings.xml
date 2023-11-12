@@ -45,7 +45,6 @@
     <string name="no_password">비밀번호를 입력해주세요</string>
     <string name="wrong_password">비밀번호가 올바르지 않습니다</string>
     <string name="password_too_short">비밀번호는 8자 이상이어야 합니다</string>
-    <string name="no_password_check">비밀번호를 확인해주세요</string>
     <string name="wrong_password_check">비밀번호가 일치하지 않습니다</string>
     <string name="code_successfully_sent">인증번호를 발송했습니다</string>
     <string name="no_code">인증번호를 입력해주세요</string>

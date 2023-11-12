@@ -1,5 +1,6 @@
 package com.example.speechbuddy.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -48,11 +49,6 @@ class LoginViewModel @Inject internal constructor(
         if (_uiState.value.error?.type == LoginErrorType.PASSWORD) validatePassword()
     }
 
-    private fun clearInputs() {
-        emailInput = ""
-        passwordInput = ""
-    }
-
     private fun validateEmail() {
         if (isValidEmail(emailInput)) {
             _uiState.update { currentState ->
@@ -75,20 +71,34 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
-    private fun changeLoading() {
-        _uiState.update {
-            it.copy(loading = !it.loading)
-        }
-    }
-
     fun login() {
-        if (!isValidEmail(emailInput)) {
+        if (emailInput.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidEmail = false,
+                    error = LoginError(
+                        type = LoginErrorType.EMAIL,
+                        messageId = R.string.no_email
+                    )
+                )
+            }
+        } else if (!isValidEmail(emailInput)) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidEmail = false,
                     error = LoginError(
                         type = LoginErrorType.EMAIL,
                         messageId = R.string.wrong_email
+                    )
+                )
+            }
+        } else if (passwordInput.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPassword = false,
+                    error = LoginError(
+                        type = LoginErrorType.PASSWORD,
+                        messageId = R.string.no_password
                     )
                 )
             }
@@ -103,7 +113,6 @@ class LoginViewModel @Inject internal constructor(
                 )
             }
         } else {
-            changeLoading()
             viewModelScope.launch {
                 repository.login(
                     AuthLoginRequest(
@@ -112,51 +121,41 @@ class LoginViewModel @Inject internal constructor(
                     )
                 ).collect { resource ->
                     if (resource.status == Status.SUCCESS) {
+                        // AccessToken is already saved in AuthTokenPrefsManager by the repository
                         sessionManager.login(resource.data!!)
-                    } else {
-                        if (resource.message?.contains("password", ignoreCase = true) == true) {
-                            changeLoading()
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isValidPassword = false,
-                                    error = LoginError(
-                                        type = LoginErrorType.PASSWORD,
-                                        messageId = R.string.wrong_password
-                                    )
+                    } else if (resource.message?.contains("email", ignoreCase = true) == true) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidEmail = false,
+                                error = LoginError(
+                                    type = LoginErrorType.EMAIL,
+                                    messageId = R.string.wrong_email
                                 )
-                            }
-                        } else if (resource.message?.contains("email", ignoreCase = true) == true
-                        ) {
-                            changeLoading()
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isValidEmail = false,
-                                    error = LoginError(
-                                        type = LoginErrorType.EMAIL,
-                                        messageId = R.string.wrong_email
-                                    )
+                            )
+                        }
+                    } else if (resource.message?.contains("password", ignoreCase = true) == true) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidPassword = false,
+                                error = LoginError(
+                                    type = LoginErrorType.PASSWORD,
+                                    messageId = R.string.wrong_password
                                 )
-                            }
-                        } else if (resource.message?.contains(
-                                "Unknown",
-                                ignoreCase = true
-                            ) == true
-                        ) {
-                            _uiState.update { currentState ->
-                                changeLoading()
-                                currentState.copy(
-                                    isValidEmail = false,
-                                    error = LoginError(
-                                        type = LoginErrorType.CONNECTION,
-                                        messageId = R.string.connection_error
-                                    )
+                            )
+                        }
+                    } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidEmail = false,
+                                error = LoginError(
+                                    type = LoginErrorType.CONNECTION,
+                                    messageId = R.string.connection_error
                                 )
-                            }
+                            )
                         }
                     }
                 }
             }
-            clearInputs()
         }
     }
 
