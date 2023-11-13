@@ -68,14 +68,14 @@ fun AccountSettings(
                     SettingsRow(
                         label = stringResource(id = R.string.email),
                         content = {
-                            SettingsRowText(text = uiState.email)
+                            SettingsRowText(text = uiState.user!!.email)
                         }
                     )
 
                     SettingsRow(
                         label = stringResource(id = R.string.nickname),
                         content = {
-                            SettingsRowText(text = uiState.nickname)
+                            SettingsRowText(text = uiState.user!!.nickname)
                         }
                     )
                 }

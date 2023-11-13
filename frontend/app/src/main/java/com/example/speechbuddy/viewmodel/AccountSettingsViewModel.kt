@@ -72,4 +72,10 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
     }
 
+    fun exitGuestMode() {
+        viewModelScope.launch {
+            sessionManager.exitGuestMode()
+        }
+    }
+
 }

@@ -99,6 +99,10 @@
     <string name="no_connection">인터넷 연결 없음</string>
     <string name="no_connection_warning">인터넷 연결을 확인하세요</string>
 
+    <!-- Guest Settings -->
+    <string name="guest_mode_description">현재 게스트 모드를 사용 중입니다.</string>
+    <string name="exit_guest_mode">게스트 모드에서 나가기</string>
+
     <!-- Backup Settings -->
     <string name="backup_to_server">서버에 백업하기</string>
     <string name="last_backup_date">마지막 백업 날짜</string>
