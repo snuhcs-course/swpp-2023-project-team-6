@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Room Database for SpeechBuddy App
  */
-@Database(entities = [SymbolEntity::class, CategoryEntity::class, WeightRowEntity::class], version = 2, exportSchema = false)
+@Database(entities = [SymbolEntity::class, CategoryEntity::class, WeightRowEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun symbolDao(): SymbolDao
