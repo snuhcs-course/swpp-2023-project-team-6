@@ -1,5 +1,6 @@
 package com.example.speechbuddy.compose.texttospeech
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -59,10 +59,13 @@ fun TextToSpeechScreen(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground
     )
+    val activatedColor = MaterialTheme.colorScheme.onBackground
     val deactivatedButtonColor: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.outline
     )
+    val deactivatedColor = MaterialTheme.colorScheme.outline
+
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -110,8 +113,8 @@ fun TextToSpeechScreen(
                 Row {
                     TextToSpeechButton(
                         buttonStatus = uiState.buttonStatus,
-                        activatedButtonColor = activatedButtonColor,
-                        deactivatedButtonColor = deactivatedButtonColor,
+                        activatedColor = activatedColor,
+                        deactivatedColor = deactivatedColor,
                         onPlay = { viewModel.ttsStart(context) },
                         onStop = { viewModel.ttsStop() },
                         viewModel = viewModel
@@ -119,10 +122,9 @@ fun TextToSpeechScreen(
 
                     TextClearButton(
                         buttonStatus = uiState.buttonStatus,
-                        activatedButtonColor = activatedButtonColor,
-                        deactivatedButtonColor = deactivatedButtonColor,
+                        activatedColor = activatedColor,
+                        deactivatedColor = deactivatedColor,
                         onPlay = { viewModel.clearText() },
-                        onStop = {},
                         viewModel = viewModel
                     )
                 }
@@ -134,67 +136,64 @@ fun TextToSpeechScreen(
 @Composable
 private fun TextToSpeechButton(
     buttonStatus: ButtonStatusType,
-    activatedButtonColor: ButtonColors,
-    deactivatedButtonColor: ButtonColors,
+    activatedColor: Color,
+    deactivatedColor: Color,
     onPlay: () -> Unit,
     onStop: () -> Unit,
     viewModel: TextToSpeechViewModel
 ) {
     if (buttonStatus == ButtonStatusType.PLAY && !viewModel.isEmptyText()) {
-        Button(
-            onClick = onPlay,
-            modifier = Modifier.size(
-                width = 200.dp,
-                height = 50.dp
-            ),
-            colors = activatedButtonColor
+        Row(
+            modifier = Modifier
+                .clickable(onClick = onPlay)
+                .size(width = 200.dp, height = 50.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.play_text),
-                style = MaterialTheme.typography.headlineMedium
+                color = activatedColor,
+                style = MaterialTheme.typography.headlineSmall
             )
             Icon(
-                Icons.Filled.PlayArrow,
+                imageVector = Icons.Filled.PlayArrow,
                 contentDescription = stringResource(id = R.string.play_text),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(38.dp),
+                tint = activatedColor
             )
         }
     } else if (buttonStatus == ButtonStatusType.PLAY && viewModel.isEmptyText()) {
-        Button(
-            onClick = {},
-            modifier = Modifier.size(
-                width = 200.dp,
-                height = 50.dp
-            ),
-            colors = deactivatedButtonColor
+        Row(
+            modifier = Modifier
+                .clickable(onClick = {})
+                .size(width = 200.dp, height = 50.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.play_text),
-                style = MaterialTheme.typography.headlineMedium
+                color = deactivatedColor,
+                style = MaterialTheme.typography.headlineSmall
             )
             Icon(
-                Icons.Filled.PlayArrow,
+                imageVector = Icons.Filled.PlayArrow,
                 contentDescription = stringResource(id = R.string.play_text),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(38.dp),
+                tint = deactivatedColor
             )
         }
     } else {
-        Button(
-            onClick = onStop,
-            modifier = Modifier.size(
-                width = 200.dp,
-                height = 50.dp
-            ),
-            colors = activatedButtonColor
+        Row(
+            modifier = Modifier
+                .clickable(onClick = onStop)
+                .size(width = 200.dp, height = 50.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.stop_text),
-                style = MaterialTheme.typography.headlineMedium
+                color = activatedColor,
+                style = MaterialTheme.typography.headlineSmall
             )
             Icon(
-                painterResource(R.drawable.stop_icon),
+                painter = painterResource(R.drawable.stop_icon),
                 contentDescription = stringResource(id = R.string.stop_text),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(38.dp),
+                tint = activatedColor
             )
         }
     }
@@ -203,48 +202,45 @@ private fun TextToSpeechButton(
 @Composable
 fun TextClearButton(
     buttonStatus: ButtonStatusType,
-    activatedButtonColor: ButtonColors,
-    deactivatedButtonColor: ButtonColors,
+    activatedColor: Color,
+    deactivatedColor: Color,
     onPlay: () -> Unit,
-    onStop: () -> Unit,
     viewModel: TextToSpeechViewModel
 ) {
     if (buttonStatus == ButtonStatusType.PLAY && !viewModel.isEmptyText()) {
-        Button(
-            onClick = onPlay,
-            modifier = Modifier.size(
-                width = 200.dp,
-                height = 50.dp
-            ),
-            colors = activatedButtonColor
+        Row(
+            modifier = Modifier
+                .clickable(onClick = onPlay)
+                .size(width = 200.dp, height = 50.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.clear_text),
-                style = MaterialTheme.typography.headlineMedium
+                color = activatedColor,
+                style = MaterialTheme.typography.headlineSmall
             )
             Icon(
-                Icons.Filled.Delete,
+                imageVector = Icons.Filled.Delete,
                 contentDescription = stringResource(id = R.string.clear_text),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(38.dp),
+                tint = activatedColor
             )
         }
     } else {
-        Button(
-            onClick = onStop,
-            modifier = Modifier.size(
-                width = 200.dp,
-                height = 50.dp
-            ),
-            colors = deactivatedButtonColor
+        Row(
+            modifier = Modifier
+                .clickable(onClick = {})
+                .size(width = 200.dp, height = 50.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.clear_text),
-                style = MaterialTheme.typography.headlineMedium
+                color = deactivatedColor,
+                style = MaterialTheme.typography.headlineSmall
             )
             Icon(
-                Icons.Filled.Delete,
+                imageVector = Icons.Filled.Delete,
                 contentDescription = stringResource(id = R.string.clear_text),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(38.dp),
+                tint = deactivatedColor
             )
         }
     }
