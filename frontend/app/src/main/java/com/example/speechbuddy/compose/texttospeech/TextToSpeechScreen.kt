@@ -100,7 +100,12 @@ fun TextToSpeechScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Row {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+
                     TextToSpeechButton(
                         buttonStatus = uiState.buttonStatus,
                         activatedColor = activatedColor,
@@ -109,6 +114,9 @@ fun TextToSpeechScreen(
                         onStop = { viewModel.ttsStop() },
                         viewModel = viewModel
                     )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
                     TextClearButton(
                         buttonStatus = uiState.buttonStatus,
                         activatedColor = activatedColor,
@@ -116,6 +124,8 @@ fun TextToSpeechScreen(
                         onClick = { viewModel.clearText() },
                         viewModel = viewModel
                     )
+
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
@@ -135,7 +145,7 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = onPlay)
-                .size(width = 200.dp, height = 50.dp),
+                .height(50.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -154,7 +164,7 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = {})
-                .size(width = 200.dp, height = 50.dp),
+                .height(50.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -173,7 +183,7 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = onStop)
-                .size(width = 200.dp, height = 50.dp),
+                .height(50.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -203,7 +213,7 @@ fun TextClearButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = onClick)
-                .size(width = 200.dp, height = 50.dp),
+                .height(50.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -222,7 +232,7 @@ fun TextClearButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = {})
-                .size(width = 200.dp, height = 50.dp),
+                .height(50.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
