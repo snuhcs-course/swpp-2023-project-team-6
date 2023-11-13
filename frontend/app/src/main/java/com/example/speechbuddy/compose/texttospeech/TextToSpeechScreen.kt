@@ -17,8 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -55,17 +53,9 @@ fun TextToSpeechScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val activatedButtonColor: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onBackground
-    )
-    val activatedColor = MaterialTheme.colorScheme.onBackground
-    val deactivatedButtonColor: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.outline
-    )
-    val deactivatedColor = MaterialTheme.colorScheme.outline
 
+    val activatedColor = MaterialTheme.colorScheme.onBackground
+    val deactivatedColor = MaterialTheme.colorScheme.outline
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -119,12 +109,11 @@ fun TextToSpeechScreen(
                         onStop = { viewModel.ttsStop() },
                         viewModel = viewModel
                     )
-
                     TextClearButton(
                         buttonStatus = uiState.buttonStatus,
                         activatedColor = activatedColor,
                         deactivatedColor = deactivatedColor,
-                        onPlay = { viewModel.clearText() },
+                        onClick = { viewModel.clearText() },
                         viewModel = viewModel
                     )
                 }
@@ -146,7 +135,8 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = onPlay)
-                .size(width = 200.dp, height = 50.dp)
+                .size(width = 200.dp, height = 50.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = stringResource(id = R.string.play_text),
@@ -164,7 +154,8 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = {})
-                .size(width = 200.dp, height = 50.dp)
+                .size(width = 200.dp, height = 50.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = stringResource(id = R.string.play_text),
@@ -182,7 +173,8 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = onStop)
-                .size(width = 200.dp, height = 50.dp)
+                .size(width = 200.dp, height = 50.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = stringResource(id = R.string.stop_text),
@@ -204,14 +196,15 @@ fun TextClearButton(
     buttonStatus: ButtonStatusType,
     activatedColor: Color,
     deactivatedColor: Color,
-    onPlay: () -> Unit,
+    onClick: () -> Unit,
     viewModel: TextToSpeechViewModel
 ) {
     if (buttonStatus == ButtonStatusType.PLAY && !viewModel.isEmptyText()) {
         Row(
             modifier = Modifier
-                .clickable(onClick = onPlay)
-                .size(width = 200.dp, height = 50.dp)
+                .clickable(onClick = onClick)
+                .size(width = 200.dp, height = 50.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = stringResource(id = R.string.clear_text),
@@ -229,7 +222,8 @@ fun TextClearButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = {})
-                .size(width = 200.dp, height = 50.dp)
+                .size(width = 200.dp, height = 50.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = stringResource(id = R.string.clear_text),
