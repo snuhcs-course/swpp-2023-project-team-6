@@ -105,7 +105,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun clearAll() {
-        repository.update2(selectedSymbols)
+        repository.update(selectedSymbols)
         selectedSymbols = emptyList()
     }
 
@@ -118,7 +118,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
             Log.d("weight", "into_context")
             getEntriesJob?.cancel()
             getEntriesJob = viewModelScope.launch {
-                repository.provideSuggestion2(symbol).collect { symbols ->
+                repository.provideSuggestion(symbol).collect { symbols ->
                     _entries.postValue(symbols)
                 }
             }

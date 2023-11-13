@@ -122,7 +122,7 @@ class SymbolRepository @Inject constructor(
         weightRowDao.updateWeightRow(weightRowEntity) // may change to updateWeightRow function
     }
 
-    fun provideSuggestion2(symbol: Symbol): Flow<List<Symbol>> = flow {
+    fun provideSuggestion(symbol: Symbol): Flow<List<Symbol>> = flow {
         val allSymbolList = getAllSymbols().first()
         val oneWeightRow = getWeightRowById(symbol.id).first()
         val newSymbolList = mutableListOf<Symbol>()
@@ -143,7 +143,7 @@ class SymbolRepository @Inject constructor(
 
     }
 
-    fun update2(symbolList: List<SymbolItem>) {
+    fun update(symbolList: List<SymbolItem>) {
         CoroutineScope(Dispatchers.IO).launch {
             val weightRows = mutableListOf<WeightRow>() // weight table
             weightRows.clear()
