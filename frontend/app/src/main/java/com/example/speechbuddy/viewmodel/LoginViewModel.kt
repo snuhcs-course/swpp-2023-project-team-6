@@ -1,6 +1,5 @@
 package com.example.speechbuddy.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -122,7 +121,7 @@ class LoginViewModel @Inject internal constructor(
                 ).collect { resource ->
                     if (resource.status == Status.SUCCESS) {
                         // AccessToken is already saved in AuthTokenPrefsManager by the repository
-                        sessionManager.login(resource.data!!)
+                        sessionManager.setAuthToken(resource.data!!)
                     } else if (resource.message?.contains("email", ignoreCase = true) == true) {
                         _uiState.update { currentState ->
                             currentState.copy(
@@ -162,8 +161,15 @@ class LoginViewModel @Inject internal constructor(
     fun checkPreviousUser() {
         viewModelScope.launch {
             repository.checkPreviousUser().collect { resource ->
-                if (resource.data != null) sessionManager.login(resource.data)
+                if (resource.data != null) sessionManager.setAuthToken(resource.data)
             }
         }
     }
+
+    fun enterGuestMode() {
+        viewModelScope.launch {
+            sessionManager.enterGuestMode()
+        }
+    }
+
 }

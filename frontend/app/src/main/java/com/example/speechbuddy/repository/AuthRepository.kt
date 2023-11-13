@@ -128,7 +128,7 @@ class AuthRepository @Inject constructor(
         flow {
             try {
                 val result =
-                    authService.resetPassword(getTemporaryAuthHeader(), authResetPasswordRequest)
+                    authService.resetPassword(getAuthHeader(), authResetPasswordRequest)
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
@@ -138,8 +138,9 @@ class AuthRepository @Inject constructor(
     suspend fun logout(): Flow<Response<Void>> =
         flow {
             try {
+                val refreshToken = sessionManager.refreshToken.value!!
                 val result =
-                    authService.logout(getAuthHeader(), AuthRefreshRequest(getRefreshToken()))
+                    authService.logout(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
                     authTokenPrefsManager.clearAuthToken()
                 }
@@ -152,8 +153,9 @@ class AuthRepository @Inject constructor(
     suspend fun withdraw(): Flow<Response<Void>> =
         flow {
             try {
+                val refreshToken = sessionManager.refreshToken.value!!
                 val result =
-                    authService.withdraw(getAuthHeader(), AuthRefreshRequest(getRefreshToken()))
+                    authService.withdraw(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
                     authTokenPrefsManager.clearAuthToken()
                 }
@@ -171,18 +173,9 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    private fun getTemporaryAuthHeader(): String {
-        val temporaryToken = sessionManager.temporaryToken.value
-        return "Bearer $temporaryToken"
-    }
-
     private fun getAuthHeader(): String {
-        val accessToken = sessionManager.cachedToken.value?.accessToken
+        val accessToken = sessionManager.accessToken.value
         return "Bearer $accessToken"
-    }
-
-    private fun getRefreshToken(): String {
-        return sessionManager.cachedToken.value?.refreshToken!!
     }
 
     private fun <T> returnUnknownError(): Resource<T> {

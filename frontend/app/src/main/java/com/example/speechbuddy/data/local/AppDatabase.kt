@@ -9,13 +9,14 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.speechbuddy.data.local.models.CategoryEntity
 import com.example.speechbuddy.data.local.models.SymbolEntity
+import com.example.speechbuddy.data.local.models.UserEntity
 import com.example.speechbuddy.utils.Constants.Companion.DATABASE_NAME
 import com.example.speechbuddy.worker.SeedDatabaseWorker
 
 /**
  * Room Database for SpeechBuddy App
  */
-@Database(entities = [SymbolEntity::class, CategoryEntity::class], version = 1, exportSchema = false)
+@Database(entities = [UserEntity::class, SymbolEntity::class, CategoryEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun symbolDao(): SymbolDao

@@ -32,8 +32,8 @@ class AuthActivity : BaseActivity() {
     }
 
     private fun subscribeObservers() {
-        sessionManager.cachedToken.observe(this) { authToken ->
-            if (authToken != null) navHomeActivity()
+        sessionManager.isAuthorized.observe(this) { isAuthorized ->
+            if (isAuthorized) navHomeActivity()
         }
     }
 

@@ -16,15 +16,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodel.LoginViewModel
 
 @Composable
 fun LandingScreen(
     modifier: Modifier = Modifier,
-    onGuestClick: () -> Unit,
     onLoginClick: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -48,7 +50,7 @@ fun LandingScreen(
             ) {
                 ButtonUi(
                     text = stringResource(id = R.string.start_guest_mode),
-                    onClick = onGuestClick
+                    onClick = { viewModel.enterGuestMode() }
                 )
                 ButtonUi(text = stringResource(id = R.string.do_login), onClick = onLoginClick)
             }
@@ -60,6 +62,6 @@ fun LandingScreen(
 @Composable
 private fun LandingScreenPreview() {
     SpeechBuddyTheme {
-        LandingScreen(onGuestClick = {}, onLoginClick = {})
+        LandingScreen(onLoginClick = {})
     }
 }

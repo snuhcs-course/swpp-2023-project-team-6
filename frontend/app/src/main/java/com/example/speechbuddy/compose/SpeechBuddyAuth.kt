@@ -26,9 +26,6 @@ fun SpeechBuddyAuthNavHost(
     NavHost(navController = navController, startDestination = "landing") {
         composable("landing") {
             LandingScreen(
-                onGuestClick = {
-                    /* TODO: Implement guest mode */
-                },
                 onLoginClick = {
                     navController.navigate("login")
                 }

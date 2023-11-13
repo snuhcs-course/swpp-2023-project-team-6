@@ -2,38 +2,34 @@ package com.example.speechbuddy.domain
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.speechbuddy.data.local.AuthTokenPrefsManager
+import androidx.lifecycle.map
 import com.example.speechbuddy.domain.models.AuthToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class SessionManager @Inject constructor(
-    private val authTokenPrefsManager: AuthTokenPrefsManager
-) {
+class SessionManager {
 
     private val _cachedToken = MutableLiveData<AuthToken?>()
-    private val _temporaryToken =
-        MutableLiveData<String?>() // Temporary access token used for reset password
+    private val _isGuestMode = MutableLiveData(false)
 
-    val cachedToken: LiveData<AuthToken?>
-        get() = _cachedToken
+    val accessToken: LiveData<String?>
+        get() = _cachedToken.map { cachedToken -> cachedToken?.accessToken }
 
-    val temporaryToken: LiveData<String?>
-        get() = _temporaryToken
+    val refreshToken: LiveData<String?>
+        get() = _cachedToken.map { cachedToken -> cachedToken?.refreshToken }
 
-    fun login(authToken: AuthToken) {
-        setValue(authToken)
-    }
+    val isGuestMode: LiveData<Boolean>
+        get() = _isGuestMode
 
-    fun clearAuthToken() {
-        setValue(null)
-    }
+    /**
+     * Authorized only when _isGuestMode is set to true or refreshToken is not null
+     * (because accessToken is temporarily set in case of 'reset password')
+     */
+    val isAuthorized: LiveData<Boolean>
+        get() = _isGuestMode.map { isGuestMode -> isGuestMode || _cachedToken.value?.refreshToken != null }
 
-    private fun setValue(value: AuthToken?) {
+    fun setAuthToken(value: AuthToken) {
         CoroutineScope(Dispatchers.Main).launch {
             if (_cachedToken.value != value) {
                 _cachedToken.value = value
@@ -41,11 +37,21 @@ class SessionManager @Inject constructor(
         }
     }
 
-    fun setTemporaryToken(token: String?) {
+    fun clearAuthToken() {
         CoroutineScope(Dispatchers.Main).launch {
-            if (_temporaryToken.value != token) {
-                _temporaryToken.value = token
-            }
+            _cachedToken.value = null
+        }
+    }
+
+    fun enterGuestMode() {
+        CoroutineScope(Dispatchers.Main).launch {
+            _isGuestMode.value = true
+        }
+    }
+
+    fun exitGuestMode() {
+        CoroutineScope(Dispatchers.Main).launch {
+            _isGuestMode.value = false
         }
     }
 

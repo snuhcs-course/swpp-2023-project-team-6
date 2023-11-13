@@ -9,6 +9,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationError
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
@@ -350,8 +351,8 @@ class EmailVerificationViewModel @Inject internal constructor(
             ).collect { resource ->
                 loading.value = false
                 if (resource.status == Status.SUCCESS) {
-                    val temporaryToken = resource.data?.accessToken
-                    sessionManager.setTemporaryToken(temporaryToken)
+                    val temporaryToken = AuthToken(resource.data?.accessToken, null)
+                    sessionManager.setAuthToken(temporaryToken)
                     navigateCallback("reset_password")
                 } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
                     _uiState.update { currentState ->

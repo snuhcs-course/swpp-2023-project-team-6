@@ -23,16 +23,19 @@ class DatabaseModule {
         return AppDatabase.getInstance(context)
     }
 
+    @Singleton
     @Provides
     fun provideUserDao(appDatabase: AppDatabase): UserDao {
         return appDatabase.userDao()
     }
 
+    @Singleton
     @Provides
     fun provideSymbolDao(appDatabase: AppDatabase): SymbolDao {
         return appDatabase.symbolDao()
     }
 
+    @Singleton
     @Provides
     fun provideCategoryDao(appDatabase: AppDatabase): CategoryDao {
         return appDatabase.categoryDao()
