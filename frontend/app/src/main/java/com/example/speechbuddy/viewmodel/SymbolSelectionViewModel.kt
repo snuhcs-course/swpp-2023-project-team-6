@@ -1,5 +1,6 @@
 package com.example.speechbuddy.viewmodel
 
+
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,27 +17,13 @@ import com.example.speechbuddy.ui.models.DisplayMode
 import com.example.speechbuddy.ui.models.SymbolItem
 import com.example.speechbuddy.ui.models.SymbolSelectionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-
-import androidx.lifecycle.viewModelScope
-
-import kotlinx.coroutines.Job
-
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-
-
 
 
 @HiltViewModel

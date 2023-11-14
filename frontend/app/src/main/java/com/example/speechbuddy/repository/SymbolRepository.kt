@@ -4,7 +4,6 @@ package com.example.speechbuddy.repository
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.WeightRowDao
-import com.example.speechbuddy.data.local.WeigthTableOperations
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
@@ -32,7 +31,6 @@ import javax.inject.Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
     private val categoryDao: CategoryDao,
-    private val weightTableOperations: WeigthTableOperations,
     private val weightRowDao: WeightRowDao
 ) {
     private val symbolMapper = SymbolMapper()

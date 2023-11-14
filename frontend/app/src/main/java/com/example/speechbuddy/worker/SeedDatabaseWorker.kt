@@ -33,9 +33,9 @@ class SeedDatabaseWorker(
                 weightRows.add(weightRowEntity)
             }
 
-            //Log.d("weightTable-2", weightRows.toString())
+
             database.weightRowDao().upsertAll(weightRows)
-            //Log.d("weightTable-1", database.weightRowDao().getAllWeightRows().toString())
+
 
 
             Result.success()
