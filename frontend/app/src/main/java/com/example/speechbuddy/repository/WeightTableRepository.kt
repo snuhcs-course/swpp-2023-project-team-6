@@ -1,22 +1,16 @@
 package com.example.speechbuddy.repository
 
-import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.WeightRowDao
-import com.example.speechbuddy.data.local.models.CategoryMapper
-import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.local.models.WeightRowEntity
 import com.example.speechbuddy.data.local.models.WeightRowMapper
-import com.example.speechbuddy.domain.models.Category
-import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.domain.models.WeightRow
 import com.example.speechbuddy.ui.models.SymbolItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -30,7 +24,7 @@ import javax.inject.Singleton
 class WeightTableRepository @Inject constructor(
     private val symbolDao: SymbolDao,
     private val weightRowDao: WeightRowDao
-){
+) {
     private val symbolMapper = SymbolMapper()
     private val weightRowMapper = WeightRowMapper()
     private val allSymbols = getAllSymbols()
