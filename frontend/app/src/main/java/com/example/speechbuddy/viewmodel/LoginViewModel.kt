@@ -9,6 +9,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
+import com.example.speechbuddy.repository.UserRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.LoginUiState
@@ -25,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject internal constructor(
-    private val repository: AuthRepository,
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -113,15 +115,16 @@ class LoginViewModel @Inject internal constructor(
             }
         } else {
             viewModelScope.launch {
-                repository.login(
+                authRepository.login(
                     AuthLoginRequest(
                         email = emailInput,
                         password = passwordInput
                     )
                 ).collect { resource ->
                     if (resource.status == Status.SUCCESS) {
-                        // AccessToken is already saved in AuthTokenPrefsManager by the repository
+                        // AccessToken is already saved in AuthTokenPrefsManager by the authRepository
                         sessionManager.setAuthToken(resource.data!!)
+                        userRepository.getMyInfoFromRemote()
                     } else if (resource.message?.contains("email", ignoreCase = true) == true) {
                         _uiState.update { currentState ->
                             currentState.copy(
@@ -160,7 +163,7 @@ class LoginViewModel @Inject internal constructor(
 
     fun checkPreviousUser() {
         viewModelScope.launch {
-            repository.checkPreviousUser().collect { resource ->
+            authRepository.checkPreviousUser().collect { resource ->
                 if (resource.data != null) sessionManager.setAuthToken(resource.data)
             }
         }

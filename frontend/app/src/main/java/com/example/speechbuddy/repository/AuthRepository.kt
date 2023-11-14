@@ -138,7 +138,7 @@ class AuthRepository @Inject constructor(
     suspend fun logout(): Flow<Response<Void>> =
         flow {
             try {
-                val refreshToken = sessionManager.refreshToken.value!!
+                val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
                 val result =
                     authService.logout(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
@@ -153,7 +153,7 @@ class AuthRepository @Inject constructor(
     suspend fun withdraw(): Flow<Response<Void>> =
         flow {
             try {
-                val refreshToken = sessionManager.refreshToken.value!!
+                val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
                 val result =
                     authService.withdraw(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
@@ -174,7 +174,7 @@ class AuthRepository @Inject constructor(
     }
 
     private fun getAuthHeader(): String {
-        val accessToken = sessionManager.accessToken.value
+        val accessToken = sessionManager.cachedToken.value?.accessToken
         return "Bearer $accessToken"
     }
 

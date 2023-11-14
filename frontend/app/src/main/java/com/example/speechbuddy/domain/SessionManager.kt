@@ -1,8 +1,8 @@
 package com.example.speechbuddy.domain
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
 import com.example.speechbuddy.domain.models.AuthToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,23 +11,26 @@ import kotlinx.coroutines.launch
 class SessionManager {
 
     private val _cachedToken = MutableLiveData<AuthToken?>()
-    private val _isGuestMode = MutableLiveData(false)
+    private val _userId = MutableLiveData<Int?>(null)
 
-    val accessToken: LiveData<String?>
-        get() = _cachedToken.map { cachedToken -> cachedToken?.accessToken }
+    val cachedToken: LiveData<AuthToken?>
+        get() = _cachedToken
 
-    val refreshToken: LiveData<String?>
-        get() = _cachedToken.map { cachedToken -> cachedToken?.refreshToken }
-
-    val isGuestMode: LiveData<Boolean>
-        get() = _isGuestMode
+    val userId: LiveData<Int?>
+        get() = _userId
 
     /**
-     * Authorized only when _isGuestMode is set to true or refreshToken is not null
+     * Authorized only when _userId is set to GUEST or refreshToken is not null
      * (because accessToken is temporarily set in case of 'reset password')
      */
-    val isAuthorized: LiveData<Boolean>
-        get() = _isGuestMode.map { isGuestMode -> isGuestMode || _cachedToken.value?.refreshToken != null }
+    val isAuthorized = MediatorLiveData<Boolean>().apply {
+        addSource(cachedToken) { value = checkAuthorization() }
+        addSource(userId) { value = checkAuthorization() }
+    }
+
+    private fun checkAuthorization(): Boolean {
+        return _cachedToken.value?.refreshToken != null || _userId.value == GUEST
+    }
 
     fun setAuthToken(value: AuthToken) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -45,14 +48,18 @@ class SessionManager {
 
     fun enterGuestMode() {
         CoroutineScope(Dispatchers.Main).launch {
-            _isGuestMode.value = true
+            _userId.value = GUEST
         }
     }
 
     fun exitGuestMode() {
         CoroutineScope(Dispatchers.Main).launch {
-            _isGuestMode.value = false
+            _userId.value = null
         }
+    }
+
+    companion object {
+        const val GUEST = -1
     }
 
 }

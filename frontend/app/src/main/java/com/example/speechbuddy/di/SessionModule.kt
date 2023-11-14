@@ -10,9 +10,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class SessionModule {
+
     @Singleton
     @Provides
     fun provideSessionManager(): SessionManager {
         return SessionManager()
     }
+
 }

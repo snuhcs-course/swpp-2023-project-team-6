@@ -6,7 +6,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
+import com.example.speechbuddy.data.remote.models.UserDtoMapper
 import com.example.speechbuddy.service.AuthService
+import com.example.speechbuddy.service.UserService
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.ResponseHandler
 import com.squareup.moshi.Moshi
@@ -46,8 +48,20 @@ class NetworkModule {
 
     @Singleton
     @Provides
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
+    }
+
+    @Singleton
+    @Provides
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDtoMapper(): UserDtoMapper {
+        return UserDtoMapper()
     }
 
     @Singleton

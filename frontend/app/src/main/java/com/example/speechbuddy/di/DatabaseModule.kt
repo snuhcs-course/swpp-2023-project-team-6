@@ -6,6 +6,9 @@ import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.UserDao
+import com.example.speechbuddy.data.local.models.CategoryMapper
+import com.example.speechbuddy.data.local.models.SymbolMapper
+import com.example.speechbuddy.data.local.models.UserMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,6 +42,24 @@ class DatabaseModule {
     @Provides
     fun provideCategoryDao(appDatabase: AppDatabase): CategoryDao {
         return appDatabase.categoryDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserMapper(): UserMapper {
+        return UserMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSymbolMapper(): SymbolMapper {
+        return SymbolMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCategoryMapper(): CategoryMapper {
+        return CategoryMapper()
     }
 
     @Singleton

@@ -1,12 +1,12 @@
 package com.example.speechbuddy.data.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.speechbuddy.data.local.models.UserEntity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * The Data Access Object for users.
@@ -17,7 +17,7 @@ interface UserDao {
     suspend fun insertUser(user: UserEntity)
 
     @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
-    fun getUserById(id: Int): LiveData<UserEntity>
+    fun getUserById(id: Int): Flow<UserEntity?>
 
     @Update
     suspend fun updateUser(user: UserEntity)
