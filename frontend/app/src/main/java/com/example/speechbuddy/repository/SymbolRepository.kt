@@ -36,6 +36,7 @@ class SymbolRepository @Inject constructor(
     private val symbolMapper = SymbolMapper()
     private val categoryMapper = CategoryMapper()
     private val weightRowMapper = WeightRowMapper()
+    private val allSymbols = getAllSymbols()
 
 
     fun getSymbols(query: String) =
@@ -121,7 +122,7 @@ class SymbolRepository @Inject constructor(
     }
 
     fun provideSuggestion(symbol: Symbol): Flow<List<Symbol>> = flow {
-        val allSymbolList = getAllSymbols().first()
+        val allSymbolList = allSymbols.first()
         val oneWeightRow = getWeightRowById(symbol.id).first()
         val newSymbolList = mutableListOf<Symbol>()
         val listOfSymCntPairs = mutableListOf<Pair<Symbol, Int>>()
