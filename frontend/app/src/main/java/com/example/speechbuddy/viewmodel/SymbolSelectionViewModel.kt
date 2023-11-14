@@ -13,6 +13,7 @@ import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.repository.WeightTableRepository
 import com.example.speechbuddy.ui.models.DisplayMode
 import com.example.speechbuddy.ui.models.SymbolItem
 import com.example.speechbuddy.ui.models.SymbolSelectionUiState
@@ -28,7 +29,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SymbolSelectionViewModel @Inject internal constructor(
-    private val repository: SymbolRepository
+    private val repository: SymbolRepository,
+    private val weightTableRepository: WeightTableRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SymbolSelectionUiState())
@@ -92,7 +94,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     fun clearAll() {
-        repository.update(selectedSymbols)
+        weightTableRepository.update(selectedSymbols)
         selectedSymbols = emptyList()
     }
 
@@ -105,7 +107,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
             Log.d("weight", "into_context")
             getEntriesJob?.cancel()
             getEntriesJob = viewModelScope.launch {
-                repository.provideSuggestion(symbol).collect { symbols ->
+                weightTableRepository.provideSuggestion(symbol).collect { symbols ->
                     _entries.postValue(symbols)
                 }
             }
