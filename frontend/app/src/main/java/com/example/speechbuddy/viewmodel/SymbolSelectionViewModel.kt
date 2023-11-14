@@ -91,6 +91,9 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     fun clear(symbolItem: SymbolItem) {
         selectedSymbols = selectedSymbols.minus(symbolItem)
+        val lastSelectedSymbol = selectedSymbols.last()
+
+        provideSuggestion(lastSelectedSymbol.symbol)
     }
 
     fun clearAll() {
@@ -102,17 +105,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
         selectedSymbols =
             selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
 
-        // TODO: 추후 수정 필요
-        if (uiState.value.displayMode == DisplayMode.SYMBOL) {
-            Log.d("weight", "into_context")
-            getEntriesJob?.cancel()
-            getEntriesJob = viewModelScope.launch {
-                weightTableRepository.provideSuggestion(symbol).collect { symbols ->
-                    _entries.postValue(symbols)
-                }
-            }
-        }
-
+        provideSuggestion(symbol)
     }
 
     fun updateFavorite(symbol: Symbol, value: Boolean) {
@@ -133,6 +126,19 @@ class SymbolSelectionViewModel @Inject internal constructor(
             selectedCategory = null
             viewModelScope.launch {
                 getEntries()
+            }
+        }
+    }
+
+    private fun provideSuggestion(symbol: Symbol){
+        // became independent from selectSymbol function
+        if (uiState.value.displayMode == DisplayMode.SYMBOL) {
+
+            getEntriesJob?.cancel()
+            getEntriesJob = viewModelScope.launch {
+                weightTableRepository.provideSuggestion(symbol).collect { symbols ->
+                    _entries.postValue(symbols)
+                }
             }
         }
     }
