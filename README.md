@@ -7,14 +7,4 @@ Specific target users are as follows.<br>
 
 Our app offers two main features: symbol-based communication and text-to-speech functionality. Users can communicate by selecting from a wide range of symbols, including the option to add personalized symbols with pictures. Additionally, SpeechBuddy incorporates next symbol prediction based on user's history, enhancing the efficiency of communication. For users who can type, SpeechBuddy also provides a text-to-speech feature, offering an alternative voice for the user. Overall, SpeechBuddy aims to enhance accessibility and communication for individuals with speech impairments through its versatile and user-friendly features.
 
-
-## Getting Started
-
-### Prerequisites
-
-- Android Studio [version, e.g., 4.2.1]
-- Minimum Android SDK Version [e.g., 21]
-
-### Installation
-
-[Installation link here]
+You can find more information in our [wiki page](https://github.com/snuhcs-course/swpp-2023-project-team-6/wiki)!
