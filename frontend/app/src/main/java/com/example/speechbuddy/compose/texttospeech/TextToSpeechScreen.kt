@@ -145,7 +145,7 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = onPlay)
-                .height(50.dp),
+                .height(38.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -164,7 +164,7 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = {})
-                .height(50.dp),
+                .height(38.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -183,7 +183,7 @@ private fun TextToSpeechButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = onStop)
-                .height(50.dp),
+                .height(38.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -213,7 +213,7 @@ fun TextClearButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = onClick)
-                .height(50.dp),
+                .height(38.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -232,7 +232,7 @@ fun TextClearButton(
         Row(
             modifier = Modifier
                 .clickable(onClick = {})
-                .height(50.dp),
+                .height(38.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
