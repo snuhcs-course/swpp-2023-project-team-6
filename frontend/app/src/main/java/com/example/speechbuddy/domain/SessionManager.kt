@@ -25,7 +25,7 @@ class SessionManager {
      */
     val isAuthorized = MediatorLiveData<Boolean>().apply {
         addSource(cachedToken) { value = checkAuthorization() }
-        addSource(userId) { value = checkAuthorization() }
+        addSource(userId) { if (_cachedToken.value?.refreshToken == null) value = checkAuthorization() }
     }
 
     private fun checkAuthorization(): Boolean {
