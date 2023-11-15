@@ -45,9 +45,6 @@ class WeightTableRepositoryTest {
         isMine = false
     )
 
-    private val mockWeight = mutableListOf(500)
-
-
     @Before
     fun setUp() {
         mockWeightRowDao = mockk(relaxed = true)
