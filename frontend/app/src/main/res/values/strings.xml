@@ -51,6 +51,7 @@
     <string name="tts_text">소리로 말해보아요</string>
     <string name="tts_explain">키보드로 텍스트를 입력해주세요</string>
     <string name="play_text">재생하기</string>
+    <string name="clear_text">지우기</string>
     <string name="menu_talk_with_symbol">상징으로 말하기</string>
     <string name="menu_tts">음성으로 말하기</string>
     <string name="menu_add_symbol">새 상징 만들기</string>
