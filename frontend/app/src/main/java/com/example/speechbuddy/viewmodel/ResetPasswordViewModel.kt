@@ -33,6 +33,7 @@ class ResetPasswordViewModel @Inject internal constructor(
 
     var passwordInput by mutableStateOf("")
         private set
+
     var passwordCheckInput by mutableStateOf("")
         private set
 

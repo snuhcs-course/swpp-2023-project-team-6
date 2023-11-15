@@ -6,12 +6,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,6 +37,8 @@ fun EmailVerificationScreen(
     viewModel: EmailVerificationViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val loading by viewModel.loading.observeAsState()
+
     val isEmailError = uiState.error?.type == EmailVerificationErrorType.EMAIL
     val isCodeError = uiState.error?.type == EmailVerificationErrorType.CODE
     val isConnectionError = uiState.error?.type == EmailVerificationErrorType.CONNECTION
@@ -117,5 +123,12 @@ fun EmailVerificationScreen(
                 isEnabled = uiState.isCodeSuccessfullySent
             )
         }
+    }
+
+    if (loading == true) {
+        CircularProgressIndicator(
+            modifier = Modifier.fillMaxSize().wrapContentSize(),
+            // color = MaterialTheme.colorScheme.primary
+        )
     }
 }

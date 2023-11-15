@@ -3,6 +3,8 @@ package com.example.speechbuddy.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
@@ -39,7 +41,8 @@ class EmailVerificationViewModel @Inject internal constructor(
 
     private val source = mutableStateOf<String?>(null)
 
-    private val loading = mutableStateOf(false)
+    private val _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean> get() = _loading
 
     var emailInput by mutableStateOf("")
         private set
@@ -120,14 +123,14 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     private fun sendCodeForSignup() {
-        loading.value = true
+        _loading.value = true
         viewModelScope.launch {
             repository.sendCodeForSignup(
                 AuthSendCodeRequest(
                     email = emailInput
                 )
             ).collect { result ->
-                loading.value = false
+                _loading.value = false
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         _uiState.update { currentState ->
@@ -185,14 +188,14 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     private fun sendCodeForResetPassword() {
-        loading.value = true
+        _loading.value = true
         viewModelScope.launch {
             repository.sendCodeForResetPassword(
                 AuthSendCodeRequest(
                     email = emailInput
                 )
             ).collect { result ->
-                loading.value = false
+                _loading.value = false
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         _uiState.update { currentState ->
@@ -286,7 +289,6 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     private fun verifyEmailForSignup(navigateCallback: (String) -> Unit) {
-        loading.value = true
         viewModelScope.launch {
             repository.verifyEmailForSignup(
                 AuthVerifyEmailRequest(
@@ -294,7 +296,6 @@ class EmailVerificationViewModel @Inject internal constructor(
                     code = codeInput
                 )
             ).collect { result ->
-                loading.value = false
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         navigateCallback("signup/$emailInput")
@@ -341,7 +342,6 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     private fun verifyEmailForResetPassword(navigateCallback: (String) -> Unit) {
-        loading.value = true
         viewModelScope.launch {
             repository.verifyEmailForResetPassword(
                 AuthVerifyEmailRequest(
@@ -349,7 +349,6 @@ class EmailVerificationViewModel @Inject internal constructor(
                     code = codeInput
                 )
             ).collect { resource ->
-                loading.value = false
                 if (resource.status == Status.SUCCESS) {
                     val temporaryToken = AuthToken(resource.data?.accessToken, null)
                     sessionManager.setAuthToken(temporaryToken)
