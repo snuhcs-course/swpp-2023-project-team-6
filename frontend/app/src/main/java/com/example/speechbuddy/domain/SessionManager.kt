@@ -40,9 +40,18 @@ class SessionManager {
         }
     }
 
-    fun clearAuthToken() {
+    fun setUserId(value: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (_userId.value != value) {
+                _userId.value = value
+            }
+        }
+    }
+
+    fun logout() {
         CoroutineScope(Dispatchers.Main).launch {
             _cachedToken.value = null
+            _userId.value = null
         }
     }
 

@@ -63,7 +63,7 @@ class AccountSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
-                        sessionManager.clearAuthToken()
+                        sessionManager.logout()
                     }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
@@ -80,7 +80,7 @@ class AccountSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
-                        sessionManager.clearAuthToken()
+                        sessionManager.logout()
                     }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {

@@ -165,7 +165,7 @@ class LoginViewModel @Inject internal constructor(
         viewModelScope.launch {
             userRepository.getMyInfoFromRemote(accessToken).collect { resource ->
                 if (resource.status == Status.SUCCESS) {
-                    // Do Nothing
+                    sessionManager.setUserId(resource.data!!.id)
                 } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
                     _uiState.update { currentState ->
                         currentState.copy(
