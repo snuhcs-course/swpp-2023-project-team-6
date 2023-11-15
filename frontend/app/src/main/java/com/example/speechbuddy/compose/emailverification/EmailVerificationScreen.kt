@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -127,8 +126,9 @@ fun EmailVerificationScreen(
 
     if (loading == true) {
         CircularProgressIndicator(
-            modifier = Modifier.fillMaxSize().wrapContentSize(),
-            // color = MaterialTheme.colorScheme.primary
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize()
         )
     }
 }
