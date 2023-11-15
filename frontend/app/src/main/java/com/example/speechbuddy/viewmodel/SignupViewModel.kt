@@ -11,7 +11,6 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.SignupError
 import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.ui.models.SignupUiState
-import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
 import com.example.speechbuddy.utils.isValidNickname
@@ -50,12 +49,12 @@ class SignupViewModel @Inject internal constructor(
 
     fun setNickname(input: String) {
         nicknameInput = input
-        if (_uiState.value.error?.type == SignupErrorType.NICKNAME) validateNickname()
+        validateNickname()
     }
 
     fun setPassword(input: String) {
         passwordInput = input
-        if (_uiState.value.error?.type == SignupErrorType.PASSWORD) validatePassword()
+        validatePassword()
     }
 
     fun setPasswordCheck(input: String) {
@@ -64,11 +63,21 @@ class SignupViewModel @Inject internal constructor(
     }
 
     private fun validateNickname() {
-        if (nicknameInput.isNotEmpty() && nicknameInput.length <= Constants.MAXIMUM_NICKNAME_LENGTH) {
+        if (isValidNickname(nicknameInput)) {
             _uiState.update { currentSate ->
                 currentSate.copy(
                     isValidNickname = true,
                     error = null
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidNickname = false,
+                    error = SignupError(
+                        type = SignupErrorType.NICKNAME,
+                        messageId = R.string.nickname_too_long
+                    )
                 )
             }
         }
@@ -80,6 +89,16 @@ class SignupViewModel @Inject internal constructor(
                 currentState.copy(
                     isValidPassword = true,
                     error = null
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPassword = false,
+                    error = SignupError(
+                        type = SignupErrorType.PASSWORD,
+                        messageId = R.string.password_too_short
+                    )
                 )
             }
         }
