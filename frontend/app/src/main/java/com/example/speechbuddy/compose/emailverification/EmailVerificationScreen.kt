@@ -85,6 +85,7 @@ fun EmailVerificationScreen(
                     ButtonUi(
                         text = stringResource(id = R.string.send_code),
                         onClick = { viewModel.sendCode() },
+                        isEnabled = !isEmailError,
                         level = ButtonLevel.TERTIARY
                     )
                 },
