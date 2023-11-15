@@ -72,9 +72,7 @@ class WeightTableRepository @Inject constructor(
         for (i in sortedByNumberDescending) {
             newSymbolList.add(i.first)
         }
-
         emit(newSymbolList)
-
     }
 
     fun update(symbolList: List<SymbolItem>) {
@@ -107,8 +105,7 @@ class WeightTableRepository @Inject constructor(
         }
     }
 
-    suspend fun fetchWeightRows(): List<WeightRow> = withContext(Dispatchers.IO) {
+    private suspend fun fetchWeightRows(): List<WeightRow> = withContext(Dispatchers.IO) {
         getAllWeightRows().first().map { it }.toList()
     }
-
 }
