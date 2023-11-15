@@ -110,7 +110,7 @@ fun TextToSpeechScreen(
                         deactivatedColor = deactivatedColor,
                         onPlay = { viewModel.ttsStart(context) },
                         onStop = { viewModel.ttsStop() },
-                        viewModel = viewModel
+                        isTextEmpty = viewModel.textInput.isEmpty()
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -120,7 +120,7 @@ fun TextToSpeechScreen(
                         activatedColor = activatedColor,
                         deactivatedColor = deactivatedColor,
                         onClick = { viewModel.clearText() },
-                        viewModel = viewModel
+                        isTextEmpty = viewModel.textInput.isEmpty()
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -137,64 +137,49 @@ private fun TextToSpeechButton(
     deactivatedColor: Color,
     onPlay: () -> Unit,
     onStop: () -> Unit,
-    viewModel: TextToSpeechViewModel
+    isTextEmpty: Boolean
 ) {
-    if (buttonStatus == ButtonStatusType.PLAY && !viewModel.isEmptyText()) {
-        Row(
-            modifier = Modifier
-                .clickable(onClick = onPlay)
-                .height(38.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(id = R.string.play_text),
-                color = activatedColor,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Icon(
-                imageVector = Icons.Filled.PlayArrow,
-                contentDescription = stringResource(id = R.string.play_text),
-                modifier = Modifier.size(38.dp),
-                tint = activatedColor
-            )
+    when (buttonStatus) {
+        ButtonStatusType.PLAY -> {
+            Row(
+                modifier = Modifier
+                    .clickable(onClick = { if (!isTextEmpty) onPlay() })
+                    .height(38.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.play_text),
+                    color = if (isTextEmpty) deactivatedColor else activatedColor,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = stringResource(id = R.string.play_text),
+                    modifier = Modifier.size(38.dp),
+                    tint = if (isTextEmpty) deactivatedColor else activatedColor
+                )
+            }
         }
-    } else if (buttonStatus == ButtonStatusType.PLAY && viewModel.isEmptyText()) {
-        Row(
-            modifier = Modifier
-                .clickable(onClick = {})
-                .height(38.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(id = R.string.play_text),
-                color = deactivatedColor,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Icon(
-                imageVector = Icons.Filled.PlayArrow,
-                contentDescription = stringResource(id = R.string.play_text),
-                modifier = Modifier.size(38.dp),
-                tint = deactivatedColor
-            )
-        }
-    } else {
-        Row(
-            modifier = Modifier
-                .clickable(onClick = onStop)
-                .height(38.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(id = R.string.stop_text),
-                color = activatedColor,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Icon(
-                painter = painterResource(R.drawable.stop_icon),
-                contentDescription = stringResource(id = R.string.stop_text),
-                modifier = Modifier.size(38.dp),
-                tint = activatedColor
-            )
+
+        ButtonStatusType.STOP -> {
+            Row(
+                modifier = Modifier
+                    .clickable(onClick = onStop)
+                    .height(38.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.stop_text),
+                    color = activatedColor,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Icon(
+                    painter = painterResource(R.drawable.stop_icon),
+                    contentDescription = stringResource(id = R.string.stop_text),
+                    modifier = Modifier.size(38.dp),
+                    tint = activatedColor
+                )
+            }
         }
     }
 }
@@ -205,45 +190,26 @@ fun TextClearButton(
     activatedColor: Color,
     deactivatedColor: Color,
     onClick: () -> Unit,
-    viewModel: TextToSpeechViewModel
+    isTextEmpty: Boolean
 ) {
-    if (buttonStatus == ButtonStatusType.PLAY && !viewModel.isEmptyText()) {
-        Row(
-            modifier = Modifier
-                .clickable(onClick = onClick)
-                .height(38.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(id = R.string.clear_text),
-                color = activatedColor,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = stringResource(id = R.string.clear_text),
-                modifier = Modifier.size(38.dp),
-                tint = activatedColor
-            )
-        }
-    } else {
-        Row(
-            modifier = Modifier
-                .clickable(onClick = {})
-                .height(38.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(id = R.string.clear_text),
-                color = deactivatedColor,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = stringResource(id = R.string.clear_text),
-                modifier = Modifier.size(38.dp),
-                tint = deactivatedColor
-            )
-        }
+    val isActivated = buttonStatus == ButtonStatusType.PLAY && !isTextEmpty
+
+    Row(
+        modifier = Modifier
+            .clickable(onClick = { if (isActivated) onClick() })
+            .height(38.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(id = R.string.clear_text),
+            color = if (isActivated) activatedColor else deactivatedColor,
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Icon(
+            imageVector = Icons.Filled.Delete,
+            contentDescription = stringResource(id = R.string.clear_text),
+            modifier = Modifier.size(38.dp),
+            tint = if (isActivated) activatedColor else deactivatedColor
+        )
     }
 }
