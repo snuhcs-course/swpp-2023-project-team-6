@@ -124,7 +124,7 @@ class LoginViewModel @Inject internal constructor(
                     if (resource.status == Status.SUCCESS) {
                         // AccessToken is already saved in AuthTokenPrefsManager by the authRepository
                         sessionManager.setAuthToken(resource.data!!)
-                        userRepository.getMyInfoFromRemote()
+                        getMyInfoFromRemote(resource.data.accessToken)
                     } else if (resource.message?.contains("email", ignoreCase = true) == true) {
                         _uiState.update { currentState ->
                             currentState.copy(
@@ -155,6 +155,36 @@ class LoginViewModel @Inject internal constructor(
                                 )
                             )
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getMyInfoFromRemote(accessToken: String?) {
+        viewModelScope.launch {
+            userRepository.getMyInfoFromRemote(accessToken).collect { resource ->
+                if (resource.status == Status.SUCCESS) {
+                    // Do Nothing
+                } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidEmail = false,
+                            error = LoginError(
+                                type = LoginErrorType.CONNECTION,
+                                messageId = R.string.connection_error
+                            )
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidPassword = false,
+                            error = LoginError(
+                                type = LoginErrorType.UNKNOWN,
+                                messageId = R.string.unknown_error
+                            )
+                        )
                     }
                 }
             }

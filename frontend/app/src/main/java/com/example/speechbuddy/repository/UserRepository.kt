@@ -31,8 +31,8 @@ class UserRepository @Inject constructor(
         }
     }
 
-    suspend fun getMyInfoFromRemote(): Flow<Resource<User>> {
-        return userRemoteSource.getMyInfoUser(getAuthHeader()).map { response ->
+    suspend fun getMyInfoFromRemote(accessToken: String?): Flow<Resource<User>> {
+        return userRemoteSource.getMyInfoUser("Bearer $accessToken").map { response ->
             if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                 response.body()?.let { userDto ->
                     val user = userDtoMapper.mapToDomainModel(userDto)
@@ -49,11 +49,6 @@ class UserRepository @Inject constructor(
                 } ?: returnUnknownError()
             }
         }
-    }
-
-    private fun getAuthHeader(): String {
-        val accessToken = sessionManager.cachedToken.value?.accessToken
-        return "Bearer $accessToken"
     }
 
     private fun <T> returnUnknownError(): Resource<T> {
