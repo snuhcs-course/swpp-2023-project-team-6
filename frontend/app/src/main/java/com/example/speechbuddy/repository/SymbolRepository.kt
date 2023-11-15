@@ -6,7 +6,6 @@ import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
-import com.example.speechbuddy.data.local.models.WeightRowMapper
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
@@ -24,7 +23,6 @@ class SymbolRepository @Inject constructor(
 ) {
     private val symbolMapper = SymbolMapper()
     private val categoryMapper = CategoryMapper()
-    private val weightRowMapper = WeightRowMapper()
 
 
     fun getSymbols(query: String) =
@@ -85,6 +83,4 @@ class SymbolRepository @Inject constructor(
         )
         symbolDao.updateSymbol(symbolEntity)
     }
-
-
 }
