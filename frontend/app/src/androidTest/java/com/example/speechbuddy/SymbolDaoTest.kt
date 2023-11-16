@@ -5,9 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.speechbuddy.data.local.AppDatabase
-import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
-import com.example.speechbuddy.data.local.models.CategoryEntity
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.first
@@ -22,7 +20,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SymbolDaoTest {
     private lateinit var symbolDao: SymbolDao
-    private lateinit var database: AppDatabase // Replace MyDatabase with your actual database class
+    private lateinit var database: AppDatabase
 
     private val testDispatcher = TestCoroutineDispatcher()
 
@@ -79,8 +77,9 @@ class SymbolDaoTest {
 
         }
     }
+
     @Test
-    fun should_get_symbols_when_fun_getFavoriteSymbols_called(){
+    fun should_get_symbols_when_fun_getFavoriteSymbols_called() {
         runBlocking {
             val symbols = listOf(
 
@@ -123,7 +122,7 @@ class SymbolDaoTest {
     }
 
     @Test
-    fun should_get_symbols_when_fun_getSymbolsByQuery_called(){
+    fun should_get_symbols_when_fun_getSymbolsByQuery_called() {
         runBlocking {
             val symbols = listOf(
 
@@ -166,7 +165,7 @@ class SymbolDaoTest {
     }
 
     @Test
-    fun should_get_symbols_when_fun_getFavoriteSymbolsByQuery_called(){
+    fun should_get_symbols_when_fun_getFavoriteSymbolsByQuery_called() {
         runBlocking {
             val symbols = listOf(
 
@@ -197,7 +196,8 @@ class SymbolDaoTest {
             )
             symbolDao.upsertAll(symbols)
 
-            val queriedCategoriesFlow = symbolDao.getFavoriteSymbolsByQuery("favsymbolwithisfav").first()
+            val queriedCategoriesFlow =
+                symbolDao.getFavoriteSymbolsByQuery("favsymbolwithisfav").first()
             Assert.assertEquals(1, queriedCategoriesFlow.size)
             Assert.assertTrue(queriedCategoriesFlow.any {
                 it.text.contains(
@@ -209,7 +209,7 @@ class SymbolDaoTest {
     }
 
     @Test
-    fun should_get_symbols_when_fun_getSymbolsByCategoryId_called(){
+    fun should_get_symbols_when_fun_getSymbolsByCategoryId_called() {
         runBlocking {
             val symbols = listOf(
 
@@ -253,7 +253,7 @@ class SymbolDaoTest {
 
     //updateSymbol
     @Test
-    fun should_update_symbols_when_fun_updateSymbol_called(){
+    fun should_update_symbols_when_fun_updateSymbol_called() {
         runBlocking {
             val symbols = listOf(
 

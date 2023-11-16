@@ -7,14 +7,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.models.CategoryEntity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -26,7 +22,7 @@ import org.junit.runner.RunWith
 class CategoryDaoTest {
 
     private lateinit var categoryDao: CategoryDao
-    private lateinit var database: AppDatabase // Replace MyDatabase with your actual database class
+    private lateinit var database: AppDatabase
 
     private val testDispatcher = TestCoroutineDispatcher()
 
@@ -93,7 +89,12 @@ class CategoryDaoTest {
 
             val queriedCategoriesFlow = categoryDao.getCategoriesByQuery("Category").first()
             assertEquals(2, queriedCategoriesFlow.size)
-            assertTrue(queriedCategoriesFlow.any { it.text.contains("Category", ignoreCase = true) })
+            assertTrue(queriedCategoriesFlow.any {
+                it.text.contains(
+                    "Category",
+                    ignoreCase = true
+                )
+            })
         }
     }
 }
