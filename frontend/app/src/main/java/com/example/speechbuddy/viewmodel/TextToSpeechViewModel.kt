@@ -34,9 +34,9 @@ class TextToSpeechViewModel @Inject internal constructor(
         textInput = input
     }
 
-private fun clearText() {
-    textInput = ""
-}
+    fun clearText() {
+        textInput = ""
+    }
 
     fun ttsStop() {
         textToSpeech?.stop()
@@ -79,7 +79,6 @@ private fun clearText() {
                                     buttonStatus = ButtonStatusType.PLAY
                                 )
                             }
-                            clearText()
                         }
 
                         @Deprecated("Deprecated in Java")

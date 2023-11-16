@@ -12,6 +12,7 @@ import com.example.speechbuddy.data.local.models.CategoryEntity
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.WeightRowEntity
 import com.example.speechbuddy.domain.utils.Converters
+import com.example.speechbuddy.data.local.models.UserEntity
 import com.example.speechbuddy.utils.Constants.Companion.DATABASE_NAME
 import com.example.speechbuddy.worker.SeedDatabaseWorker
 
@@ -19,12 +20,13 @@ import com.example.speechbuddy.worker.SeedDatabaseWorker
  * Room Database for SpeechBuddy App
  */
 @Database(
-    entities = [SymbolEntity::class, CategoryEntity::class, WeightRowEntity::class],
+    entities = [UserEntity::class,SymbolEntity::class, CategoryEntity::class, WeightRowEntity::class],
     version = 1,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun userDao(): UserDao
     abstract fun symbolDao(): SymbolDao
     abstract fun categoryDao(): CategoryDao
     abstract fun weightRowDao(): WeightRowDao

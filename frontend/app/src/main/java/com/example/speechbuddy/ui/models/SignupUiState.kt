@@ -4,7 +4,8 @@ data class SignupUiState(
     val isValidEmail: Boolean = false,
     val isValidNickname: Boolean = false,
     val isValidPassword: Boolean = false,
-    val error: SignupError? = null
+    val error: SignupError? = null,
+    val loading: Boolean = false
 )
 
 data class SignupError(
@@ -13,7 +14,10 @@ data class SignupError(
 )
 
 enum class SignupErrorType {
+    EMAIL,
     NICKNAME,
     PASSWORD,
-    PASSWORD_CHECK
+    PASSWORD_CHECK,
+    CONNECTION,
+    UNKNOWN
 }

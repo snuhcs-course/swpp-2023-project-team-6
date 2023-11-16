@@ -1,87 +1,131 @@
 <resources>
     <string name="app_name">SpeechBuddy</string>
-    <string name="guess_mode_action">게스트 모드로 시작하기</string>
-    <string name="login_action">로그인하기</string>
-    <string name="forgot_password">비밀번호를 잊으셨나요?</string>
-    <string name="signup_text">회원가입</string>
-    <string name="signup_explain">SpeechBuddy에 오신 것을 환영합니다!</string>
-    <string name="login_text">로그인</string>
-    <string name="login_explain">로그인해 SpeechBuddy의 많은 기능을 사용해보세요</string>
-    <string name="nickname">닉네임</string>
-    <string name="unreg_email">등록되지 않은 이메일입니다</string>
-    <string name="false_email">이메일 주소가 올바르지 않습니다</string>
-    <string name="false_password">비밀번호가 올바르지 않습니다</string>
-    <string name="false_nickname">닉네임이 올바르지 않습니다</string>
+
+    <!-- SpeechBuddyAuth -->
+    <!-- titles -->
+    <string name="login">로그인</string>
+    <string name="signup">회원가입</string>
+    <string name="reset_password">비밀번호 변경</string>
+    <string name="email_verification">이메일 인증</string>
+
+    <!-- descriptions -->
+    <string name="login_description">로그인해 SpeechBuddy의 다양한 기능을 사용해보세요</string>
+    <string name="signup_description">SpeechBuddy에 오신 것을 환영합니다!</string>
+    <string name="reset_password_description">앞으로 사용할 새 비밀번호를 입력해주세요</string>
+    <string name="email_verification_description">이메일 인증을 먼저 진행해주세요</string>
+    <string name="verify_email_for_reset_password">비밀번호 변경을 위해 이메일 인증을 먼저 진행해주세요</string>
+    <string name="verify_email_for_signup">회원가입을 위해 이메일 인증을 먼저 진행해주세요</string>
+
+    <!-- inputs -->
     <string name="email">이메일</string>
-    <string name="password_field">비밀번호</string>
-    <string name="signup">회원가입하기</string>
-    <string name="verify_email_field">이메일 인증</string>
-    <string name="verify_email_explain_default">이메일 인증을 진행해주세요</string>
-    <string name="validation_code">인증번호</string>
-    <string name="false_validation_code">인증번호가 잘못되었습니다</string>
-    <string name="verify_email_explain">회원가입을 위해 이메일 인증을 진행해주세요</string>
-    <string name="send_validation_code">인증번호 발송</string>
-    <string name="password_check_field">비밀번호 확인</string>
+    <string name="nickname">닉네임</string>
+    <string name="password">비밀번호</string>
+    <string name="password_check">비밀번호 확인</string>
+    <string name="code">인증번호</string>
+    <string name="new_password">새 비밀번호</string>
+    <string name="new_password_check">새 비밀번호 확인</string>인
+
+    <!-- buttons -->
+    <string name="start_guest_mode">게스트 모드로 시작하기</string>
+    <string name="do_login">로그인하기</string>
     <string name="next">다음</string>
-    <string name="reset_password_title">새 비밀번호 설정</string>
-    <string name="reset_password_subtitle1">이메일 인증을 통해 비밀번호를 재설정 할 수 있습니다</string>
-    <string name="verification_code_sent">인증번호를 발송하였습니다</string>
-    <string name="validation_code_field">인증번호</string>
-    <string name="reset_password_next">다음</string>
-    <string name="reset_password_subtitle2">새 비밀번호의 길이는 8자 이상이어야 합니다</string>
-    <string name="reset_password_error">비밀번호를 재설정하는 도중 오류가 발생했습니다</string>
-    <string name="new_password_field">새 비밀번호</string>
-    <string name="new_password_check_field">새 비밀번호 확인</string>
-    <string name="false_new_password">8자 이상 입력해주세요</string>
-    <string name="false_new_password_check">비밀번호가 일치하지 않습니다</string>
-    <string name="talk_with_symbols">상징으로 말하기</string>
-    <string name="talk_with_speech">음성으로 말하기</string>
-    <string name="symbol_creation">새 상징 만들기</string>
-    <string name="settings">설정</string>
+    <string name="forgot_password">비밀번호를 잊으셨나요?</string>
+    <string name="send_code">인증번호 발송</string>
+    <string name="do_signup">회원가입하기</string>
+    <string name="cancel">취소</string>
+    <string name="confirm">확인</string>
+    <string name="proceed">진행</string>기
+
+    <!-- error messages -->
+    <string name="no_email">이메일 주소를 입력해주세요</string>
+    <string name="wrong_email">이메일 주소가 올바르지 않습니다</string>
+    <string name="unregistered_email">등록되지 않은 이메일입니다</string>
     <string name="email_already_taken">다른 사용자가 이미 사용하고 있는 이메일입니다</string>
-    <string name="no_such_user">해당 이메일로 가입된 계정이 없습니다</string>
-    <string name="nickname_length_error">닉네임을 입력해주세요</string>
-    <string name="alert_dialog_login_error">로그인 오류</string>
-    <string name="alert_dialog_signup_error">회원가입 오류</string>
-    <string name="search_box_placeholder">검색어를 입력하세요</string>
-    <string name="favorite">즐겨찾기</string>
-    <string name="symbol_unselect">상징 선택 취소</string>
-    <string name="clear_all">전체 삭제</string>
-    <string name="tts_text">소리로 말해보아요</string>
-    <string name="tts_explain">키보드로 텍스트를 입력해주세요</string>
-    <string name="play_text">재생하기</string>
-    <string name="menu_talk_with_symbol">상징으로 말하기</string>
-    <string name="menu_tts">음성으로 말하기</string>
-    <string name="menu_add_symbol">새 상징 만들기</string>
-    <string name="menu_settings">설정</string>
-    <string name="account">계정</string>
-    <string name="backup_to_server">서버에 백업하기</string>
-    <string name="display">디스플레이</string>
-    <string name="manage_symbols">상징 목록 관리</string>
-    <string name="version_info">버전 정보</string>
-    <string name="developers_info">개발자 정보</string>
-    <string name="last_backup_date">마지막 백업 날짜</string>
-    <string name="enable_auto_backup">자동 백업 활성화</string>
-    <string name="backup_now">지금 백업하기</string>
-    <string name="display_settings">디스플레이 설정</string>
-    <string name="dark_mode">다크 모드</string>
-    <string name="initial_page">시작 페이지</string>
-    <string name="tts_page">TTS 페이지</string>
-    <string name="symbol_page">상징 페이지</string>
-    <string name="logout">로그아웃</string>
-    <string name="withdraw">회원탈퇴</string>
-    <string name="logout_warning">정말로 로그아웃하시겠습니까?</string>
-    <string name="dismiss">취소</string>
-    <string name="withdraw_warning">회원탈퇴를 하면 지금까지의 이용 기록, 즐겨찾기, 새롭게 등록한 상징이 모두 사라지며 복구할 수 없습니다. SpeechBuddy를 다시 이용하시려면 게스트 모드를 이용하시거나 회원가입을 새로 해주셔야 합니다. 탈퇴하시겠습니까?</string>
-    <string name="proceed">진행</string>
-    <string name="withdraw_proceed_warning">정말로 탈퇴하시겠습니까? 이 동작은 취소할 수 없습니다.</string>
-    <string name="version">버전</string>
-    <string name="stop_text">정지</string>
-    <string name="back">뒤로가기</string>
+    <string name="no_nickname">닉네임을 입력해주세요</string>
+    <string name="nickname_too_long">닉네임은 15자 이하여야 합니다</string>
+    <string name="no_password">비밀번호를 입력해주세요</string>
+    <string name="wrong_password">비밀번호가 올바르지 않습니다</string>
+    <string name="password_too_short">비밀번호는 8자 이상이어야 합니다</string>
+    <string name="wrong_password_check">비밀번호가 일치하지 않습니다</string>
+    <string name="code_successfully_sent">인증번호를 발송했습니다</string>
+    <string name="no_code">인증번호를 입력해주세요</string>
+    <string name="wrong_code">인증번호가 올바르지 않습니다</string>
+    <string name="connection_error">인터넷 연결을 확인하세요</string>
+    <string name="unknown_error">예기치 못한 오류가 발생했습니다</string>
+
+    <!-- SpeechBuddyHome -->
+    <!-- Symbol Selection -->
+    <string name="talk_with_symbols">상징으로 말하기</string>
     <string name="menu">메뉴</string>
     <string name="display_all">모두 보기</string>
     <string name="display_symbols">상징 보기</string>
     <string name="display_categories">대분류로 보기</string>
     <string name="display_favorites">즐겨찾기만 보기</string>
     <string name="currently_selected_menu">현재 선택된 메뉴</string>
+    <string name="fill_query">검색어를 입력하세요</string>
+    <string name="clear_all">전체 삭제</string>
+    <string name="unselect_symbol">상징 선택 취소</string>
+    <string name="favorite">즐겨찾기</string>
+
+    <!-- Text-to-Speech -->
+    <string name="talk_with_speech">음성으로 말하기</string>
+    <string name="talk_with_sound">소리로 말해요</string>
+    <string name="tts_description">텍스트를 입력하면 SpeechBuddy가 직접 읽어줘요</string>
+    <string name="play">재생</string>
+    <string name="stop">정지</string>
+    <string name="clear">지우기</string>
+
+    <!-- Symbol Creation -->
+    <string name="create_new_symbol">새 상징 만들기</string>
+    <string name="symbol_creation_description">직접 찍은 사진으로 새로운 상징을 만들어보세요</string>
+    <string name="category">대분류</string>
+    <string name="dropdown">드롭다운</string>
+    <string name="create">만들기</string>
+    <string name="new_symbol_photo">새 상징 사진</string>
+    <string name="no_symbol_name">상징 이름을 입력해주세요</string>
+    <string name="symbol_name_too_long">상징 이름은 20자 이하여야 합니다</string>
+    <string name="no_category">대분류를 선택해주세요</string>
+    <string name="no_photo">사진을 선택해주세요</string>
+
+    <!-- Settings -->
+    <string name="settings">설정</string>
+
+    <!-- Account Settings -->
+    <string name="account">계정</string>
+    <string name="logout">로그아웃</string>
+    <string name="logout_warning">정말로 로그아웃하시겠습니까?</string>
+    <string name="withdraw">회원탈퇴</string>
+    <string name="withdraw_warning">회원탈퇴를 하면 지금까지의 이용 기록이 모두 사라지며 복구할 수 없습니다. SpeechBuddy를 다시 이용하시려면 게스트 모드를 이용하거나 회원가입을 새로 해야 합니다. 정말로 탈퇴하시겠습니까?</string>
+    <string name="withdraw_proceed_warning">정말로 탈퇴하시겠습니까? 이 동작은 취소할 수 없습니다.</string>
+    <string name="no_connection">인터넷 연결 없음</string>
+    <string name="no_connection_warning">인터넷 연결을 확인하세요</string>
+
+    <!-- Guest Settings -->
+    <string name="guest_mode_description">현재 게스트 모드를 사용 중입니다.</string>
+    <string name="exit_guest_mode">게스트 모드에서 나가기</string>
+
+    <!-- Backup Settings -->
+    <string name="backup_to_server">서버에 백업하기</string>
+    <string name="last_backup_date">마지막 백업 날짜</string>
+    <string name="enable_auto_backup">자동 백업 활성화</string>
+    <string name="backup_now">지금 백업하기</string>
+
+    <!-- Display Settings -->
+    <string name="display">디스플레이</string>
+    <string name="display_settings">디스플레이 설정</string>
+    <string name="dark_mode">다크 모드</string>
+    <string name="initial_page">시작 페이지</string>
+    <string name="symbol_page">상징 페이지</string>
+    <string name="tts_page">TTS 페이지</string>
+
+    <!-- My Symbol Settings -->
+    <string name="manage_symbols">상징 목록 관리</string>
+
+    <!-- Version Info -->
+    <string name="version_info">버전 정보</string>
+    <string name="version">버전</string>
+    <string name="developers_email">개발자 이메일</string>
+
+    <!-- Developers Info -->
+    <string name="developers_info">개발자 정보</string>
 </resources>

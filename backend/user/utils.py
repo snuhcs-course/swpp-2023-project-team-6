@@ -14,7 +14,7 @@ def normalize_email(email):
 
 def generate_code():
     LENGTH = 6
-    seed = string.ascii_letters + string.digits
+    seed = string.digits
     code = ""
 
     for i in range(LENGTH):

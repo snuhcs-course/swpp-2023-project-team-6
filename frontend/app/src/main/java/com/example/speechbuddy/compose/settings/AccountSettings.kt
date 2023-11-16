@@ -21,8 +21,8 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.AlertDialogUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
 
@@ -36,65 +36,71 @@ fun AccountSettings(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Surface(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Scaffold(
-            topBar = {
-                HomeTopAppBarUi(
-                    title = stringResource(id = R.string.settings),
-                    onBackClick = onBackClick,
-                    isBackClickEnabled = true
-                )
-            }
-        ) { topPaddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = topPaddingValues.calculateTopPadding(),
-                        bottom = bottomPaddingValues.calculateBottomPadding()
-                    )
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                TitleUi(title = stringResource(id = R.string.account))
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    SettingsRow(
-                        label = stringResource(id = R.string.email),
-                        content = {
-                            SettingsRowText(text = uiState.email)
-                        }
-                    )
-
-                    SettingsRow(
-                        label = stringResource(id = R.string.nickname),
-                        content = {
-                            SettingsRowText(text = uiState.nickname)
-                        }
+    /**
+     * Wait until user info is successfully retrieved
+     * in init{} of the viewmodel.
+     */
+    uiState.user?.let { user ->
+        Surface(
+            modifier = modifier.fillMaxSize()
+        ) {
+            Scaffold(
+                topBar = {
+                    TopAppBarUi(
+                        title = stringResource(id = R.string.settings),
+                        onBackClick = onBackClick,
+                        isBackClickEnabled = true
                     )
                 }
-
-                Spacer(modifier = Modifier.height(80.dp))
-
+            ) { topPaddingValues ->
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = topPaddingValues.calculateTopPadding(),
+                            bottom = bottomPaddingValues.calculateBottomPadding()
+                        )
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    ButtonUi(
-                        text = stringResource(id = R.string.logout),
-                        onClick = { viewModel.showAlert(AccountSettingsAlert.LOGOUT) }
-                    )
+                    TitleUi(title = stringResource(id = R.string.account))
 
-                    ButtonUi(
-                        text = stringResource(id = R.string.withdraw),
-                        onClick = { viewModel.showAlert(AccountSettingsAlert.WITHDRAW) },
-                        level = ButtonLevel.QUATERNARY
-                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        SettingsRow(
+                            label = stringResource(id = R.string.email),
+                            content = {
+                                SettingsRowText(text = user.email)
+                            }
+                        )
+
+                        SettingsRow(
+                            label = stringResource(id = R.string.nickname),
+                            content = {
+                                SettingsRowText(text = user.nickname)
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(80.dp))
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        ButtonUi(
+                            text = stringResource(id = R.string.logout),
+                            onClick = { viewModel.showAlert(AccountSettingsAlert.LOGOUT) }
+                        )
+
+                        ButtonUi(
+                            text = stringResource(id = R.string.withdraw),
+                            onClick = { viewModel.showAlert(AccountSettingsAlert.WITHDRAW) },
+                            level = ButtonLevel.QUATERNARY
+                        )
+                    }
                 }
             }
         }
@@ -106,7 +112,7 @@ fun AccountSettings(
                 AlertDialogUi(
                     title = stringResource(id = R.string.logout),
                     text = stringResource(id = R.string.logout_warning),
-                    dismissButtonText = stringResource(id = R.string.dismiss),
+                    dismissButtonText = stringResource(id = R.string.cancel),
                     confirmButtonText = stringResource(id = R.string.logout),
                     onDismiss = { viewModel.hideAlert() },
                     onConfirm = { viewModel.logout() }
@@ -117,7 +123,7 @@ fun AccountSettings(
                 AlertDialogUi(
                     title = stringResource(id = R.string.withdraw),
                     text = stringResource(id = R.string.withdraw_warning),
-                    dismissButtonText = stringResource(id = R.string.dismiss),
+                    dismissButtonText = stringResource(id = R.string.cancel),
                     confirmButtonText = stringResource(id = R.string.proceed),
                     onDismiss = { viewModel.hideAlert() },
                     onConfirm = {
@@ -130,10 +136,21 @@ fun AccountSettings(
                 AlertDialogUi(
                     title = stringResource(id = R.string.withdraw),
                     text = stringResource(id = R.string.withdraw_proceed_warning),
-                    dismissButtonText = stringResource(id = R.string.dismiss),
+                    dismissButtonText = stringResource(id = R.string.cancel),
                     confirmButtonText = stringResource(id = R.string.withdraw),
                     onDismiss = { viewModel.hideAlert() },
-                    onConfirm = { viewModel.deleteAccount() }
+                    onConfirm = { viewModel.withdraw() }
+                )
+            }
+
+            AccountSettingsAlert.CONNECTION -> {
+                AlertDialogUi(
+                    title = stringResource(id = R.string.no_connection),
+                    text = stringResource(id = R.string.no_connection_warning),
+                    dismissButtonText = stringResource(id = R.string.cancel),
+                    confirmButtonText = stringResource(id = R.string.confirm),
+                    onDismiss = { viewModel.hideAlert() },
+                    onConfirm = { viewModel.hideAlert() }
                 )
             }
         }

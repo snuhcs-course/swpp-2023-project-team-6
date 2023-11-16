@@ -33,11 +33,11 @@ fun SymbolSearchTextField(
             .fillMaxWidth()
             .defaultMinSize(minHeight = 48.dp),
         textStyle = MaterialTheme.typography.bodyMedium,
-        placeholder = { Text(text = stringResource(id = R.string.search_box_placeholder)) },
+        placeholder = { Text(text = stringResource(id = R.string.fill_query)) },
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = stringResource(id = R.string.search_box_placeholder)
+                contentDescription = stringResource(id = R.string.fill_query)
             )
         },
         singleLine = true,
