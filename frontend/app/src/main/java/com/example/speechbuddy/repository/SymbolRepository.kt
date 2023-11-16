@@ -8,11 +8,13 @@ import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.remote.MySymbolRemoteSource
 import com.example.speechbuddy.utils.ResponseHandler
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.MySymbol
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.ResponseCode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -24,10 +26,11 @@ import javax.inject.Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
     private val categoryDao: CategoryDao,
-    // For remote mapping
+    // For remote-related processing
     private val mySymbolRemoteSource: MySymbolRemoteSource,
     private val mySymbolDtoMapper: MySymbolDtoMapper,
     private val responseHandler: ResponseHandler,
+    private val sessionManager: SessionManager,
     // For local mapping
     private val symbolMapper: SymbolMapper,
     private val categoryMapper: CategoryMapper
@@ -102,9 +105,9 @@ class SymbolRepository @Inject constructor(
         categoryId: Int,
         image: MultipartBody.Part
     ): Flow<Resource<MySymbol>> {
-        return mySymbolRemoteSource.createSymbolBackup(symbolText, categoryId, image)
+        return mySymbolRemoteSource.createSymbolBackup(getAuthHeader(), symbolText, categoryId, image)
             .map { response ->
-                if (response.isSuccessful && response.code() == 200) {
+                if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                     response.body()?.let { mySymbolDto ->
                         mySymbolDto.let {
                             Resource.success(
@@ -123,6 +126,11 @@ class SymbolRepository @Inject constructor(
                     } ?: returnUnknownError()
                 }
             }
+    }
+
+    private fun getAuthHeader(): String {
+        val accessToken = sessionManager.cachedToken.value?.accessToken
+        return "Bearer $accessToken"
     }
 
     private fun returnUnknownError(): Resource<MySymbol> {

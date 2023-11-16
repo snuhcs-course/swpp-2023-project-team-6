@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,7 +16,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
-import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
@@ -44,8 +42,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SymbolCreationViewModel @Inject internal constructor(
     private val repository: SymbolRepository,
-    private val responseHandler: ResponseHandler,
-    private val sessionManager: SessionManager
+    private val responseHandler: ResponseHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SymbolCreationUiState())
@@ -224,6 +221,9 @@ class SymbolCreationViewModel @Inject internal constructor(
             val imageFile = bitmapToFile(context, photoInputBitmap!!, tempFileName)
             val imagePart = fileToMultipartBodyPart(imageFile, "image")
 
+            /* TODO
+               Ban guest-mode user from backup
+             */
             viewModelScope.launch() {
                 repository.createSymbolBackup(
                     symbolText = symbolTextInput,
