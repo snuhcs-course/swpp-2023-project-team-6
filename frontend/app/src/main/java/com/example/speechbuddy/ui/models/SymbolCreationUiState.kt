@@ -16,5 +16,6 @@ data class SymbolCreationError(
 enum class SymbolCreationErrorType {
     SYMBOL_TEXT,
     CATEGORY,
-    PHOTO_INPUT
+    PHOTO_INPUT,
+    CONNECTION
 }

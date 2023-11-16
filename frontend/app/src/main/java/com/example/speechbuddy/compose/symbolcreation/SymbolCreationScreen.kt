@@ -60,7 +60,10 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.domain.models.Category
+import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
+import com.example.speechbuddy.ui.models.SymbolCreationUiState
+import com.example.speechbuddy.ui.models.SymbolSelectionUiState
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
@@ -79,7 +82,8 @@ fun SymbolCreationScreen(
     val isSymbolTextError = uiState.error?.type == SymbolCreationErrorType.SYMBOL_TEXT
     val isCategoryError = uiState.error?.type == SymbolCreationErrorType.CATEGORY
     val isPhotoInputError = uiState.error?.type == SymbolCreationErrorType.PHOTO_INPUT
-    val isError = isSymbolTextError || isCategoryError || isPhotoInputError
+    val isConnectionError = uiState.error?.type == SymbolCreationErrorType.CONNECTION
+    val isError = (isSymbolTextError || isCategoryError || isPhotoInputError) && !isConnectionError
 
     val creationResultMessage by viewModel.creationResultMessage.observeAsState()
 
@@ -129,7 +133,9 @@ fun SymbolCreationScreen(
                     items = categories,
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(stringResource(R.string.category)) },
-                    isError = isCategoryError
+                    isError = isCategoryError,
+                    viewModel = viewModel,
+                    uiState = uiState
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
@@ -171,9 +177,10 @@ private fun DropdownUi(
     items: List<Category>,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
-    isError: Boolean = false
+    isError: Boolean = false,
+    viewModel: SymbolCreationViewModel,
+    uiState: SymbolCreationUiState
 ) {
-    var expanded by remember { mutableStateOf(false) }
     Column {
         Box(modifier = modifier
             .fillMaxWidth()
@@ -182,7 +189,7 @@ private fun DropdownUi(
                 if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
                 RoundedCornerShape(10.dp)
             )
-            .clickable { expanded = true }
+            .clickable { viewModel.expandCategory() }
             .defaultMinSize(minHeight = 48.dp)
             .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center) {
@@ -208,8 +215,8 @@ private fun DropdownUi(
         }
 
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
+            expanded = uiState.isCategoryExpanded,
+            onDismissRequest = { viewModel.dismissCategory() },
             modifier = Modifier
                 .width(300.dp)
                 .heightIn(max = 230.dp)
@@ -223,7 +230,7 @@ private fun DropdownUi(
                     )
                 }, onClick = {
                     onValueChange(item)
-                    expanded = false
+                    viewModel.dismissCategory()
                 })
             }
         }

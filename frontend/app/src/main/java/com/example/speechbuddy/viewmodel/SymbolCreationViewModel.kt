@@ -62,6 +62,22 @@ class SymbolCreationViewModel @Inject internal constructor(
     var categoryInput by mutableStateOf<Category?>(null)
         private set
 
+    fun expandCategory() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isCategoryExpanded = true
+            )
+        }
+    }
+
+    fun dismissCategory() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isCategoryExpanded = false
+            )
+        }
+    }
+
     @JvmName("callFromUri")
     fun setPhotoInputUri(input: Uri?, context: Context) {
         photoInputUri = input
