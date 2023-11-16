@@ -113,8 +113,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'email',
-            'nickname',
-            'updated_at',
+            'nickname'
         )
 
 

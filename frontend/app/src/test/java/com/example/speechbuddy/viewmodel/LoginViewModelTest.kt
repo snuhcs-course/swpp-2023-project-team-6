@@ -1,8 +1,11 @@
 package com.example.speechbuddy.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.liveData
 import com.example.speechbuddy.R
+import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.LoginErrorType
@@ -30,6 +33,8 @@ class LoginViewModelTest {
 
     @MockK
     private val repository: AuthRepository = mockk()
+    private val authTokenPrefsManager: AuthTokenPrefsManager = mockk()
+    private val sessionManager = SessionManager(authTokenPrefsManager)
     private lateinit var viewModel: LoginViewModel
 
     // boundary condition: 8 characters in password field
@@ -47,7 +52,7 @@ class LoginViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(mainThreadSurrogate)
-        viewModel = LoginViewModel(repository)
+        viewModel = LoginViewModel(repository, sessionManager)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -118,7 +123,7 @@ class LoginViewModelTest {
 
         assertEquals(unregisteredEmail, viewModel.emailInput)
         assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.wrong_email, viewModel.uiState.value.error?.messageId)
         assertEquals(false, viewModel.uiState.value.isValidEmail)
     }
 
@@ -166,7 +171,7 @@ class LoginViewModelTest {
 
         assertEquals(validEmail, viewModel.emailInput)
         assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.wrong_password, viewModel.uiState.value.error?.messageId)
         assertEquals(false, viewModel.uiState.value.isValidEmail)
     }
 
@@ -191,7 +196,7 @@ class LoginViewModelTest {
 
         assertEquals(invalidEmail, viewModel.emailInput)
         assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.wrong_password, viewModel.uiState.value.error?.messageId)
         assertEquals(false, viewModel.uiState.value.isValidEmail)
     }
 
@@ -295,7 +300,7 @@ class LoginViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidEmail)
         assertEquals(false, viewModel.uiState.value.isValidPassword)
         assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.wrong_email, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
@@ -308,7 +313,7 @@ class LoginViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidEmail)
         assertEquals(false, viewModel.uiState.value.isValidPassword)
         assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.wrong_email, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
@@ -321,7 +326,7 @@ class LoginViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidEmail)
         assertEquals(false, viewModel.uiState.value.isValidPassword)
         assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.wrong_password, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
@@ -344,8 +349,7 @@ class LoginViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidEmail)
         assertEquals(false, viewModel.uiState.value.isValidPassword)
         assertEquals(LoginErrorType.EMAIL, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_email, viewModel.uiState.value.error?.messageId)
-
+        assertEquals(R.string.wrong_email, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
@@ -358,8 +362,7 @@ class LoginViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidEmail)
         assertEquals(false, viewModel.uiState.value.isValidPassword)
         assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
-
+        assertEquals(R.string.wrong_password, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
@@ -382,7 +385,7 @@ class LoginViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidEmail)
         assertEquals(false, viewModel.uiState.value.isValidPassword)
         assertEquals(LoginErrorType.PASSWORD, viewModel.uiState.value.error?.type)
-        assertEquals(R.string.false_password, viewModel.uiState.value.error?.messageId)
+        assertEquals(R.string.wrong_password, viewModel.uiState.value.error?.messageId)
     }
 
     @Test
@@ -391,6 +394,7 @@ class LoginViewModelTest {
         viewModel.setPassword(validPassword)
 
         val authToken = AuthToken("access", "refresh")
+
         coEvery {
             repository.login(AuthLoginRequest(validEmail, validPassword))
         } returns flowOf(
@@ -400,8 +404,7 @@ class LoginViewModelTest {
         viewModel.login()
         Thread.sleep(10) //viewModel.login() does not immediately produce result
 
-        assertEquals(null, viewModel.loginResult.value?.message)
-        assertEquals(authToken, viewModel.loginResult.value?.data)
+        assertEquals(authToken, sessionManager.cachedToken.value)
     }
 
 }

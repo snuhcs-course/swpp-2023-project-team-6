@@ -1,5 +1,6 @@
 package com.example.speechbuddy.service
 
+import com.example.speechbuddy.data.remote.models.AccessTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
@@ -29,6 +30,8 @@ class AuthServiceTest {
     
     private val errorResponseBody =
         "{\"error\":\"Something went wrong\"}".toResponseBody("application/json".toMediaType())
+
+    private val authHeader = "Bearer access"
 
     @Before
     fun setUp() {
@@ -100,27 +103,26 @@ class AuthServiceTest {
     @Test
     fun `should return response with auth token dto when request code is valid for password reset`() = runBlocking {
         val verifyEmailAcceptRequest = AuthVerifyEmailRequest(mockEmail, mockCode)
-        val authTokenDto = AuthTokenDto("AccessToken", "RefreshToken")
+        val accessTokenDto = AccessTokenDto(accessToken = "access")
         coEvery { authService.verifyEmailForResetPassword(verifyEmailAcceptRequest) } returns Response.success(
-            authTokenDto
+            accessTokenDto
         )
 
         val response = authService.verifyEmailForResetPassword(verifyEmailAcceptRequest)
 
         coVerify(exactly = 1) { authService.verifyEmailForResetPassword(verifyEmailAcceptRequest) }
         assertTrue(response.isSuccessful)
-        assertTrue(response.body()?.accessToken == "AccessToken")
-        assertTrue(response.body()?.refreshToken == "RefreshToken")
+        assertTrue(response.body()?.accessToken == "access")
     }
 
     @Test
     fun `should return response with success when request is valid password`() = runBlocking {
         val resetPasswordRequest = AuthResetPasswordRequest(mockPassword)
-        coEvery { authService.resetPassword(resetPasswordRequest) } returns Response.success(null)
+        coEvery { authService.resetPassword(authHeader, resetPasswordRequest) } returns Response.success(null)
 
-        val response = authService.resetPassword(resetPasswordRequest)
+        val response = authService.resetPassword(authHeader, resetPasswordRequest)
 
-        coVerify(exactly = 1) { authService.resetPassword(resetPasswordRequest) }
+        coVerify(exactly = 1) { authService.resetPassword(authHeader, resetPasswordRequest) }
         assertTrue(response.isSuccessful)
     }
 
@@ -207,14 +209,14 @@ class AuthServiceTest {
     @Test
     fun `should return response with error when request is invalid password`() = runBlocking {
         val resetPasswordRequest = AuthResetPasswordRequest("short")
-        coEvery { authService.resetPassword(resetPasswordRequest) } returns Response.error(
+        coEvery { authService.resetPassword(authHeader, resetPasswordRequest) } returns Response.error(
             400,
             errorResponseBody
         )
 
-        val response = authService.resetPassword(resetPasswordRequest)
+        val response = authService.resetPassword(authHeader, resetPasswordRequest)
 
-        coVerify(exactly = 1) { authService.resetPassword(resetPasswordRequest) }
+        coVerify(exactly = 1) { authService.resetPassword(authHeader, resetPasswordRequest) }
         assertFalse(response.isSuccessful)
     }
     

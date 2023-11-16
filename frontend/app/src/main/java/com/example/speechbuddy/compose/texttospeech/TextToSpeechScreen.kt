@@ -37,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.ButtonStatusType
 import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
@@ -59,7 +59,7 @@ fun TextToSpeechScreen(
         modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
-            HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_speech))
+            TopAppBarUi(title = stringResource(id = R.string.talk_with_speech))
         }) { topPaddingValues ->
             Column(
                 modifier = Modifier
@@ -73,8 +73,8 @@ fun TextToSpeechScreen(
                 verticalArrangement = Arrangement.Center,
             ) {
                 TitleUi(
-                    title = stringResource(id = R.string.tts_text),
-                    description = stringResource(id = R.string.tts_explain)
+                    title = stringResource(id = R.string.talk_with_sound),
+                    description = stringResource(id = R.string.tts_description)
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -148,13 +148,13 @@ private fun TextToSpeechButton(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = stringResource(id = R.string.play_text),
+                    text = stringResource(id = R.string.play),
                     color = if (isTextEmpty) deactivatedColor else activatedColor,
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = stringResource(id = R.string.play_text),
+                    contentDescription = stringResource(id = R.string.play),
                     modifier = Modifier.size(38.dp),
                     tint = if (isTextEmpty) deactivatedColor else activatedColor
                 )
@@ -169,13 +169,13 @@ private fun TextToSpeechButton(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = stringResource(id = R.string.stop_text),
+                    text = stringResource(id = R.string.stop),
                     color = activatedColor,
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Icon(
                     painter = painterResource(R.drawable.stop_icon),
-                    contentDescription = stringResource(id = R.string.stop_text),
+                    contentDescription = stringResource(id = R.string.stop),
                     modifier = Modifier.size(38.dp),
                     tint = activatedColor
                 )
@@ -201,13 +201,13 @@ fun TextClearButton(
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(id = R.string.clear_text),
+            text = stringResource(id = R.string.clear),
             color = if (isActivated) activatedColor else deactivatedColor,
             style = MaterialTheme.typography.headlineSmall
         )
         Icon(
             imageVector = Icons.Filled.Delete,
-            contentDescription = stringResource(id = R.string.clear_text),
+            contentDescription = stringResource(id = R.string.clear),
             modifier = Modifier.size(38.dp),
             tint = if (isActivated) activatedColor else deactivatedColor
         )

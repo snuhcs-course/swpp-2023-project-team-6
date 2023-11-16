@@ -7,3 +7,8 @@ import kotlinx.parcelize.Parcelize
 data class AuthToken(
     val accessToken: String? = null, val refreshToken: String? = null
 ) : Parcelable
+
+@Parcelize
+data class AccessToken(
+    val accessToken: String? = null
+) : Parcelable

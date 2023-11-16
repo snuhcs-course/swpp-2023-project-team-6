@@ -38,8 +38,8 @@ private fun SettingsScreenNavHost(
                 bottomPaddingValues = bottomPaddingValues
             )
         }
-        composable("backup") {
-            BackupSettings(
+        composable("guest") {
+            GuestSettings(
                 onBackClick = navigateToMain,
                 bottomPaddingValues = bottomPaddingValues
             )
@@ -52,6 +52,12 @@ private fun SettingsScreenNavHost(
         }
         composable("my_symbol") {
             MySymbolSettings(
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
+            )
+        }
+        composable("backup") {
+            BackupSettings(
                 onBackClick = navigateToMain,
                 bottomPaddingValues = bottomPaddingValues
             )
