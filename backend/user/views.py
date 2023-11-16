@@ -144,8 +144,7 @@ class UserProfileView(APIView):
     def get(self, request):
         user = request.user
         serialized_user = UserProfileSerializer(user).data
-        response_data = {"user": serialized_user}
-        return Response(response_data, status=status.HTTP_200_OK)
+        return Response(serialized_user, status=status.HTTP_200_OK)
 
 
 class PasswordUpdateView(APIView):
