@@ -41,7 +41,7 @@ class SymbolDaoTest {
     }
 
     @Test
-    fun should_upsert_symbols_when_fun_upsertAll_called() {
+    fun should_upsert_symbols_and_get_symbols_when_fun_upsertAll_and_fun_getSymbols_called() {
         runBlocking {
 
             val symbols = listOf(
@@ -251,7 +251,6 @@ class SymbolDaoTest {
         }
     }
 
-    //updateSymbol
     @Test
     fun should_update_symbols_when_fun_updateSymbol_called() {
         runBlocking {
