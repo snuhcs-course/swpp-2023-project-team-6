@@ -18,5 +18,6 @@ enum class SignupErrorType {
     NICKNAME,
     PASSWORD,
     PASSWORD_CHECK,
-    CONNECTION
+    CONNECTION,
+    UNKNOWN
 }

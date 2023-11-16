@@ -6,9 +6,11 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
-import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
+import com.example.speechbuddy.data.remote.models.UserDtoMapper
 import com.example.speechbuddy.service.AuthService
+import com.example.speechbuddy.service.UserService
 import com.example.speechbuddy.utils.Constants
+import com.example.speechbuddy.utils.ResponseHandler
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -35,7 +37,8 @@ class NetworkModule {
         val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
         val client =
-            OkHttpClient.Builder().addInterceptor(logger).addInterceptor(AuthInterceptor(context)).build()
+            OkHttpClient.Builder().addInterceptor(logger).addInterceptor(AuthInterceptor(context))
+                .build()
 
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
@@ -45,8 +48,20 @@ class NetworkModule {
 
     @Singleton
     @Provides
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
+    }
+
+    @Singleton
+    @Provides
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDtoMapper(): UserDtoMapper {
+        return UserDtoMapper()
     }
 
     @Singleton
@@ -63,8 +78,8 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideErrorResponseMapper(): ErrorResponseMapper {
-        return ErrorResponseMapper()
+    fun provideResponseHandler(): ResponseHandler {
+        return ResponseHandler()
     }
 
 }
@@ -91,4 +106,5 @@ class AuthInterceptor(private val context: Context) : Interceptor {
             NetworkCapabilities.TRANSPORT_ETHERNET
         ) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
     }
+
 }

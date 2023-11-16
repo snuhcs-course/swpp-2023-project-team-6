@@ -26,9 +26,6 @@ fun SpeechBuddyAuthNavHost(
     NavHost(navController = navController, startDestination = "landing") {
         composable("landing") {
             LandingScreen(
-                onGuestClick = {
-                    navController.navigate("home")
-                },
                 onLoginClick = {
                     navController.navigate("login")
                 }
@@ -36,9 +33,6 @@ fun SpeechBuddyAuthNavHost(
         }
         composable("login") {
             LoginScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
                 onResetPasswordClick = {
                     navController.navigate("email_verification/reset_password")
                 },
@@ -51,28 +45,23 @@ fun SpeechBuddyAuthNavHost(
             val source = backStackEntry.arguments?.getString("source")
             EmailVerificationScreen(
                 source = source,
-                onBackClick = {
-                    navController.navigateUp()
-                },
-                navController = navController,
+                navigateCallback = { navController.navigate(it) }
             )
         }
-        composable("signup/{emailInput}") { backStackEntry ->
-            val emailInput = backStackEntry.arguments?.getString("emailInput")
+        composable("signup/{email}") { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email")
             SignupScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
-                email = emailInput ?: "",
-                navController = navController
+                email = email ?: "",
+                navigateToLogin = {
+                    navController.navigate("login")
+                }
             )
         }
         composable("reset_password") {
             ResetPasswordScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
-                navController = navController
+                navigateToLogin = {
+                    navController.navigate("login")
+                }
             )
         }
     }

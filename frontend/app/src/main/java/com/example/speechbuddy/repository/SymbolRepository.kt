@@ -18,9 +18,9 @@ import javax.inject.Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
     private val categoryDao: CategoryDao,
+    private val symbolMapper: SymbolMapper,
+    private val categoryMapper: CategoryMapper
 ) {
-    private val symbolMapper = SymbolMapper()
-    private val categoryMapper = CategoryMapper()
 
     fun getSymbols(query: String) =
         if (query.isBlank()) getAllSymbols()

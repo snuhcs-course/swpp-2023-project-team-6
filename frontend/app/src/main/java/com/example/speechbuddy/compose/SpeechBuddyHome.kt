@@ -56,7 +56,7 @@ fun SpeechBuddyHome(
         ),
         BottomNavItem(
             "symbol_creation",
-            R.string.symbol_creation,
+            R.string.create_new_symbol,
             R.drawable.outline_add_a_photo_24
         ),
         BottomNavItem(

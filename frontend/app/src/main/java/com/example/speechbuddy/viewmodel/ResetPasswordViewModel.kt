@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.domain.SessionManager
@@ -34,6 +33,7 @@ class ResetPasswordViewModel @Inject internal constructor(
 
     var passwordInput by mutableStateOf("")
         private set
+
     var passwordCheckInput by mutableStateOf("")
         private set
 
@@ -45,11 +45,6 @@ class ResetPasswordViewModel @Inject internal constructor(
     fun setPasswordCheck(input: String) {
         passwordCheckInput = input
         if (_uiState.value.error?.type == ResetPasswordErrorType.PASSWORD_CHECK) validatePasswordCheck()
-    }
-
-    private fun clearInputs() {
-        passwordInput = ""
-        passwordCheckInput = ""
     }
 
     private fun validatePassword() {
@@ -73,20 +68,24 @@ class ResetPasswordViewModel @Inject internal constructor(
         }
     }
 
-    private fun changeLoading() {
-        _uiState.update {
-            it.copy(loading = !it.loading)
-        }
-    }
-
-    fun resetPassword(navController: NavHostController) {
-        if (!isValidPassword(passwordInput)) {
+    fun resetPassword(onSuccess: () -> Unit) {
+        if (passwordInput.isEmpty()) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPassword = false,
                     error = ResetPasswordError(
                         type = ResetPasswordErrorType.PASSWORD,
-                        messageId = R.string.false_new_password
+                        messageId = R.string.no_password
+                    )
+                )
+            }
+        } else if (!isValidPassword(passwordInput)) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPassword = false,
+                    error = ResetPasswordError(
+                        type = ResetPasswordErrorType.PASSWORD,
+                        messageId = R.string.wrong_password
                     )
                 )
             }
@@ -95,7 +94,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                 currentState.copy(
                     error = ResetPasswordError(
                         type = ResetPasswordErrorType.PASSWORD_CHECK,
-                        messageId = R.string.false_new_password_check
+                        messageId = R.string.wrong_password_check
                     )
                 )
             }
@@ -108,39 +107,35 @@ class ResetPasswordViewModel @Inject internal constructor(
                 ).collect { result ->
                     when (result.code()) {
                         ResponseCode.SUCCESS.value -> {
-                            changeLoading()
-                            sessionManager.setTemporaryToken(null)
-                            navController.navigate("login")
+                            sessionManager.logout()
+                            onSuccess()
                         }
 
                         ResponseCode.BAD_REQUEST.value -> {
-                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
                                     error = ResetPasswordError(
-                                        type = ResetPasswordErrorType.PASSWORD_CHECK,
-                                        messageId = R.string.reset_password_error
+                                        type = ResetPasswordErrorType.PASSWORD,
+                                        messageId = R.string.unknown_error
                                     )
                                 )
                             }
                         }
 
                         ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidPassword = false,
                                     error = ResetPasswordError(
                                         type = ResetPasswordErrorType.CONNECTION,
-                                        messageId = R.string.internet_error
+                                        messageId = R.string.connection_error
                                     )
                                 )
                             }
                         }
                     }
                 }
-                clearInputs()
             }
         }
     }

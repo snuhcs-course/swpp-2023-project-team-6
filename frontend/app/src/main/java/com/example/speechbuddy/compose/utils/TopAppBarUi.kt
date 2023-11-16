@@ -34,7 +34,7 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBarUi(
+fun TopAppBarUi(
     title: String,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
@@ -54,7 +54,7 @@ fun HomeTopAppBarUi(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back)
+                        contentDescription = null
                     )
                 }
             else
@@ -77,8 +77,8 @@ fun HomeTopAppBarUi(
 
 @Preview
 @Composable
-fun HomeTopAppBarUiPreview() {
+fun TopAppBarUiPreview() {
     SpeechBuddyTheme {
-        HomeTopAppBarUi(title = "title", onBackClick = {})
+        TopAppBarUi(title = "title", onBackClick = {})
     }
 }

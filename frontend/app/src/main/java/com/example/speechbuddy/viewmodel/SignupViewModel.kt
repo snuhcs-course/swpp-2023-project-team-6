@@ -5,16 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
-import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.SignupError
 import com.example.speechbuddy.ui.models.SignupErrorType
 import com.example.speechbuddy.ui.models.SignupUiState
-import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.ResponseCode
+import com.example.speechbuddy.utils.ResponseHandler
 import com.example.speechbuddy.utils.isValidNickname
 import com.example.speechbuddy.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,13 +25,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject internal constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val responseHandler: ResponseHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> = _uiState.asStateFlow()
 
-    private val errorResponseMapper = ErrorResponseMapper()
+    val email = mutableStateOf<String?>(null)
 
     var nicknameInput by mutableStateOf("")
         private set
@@ -44,14 +43,18 @@ class SignupViewModel @Inject internal constructor(
     var passwordCheckInput by mutableStateOf("")
         private set
 
+    fun setEmail(value: String?) {
+        email.value = value
+    }
+
     fun setNickname(input: String) {
         nicknameInput = input
-        if (_uiState.value.error?.type == SignupErrorType.NICKNAME) validateNickname()
+        validateNickname()
     }
 
     fun setPassword(input: String) {
         passwordInput = input
-        if (_uiState.value.error?.type == SignupErrorType.PASSWORD) validatePassword()
+        validatePassword()
     }
 
     fun setPasswordCheck(input: String) {
@@ -60,11 +63,31 @@ class SignupViewModel @Inject internal constructor(
     }
 
     private fun validateNickname() {
-        if (nicknameInput.isNotEmpty() && nicknameInput.length <= Constants.MAXIMUM_NICKNAME_LENGTH) {
-            _uiState.update { currentSate ->
-                currentSate.copy(
+        if (isValidNickname(nicknameInput)) {
+            _uiState.update { currentState ->
+                currentState.copy(
                     isValidNickname = true,
                     error = null
+                )
+            }
+        } else if (nicknameInput.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidNickname = false,
+                    error = SignupError(
+                        type = SignupErrorType.NICKNAME,
+                        messageId = R.string.no_nickname
+                    )
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidNickname = false,
+                    error = SignupError(
+                        type = SignupErrorType.NICKNAME,
+                        messageId = R.string.nickname_too_long
+                    )
                 )
             }
         }
@@ -78,6 +101,16 @@ class SignupViewModel @Inject internal constructor(
                     error = null
                 )
             }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPassword = false,
+                    error = SignupError(
+                        type = SignupErrorType.PASSWORD,
+                        messageId = R.string.password_too_short
+                    )
+                )
+            }
         }
     }
 
@@ -85,33 +118,51 @@ class SignupViewModel @Inject internal constructor(
         if (passwordInput == passwordCheckInput) {
             _uiState.update { currentState ->
                 currentState.copy(
-                    isValidEmail = true,
+                    isValidPassword = true,
                     error = null
                 )
             }
         }
     }
 
-    private fun changeLoading() {
-        _uiState.update {
-            it.copy(loading = !it.loading)
-        }
-    }
-
-    fun clearInputs() {
-        nicknameInput = ""
-        passwordInput = ""
-        passwordCheckInput = ""
-    }
-
-    fun signup(emailInput: String, navController: NavHostController) {
-        if (!isValidNickname(nicknameInput)) {
+    fun signup(onSuccess: () -> Unit) {
+        if (email.value == null) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidEmail = false,
+                    error = SignupError(
+                        type = SignupErrorType.UNKNOWN,
+                        messageId = R.string.unknown_error
+                    )
+                )
+            }
+        } else if (nicknameInput.isEmpty()) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidNickname = false,
                     error = SignupError(
                         type = SignupErrorType.NICKNAME,
-                        messageId = R.string.nickname_length_error
+                        messageId = R.string.no_nickname
+                    )
+                )
+            }
+        } else if (!isValidNickname(nicknameInput)) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidNickname = false,
+                    error = SignupError(
+                        type = SignupErrorType.NICKNAME,
+                        messageId = R.string.nickname_too_long
+                    )
+                )
+            }
+        } else if (passwordInput.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPassword = false,
+                    error = SignupError(
+                        type = SignupErrorType.PASSWORD,
+                        messageId = R.string.no_password
                     )
                 )
             }
@@ -121,63 +172,59 @@ class SignupViewModel @Inject internal constructor(
                     isValidPassword = false,
                     error = SignupError(
                         type = SignupErrorType.PASSWORD,
-                        messageId = R.string.false_new_password
+                        messageId = R.string.password_too_short
                     )
                 )
             }
         } else if (passwordInput != passwordCheckInput) {
             _uiState.update { currentState ->
                 currentState.copy(
-                    isValidEmail = false,
+                    isValidPassword = false,
                     error = SignupError(
                         type = SignupErrorType.PASSWORD_CHECK,
-                        messageId = R.string.false_new_password_check
+                        messageId = R.string.wrong_password_check
                     )
                 )
             }
         } else {
-            changeLoading()
             viewModelScope.launch {
                 repository.signup(
                     AuthSignupRequest(
-                        email = emailInput,
+                        email = email.value!!,
                         nickname = nicknameInput,
                         password = passwordInput
                     )
                 ).collect { result ->
                     when (result.code()) {
                         ResponseCode.CREATED.value -> {
-                            changeLoading()
-                            navController.navigate("login")
+                            onSuccess()
                         }
 
                         ResponseCode.BAD_REQUEST.value -> {
-                            changeLoading()
-                            val messageId =
-                                when (errorResponseMapper.mapToDomainModel(result.errorBody()!!).key) {
-                                    "email" -> R.string.false_email
+                            val errorMessageId =
+                                when (responseHandler.parseErrorResponse(result.errorBody()!!).key) {
+                                    "email" -> R.string.wrong_email
                                     "already_taken" -> R.string.email_already_taken
-                                    else -> R.string.false_email
+                                    else -> R.string.unknown_error
                                 }
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
                                     error = SignupError(
                                         type = SignupErrorType.EMAIL,
-                                        messageId = messageId
+                                        messageId = errorMessageId
                                     )
                                 )
                             }
                         }
 
                         ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                            changeLoading()
                             _uiState.update { currentState ->
                                 currentState.copy(
                                     isValidEmail = false,
                                     error = SignupError(
                                         type = SignupErrorType.CONNECTION,
-                                        messageId = R.string.internet_error
+                                        messageId = R.string.connection_error
                                     )
                                 )
                             }
@@ -185,7 +232,6 @@ class SignupViewModel @Inject internal constructor(
                     }
                 }
             }
-            clearInputs()
         }
     }
 }

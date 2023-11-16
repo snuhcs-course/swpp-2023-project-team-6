@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +35,7 @@ fun SymbolCreationScreen(
     ) {
         Scaffold(
             topBar = {
-                HomeTopAppBarUi(title = stringResource(id = R.string.symbol_creation))
+                TopAppBarUi(title = stringResource(id = R.string.create_new_symbol))
             }
         ) { topPaddingValues ->
             Column(
@@ -50,8 +50,8 @@ fun SymbolCreationScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleUi(
-                    title = "상징 추가하기",
-                    description = "소개원실 좋아요"
+                    title = stringResource(id = R.string.create_new_symbol),
+                    description = stringResource(id = R.string.symbol_creation_description)
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))

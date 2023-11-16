@@ -4,7 +4,6 @@ import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
-import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
@@ -35,10 +34,9 @@ class AuthRepository @Inject constructor(
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
     private val accessTokenDtoMapper: AccessTokenDtoMapper,
+    private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager
 ) {
-    private val errorResponseMapper = ErrorResponseMapper()
-    private val responseHandler = ResponseHandler()
 
     suspend fun signup(authSignupRequest: AuthSignupRequest): Flow<Response<Void>> =
         flow {
@@ -46,7 +44,7 @@ class AuthRepository @Inject constructor(
                 val result = authService.signup(authSignupRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -62,7 +60,7 @@ class AuthRepository @Inject constructor(
                 } ?: returnUnknownError()
             } else {
                 response.errorBody()?.let { responseBody ->
-                    val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
+                    val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
                     Resource.error(
                         errorMsgKey, null
                     )
@@ -77,7 +75,7 @@ class AuthRepository @Inject constructor(
                 val result = authService.sendCodeForSignup(authSendCodeRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -87,7 +85,7 @@ class AuthRepository @Inject constructor(
                 val result = authService.sendCodeForResetPassword(authSendCodeRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -97,7 +95,7 @@ class AuthRepository @Inject constructor(
                 val result = authService.verifyEmailForSignup(authVerifyEmailRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -117,7 +115,7 @@ class AuthRepository @Inject constructor(
                 } ?: returnUnknownError()
             } else {
                 response.errorBody()?.let { responseBody ->
-                    val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
+                    val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
                     Resource.error(
                         errorMsgKey, null
                     )
@@ -129,36 +127,41 @@ class AuthRepository @Inject constructor(
     suspend fun resetPassword(authResetPasswordRequest: AuthResetPasswordRequest): Flow<Response<Void>> =
         flow {
             try {
-                val result = authService.resetPassword(getTemporaryAuthHeader(), authResetPasswordRequest)
+                val result =
+                    authService.resetPassword(getAuthHeader(), authResetPasswordRequest)
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
     suspend fun logout(): Flow<Response<Void>> =
         flow {
             try {
-                val result = authService.logout(getAuthHeader(), AuthRefreshRequest(getRefreshToken()))
+                val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
+                val result =
+                    authService.logout(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
                     authTokenPrefsManager.clearAuthToken()
                 }
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
     suspend fun withdraw(): Flow<Response<Void>> =
         flow {
             try {
-                val result = authService.withdraw(getAuthHeader(), AuthRefreshRequest(getRefreshToken()))
+                val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
+                val result =
+                    authService.withdraw(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
                     authTokenPrefsManager.clearAuthToken()
                 }
                 emit(result)
             } catch (e: Exception) {
-                emit(noInternetResponse())
+                emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
@@ -170,30 +173,14 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    private fun getTemporaryAuthHeader(): String {
-        val temporaryToken = sessionManager.temporaryToken.value
-        return "Bearer $temporaryToken"
-    }
-
     private fun getAuthHeader(): String {
         val accessToken = sessionManager.cachedToken.value?.accessToken
         return "Bearer $accessToken"
     }
 
-    private fun getRefreshToken(): String {
-        return sessionManager.cachedToken.value?.refreshToken!!
-    }
-
     private fun <T> returnUnknownError(): Resource<T> {
         return Resource.error(
             "Unknown error", null
-        )
-    }
-
-    private fun noInternetResponse(): Response<Void> {
-        return Response.error(
-            ResponseCode.NO_INTERNET_CONNECTION.value,
-            responseHandler.getResponseBody(ResponseCode.NO_INTERNET_CONNECTION)
         )
     }
 

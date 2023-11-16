@@ -9,6 +9,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
+import com.example.speechbuddy.repository.UserRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.LoginUiState
@@ -25,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject internal constructor(
-    private val repository: AuthRepository,
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -46,11 +48,6 @@ class LoginViewModel @Inject internal constructor(
     fun setPassword(input: String) {
         passwordInput = input
         if (_uiState.value.error?.type == LoginErrorType.PASSWORD) validatePassword()
-    }
-
-    private fun clearInputs() {
-        emailInput = ""
-        passwordInput = ""
     }
 
     private fun validateEmail() {
@@ -75,20 +72,34 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
-    private fun changeLoading() {
-        _uiState.update {
-            it.copy(loading = !it.loading)
-        }
-    }
-
     fun login() {
-        if (!isValidEmail(emailInput)) {
+        if (emailInput.isEmpty()) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidEmail = false,
                     error = LoginError(
                         type = LoginErrorType.EMAIL,
-                        messageId = R.string.false_email
+                        messageId = R.string.no_email
+                    )
+                )
+            }
+        } else if (!isValidEmail(emailInput)) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidEmail = false,
+                    error = LoginError(
+                        type = LoginErrorType.EMAIL,
+                        messageId = R.string.wrong_email
+                    )
+                )
+            }
+        } else if (passwordInput.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPassword = false,
+                    error = LoginError(
+                        type = LoginErrorType.PASSWORD,
+                        messageId = R.string.no_password
                     )
                 )
             }
@@ -98,73 +109,100 @@ class LoginViewModel @Inject internal constructor(
                     isValidPassword = false,
                     error = LoginError(
                         type = LoginErrorType.PASSWORD,
-                        messageId = R.string.false_password
+                        messageId = R.string.wrong_password
                     )
                 )
             }
         } else {
-            changeLoading()
             viewModelScope.launch {
-                repository.login(
+                authRepository.login(
                     AuthLoginRequest(
                         email = emailInput,
                         password = passwordInput
                     )
                 ).collect { resource ->
                     if (resource.status == Status.SUCCESS) {
-                        sessionManager.login(resource.data!!)
-                    } else {
-                        if (resource.message?.contains("password", ignoreCase = true) == true) {
-                            changeLoading()
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isValidPassword = false,
-                                    error = LoginError(
-                                        type = LoginErrorType.PASSWORD,
-                                        messageId = R.string.false_password
-                                    )
+                        // AccessToken is already saved in AuthTokenPrefsManager by the authRepository
+                        sessionManager.setAuthToken(resource.data!!)
+                        getMyInfoFromRemote(resource.data.accessToken)
+                    } else if (resource.message?.contains("email", ignoreCase = true) == true) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidEmail = false,
+                                error = LoginError(
+                                    type = LoginErrorType.EMAIL,
+                                    messageId = R.string.wrong_email
                                 )
-                            }
-                        } else if (resource.message?.contains("email", ignoreCase = true) == true
-                        ) {
-                            changeLoading()
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    isValidEmail = false,
-                                    error = LoginError(
-                                        type = LoginErrorType.EMAIL,
-                                        messageId = R.string.false_email
-                                    )
+                            )
+                        }
+                    } else if (resource.message?.contains("password", ignoreCase = true) == true) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidPassword = false,
+                                error = LoginError(
+                                    type = LoginErrorType.PASSWORD,
+                                    messageId = R.string.wrong_password
                                 )
-                            }
-                        } else if (resource.message?.contains(
-                                "Unknown",
-                                ignoreCase = true
-                            ) == true
-                        ) {
-                            _uiState.update { currentState ->
-                                changeLoading()
-                                currentState.copy(
-                                    isValidEmail = false,
-                                    error = LoginError(
-                                        type = LoginErrorType.CONNECTION,
-                                        messageId = R.string.internet_error
-                                    )
+                            )
+                        }
+                    } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isValidEmail = false,
+                                error = LoginError(
+                                    type = LoginErrorType.CONNECTION,
+                                    messageId = R.string.connection_error
                                 )
-                            }
+                            )
                         }
                     }
                 }
             }
         }
-        clearInputs()
+    }
+
+    private fun getMyInfoFromRemote(accessToken: String?) {
+        viewModelScope.launch {
+            userRepository.getMyInfoFromRemote(accessToken).collect { resource ->
+                if (resource.status == Status.SUCCESS) {
+                    sessionManager.setUserId(resource.data!!.id)
+                } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidEmail = false,
+                            error = LoginError(
+                                type = LoginErrorType.CONNECTION,
+                                messageId = R.string.connection_error
+                            )
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidPassword = false,
+                            error = LoginError(
+                                type = LoginErrorType.UNKNOWN,
+                                messageId = R.string.unknown_error
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 
     fun checkPreviousUser() {
         viewModelScope.launch {
-            repository.checkPreviousUser().collect { resource ->
-                if (resource.data != null) sessionManager.login(resource.data)
+            authRepository.checkPreviousUser().collect { resource ->
+                if (resource.data != null) sessionManager.setAuthToken(resource.data)
             }
         }
     }
+
+    fun enterGuestMode() {
+        viewModelScope.launch {
+            sessionManager.enterGuestMode()
+        }
+    }
+
 }
