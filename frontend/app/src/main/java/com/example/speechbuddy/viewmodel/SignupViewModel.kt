@@ -108,7 +108,7 @@ class SignupViewModel @Inject internal constructor(
         if (passwordInput == passwordCheckInput) {
             _uiState.update { currentState ->
                 currentState.copy(
-                    isValidEmail = true,
+                    isValidPassword = true,
                     error = null
                 )
             }
