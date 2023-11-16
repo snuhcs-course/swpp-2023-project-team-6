@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
@@ -24,6 +25,7 @@ import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
 import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.ResponseHandler
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidSymbolText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,6 +44,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SymbolCreationViewModel @Inject internal constructor(
     private val repository: SymbolRepository,
+    private val responseHandler: ResponseHandler,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SymbolCreationUiState())
@@ -225,11 +229,11 @@ class SymbolCreationViewModel @Inject internal constructor(
                     symbolText = symbolTextInput,
                     categoryId = categoryInput!!.id,
                     image = imagePart
-                ).collect{
-                    if(it.status == Resource(Status.SUCCESS, "", "").status){
+                ).collect{ resource ->
+                    if(resource.status == Status.SUCCESS){
                         // Store new symbol in local db
-                        val symbolId = it.data!!.id
-                        val imageUrl = it.data!!.imageUrl
+                        val symbolId = resource.data!!.id
+                        val imageUrl = resource.data!!.imageUrl
                         val symbol = Symbol(
                             id = symbolId!!,
                             text = symbolTextInput,
@@ -245,12 +249,12 @@ class SymbolCreationViewModel @Inject internal constructor(
                         clearInput()
                         // Notify user that the creation was successful
                         _creationResultMessage.postValue(R.string.create_symbol_success)
-                    } else if (it.message?.contains("Unknown")==true){
+                    } else if (resource.message?.contains("Unknown", ignoreCase = true)==true){
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidSymbolText = false,
                                 error = SymbolCreationError(
-                                    type = SymbolCreationErrorType.SYMBOL_TEXT,
+                                    type = SymbolCreationErrorType.CONNECTION,
                                     messageId = R.string.connection_error
                                 )
                             )
