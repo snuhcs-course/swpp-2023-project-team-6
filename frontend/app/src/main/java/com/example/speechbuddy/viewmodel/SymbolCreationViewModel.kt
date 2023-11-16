@@ -184,7 +184,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                     isValidCategory = false,
                     error = SymbolCreationError(
                         type = SymbolCreationErrorType.CATEGORY,
-                        messageId = R.string.empty_category
+                        messageId = R.string.no_category
                     )
                 )
             }
@@ -194,7 +194,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                     isValidPhotoInput = false,
                     error = SymbolCreationError(
                         type = SymbolCreationErrorType.PHOTO_INPUT,
-                        messageId = R.string.empty_photo
+                        messageId = R.string.no_photo
                     )
                 )
             }
@@ -235,7 +235,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                                 isValidSymbolText = false,
                                 error = SymbolCreationError(
                                     type = SymbolCreationErrorType.SYMBOL_TEXT,
-                                    messageId = R.string.internet_error
+                                    messageId = R.string.connection_error
                                 )
                             )
                         }
