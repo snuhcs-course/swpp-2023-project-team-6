@@ -70,6 +70,16 @@ class SignupViewModel @Inject internal constructor(
                     error = null
                 )
             }
+        } else if (nicknameInput.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidNickname = false,
+                    error = SignupError(
+                        type = SignupErrorType.NICKNAME,
+                        messageId = R.string.no_nickname
+                    )
+                )
+            }
         } else {
             _uiState.update { currentState ->
                 currentState.copy(
