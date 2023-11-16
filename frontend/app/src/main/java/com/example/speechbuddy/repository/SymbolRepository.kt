@@ -1,5 +1,6 @@
 package com.example.speechbuddy.repository
 
+import android.util.Log
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.models.CategoryMapper
@@ -41,6 +42,10 @@ class SymbolRepository @Inject constructor(
         else symbolDao.getSymbolsByQuery(query).map { symbolEntities ->
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
+
+    fun getLastSymbol() = symbolDao.getLastSymbol().map { symbolEntities ->
+        symbolEntities.first().let { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+    }
 
     fun getCategories(query: String) =
         if (query.isBlank()) getAllCategories()

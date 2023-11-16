@@ -17,6 +17,9 @@ interface SymbolDao {
     @Query("SELECT * FROM symbols")
     fun getSymbols(): Flow<List<SymbolEntity>>
 
+    @Query("SELECT * FROM symbols ORDER BY id DESC LIMIT 1")
+    fun getLastSymbol(): Flow<List<SymbolEntity>>
+
     @Query("SELECT * FROM symbols WHERE isFavorite = 1")
     fun getFavoriteSymbols(): Flow<List<SymbolEntity>>
 
