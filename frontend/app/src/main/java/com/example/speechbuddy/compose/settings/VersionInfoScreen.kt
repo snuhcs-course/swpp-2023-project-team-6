@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +30,7 @@ fun VersionInfo(
     ) {
         Scaffold(
             topBar = {
-                HomeTopAppBarUi(
+                TopAppBarUi(
                     title = stringResource(id = R.string.settings),
                     onBackClick = onBackClick,
                     isBackClickEnabled = true
@@ -63,7 +63,7 @@ fun VersionInfo(
                     )
 
                     SettingsRow(
-                        label = stringResource(id = R.string.email),
+                        label = stringResource(id = R.string.developers_email),
                         content = {
                             /* TODO */
                             SettingsRowText(text = "speechbuddy@gmail.com")

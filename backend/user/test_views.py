@@ -1,6 +1,5 @@
 from django.test import TestCase
 from rest_framework import status
-from rest_framework.utils import json
 
 from user.models import User, EmailVerification
 
@@ -51,7 +50,7 @@ class UserTest(TestCase):
         }
         response = self.client.get('/user/profile/', **headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.json()['user']
+        data = response.json()
         self.assertEqual(self.user.email, data['email'])
         self.assertEqual(self.user.nickname, data['nickname'])
 
@@ -94,7 +93,7 @@ class UserTest(TestCase):
 
         # Call get-profile API to check whether the value change is applied
         response = self.client.get('/user/profile/', **headers)
-        self.assertEqual(data['nickname'], response.json()['user']['nickname'])
+        self.assertEqual(data['nickname'], response.json()['nickname'])
 
     def test_change_password_success(self):
         headers = {

@@ -45,8 +45,8 @@ fun TitleUi(
 fun TitleUiPreview() {
     SpeechBuddyTheme {
         TitleUi(
-            title = stringResource(id = R.string.signup_text),
-            description = stringResource(id = R.string.signup_explain)
+            title = stringResource(id = R.string.signup),
+            description = stringResource(id = R.string.signup_description)
         )
     }
 }

@@ -6,31 +6,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.compose.emailverification.EmailVerificationScreen
-import com.example.speechbuddy.compose.home.HomeScreen
 import com.example.speechbuddy.compose.landing.LandingScreen
 import com.example.speechbuddy.compose.login.LoginScreen
 import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
 
 @Composable
-fun SpeechBuddyApp() {
+fun SpeechBuddyAuth() {
     val navController = rememberNavController()
-    SpeechBuddyNavHost(
+    SpeechBuddyAuthNavHost(
         navController = navController
     )
 }
 
 @Composable
-fun SpeechBuddyNavHost(
+fun SpeechBuddyAuthNavHost(
     navController: NavHostController
 ) {
-    // val activity = (LocalContext.current as Activity)
     NavHost(navController = navController, startDestination = "landing") {
         composable("landing") {
             LandingScreen(
-                onGuestClick = {
-                    navController.navigate("home")
-                },
                 onLoginClick = {
                     navController.navigate("login")
                 }
@@ -38,9 +33,6 @@ fun SpeechBuddyNavHost(
         }
         composable("login") {
             LoginScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
                 onResetPasswordClick = {
                     navController.navigate("email_verification/reset_password")
                 },
@@ -53,31 +45,24 @@ fun SpeechBuddyNavHost(
             val source = backStackEntry.arguments?.getString("source")
             EmailVerificationScreen(
                 source = source,
-                onBackClick = {
-                    navController.navigateUp()
-                },
-                navController = navController,
+                navigateCallback = { navController.navigate(it) }
             )
         }
-        composable("signup/{emailInput}") { backStackEntry ->
-            val emailInput = backStackEntry.arguments?.getString("emailInput")
+        composable("signup/{email}") { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email")
             SignupScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
-                email = emailInput ?: ""
+                email = email ?: "",
+                navigateToLogin = {
+                    navController.navigate("login")
+                }
             )
         }
         composable("reset_password") {
             ResetPasswordScreen(
-                onBackClick = {
-                    navController.navigateUp()
-                },
-                navController = navController
+                navigateToLogin = {
+                    navController.navigate("login")
+                }
             )
-        }
-        composable("home") {
-            HomeScreen()
         }
     }
 }

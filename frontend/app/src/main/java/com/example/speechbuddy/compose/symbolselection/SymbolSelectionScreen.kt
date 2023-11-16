@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.CategoryUi
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.SymbolUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
@@ -63,7 +63,7 @@ fun SymbolSelectionScreen(
     ) {
         Scaffold(
             topBar = {
-                HomeTopAppBarUi(title = stringResource(id = R.string.talk_with_symbols), actions = {
+                TopAppBarUi(title = stringResource(id = R.string.talk_with_symbols), actions = {
                     IconButton(onClick = { viewModel.expandMenu() }) {
                         Icon(
                             imageVector = Icons.Default.Menu,

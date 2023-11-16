@@ -67,7 +67,7 @@ fun SelectedSymbolUi(
             ) {
                 Icon(
                     imageVector = Icons.Default.Clear,
-                    contentDescription = stringResource(id = R.string.symbol_unselect)
+                    contentDescription = stringResource(id = R.string.unselect_symbol)
                 )
             }
 

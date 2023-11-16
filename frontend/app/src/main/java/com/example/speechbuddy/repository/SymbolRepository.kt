@@ -6,7 +6,7 @@ import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.remote.MySymbolRemoteSource
-import com.example.speechbuddy.data.remote.models.ErrorResponseMapper
+import com.example.speechbuddy.utils.ResponseHandler
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
@@ -24,12 +24,14 @@ import javax.inject.Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
     private val categoryDao: CategoryDao,
+    // For remote mapping
     private val mySymbolRemoteSource: MySymbolRemoteSource,
     private val mySymbolDtoMapper: MySymbolDtoMapper,
-    private val errorResponseMapper: ErrorResponseMapper
+    private val responseHandler: ResponseHandler,
+    // For local mapping
+    private val symbolMapper: SymbolMapper,
+    private val categoryMapper: CategoryMapper
 ) {
-    private val symbolMapper = SymbolMapper()
-    private val categoryMapper = CategoryMapper()
 
     fun getSymbols(query: String) =
         if (query.isBlank()) getAllSymbols()
@@ -103,18 +105,18 @@ class SymbolRepository @Inject constructor(
         return mySymbolRemoteSource.createSymbolBackup(symbolText, categoryId, image)
             .map { response ->
                 if (response.isSuccessful && response.code() == 200) {
-                    response.body()?.let { MySymbolDto ->
-                        MySymbolDto.let {
+                    response.body()?.let { mySymbolDto ->
+                        mySymbolDto.let {
                             Resource.success(
                                 mySymbolDtoMapper.mapToDomainModel(
-                                    MySymbolDto
+                                    mySymbolDto
                                 )
                             )
                         }
                     } ?: returnUnknownError()
                 } else {
                     response.errorBody()?.let { responseBody ->
-                        val errorMsgKey = errorResponseMapper.mapToDomainModel(responseBody).key
+                        val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
                         Resource.error(
                             errorMsgKey, null
                         )

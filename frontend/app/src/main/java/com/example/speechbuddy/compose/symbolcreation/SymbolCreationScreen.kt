@@ -56,8 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
-import com.example.speechbuddy.compose.utils.HomeTopAppBarUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
@@ -92,9 +92,11 @@ fun SymbolCreationScreen(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(topBar = {
-            HomeTopAppBarUi(title = stringResource(id = R.string.symbol_creation))
-        }) { topPaddingValues ->
+        Scaffold(
+            topBar = {
+                TopAppBarUi(title = stringResource(id = R.string.create_new_symbol))
+            }
+        ) { topPaddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -107,8 +109,8 @@ fun SymbolCreationScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleUi(
-                    title = stringResource(id = R.string.create_symbol_text),
-                    description = stringResource(id = R.string.create_symbol_explain)
+                    title = stringResource(id = R.string.create_new_symbol),
+                    description = stringResource(id = R.string.symbol_creation_description)
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -147,7 +149,7 @@ fun SymbolCreationScreen(
                 )
 
                 ButtonUi(
-                    text = stringResource(id = R.string.register),
+                    text = stringResource(id = R.string.create),
                     onClick = { viewModel.createSymbol(context) },
                     modifier = Modifier.offset(y = 50.dp),
                     isEnabled = true,
@@ -200,7 +202,7 @@ private fun DropdownUi(
                 }
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = stringResource(R.string.dropdown_icon_description)
+                    contentDescription = stringResource(R.string.dropdown)
                 )
             }
         }
@@ -253,7 +255,7 @@ private fun AddPhotoButton(
         } else {
             Icon(
                 painter = painterResource(id = R.drawable.outline_add_a_photo_24),
-                contentDescription = stringResource(R.string.symbol_creation)
+                contentDescription = stringResource(R.string.create_new_symbol)
             )
         }
     }
