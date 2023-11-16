@@ -45,7 +45,7 @@ class WeightRowTest {
     }
 
     @Test
-    fun should_upsert_weightRows_and_get_weightRows_when_fun_upsertAll_and_getAllWeightRows_called() {
+    fun should_upsert_weightRows_and_get_weightRows_when_fun_upsertAll_and_fun_getAllWeightRows_called() {
         runBlocking {
 
             val weightRows = listOf(
