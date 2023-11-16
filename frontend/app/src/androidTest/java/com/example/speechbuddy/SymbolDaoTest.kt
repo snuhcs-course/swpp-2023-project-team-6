@@ -251,7 +251,6 @@ class SymbolDaoTest {
         }
     }
 
-    //updateSymbol
     @Test
     fun should_update_symbols_when_fun_updateSymbol_called() {
         runBlocking {
