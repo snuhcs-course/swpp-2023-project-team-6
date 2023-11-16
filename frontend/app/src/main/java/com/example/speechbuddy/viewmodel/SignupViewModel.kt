@@ -64,8 +64,8 @@ class SignupViewModel @Inject internal constructor(
 
     private fun validateNickname() {
         if (isValidNickname(nicknameInput)) {
-            _uiState.update { currentSate ->
-                currentSate.copy(
+            _uiState.update { currentState ->
+                currentState.copy(
                     isValidNickname = true,
                     error = null
                 )
