@@ -74,7 +74,7 @@ class WeightTableRepositoryTest {
     }
 
     @Test
-    fun `provideSuggestion calls symbolDao insert`() = runBlocking {
+    fun `should retrun sorted symbols when symbol is selected`() = runBlocking {
         val weightRowEntities = listOf(WeightRowEntity(id = 1, weights = (1..500).toList()))
         val expectedResult = mutableListOf<Symbol>()
 
@@ -103,7 +103,7 @@ class WeightTableRepositoryTest {
     }
 
     @Test
-    fun `update calls weightRowDao update`() = runBlocking {
+    fun `should update weight table when symbol list is inputted`() = runBlocking {
         val weightRowEntities = mutableListOf<WeightRowEntity>()
         val symbolItems = listOf(
             SymbolItem(1, mockSymbol1),
