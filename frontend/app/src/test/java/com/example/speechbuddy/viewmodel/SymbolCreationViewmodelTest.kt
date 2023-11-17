@@ -39,13 +39,17 @@ class SymbolCreationViewModelTest {
 
     @MockK
     private val repository: SymbolRepository = mockk()
-    private val sessionManager : SessionManager = mockk()
+    private val sessionManager: SessionManager = mockk()
     val context: Context = mockk()
     private lateinit var viewModel: SymbolCreationViewModel
 
     private val emptySymbolText = ""
     private val longSymbolText = "tooLongSymbolTextToRegisterHahaToooooooLonggggg"
     private val validSymbolText = "valid"
+
+    private val validCategory = Category(1, "validCategory")
+
+    val validUri: Uri = mockk(relaxed = true)
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -153,6 +157,32 @@ class SymbolCreationViewModelTest {
 
         assertEquals(emptySymbolText, viewModel.symbolTextInput)
         assertEquals(false, viewModel.uiState.value.isValidSymbolText)
+        assertEquals(SymbolCreationErrorType.CATEGORY, viewModel.uiState.value.error?.type)
+    }
+
+    // Category related
+    @Test
+    fun `should set no category when setCategory is not called`() {
+        assertEquals(null, viewModel.categoryInput)
+        assertEquals(false, viewModel.uiState.value.isValidCategory)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set valid category before create click when setCategory is called with a valid category`() {
+        viewModel.setCategory(validCategory)
+
+        assertEquals(validCategory, viewModel.categoryInput)
+        assertEquals(false, viewModel.uiState.value.isValidCategory)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set error after create click when setCategory is not called`() {
+        viewModel.createSymbol(context)
+
+        assertEquals(null, viewModel.categoryInput)
+        assertEquals(false, viewModel.uiState.value.isValidCategory)
         assertEquals(SymbolCreationErrorType.CATEGORY, viewModel.uiState.value.error?.type)
     }
 }
