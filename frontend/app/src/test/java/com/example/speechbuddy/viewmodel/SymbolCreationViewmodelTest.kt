@@ -179,11 +179,31 @@ class SymbolCreationViewModelTest {
 
     @Test
     fun `should set error after create click when setCategory is not called`() {
+        viewModel.setSymbolText(validSymbolText)
         viewModel.createSymbol(context)
 
         assertEquals(null, viewModel.categoryInput)
         assertEquals(false, viewModel.uiState.value.isValidCategory)
         assertEquals(SymbolCreationErrorType.CATEGORY, viewModel.uiState.value.error?.type)
     }
-}
 
+    // setPhoto related
+    @Test
+    fun `should set no photoInputUri when setPhoto is not called`() {
+        assertEquals(null, viewModel.photoInputUri)
+        assertEquals(false, viewModel.uiState.value.isValidPhotoInput)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set error after create click when setPhoto is not called`() {
+        viewModel.setSymbolText(validSymbolText)
+        viewModel.setCategory(validCategory)
+        viewModel.createSymbol(context)
+
+        assertEquals(null, viewModel.photoInputUri)
+        assertEquals(null, viewModel.photoInputBitmap)
+        assertEquals(false, viewModel.uiState.value.isValidPhotoInput)
+        assertEquals(SymbolCreationErrorType.PHOTO_INPUT, viewModel.uiState.value.error?.type)
+    }
+}

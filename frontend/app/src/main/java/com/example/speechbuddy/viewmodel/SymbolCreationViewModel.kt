@@ -153,7 +153,7 @@ class SymbolCreationViewModel @Inject internal constructor(
         }
     }
 
-    fun bitmapToFile(context: Context, bitmap: Bitmap, fileName: String): File {
+    private fun bitmapToFile(context: Context, bitmap: Bitmap, fileName: String): File {
         // Get the app's internal storage directory
         val internalDir = context.filesDir
         val imageFile = File(internalDir, "$fileName.png")
@@ -171,7 +171,7 @@ class SymbolCreationViewModel @Inject internal constructor(
         return MultipartBody.Part.createFormData(paramName, file.name, requestFile)
     }
 
-    fun changeFileName(oldFileName: String, newFileName: String, context: Context) {
+    private fun changeFileName(oldFileName: String, newFileName: String, context: Context) {
         val internalStorageDir = context.filesDir
         val oldFile = File(internalStorageDir, oldFileName)
 
