@@ -1,6 +1,5 @@
 package com.example.speechbuddy.data.remote
 
-import android.util.Log
 import com.example.speechbuddy.data.remote.models.MySymbolDto
 import com.example.speechbuddy.service.SymbolCreationService
 import com.example.speechbuddy.utils.ResponseHandler
