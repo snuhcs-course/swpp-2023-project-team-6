@@ -1,18 +1,12 @@
-
-
 package com.example.speechbuddy.viewmodel
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.repository.SymbolRepository
-import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
-import com.example.speechbuddy.ui.models.SymbolCreationUiState
-import com.example.speechbuddy.utils.Resource
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
@@ -22,10 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -160,7 +151,7 @@ class SymbolCreationViewModelTest {
         assertEquals(SymbolCreationErrorType.CATEGORY, viewModel.uiState.value.error?.type)
     }
 
-    // Category related
+    // setCategory related
     @Test
     fun `should set no category when setCategory is not called`() {
         assertEquals(null, viewModel.categoryInput)
@@ -206,4 +197,5 @@ class SymbolCreationViewModelTest {
         assertEquals(false, viewModel.uiState.value.isValidPhotoInput)
         assertEquals(SymbolCreationErrorType.PHOTO_INPUT, viewModel.uiState.value.error?.type)
     }
+
 }
