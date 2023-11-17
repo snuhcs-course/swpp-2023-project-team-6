@@ -8,6 +8,7 @@ import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.UserDtoMapper
 import com.example.speechbuddy.service.AuthService
+import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.service.UserService
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.ResponseHandler
@@ -56,6 +57,12 @@ class NetworkModule {
     @Provides
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBackupService(retrofit: Retrofit): BackupService {
+        return retrofit.create(BackupService::class.java)
     }
 
     @Singleton

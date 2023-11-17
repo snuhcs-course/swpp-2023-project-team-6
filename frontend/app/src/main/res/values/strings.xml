@@ -109,6 +109,7 @@
     <string name="last_backup_date">마지막 백업 날짜</string>
     <string name="enable_auto_backup">자동 백업 활성화</string>
     <string name="backup_now">지금 백업하기</string>
+    <string name="backup_success">백업 성공</string>
 
     <!-- Display Settings -->
     <string name="display">디스플레이</string>

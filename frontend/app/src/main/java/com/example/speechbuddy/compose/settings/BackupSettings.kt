@@ -1,5 +1,6 @@
 package com.example.speechbuddy.compose.settings
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -15,7 +18,9 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,6 +28,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.ui.models.BackupSettingsAlert
 import com.example.speechbuddy.viewmodel.BackupSettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,6 +40,7 @@ fun BackupSettings(
     viewModel: BackupSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val loading by viewModel.loading.observeAsState()
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -88,5 +95,37 @@ fun BackupSettings(
                 )
             }
         }
+    }
+
+    uiState.alert.let { alert ->
+        when (alert) {
+            BackupSettingsAlert.SUCCESS -> {
+                viewModel.toastDisplayed()
+                Toast.makeText(
+                    LocalContext.current,
+                    stringResource(id = R.string.backup_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            BackupSettingsAlert.CONNECTION -> {
+                viewModel.toastDisplayed()
+                Toast.makeText(
+                    LocalContext.current,
+                    stringResource(id = R.string.connection_error),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> {}
+        }
+    }
+
+    if (loading == true) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize()
+        )
     }
 }
