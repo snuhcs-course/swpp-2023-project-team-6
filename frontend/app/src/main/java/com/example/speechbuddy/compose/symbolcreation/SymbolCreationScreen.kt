@@ -83,7 +83,6 @@ fun SymbolCreationScreen(
     val isCategoryError = uiState.error?.type == SymbolCreationErrorType.CATEGORY
     val isPhotoInputError = uiState.error?.type == SymbolCreationErrorType.PHOTO_INPUT
     val isConnectionError = uiState.error?.type == SymbolCreationErrorType.CONNECTION
-    val isError = (isSymbolTextError || isCategoryError || isPhotoInputError) && !isConnectionError
 
     val creationResultMessage by viewModel.creationResultMessage.observeAsState()
 
