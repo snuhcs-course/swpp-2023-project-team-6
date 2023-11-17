@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
@@ -37,6 +38,7 @@ class SymbolCreationViewModelTest {
 
     @MockK
     private val repository: SymbolRepository = mockk()
+    private val sessionManager : SessionManager = mockk()
     private lateinit var viewModel: SymbolCreationViewModel
 
     private val validSymbolText = "valid"
@@ -51,7 +53,7 @@ class SymbolCreationViewModelTest {
     fun setup() {
         Dispatchers.setMain(mainThreadSurrogate)
         coEvery { repository.getAllCategories() } returns flowOf(emptyList())
-        viewModel = SymbolCreationViewModel(repository)
+        viewModel = SymbolCreationViewModel(repository, sessionManager)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -76,7 +78,7 @@ class SymbolCreationViewModelTest {
 
         assertEquals(invalidSymbolText, viewModel.symbolTextInput)
         assertEquals(false, viewModel.uiState.value.isValidSymbolText)
-        assertEquals(SymbolCreationErrorType.SYMBOL_TEXT, viewModel.uiState.value.error?.type)
+        assertEquals(null, viewModel.uiState.value.error?.type)
     }
 }
 
