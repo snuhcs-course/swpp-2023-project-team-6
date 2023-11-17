@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.models.CategoryEntity
 import com.example.speechbuddy.data.local.models.SymbolEntity
+import com.example.speechbuddy.data.local.models.WeightRowEntity
 import com.example.speechbuddy.utils.Constants.Companion.CATEGORY_DATA_FILENAME
 import com.example.speechbuddy.utils.Constants.Companion.SYMBOL_DATA_FILENAME
 import com.google.gson.Gson
@@ -23,6 +24,22 @@ class SeedDatabaseWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val database = AppDatabase.getInstance(applicationContext)
+
+            val weightRows = mutableListOf<WeightRowEntity>()
+
+            for(id in 1..500){
+                val weightsList = List(500){0}
+                val weightRowEntity = WeightRowEntity(id, weightsList)
+                weightRows.add(weightRowEntity)
+            }
+
+
+            database.weightRowDao().upsertAll(weightRows)
+
+
+
+            Result.success()
+
 
             applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
@@ -45,6 +62,8 @@ class SeedDatabaseWorker(
                     Result.success()
                 }
             }
+
+
         } catch (ex: Exception) {
             Log.e("SeedDatabaseWorker", "Error seeding database", ex)
             Result.failure()
