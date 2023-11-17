@@ -3,7 +3,9 @@ package com.example.speechbuddy.repository
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.models.CategoryEntity
+import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
+import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
@@ -22,6 +24,8 @@ import org.junit.Test
 class SymbolRepositoryTest {
     private lateinit var symbolDao: SymbolDao
     private lateinit var categoryDao: CategoryDao
+    private lateinit var symbolMapper: SymbolMapper
+    private lateinit var categoryMapper: CategoryMapper
     private lateinit var mockSymbolRepository: SymbolRepository
 
     val categoryTypes = listOf(
@@ -56,6 +60,8 @@ class SymbolRepositoryTest {
     fun setUp() {
         symbolDao = mockk(relaxed = true)
         categoryDao = mockk(relaxed = true)
+        symbolMapper = mockk(relaxed = true)
+        categoryMapper = mockk(relaxed = true)
 
         // create symbolEntities
         val symbolEntities = mutableListOf<SymbolEntity>()
@@ -84,7 +90,7 @@ class SymbolRepositoryTest {
             categoryEntities.toList()
         )
 
-        mockSymbolRepository = SymbolRepository(symbolDao, categoryDao)
+        mockSymbolRepository = SymbolRepository(symbolDao, categoryDao, symbolMapper, categoryMapper)
     }
 
     @Test

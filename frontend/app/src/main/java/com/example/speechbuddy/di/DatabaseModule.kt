@@ -45,6 +45,7 @@ class DatabaseModule {
         return appDatabase.categoryDao()
     }
 
+    @Singleton
     @Provides
     fun provideWeightRowDao(appDatabase: AppDatabase): WeightRowDao {
         return appDatabase.weightRowDao()
