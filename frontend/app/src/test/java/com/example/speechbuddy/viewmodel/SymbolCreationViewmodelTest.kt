@@ -9,6 +9,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
 import com.example.speechbuddy.utils.Resource
@@ -39,11 +40,12 @@ class SymbolCreationViewModelTest {
     @MockK
     private val repository: SymbolRepository = mockk()
     private val sessionManager : SessionManager = mockk()
+    val context: Context = mockk()
     private lateinit var viewModel: SymbolCreationViewModel
 
+    private val emptySymbolText = ""
+    private val longSymbolText = "tooLongSymbolTextToRegisterHahaToooooooLonggggg"
     private val validSymbolText = "valid"
-
-    private val invalidSymbolText = ""
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -63,8 +65,27 @@ class SymbolCreationViewModelTest {
         mainThreadSurrogate.close()
     }
 
+    // setSymbolText-related
     @Test
-    fun `should set valid symbol text when setSymbolText is called with a valid text`() {
+    fun `should set empty symbol text before create click when setSymbolText is called with an empty text`() {
+        viewModel.setSymbolText(emptySymbolText)
+
+        assertEquals(validSymbolText, viewModel.symbolTextInput)
+        assertEquals(false, viewModel.uiState.value.isValidSymbolText)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set long symbol text before create click when setSymbolText is called with a long text`() {
+        viewModel.setSymbolText(longSymbolText)
+
+        assertEquals(validSymbolText, viewModel.symbolTextInput)
+        assertEquals(false, viewModel.uiState.value.isValidSymbolText)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set valid symbol text before create click when setSymbolText is called with a valid text`() {
         viewModel.setSymbolText(validSymbolText)
 
         assertEquals(validSymbolText, viewModel.symbolTextInput)
@@ -73,12 +94,66 @@ class SymbolCreationViewModelTest {
     }
 
     @Test
-    fun `should set invalid symbol text when setSymbolText is called with invalid text`() {
-        viewModel.setSymbolText(invalidSymbolText)
+    fun `should set error after create click when setSymbolText is called with an empty text`() {
+        viewModel.setSymbolText(emptySymbolText)
+        viewModel.createSymbol(context)
 
-        assertEquals(invalidSymbolText, viewModel.symbolTextInput)
+        assertEquals(emptySymbolText, viewModel.symbolTextInput)
         assertEquals(false, viewModel.uiState.value.isValidSymbolText)
+        assertEquals(SymbolCreationErrorType.SYMBOL_TEXT, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set error after create click when setSymbolText is called with a long text`() {
+        viewModel.setSymbolText(longSymbolText)
+        viewModel.createSymbol(context)
+
+        assertEquals(longSymbolText, viewModel.symbolTextInput)
+        assertEquals(false, viewModel.uiState.value.isValidSymbolText)
+        assertEquals(SymbolCreationErrorType.SYMBOL_TEXT, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set no symbol text error after create click when empty symbol text is changed to a valid text`() {
+        viewModel.setSymbolText(emptySymbolText)
+        viewModel.createSymbol(context)
+        viewModel.setSymbolText(validSymbolText)
+
+        assertEquals(validSymbolText, viewModel.symbolTextInput)
+        assertEquals(true, viewModel.uiState.value.isValidSymbolText)
         assertEquals(null, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set no symbol text error after create click when long symbol text is changed to a valid text`() {
+        viewModel.setSymbolText(longSymbolText)
+        viewModel.createSymbol(context)
+        viewModel.setSymbolText(validSymbolText)
+
+        assertEquals(validSymbolText, viewModel.symbolTextInput)
+        assertEquals(true, viewModel.uiState.value.isValidSymbolText)
+        assertEquals(null, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set non-symbol-text-error after create click when setSymbolText is called with a valid text`() {
+        viewModel.setSymbolText(validSymbolText)
+        viewModel.createSymbol(context)
+
+        assertEquals(validSymbolText, viewModel.symbolTextInput)
+        assertEquals(false, viewModel.uiState.value.isValidSymbolText)
+        assertEquals(SymbolCreationErrorType.CATEGORY, viewModel.uiState.value.error?.type)
+    }
+
+    @Test
+    fun `should set non-symbol-text-error after create click when valid text is changed to empty text`() {
+        viewModel.setSymbolText(validSymbolText)
+        viewModel.createSymbol(context)
+        viewModel.setSymbolText(emptySymbolText)
+
+        assertEquals(emptySymbolText, viewModel.symbolTextInput)
+        assertEquals(false, viewModel.uiState.value.isValidSymbolText)
+        assertEquals(SymbolCreationErrorType.CATEGORY, viewModel.uiState.value.error?.type)
     }
 }
 
