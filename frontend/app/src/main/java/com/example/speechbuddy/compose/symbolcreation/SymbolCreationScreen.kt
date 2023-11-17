@@ -41,9 +41,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -60,10 +57,8 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.domain.models.Category
-import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
-import com.example.speechbuddy.ui.models.SymbolSelectionUiState
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
@@ -145,11 +140,11 @@ fun SymbolCreationScreen(
                     onValueChange = { viewModel.setSymbolText(it) },
                     label = { Text(stringResource(R.string.new_symbol_name)) },
                     supportingText = {
-                        if (isSymbolTextError) {
+                        if (isSymbolTextError || isConnectionError) {
                             Text(stringResource(id = uiState.error!!.messageId))
                         }
                     },
-                    isError = isSymbolTextError,
+                    isError = isSymbolTextError || isConnectionError,
                     isValid = uiState.isValidSymbolText
                 )
 
