@@ -1,6 +1,5 @@
 package com.example.speechbuddy.repository
 
-import android.util.Log
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.models.CategoryMapper
@@ -23,6 +22,7 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 @Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
@@ -36,6 +36,7 @@ class SymbolRepository @Inject constructor(
     private val symbolMapper: SymbolMapper,
     private val categoryMapper: CategoryMapper
 ) {
+
 
     fun getSymbols(query: String) =
         if (query.isBlank()) getAllSymbols()
