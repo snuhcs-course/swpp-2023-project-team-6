@@ -18,7 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class WeightRowTest {
+class WeightRowDaoTest {
 
     private lateinit var weightRowDao: WeightRowDao
     private lateinit var database: AppDatabase
