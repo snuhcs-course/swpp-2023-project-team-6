@@ -7,6 +7,8 @@ import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
 import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
 import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.domain.models.Entry
+import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.ui.models.InitialPage
 import com.example.speechbuddy.utils.Resource
@@ -14,6 +16,7 @@ import com.example.speechbuddy.utils.ResponseHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -26,7 +29,8 @@ class SettingsRepository @Inject constructor(
     private val settingsPrefManager: SettingsPrefsManager,
     private val backupService: BackupService,
     private val responseHandler: ResponseHandler,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val symbolRepository: SymbolRepository
 ) {
 
     private val _darkModeLiveData = MutableLiveData<Boolean?>()
@@ -77,14 +81,47 @@ class SettingsRepository @Inject constructor(
             try {
                 val result = backupService.displayBackup(getAuthHeader(), settingsBackupDto)
                 emit(result)
-                Log.d("repository", result.code().toString())
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
-    /* TODO: favorite symbol, symbol list, weight table backup */
-    /* TODO: setting 받아오기 */
+    suspend fun symbolListBackup(): Flow<Response<Void>> =
+        flow {
+            try {
+                /*
+                var symbollist: List<Symbol> = emptyList()
+                var params: String = ""
+                symbolRepository.getSymbols("").collect {symbols ->
+                    symbollist = symbols
+                }
+                val len = symbollist.size
+                for (i in 1 until len)
+                    params = params + symbollist[i].id + ","
+                */
+
+                /* TODO: symbol list 받아와서 params에 넣기 */
+
+                val result = backupService.symbolListBackup("", getAuthHeader())
+                emit(result)
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    suspend fun favoriteSymbolBackup(): Flow<Response<Void>> =
+        flow {
+            try {
+                /* TODO: favorite symbol list 받아와서 params에 넣기 */
+                val result = backupService.favoriteSymbolBackup("", getAuthHeader())
+                emit(result)
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    /* TODO: weight table backup */
+    /* TODO: setting 관련 get */
 
     private fun getAuthHeader(): String {
         val accessToken = sessionManager.cachedToken.value?.accessToken
