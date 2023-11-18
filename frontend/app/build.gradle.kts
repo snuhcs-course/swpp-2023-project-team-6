@@ -149,6 +149,7 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
+//    testImplementation("io.mockk:mockk-android-extensions-livedata:$mockkVersion")
 
     // Glide
     val glideVersion = "1.0.0-alpha.3"

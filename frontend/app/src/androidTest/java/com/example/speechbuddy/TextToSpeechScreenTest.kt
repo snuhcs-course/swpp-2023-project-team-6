@@ -31,6 +31,23 @@ class TextToSpeechScreenTest {
 
     @Before
     fun setUp() {
+        //        // Mock the SessionManager
+//        val sessionManager = mockk<SessionManager>(relaxed = true)
+//
+//        // When sessionManager.isAuthorized is called, return a LiveData that does not emit a value
+//        every { sessionManager.isAuthorized } returns MutableLiveData()
+//
+//        // Pass the mocked SessionManager to the HomeActivity
+//        composeTestRule.activity.sessionManager = sessionManager
+//
+//        // Mock the SessionManager
+//        val sessionManager = mock(SessionManager::class.java)
+//
+//        // When sessionManager.isAuthorized is called, return a LiveData that does not emit a value
+//        `when`(sessionManager.isAuthorized).thenReturn(MutableLiveData())
+//
+//        // Pass the mocked SessionManager to the HomeActivity
+//        composeTestRule.activity.sessionManager = sessionManager
         composeTestRule.activityRule.scenario.onActivity { activity ->
             hiltRule.inject()
             composeTestRule.activity.setContent {
