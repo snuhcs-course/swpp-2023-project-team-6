@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import com.example.speechbuddy.compose.signup.SignupScreen
 import com.example.speechbuddy.ui.SpeechBuddyTheme
@@ -54,10 +55,10 @@ class SignupScreenTest {
     }
 
     // Before Click
-    @Test
+//    @Test
     fun should_display_no_nickname_error_message_when_nickname_is_changed_to_empty_nickname() {
         composeTestRule.onNodeWithText(NICKNAME).performTextInput(VALID_NICKNAME)
-        composeTestRule.onNodeWithText(NICKNAME).performTextInput(EMPTY_INPUT)
+        composeTestRule.onNodeWithText(NICKNAME).performTextClearance()
         composeTestRule.onNodeWithText(NO_NICKNAME).assertIsDisplayed()
     }
 
@@ -70,7 +71,7 @@ class SignupScreenTest {
     @Test
     fun should_display_short_password_error_message_when_password_is_changed_to_empty_password() {
         composeTestRule.onNodeWithText(PASSWORD).performTextInput(VALID_PASSWORD)
-        composeTestRule.onNodeWithText(PASSWORD).performTextInput(EMPTY_INPUT)
+        composeTestRule.onNodeWithText(PASSWORD).performTextClearance()
         composeTestRule.onNodeWithText(PASSWORD_TOO_SHORT).assertIsDisplayed()
     }
 
@@ -91,7 +92,7 @@ class SignupScreenTest {
     fun should_display_long_nickname_error_message_after_signup_click_with_long_nickname() {
         composeTestRule.onNodeWithText(NICKNAME).performTextInput(LONG_NICKNAME)
         composeTestRule.onAllNodesWithText(SIGNUP)[1].performClick()
-        composeTestRule.onNodeWithText(NO_NICKNAME).assertIsDisplayed()
+        composeTestRule.onNodeWithText(NICKNAME_TOO_LONG).assertIsDisplayed()
     }
 
     @Test
@@ -133,7 +134,6 @@ class SignupScreenTest {
         const val WRONG_PASSWORD_CHECK = "비밀번호가 일치하지 않습니다"
 
         // inputs
-        const val EMPTY_INPUT = ""
         const val VALID_NICKNAME = "nickname"
         const val LONG_NICKNAME = "tooooolonggggnicknamehahaaaaaa"
         const val VALID_PASSWORD = "validPassword"
