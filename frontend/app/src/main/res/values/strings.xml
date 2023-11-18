@@ -23,7 +23,7 @@
     <string name="password_check">비밀번호 확인</string>
     <string name="code">인증번호</string>
     <string name="new_password">새 비밀번호</string>
-    <string name="new_password_check">새 비밀번호 확인</string>인
+    <string name="new_password_check">새 비밀번호 확인</string>
 
     <!-- buttons -->
     <string name="start_guest_mode">게스트 모드로 시작하기</string>
@@ -34,7 +34,7 @@
     <string name="do_signup">회원가입하기</string>
     <string name="cancel">취소</string>
     <string name="confirm">확인</string>
-    <string name="proceed">진행</string>기
+    <string name="proceed">진행</string>
 
     <!-- error messages -->
     <string name="no_email">이메일 주소를 입력해주세요</string>
