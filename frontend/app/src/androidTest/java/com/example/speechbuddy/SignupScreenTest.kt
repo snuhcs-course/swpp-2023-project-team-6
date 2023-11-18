@@ -1,7 +1,6 @@
 package com.example.speechbuddy
 
 import androidx.activity.compose.setContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -27,7 +26,6 @@ class SignupScreenTest {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<AuthActivity>()
 
-    @ExperimentalAnimationApi
     @Before
     fun setUp() {
         hiltRule.inject()
@@ -55,7 +53,7 @@ class SignupScreenTest {
     }
 
     // Before Click
-//    @Test
+    @Test
     fun should_display_no_nickname_error_message_when_nickname_is_changed_to_empty_nickname() {
         composeTestRule.onNodeWithText(NICKNAME).performTextInput(VALID_NICKNAME)
         composeTestRule.onNodeWithText(NICKNAME).performTextClearance()
