@@ -7,6 +7,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.example.speechbuddy.compose.signup.SignupScreen
 import com.example.speechbuddy.ui.SpeechBuddyTheme
@@ -52,6 +53,7 @@ class SignupScreenTest {
         composeTestRule.onAllNodesWithText(SIGNUP)[1].assertIsDisplayed().assertHasClickAction()
     }
 
+    // Before Click
     @Test
     fun should_display_no_nickname_error_message_when_nickname_is_changed_to_empty_nickname() {
         composeTestRule.onNodeWithText(NICKNAME).performTextInput(VALID_NICKNAME)
@@ -63,6 +65,57 @@ class SignupScreenTest {
     fun should_display_long_nickname_error_message_with_long_nickname() {
         composeTestRule.onNodeWithText(NICKNAME).performTextInput(LONG_NICKNAME)
         composeTestRule.onNodeWithText(NICKNAME_TOO_LONG).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_short_password_error_message_when_password_is_changed_to_empty_password() {
+        composeTestRule.onNodeWithText(PASSWORD).performTextInput(VALID_PASSWORD)
+        composeTestRule.onNodeWithText(PASSWORD).performTextInput(EMPTY_INPUT)
+        composeTestRule.onNodeWithText(PASSWORD_TOO_SHORT).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_short_password_error_message_with_short_password() {
+        composeTestRule.onNodeWithText(PASSWORD).performTextInput(SHORT_PASSWORD)
+        composeTestRule.onNodeWithText(PASSWORD_TOO_SHORT).assertIsDisplayed()
+    }
+
+    // After click
+    @Test
+    fun should_display_no_nickname_error_message_after_signup_click_with_no_input() {
+        composeTestRule.onAllNodesWithText(SIGNUP)[1].performClick()
+        composeTestRule.onNodeWithText(NO_NICKNAME).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_long_nickname_error_message_after_signup_click_with_long_nickname() {
+        composeTestRule.onNodeWithText(NICKNAME).performTextInput(LONG_NICKNAME)
+        composeTestRule.onAllNodesWithText(SIGNUP)[1].performClick()
+        composeTestRule.onNodeWithText(NO_NICKNAME).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_no_password_error_message_after_signup_click_with_no_password() {
+        composeTestRule.onNodeWithText(NICKNAME).performTextInput(VALID_NICKNAME)
+        composeTestRule.onAllNodesWithText(SIGNUP)[1].performClick()
+        composeTestRule.onNodeWithText(NO_PASSWORD).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_short_password_error_message_after_signup_click_with_short_password() {
+        composeTestRule.onNodeWithText(NICKNAME).performTextInput(VALID_NICKNAME)
+        composeTestRule.onNodeWithText(PASSWORD).performTextInput(SHORT_PASSWORD)
+        composeTestRule.onAllNodesWithText(SIGNUP)[1].performClick()
+        composeTestRule.onNodeWithText(PASSWORD_TOO_SHORT).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_wrong_password_check_error_message_after_signup_click_with_different_password_inputs() {
+        composeTestRule.onNodeWithText(NICKNAME).performTextInput(VALID_NICKNAME)
+        composeTestRule.onNodeWithText(PASSWORD).performTextInput(VALID_PASSWORD)
+        composeTestRule.onNodeWithText(PASSWORD_CHECK).performTextInput(NO_MATCH_PASSWORD)
+        composeTestRule.onAllNodesWithText(SIGNUP)[1].performClick()
+        composeTestRule.onNodeWithText(WRONG_PASSWORD_CHECK).assertIsDisplayed()
     }
 
     companion object {
