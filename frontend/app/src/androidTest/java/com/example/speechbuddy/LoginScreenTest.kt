@@ -55,19 +55,47 @@ class LoginScreenTest {
     }
 
     @Test
-    fun should_display_email_error_message_when_invalid_email_input() {
-        composeTestRule.onNodeWithText(EMAIL).performTextInput(INVALID_EMAIL)
-        composeTestRule.onNodeWithText(PASSWORD).performTextInput(VALID_PASSWORD)
+    fun should_display_no_email_error_message_with_no_input_for_email() {
         composeTestRule.onAllNodesWithText(LOGIN)[1].performClick()
-        composeTestRule.onNodeWithText(FALSE_EMAIL).assertIsDisplayed()
+        composeTestRule.onNodeWithText(NO_EMAIL).assertIsDisplayed()
     }
 
     @Test
-    fun should_display_password_error_message_when_invalid_password_input() {
+    fun should_display_no_password_error_message_with_no_input_for_password() {
+        composeTestRule.onNodeWithText(EMAIL).performTextInput(VALID_EMAIL)
+        composeTestRule.onAllNodesWithText(LOGIN)[1].performClick()
+        composeTestRule.onNodeWithText(NO_PASSWORD).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_wrong_email_error_message_with_invalid_email_input() {
+        composeTestRule.onNodeWithText(EMAIL).performTextInput(INVALID_EMAIL)
+        composeTestRule.onNodeWithText(PASSWORD).performTextInput(VALID_PASSWORD)
+        composeTestRule.onAllNodesWithText(LOGIN)[1].performClick()
+        composeTestRule.onNodeWithText(WRONG_EMAIL).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_wrong_email_error_message_with_invalid_email_input_even_with_no_password_input() {
+        composeTestRule.onNodeWithText(EMAIL).performTextInput(INVALID_EMAIL)
+        composeTestRule.onAllNodesWithText(LOGIN)[1].performClick()
+        composeTestRule.onNodeWithText(WRONG_EMAIL).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_wrong_password_error_message_with_invalid_password_input() {
         composeTestRule.onNodeWithText(EMAIL).performTextInput(VALID_EMAIL)
         composeTestRule.onNodeWithText(PASSWORD).performTextInput(INVALID_PASSWORD)
         composeTestRule.onAllNodesWithText(LOGIN)[1].performClick()
-        composeTestRule.onNodeWithText(FALSE_PASSWORD).assertIsDisplayed()
+        composeTestRule.onNodeWithText(WRONG_PASSWORD).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_wrong_password_error_message_with_wrong_password_input() {
+        composeTestRule.onNodeWithText(EMAIL).performTextInput(REGISTERED_EMAIL)
+        composeTestRule.onNodeWithText(PASSWORD).performTextInput(UNREGISTERED_PASSWORD)
+        composeTestRule.onAllNodesWithText(LOGIN)[1].performClick()
+        composeTestRule.onNodeWithText(WRONG_PASSWORD).assertIsDisplayed()
     }
 
     @Test
@@ -105,17 +133,22 @@ class LoginScreenTest {
         const val PASSWORD = "비밀번호"
         const val FORGOT_PASSWORD = "비밀번호를 잊으셨나요?"
         const val SIGNUP_ACTION = "회원가입"
-        const val FALSE_EMAIL = "이메일 주소가 올바르지 않습니다"
-        const val FALSE_PASSWORD = "비밀번호가 올바르지 않습니다"
+
+        const val WRONG_EMAIL = "이메일 주소가 올바르지 않습니다"
+        const val WRONG_PASSWORD = "비밀번호가 올바르지 않습니다"
+        const val NO_EMAIL = "이메일 주소를 입력해주세요"
+        const val NO_PASSWORD = "비밀번호를 입력해주세요"
 
         val ERROR_COLOR = Color(0xFFBA1A1A)
         val ERROR_CONTAINER_COLOR = Color(0xFFFFDAD6)
         val PRIMARY_COLOR = Color(0xFF0D6D35)
         val SECONDARY_CONTAINER_COLOR = Color(0xFFD3E8D2)
 
-        const val VALID_EMAIL = "validemail@google.com"
-        const val VALID_PASSWORD = "asdfqwer1234"
+        const val VALID_EMAIL = "validemail@test.com"
+        const val REGISTERED_EMAIL = "hahaa@gmail.com"
         const val INVALID_EMAIL = "invalid"
+        const val VALID_PASSWORD = "asdfqwer1234"
+        const val UNREGISTERED_PASSWORD = "merong"
         const val INVALID_PASSWORD = "invalid"
 
         fun SemanticsNodeInteraction.assertBackgroundColor(expectedBackground: Color) {
