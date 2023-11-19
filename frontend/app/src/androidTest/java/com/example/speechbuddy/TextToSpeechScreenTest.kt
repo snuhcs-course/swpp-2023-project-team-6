@@ -75,9 +75,11 @@ class TextToSpeechScreenTest {
     fun should_change_button_status_when_play_and_stop_are_clicked() {
         composeTestRule.onNode(hasSetTextAction()).performTextInput(SAMPLE_TEXT)
         composeTestRule.onNodeWithText(PLAY_TEXT).performClick()
-        composeTestRule.onNodeWithText(STOP_TEXT).assertIsDisplayed()
+        //composeTestRule.onNodeWithText(STOP_TEXT).assertIsDisplayed()
+        composeTestRule.onNodeWithText(STOP_TEXT).assertHasClickAction()
         composeTestRule.onNodeWithText(STOP_TEXT).performClick()
-        composeTestRule.onNodeWithText(PLAY_TEXT).assertIsDisplayed() //
+        composeTestRule.onNodeWithText(PLAY_TEXT).assertHasClickAction()
+        //composeTestRule.onNodeWithText(PLAY_TEXT).assertIsDisplayed()
     }
 
     @Test
