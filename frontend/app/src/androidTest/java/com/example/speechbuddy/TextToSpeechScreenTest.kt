@@ -2,9 +2,9 @@ package com.example.speechbuddy
 
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -27,35 +27,16 @@ class TextToSpeechScreenTest {
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<HomeActivity>()
+    val composeTestRule = createAndroidComposeRule<AuthActivity>()
 
     @Before
     fun setUp() {
-        //        // Mock the SessionManager
-//        val sessionManager = mockk<SessionManager>(relaxed = true)
-//
-//        // When sessionManager.isAuthorized is called, return a LiveData that does not emit a value
-//        every { sessionManager.isAuthorized } returns MutableLiveData()
-//
-//        // Pass the mocked SessionManager to the HomeActivity
-//        composeTestRule.activity.sessionManager = sessionManager
-//
-//        // Mock the SessionManager
-//        val sessionManager = mock(SessionManager::class.java)
-//
-//        // When sessionManager.isAuthorized is called, return a LiveData that does not emit a value
-//        `when`(sessionManager.isAuthorized).thenReturn(MutableLiveData())
-//
-//        // Pass the mocked SessionManager to the HomeActivity
-//        composeTestRule.activity.sessionManager = sessionManager
-        composeTestRule.activityRule.scenario.onActivity { activity ->
+        composeTestRule.activity.setContent {
             hiltRule.inject()
-            composeTestRule.activity.setContent {
-                SpeechBuddyTheme {
-                    TextToSpeechScreen(
-                        bottomPaddingValues = PaddingValues(16.dp)
-                    )
-                }
+            SpeechBuddyTheme {
+                TextToSpeechScreen(
+                    bottomPaddingValues = PaddingValues(16.dp)
+                )
             }
         }
     }
@@ -64,7 +45,7 @@ class TextToSpeechScreenTest {
     fun should_display_all_elements_when_text_to_speech_screen_appears() {
         composeTestRule.onNodeWithText(TALK_WITH_SPEECH).assertIsDisplayed()
         composeTestRule.onNodeWithText(TTS_TEXT).assertIsDisplayed()
-        composeTestRule.onNodeWithText(TTS_EXPLAIN).assertIsDisplayed()
+        composeTestRule.onNodeWithText(TTS_DESCRIPTION).assertIsDisplayed()
         composeTestRule.onNode(hasSetTextAction()).assertIsDisplayed() //OutlinedTextField
         composeTestRule.onNodeWithText(PLAY_TEXT).assertIsDisplayed()
         composeTestRule.onNodeWithText(CLEAR_TEXT).assertIsDisplayed()
@@ -72,16 +53,15 @@ class TextToSpeechScreenTest {
 
     @Test
     fun should_disable_play_button_and_clear_button_when_text_is_empty() {
-        composeTestRule.onNode(hasSetTextAction()).performTextInput(EMPTY_TEXT)
-        composeTestRule.onNodeWithText(PLAY_TEXT).assertIsNotEnabled()
-        composeTestRule.onNodeWithText(CLEAR_TEXT).assertIsNotEnabled()
+        composeTestRule.onNodeWithText(PLAY_TEXT).assertHasNoClickAction()
+        composeTestRule.onNodeWithText(CLEAR_TEXT).assertHasNoClickAction()
     }
 
     @Test
     fun should_enable_play_button_and_clear_button_when_text_is_entered() {
         composeTestRule.onNode(hasSetTextAction()).performTextInput(SAMPLE_TEXT)
-        composeTestRule.onNodeWithText(PLAY_TEXT).assertIsEnabled()
-        composeTestRule.onNodeWithText(CLEAR_TEXT).assertIsEnabled()
+        composeTestRule.onNodeWithText(PLAY_TEXT).assertHasClickAction()
+        composeTestRule.onNodeWithText(CLEAR_TEXT).assertHasClickAction()
     }
 
     @Test
@@ -97,22 +77,22 @@ class TextToSpeechScreenTest {
         composeTestRule.onNodeWithText(PLAY_TEXT).performClick()
         composeTestRule.onNodeWithText(STOP_TEXT).assertIsDisplayed()
         composeTestRule.onNodeWithText(STOP_TEXT).performClick()
-        composeTestRule.onNodeWithText(PLAY_TEXT).assertIsDisplayed()
+        composeTestRule.onNodeWithText(PLAY_TEXT).assertIsDisplayed() //
     }
 
     @Test
-    fun should_enable_stop_button_disable_clear_button_when_playing() {
+    fun should_enable_stop_button_and_disable_clear_button_when_playing() {
         composeTestRule.onNode(hasSetTextAction()).performTextInput(SAMPLE_TEXT)
         composeTestRule.onNodeWithText(PLAY_TEXT).performClick()
-        composeTestRule.onNodeWithText(STOP_TEXT).assertIsEnabled()
-        composeTestRule.onNodeWithText(CLEAR_TEXT).assertIsNotEnabled()
+        composeTestRule.onNodeWithText(STOP_TEXT).assertHasClickAction()
+        composeTestRule.onNodeWithText(CLEAR_TEXT).assertHasNoClickAction()
     }
 
     companion object {
         const val TALK_WITH_SPEECH = "음성으로 말하기"
-        const val TTS_TEXT = "소리로 말해보아요"
-        const val TTS_EXPLAIN = "키보드로 텍스트를 입력해주세요"
-        const val PLAY_TEXT = "재생하기"
+        const val TTS_TEXT = "소리로 말해요"
+        const val TTS_DESCRIPTION = "텍스트를 입력하면 SpeechBuddy가 직접 읽어줘요"
+        const val PLAY_TEXT = "재생"
         const val CLEAR_TEXT = "지우기"
         const val STOP_TEXT = "정지"
 

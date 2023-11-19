@@ -110,17 +110,16 @@ fun TextToSpeechScreen(
                         deactivatedColor = deactivatedColor,
                         onPlay = { viewModel.ttsStart(context) },
                         onStop = { viewModel.ttsStop() },
-                        isTextEmpty = viewModel.textInput.isEmpty()
+                        enabled = viewModel.textInput.isNotEmpty()
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
 
                     TextClearButton(
-                        buttonStatus = uiState.buttonStatus,
                         activatedColor = activatedColor,
                         deactivatedColor = deactivatedColor,
                         onClick = { viewModel.clearText() },
-                        isTextEmpty = viewModel.textInput.isEmpty()
+                        enabled = uiState.buttonStatus == ButtonStatusType.PLAY && !viewModel.textInput.isEmpty()
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -137,34 +136,36 @@ private fun TextToSpeechButton(
     deactivatedColor: Color,
     onPlay: () -> Unit,
     onStop: () -> Unit,
-    isTextEmpty: Boolean
+    enabled: Boolean = false
 ) {
     when (buttonStatus) {
         ButtonStatusType.PLAY -> {
+            val clickableModifier = if (enabled) Modifier.clickable(onClick = onPlay) else Modifier
             Row(
                 modifier = Modifier
-                    .clickable(onClick = { if (!isTextEmpty) onPlay() })
+                    .then(clickableModifier)
                     .height(38.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = stringResource(id = R.string.play),
-                    color = if (isTextEmpty) deactivatedColor else activatedColor,
+                    color = if (!enabled) deactivatedColor else activatedColor,
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,
                     contentDescription = stringResource(id = R.string.play),
                     modifier = Modifier.size(38.dp),
-                    tint = if (isTextEmpty) deactivatedColor else activatedColor
+                    tint = if (!enabled) deactivatedColor else activatedColor
                 )
             }
         }
 
         ButtonStatusType.STOP -> {
+            val clickableModifier = if (enabled) Modifier.clickable(onClick = onStop) else Modifier
             Row(
                 modifier = Modifier
-                    .clickable(onClick = onStop)
+                    .then(clickableModifier)
                     .height(38.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -186,30 +187,28 @@ private fun TextToSpeechButton(
 
 @Composable
 fun TextClearButton(
-    buttonStatus: ButtonStatusType,
     activatedColor: Color,
     deactivatedColor: Color,
     onClick: () -> Unit,
-    isTextEmpty: Boolean
+    enabled: Boolean = false
 ) {
-    val isActivated = buttonStatus == ButtonStatusType.PLAY && !isTextEmpty
-
+    val clickableModifier = if (enabled) Modifier.clickable(onClick = onClick) else Modifier
     Row(
         modifier = Modifier
-            .clickable(onClick = { if (isActivated) onClick() })
+            .then(clickableModifier)
             .height(38.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(id = R.string.clear),
-            color = if (isActivated) activatedColor else deactivatedColor,
+            color = if (enabled) activatedColor else deactivatedColor,
             style = MaterialTheme.typography.headlineSmall
         )
         Icon(
             imageVector = Icons.Filled.Delete,
             contentDescription = stringResource(id = R.string.clear),
             modifier = Modifier.size(38.dp),
-            tint = if (isActivated) activatedColor else deactivatedColor
+            tint = if (enabled) activatedColor else deactivatedColor
         )
     }
 }
