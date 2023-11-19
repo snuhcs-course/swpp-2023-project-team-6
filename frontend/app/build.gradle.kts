@@ -146,4 +146,9 @@ dependencies {
     // Glide
     val glideVersion = "1.0.0-alpha.3"
     implementation("com.github.bumptech.glide:compose:$glideVersion")
+
+    // multik
+    val multikVersion = "0.2.2"
+    implementation("org.jetbrains.kotlinx:multik-core:$multikVersion")
+    implementation("org.jetbrains.kotlinx:multik-kotlin:$multikVersion")
 }

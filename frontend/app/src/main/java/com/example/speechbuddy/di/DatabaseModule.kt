@@ -10,6 +10,7 @@ import com.example.speechbuddy.data.local.UserDao
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.local.models.UserMapper
+import com.example.speechbuddy.data.local.WeightRowDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,6 +44,12 @@ class DatabaseModule {
     @Provides
     fun provideCategoryDao(appDatabase: AppDatabase): CategoryDao {
         return appDatabase.categoryDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideWeightRowDao(appDatabase: AppDatabase): WeightRowDao {
+        return appDatabase.weightRowDao()
     }
 
     @Singleton

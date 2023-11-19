@@ -11,6 +11,7 @@ import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.repository.WeightTableRepository
 import com.example.speechbuddy.ui.models.DisplayMode
 import com.example.speechbuddy.ui.models.SymbolItem
 import com.example.speechbuddy.ui.models.SymbolSelectionUiState
@@ -25,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SymbolSelectionViewModel @Inject internal constructor(
-    private val repository: SymbolRepository
+    private val repository: SymbolRepository,
+    private val weightTableRepository: WeightTableRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SymbolSelectionUiState())
@@ -84,9 +86,13 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     fun clear(symbolItem: SymbolItem) {
         selectedSymbols = selectedSymbols.minus(symbolItem)
+        val lastSelectedSymbol = selectedSymbols.last()
+
+        provideSuggestion(lastSelectedSymbol.symbol)
     }
 
     fun clearAll() {
+        weightTableRepository.update(selectedSymbols)
         selectedSymbols = emptyList()
     }
 
@@ -94,6 +100,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
         queryInput = ""
         selectedSymbols =
             selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
+
+        provideSuggestion(symbol)
     }
 
     fun updateFavorite(symbol: Symbol, value: Boolean) {
@@ -115,6 +123,20 @@ class SymbolSelectionViewModel @Inject internal constructor(
             selectedCategory = null
             getEntries()
         }
+    }
+
+    private fun provideSuggestion(symbol: Symbol){
+        // became independent from selectSymbol function
+        // change it so that providing suggestion is available from any screen
+//        if (uiState.value.displayMode == DisplayMode.SYMBOL) {
+
+            getEntriesJob?.cancel()
+            getEntriesJob = viewModelScope.launch {
+                weightTableRepository.provideSuggestion(symbol).collect { symbols ->
+                    _entries.postValue(symbols)
+                }
+            }
+//        }
     }
 
     private fun getEntries(query: String? = null) {
