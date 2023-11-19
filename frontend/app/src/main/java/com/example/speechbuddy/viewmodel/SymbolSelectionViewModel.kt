@@ -86,9 +86,11 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     fun clear(symbolItem: SymbolItem) {
         selectedSymbols = selectedSymbols.minus(symbolItem)
-        val lastSelectedSymbol = selectedSymbols.last()
-
-        provideSuggestion(lastSelectedSymbol.symbol)
+        // when clearing one left selected symbol
+        if(selectedSymbols.isNotEmpty()){
+            val lastSelectedSymbol = selectedSymbols.last()
+            provideSuggestion(lastSelectedSymbol.symbol)
+        }
     }
 
     fun clearAll() {
