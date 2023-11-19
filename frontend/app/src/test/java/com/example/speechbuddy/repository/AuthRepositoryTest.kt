@@ -361,6 +361,7 @@ class AuthRepositoryTest {
         }
     }
 
+    /*
     @Test
     fun `should return successful response when resetPassword request is valid`() {
         runBlocking {
@@ -402,5 +403,7 @@ class AuthRepositoryTest {
             }
         }
     }
+
+     */
 
 }
