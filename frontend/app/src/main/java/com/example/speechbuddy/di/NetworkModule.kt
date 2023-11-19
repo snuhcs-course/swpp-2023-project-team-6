@@ -6,9 +6,11 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
-import com.example.speechbuddy.data.remote.models.UserDtoMapper
+import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.service.BackupService
+import com.example.speechbuddy.service.SymbolCreationService
+import com.example.speechbuddy.data.remote.models.UserDtoMapper
 import com.example.speechbuddy.service.UserService
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.ResponseHandler
@@ -87,6 +89,18 @@ class NetworkModule {
     @Provides
     fun provideResponseHandler(): ResponseHandler {
         return ResponseHandler()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMySymbolDtoMapper(): MySymbolDtoMapper {
+        return MySymbolDtoMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSymbolCreationService(retrofit: Retrofit): SymbolCreationService {
+        return retrofit.create(SymbolCreationService::class.java)
     }
 
 }

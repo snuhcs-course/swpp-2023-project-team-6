@@ -4,7 +4,7 @@ class Constants {
     companion object {
         const val BASE_URL = "http://54.180.112.72:8000/"
 
-        const val SYMBOL_IMAGE_PATH = "file:///android_asset/images/symbol/"
+        const val DEFAULT_SYMBOL_IMAGE_PATH = "file:///android_asset/images/symbol/"
         const val CATEGORY_IMAGE_PATH = "file:///android_asset/images/category/"
 
         const val DATABASE_NAME = "speechbuddy-db"
@@ -24,5 +24,6 @@ class Constants {
         const val MAXIMUM_NICKNAME_LENGTH = 15
         const val CODE_LENGTH = 6
         const val MAXIMUM_LINES_FOR_SYMBOL_TEXT = 2
+        const val MAXIMUM_SYMBOL_TEXT_LENGTH = 20
     }
 }
