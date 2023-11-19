@@ -27,7 +27,7 @@ class WeightTableRepository @Inject constructor(
 ) {
     private val symbolMapper = SymbolMapper()
     private val weightRowMapper = WeightRowMapper()
-    private val allSymbols = getAllSymbols()
+    private var allSymbols = getAllSymbols()
 
 
     private fun getAllSymbols() = symbolDao.getSymbols().map { symbolEntities ->
@@ -54,6 +54,34 @@ class WeightTableRepository @Inject constructor(
             weights = value
         )
         weightRowDao.updateWeightRow(weightRowEntity) // may change to updateWeightRow function
+    }
+
+    fun updateWeightTableForNewSymbol(symbol: Symbol){
+        CoroutineScope(Dispatchers.IO).launch {
+            val weightRows = mutableListOf<WeightRow>()
+            weightRows.clear()
+            weightRows.addAll(fetchWeightRows())
+
+            // update existing weightRows
+            for(weightRow in weightRows){
+                val newWeights = mutableListOf<Int>()
+                newWeights.addAll(weightRow.weights)
+                newWeights.add(0)
+                updateWeightRow(weightRow, newWeights)
+            }
+
+            // insert new weightRow for new symbol
+            val newWeightRowEntity = WeightRowEntity(
+                id = symbol.id,
+                weights = List(weightRows.size + 1){0}
+            )
+            val newWeightRowEntities = mutableListOf<WeightRowEntity>()
+            newWeightRowEntities.add(newWeightRowEntity)
+            weightRowDao.upsertAll(newWeightRowEntities)
+
+            allSymbols = getAllSymbols()
+
+        }
     }
 
     fun provideSuggestion(symbol: Symbol): Flow<List<Symbol>> = flow {
