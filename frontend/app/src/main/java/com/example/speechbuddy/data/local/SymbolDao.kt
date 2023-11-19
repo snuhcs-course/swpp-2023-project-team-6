@@ -1,6 +1,8 @@
 package com.example.speechbuddy.data.local
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
@@ -14,6 +16,9 @@ import kotlinx.coroutines.flow.Flow
 interface SymbolDao {
     @Query("SELECT * FROM symbols")
     fun getSymbols(): Flow<List<SymbolEntity>>
+
+    @Query("SELECT * FROM symbols ORDER BY id DESC LIMIT 1")
+    fun getLastSymbol(): Flow<List<SymbolEntity>>
 
     @Query("SELECT * FROM symbols WHERE isFavorite = 1")
     fun getFavoriteSymbols(): Flow<List<SymbolEntity>>
@@ -29,6 +34,9 @@ interface SymbolDao {
 
     @Update
     suspend fun updateSymbol(symbolEntity: SymbolEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertSymbol(symbolEntity: SymbolEntity)
 
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)

@@ -72,7 +72,8 @@ class MySymbolBackupView(APIView):
         my_symbol = serializer.save()
 
         response_data = {
-            "id": my_symbol.id
+            "id": my_symbol.id,
+            "image_url": my_symbol.image.url
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
