@@ -16,5 +16,6 @@ class Setting(models.Model):
     user = models.OneToOneField('user.User', related_name='settings', on_delete=models.CASCADE)
     display_mode = models.IntegerField(null=False, default=0, choices=DISPLAY_CHOICE)
     default_menu = models.IntegerField(null=False, default=0, choices=MENU_CHOICE)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
