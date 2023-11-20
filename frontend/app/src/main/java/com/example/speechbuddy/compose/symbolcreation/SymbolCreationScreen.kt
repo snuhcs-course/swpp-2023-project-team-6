@@ -1,10 +1,12 @@
 package com.example.speechbuddy.compose.symbolcreation
 
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -51,6 +53,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
@@ -58,6 +61,7 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.domain.models.Category
+import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
 import com.example.speechbuddy.utils.Constants
@@ -91,9 +95,25 @@ fun SymbolCreationScreen(
     val cameraLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
             bitmap?.let {
-                viewModel.setPhotoInputBitmap(bitmap, context)
+                viewModel.updatePhotoInputBitmap(bitmap)
             }
         }
+    // Request permission launcher
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Permission is granted, launch the camera
+            cameraLauncher.launch(null)
+        } else {
+            // Permission is denied, show a toast or a dialog
+            Toast.makeText(
+                context,
+                "Camera permission is required to take photos",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -123,7 +143,24 @@ fun SymbolCreationScreen(
 
                 AddPhotoButton(
                     onGalleryClick = { galleryLauncher.launch("image/*") },
-                    onCameraClick = { cameraLauncher.launch(null) },
+                    onCameraClick = {
+                        // Check if permission is already granted
+                        when (PackageManager.PERMISSION_GRANTED) {
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                android.Manifest.permission.CAMERA
+                            ) -> {
+                                // If permission is granted, launch the camera directly
+                                cameraLauncher.launch(null)
+                            }
+
+                            else -> {
+                                // Request the camera permission
+                                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                            }
+                        }
+                        viewModel.photoType = PhotoType.CAMERA
+                    },
                     isError = isPhotoInputError,
                     viewModel = viewModel
                 )

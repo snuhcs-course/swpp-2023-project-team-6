@@ -20,6 +20,7 @@ import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
@@ -57,6 +58,8 @@ class SymbolCreationViewModel @Inject internal constructor(
 
     var photoInputBitmap by mutableStateOf<Bitmap?>(null)
 
+    var photoType by mutableStateOf<PhotoType?>(null)
+
     var symbolTextInput by mutableStateOf("")
         private set
 
@@ -86,7 +89,7 @@ class SymbolCreationViewModel @Inject internal constructor(
         if (photoInputUri != null) photoInputBitmap = uriToBitmap(photoInputUri, context)
     }
 
-    fun setPhotoInputBitmap(bitmap: Bitmap, context: Context) {
+    fun updatePhotoInputBitmap(bitmap: Bitmap) {
         photoInputBitmap = bitmap
         validatePhotoInput()
     }
@@ -103,11 +106,21 @@ class SymbolCreationViewModel @Inject internal constructor(
     }
 
     private fun validatePhotoInput() {
-        if (photoInputUri != null || photoInputBitmap != null) {
+        if (photoInputBitmap != null) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = true,
                     error = null
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPhotoInput = false,
+                    error = SymbolCreationError(
+                        type = SymbolCreationErrorType.PHOTO_INPUT,
+                        messageId = R.string.no_photo
+                    )
                 )
             }
         }
@@ -212,7 +225,10 @@ class SymbolCreationViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else if (photoInputUri == null || photoInputBitmap == null) {
+        } else if (
+            (photoType == PhotoType.GALLERY && photoInputUri == null)
+            || (photoType == PhotoType.CAMERA && photoInputBitmap == null)
+        ) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = false,
