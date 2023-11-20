@@ -1,6 +1,8 @@
 package com.example.speechbuddy.data.remote
 
+import com.example.speechbuddy.data.remote.models.FavoritesListDto
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
+import com.example.speechbuddy.data.remote.models.SymbolListDto
 import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.utils.ResponseHandler
 import kotlinx.coroutines.flow.flow
@@ -16,6 +18,26 @@ class SettingsRemoteSource @Inject constructor(
         flow {
             try {
                 val result = backupService.getDisplaySettings(authHeader)
+                emit(result)
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    suspend fun getSymbolList(authHeader: String): Flow<Response<SymbolListDto>> =
+        flow {
+            try {
+                val result = backupService.getSymbolList(authHeader)
+                emit(result)
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    suspend fun getFavoritesList(authHeader: String): Flow<Response<FavoritesListDto>> =
+        flow {
+            try {
+                val result = backupService.getFavoriteSymbolList(authHeader)
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())

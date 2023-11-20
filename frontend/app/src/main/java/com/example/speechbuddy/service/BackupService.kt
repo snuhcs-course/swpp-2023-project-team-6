@@ -1,6 +1,8 @@
 package com.example.speechbuddy.service
 
+import com.example.speechbuddy.data.remote.models.FavoritesListDto
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
+import com.example.speechbuddy.data.remote.models.SymbolListDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -32,4 +34,14 @@ interface BackupService {
     suspend fun getDisplaySettings(
         @Header("Authorization") header: String
     ): Response<SettingsBackupDto>
+
+    @GET("/symbol/")
+    suspend fun getSymbolList(
+        @Header("Authorization") header: String
+    ): Response<SymbolListDto>
+
+    @GET("/symbol/favorite/backup/")
+    suspend fun getFavoriteSymbolList(
+        @Header("Authorization") header: String
+    ): Response<FavoritesListDto>
 }
