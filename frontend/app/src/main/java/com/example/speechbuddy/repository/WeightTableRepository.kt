@@ -112,20 +112,30 @@ class WeightTableRepository @Inject constructor(
             // loop through every symbol
             for (i in 0 until symbolList.size - 1) {
                 val symbol = symbolList[i].symbol
+                val symbol2 = symbolList[i+1].symbol
                 var dbIndex = 0
+                var dbIndex2 = 0
                 // loop through every weight table
                 // get the match index of weight row to symbol.id
-                for (j in 0 until weightRows.size - 1) {
+                for (j in 0 until weightRows.size) {
+                    // weightRow들 중 그 id가 주어진 symbol의 id인 것을 고른다. 즉 주어진 앞 symbol의 weightRow를 찾는다.
                     if (weightRows[j].id == symbol.id) {
                         dbIndex = j
                         break
                     }
                 }
-                val targetRow = weightRows[dbIndex]
+                // 앞 심볼의 weightrow에서 업데이트되어야 할 값이 weights의 몇 번째에 있는지 확인
+                for (j in 0 until weightRows.size){
+                    if(weightRows[j].id == symbol2.id){
+                        dbIndex2 = j
+                    }
+                }
+                val targetRow = weightRows[dbIndex] // 위에서 찾은 weightRow
                 val weights = targetRow.weights
-                val preSymbolWeights = weights.toIntArray()
-                val aftSymbolId = symbolList[i + 1].symbol.id
-                preSymbolWeights[aftSymbolId - 1] += 1 // weights의 iteration 0이 symbol의 id 1에 대응
+                val preSymbolWeights = weights.toIntArray() // 앞 symbol의 weights
+
+                preSymbolWeights[dbIndex2] += 1
+
                 val aftSymbolWeights = preSymbolWeights
 
                 updateWeightRow(targetRow, aftSymbolWeights.toList())
