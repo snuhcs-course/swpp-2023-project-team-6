@@ -1,11 +1,9 @@
 package com.example.speechbuddy
 
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.example.speechbuddy.compose.SpeechBuddyHome
@@ -42,6 +40,7 @@ class HomeActivity : BaseActivity() {
         startActivity(intent)
         finish()
     }
+
     // hides keyboard
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
