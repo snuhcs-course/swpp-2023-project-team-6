@@ -1,5 +1,6 @@
 package com.example.speechbuddy.compose.symbolcreation
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -54,8 +55,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
@@ -86,6 +87,13 @@ fun SymbolCreationScreen(
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             viewModel.setPhotoInputUri(uri, context)
         }
+    // Take photo
+    val cameraLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
+            bitmap?.let {
+                viewModel.setPhotoInputBitmap(bitmap, context)
+            }
+        }
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -114,7 +122,8 @@ fun SymbolCreationScreen(
                 Spacer(modifier = Modifier.height(30.dp))
 
                 AddPhotoButton(
-                    onClick = { galleryLauncher.launch("image/*") },
+                    onGalleryClick = { galleryLauncher.launch("image/*") },
+                    onCameraClick = { cameraLauncher.launch(null) },
                     isError = isPhotoInputError,
                     viewModel = viewModel
                 )
@@ -233,7 +242,8 @@ private fun DropdownUi(
 
 @Composable
 private fun AddPhotoButton(
-    onClick: () -> Unit,
+    onGalleryClick: () -> Unit,
+    onCameraClick: () -> Unit,
     isError: Boolean = false,
     viewModel: SymbolCreationViewModel
 ) {
@@ -243,7 +253,7 @@ private fun AddPhotoButton(
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(140.dp)
-            .clickable { onClick() }
+            .clickable { onCameraClick() }
             .border(
                 border = BorderStroke(1.dp, color), shape = RoundedCornerShape(10.dp)
             )) {

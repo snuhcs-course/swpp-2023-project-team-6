@@ -26,16 +26,12 @@ import com.example.speechbuddy.ui.models.SymbolCreationUiState
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidSymbolText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -90,6 +86,12 @@ class SymbolCreationViewModel @Inject internal constructor(
         if (photoInputUri != null) photoInputBitmap = uriToBitmap(photoInputUri, context)
     }
 
+    fun setPhotoInputBitmap(bitmap: Bitmap, context: Context) {
+        photoInputBitmap = bitmap
+        validatePhotoInput()
+    }
+
+
     fun setSymbolText(input: String) {
         symbolTextInput = input
         if (_uiState.value.error?.type == SymbolCreationErrorType.SYMBOL_TEXT) validateSymbolText()
@@ -101,7 +103,7 @@ class SymbolCreationViewModel @Inject internal constructor(
     }
 
     private fun validatePhotoInput() {
-        if (photoInputUri != null) {
+        if (photoInputUri != null || photoInputBitmap != null) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = true,
@@ -132,6 +134,7 @@ class SymbolCreationViewModel @Inject internal constructor(
             }
         }
     }
+
     private fun clearInput() {
         symbolTextInput = ""
         categoryInput = null
@@ -221,11 +224,11 @@ class SymbolCreationViewModel @Inject internal constructor(
             }
         } else {
             // If guest-mode
-            if(sessionManager.userId.value ==-1){
+            if (sessionManager.userId.value == -1) {
                 viewModelScope.launch {
                     val lastSymbol = repository.getLastSymbol().first()
-                    val symbolId = lastSymbol.id+1
-                    val fileName = "symbol_${ symbolId }"
+                    val symbolId = lastSymbol.id + 1
+                    val fileName = "symbol_${symbolId}"
                     bitmapToFile(context, photoInputBitmap!!, fileName)
 
                     val symbol = Symbol(
@@ -244,13 +247,12 @@ class SymbolCreationViewModel @Inject internal constructor(
                     // Notify user that the creation was successful
                     _creationResultMessage.postValue(R.string.create_symbol_success)
                 }
-            }
-            else { // If login-mode
+            } else { // If login-mode
                 // file processing
                 val tempFileName = "symbol_${System.currentTimeMillis()}"
                 val imageFile = bitmapToFile(context, photoInputBitmap!!, tempFileName)
                 val imagePart = fileToMultipartBodyPart(imageFile, "image")
-                viewModelScope.launch() {
+                viewModelScope.launch {
                     repository.createSymbolBackup(
                         symbolText = symbolTextInput,
                         categoryId = categoryInput!!.id,
@@ -259,7 +261,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                         if (resource.status == Status.SUCCESS) {
                             // Store new symbol in local db
                             val symbolId = resource.data!!.id
-                            val imageUrl = resource.data!!.imageUrl
+                            val imageUrl = resource.data.imageUrl
                             val symbol = Symbol(
                                 id = symbolId!!,
                                 text = symbolTextInput,
