@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -127,7 +128,8 @@ class BackupSettingsViewModel @Inject internal constructor(
                         _loading.value = false
                         _uiState.update { currentState ->
                             currentState.copy (
-                                alert = BackupSettingsAlert.SUCCESS
+                                alert = BackupSettingsAlert.SUCCESS,
+                                lastBackupDate = LocalDate.now().toString()
                             )
                         }
                     }
