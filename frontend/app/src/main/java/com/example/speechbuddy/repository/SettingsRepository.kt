@@ -89,21 +89,18 @@ class SettingsRepository @Inject constructor(
     suspend fun symbolListBackup(): Flow<Response<Void>> =
         flow {
             try {
-                /*
-                var symbollist: List<Symbol> = emptyList()
-                var params: String = ""
-                symbolRepository.getSymbols("").collect {symbols ->
-                    symbollist = symbols
+                if (symbolRepository.getUserSymbolsIdString().isEmpty()) {
+                    val result = backupService.symbolListBackup(
+                        header = getAuthHeader()
+                    )
+                    emit(result)
+                } else {
+                    val result = backupService.symbolListBackup(
+                        symbolRepository.getUserSymbolsIdString(),
+                        getAuthHeader()
+                    )
+                    emit(result)
                 }
-                val len = symbollist.size
-                for (i in 1 until len)
-                    params = params + symbollist[i].id + ","
-                */
-
-                /* TODO: symbol list 받아와서 params에 넣기 */
-
-                val result = backupService.symbolListBackup("", getAuthHeader())
-                emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
             }
@@ -112,9 +109,19 @@ class SettingsRepository @Inject constructor(
     suspend fun favoriteSymbolBackup(): Flow<Response<Void>> =
         flow {
             try {
-                /* TODO: favorite symbol list 받아와서 params에 넣기 */
-                val result = backupService.favoriteSymbolBackup("", getAuthHeader())
-                emit(result)
+                Log.d("symbol", symbolRepository.getFavoriteSymbolsIdString())
+                if (symbolRepository.getFavoriteSymbolsIdString().isEmpty()) {
+                    val result = backupService.favoriteSymbolBackup(
+                        header = getAuthHeader()
+                    )
+                    emit(result)
+                } else {
+                    val result = backupService.favoriteSymbolBackup(
+                        symbolRepository.getFavoriteSymbolsIdString(),
+                        getAuthHeader()
+                    )
+                    emit(result)
+                }
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
             }

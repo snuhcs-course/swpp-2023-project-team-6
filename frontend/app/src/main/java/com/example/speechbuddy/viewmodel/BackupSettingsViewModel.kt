@@ -81,15 +81,7 @@ class BackupSettingsViewModel @Inject internal constructor(
                 )
             ).collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {
-                        /* TODO: 백업 완성됐을 때 지우기 */
-                        _loading.value = false
-                        _uiState.update { currentState ->
-                            currentState.copy (
-                                alert = BackupSettingsAlert.SUCCESS
-                            )
-                        }
-                    }
+                    ResponseCode.SUCCESS.value -> {}
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         _loading.value = false
@@ -105,12 +97,33 @@ class BackupSettingsViewModel @Inject internal constructor(
     }
 
     private fun symbolListBackup() {
-        /*
+
         viewModelScope.launch {
             repository.symbolListBackup().collect { result ->
                 when (result.code()) {
+                    ResponseCode.SUCCESS.value -> {}
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        _loading.value = false
+                        _uiState.update { currentState ->
+                            currentState.copy (
+                                alert = BackupSettingsAlert.CONNECTION
+                            )
+                        }
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    private fun favoriteSymbolBackup() {
+        viewModelScope.launch {
+            repository.favoriteSymbolBackup().collect { result ->
+                when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
-                        /* TODO: 백업 완성됐을 때 로딩 조절 */
+                        /* TODO: 백업 완성됐을 때 여기는 지우고 weight table에 복붙 */
                         _loading.value = false
                         _uiState.update { currentState ->
                             currentState.copy (
@@ -128,15 +141,7 @@ class BackupSettingsViewModel @Inject internal constructor(
                         }
                     }
                 }
-
             }
-        }
-         */
-    }
-
-    private fun favoriteBackup() {
-        viewModelScope.launch {
-            //repository.favoriteBackup()
         }
     }
 
@@ -149,8 +154,9 @@ class BackupSettingsViewModel @Inject internal constructor(
     fun backup() {
         _loading.value = true
         displayBackup()
-        //symbolListBackup()
-        //favoriteBackup()
+        symbolListBackup()
+        favoriteSymbolBackup()
+        //weightTableBackup()
     }
 
 

@@ -12,10 +12,10 @@ class SettingsRemoteSource @Inject constructor(
     private val backupService: BackupService,
     private val responseHandler: ResponseHandler
 ){
-    suspend fun getSettings(authHeader: String): Flow<Response<SettingsBackupDto>> =
+    suspend fun getDisplaySettings(authHeader: String): Flow<Response<SettingsBackupDto>> =
         flow {
             try {
-                val result = backupService.getSettings(authHeader)
+                val result = backupService.getDisplaySettings(authHeader)
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())

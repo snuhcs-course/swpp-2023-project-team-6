@@ -18,18 +18,18 @@ interface BackupService {
 
     @POST("/symbol/enable/")
     suspend fun symbolListBackup(
-        @Query("id") id: String,
+        @Query("id") id: String? = null,
         @Header("Authorization") header: String
     ): Response<Void>
 
     @POST("/symbol/favorite/backup/")
     suspend fun favoriteSymbolBackup(
-        @Query("id") id: String,
+        @Query("id") id: String? = null,
         @Header("Authorization") header: String
     ): Response<Void>
 
     @GET("/setting/backup/")
-    suspend fun getSettings(
+    suspend fun getDisplaySettings(
         @Header("Authorization") header: String
     ): Response<SettingsBackupDto>
 }
