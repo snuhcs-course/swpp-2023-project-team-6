@@ -55,34 +55,9 @@ class BackupSettingsViewModel @Inject internal constructor(
         }
     }
 
-    private fun getDarkMode(): Int {
-        var darkMode: Boolean = false
-        viewModelScope.launch {
-            repository.getDarkMode().collect {
-                darkMode = it.data?: false
-            }
-        }
-        return if (!darkMode) { 0 } else { 1 }
-    }
-
-    private fun getInitialPage(): Int {
-        var initialPage: Boolean = true
-        viewModelScope.launch {
-            repository.getInitialPage().collect {
-                initialPage = it.data?: true
-            }
-        }
-        return if (initialPage) { 1 } else { 0 }
-    }
-
     private fun displayBackup() {
         viewModelScope.launch {
-            repository.displayBackup(
-                SettingsBackupDto(
-                    getDarkMode(),
-                    getInitialPage()
-                )
-            ).collect { result ->
+            repository.displayBackup().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {}
 

@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -78,10 +79,21 @@ class SettingsRepository @Inject constructor(
         }
     }
 
-    suspend fun displayBackup(settingsBackupDto: SettingsBackupDto): Flow<Response<Void>> =
+    suspend fun displayBackup(): Flow<Response<Void>> =
         flow {
             try {
-                val result = backupService.displayBackup(getAuthHeader(), settingsBackupDto)
+                var darkMode: Int? = 0
+                var initialPage: Int? = 1
+                getDarkMode().first().data?.let {
+                    darkMode = if (it) 1 else 0
+                }
+                getInitialPage().first().data?.let{
+                    initialPage = if (it) 1 else 0
+                }
+                val result = backupService.displayBackup(
+                    getAuthHeader(),
+                    SettingsBackupDto(darkMode, initialPage)
+                )
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
