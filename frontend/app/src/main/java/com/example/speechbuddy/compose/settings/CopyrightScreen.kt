@@ -69,11 +69,3 @@ fun Copyright(
         }
     }
 }
-
-@Preview
-@Composable
-fun CopyrightPreview() {
-    SpeechBuddyTheme {
-        Copyright(onBackClick = { /*TODO*/ }, bottomPaddingValues = PaddingValues())
-    }
-}
