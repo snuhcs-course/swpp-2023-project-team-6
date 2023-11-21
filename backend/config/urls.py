@@ -6,4 +6,5 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('setting/', include('setup.urls', namespace='default')),
     path('symbol/', include('entry.urls')),
+    path('weight/', include('weight_table.urls'))
 ]
