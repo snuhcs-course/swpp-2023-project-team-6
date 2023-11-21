@@ -1,7 +1,5 @@
 package com.example.speechbuddy.compose.symbolcreation
 
-import android.app.Activity
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
@@ -146,8 +144,6 @@ fun SymbolCreationScreen(
                 AddPhotoButton(
                     onGalleryClick = { galleryLauncher.launch("image/*") },
                     onCameraClick = {
-                        (context as? Activity)?.requestedOrientation =
-                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                         // Check if permission is already granted
                         when (PackageManager.PERMISSION_GRANTED) {
                             ContextCompat.checkSelfPermission(
