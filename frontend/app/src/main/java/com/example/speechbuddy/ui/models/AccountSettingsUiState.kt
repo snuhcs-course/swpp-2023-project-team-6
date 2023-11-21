@@ -9,6 +9,8 @@ data class AccountSettingsUiState(
 
 enum class AccountSettingsAlert {
     BACKUP,
+    LOADING,
+    BACKUP_SUCCESS,
     LOGOUT,
     WITHDRAW,
     WITHDRAW_PROCEED,

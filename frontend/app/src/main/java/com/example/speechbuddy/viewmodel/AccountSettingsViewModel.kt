@@ -1,9 +1,14 @@
 package com.example.speechbuddy.viewmodel
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
+import com.example.speechbuddy.repository.SettingsRepository
 import com.example.speechbuddy.repository.UserRepository
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.ui.models.AccountSettingsUiState
@@ -20,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountSettingsViewModel @Inject internal constructor(
     private val authRepository: AuthRepository,
+    private val settingsRepository: SettingsRepository,
     private val userRepository: UserRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
@@ -58,12 +64,14 @@ class AccountSettingsViewModel @Inject internal constructor(
     }
 
     fun logout() {
+        showAlert(AccountSettingsAlert.LOADING)
         viewModelScope.launch {
             authRepository.logout().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
                         sessionManager.logout()
+                        hideAlert()
                     }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
@@ -76,11 +84,13 @@ class AccountSettingsViewModel @Inject internal constructor(
 
     fun withdraw() {
         viewModelScope.launch {
+            showAlert(AccountSettingsAlert.LOADING)
             authRepository.withdraw().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
                         sessionManager.logout()
+                        hideAlert()
                     }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
@@ -94,6 +104,87 @@ class AccountSettingsViewModel @Inject internal constructor(
     fun exitGuestMode() {
         viewModelScope.launch {
             sessionManager.exitGuestMode()
+        }
+    }
+
+    private fun displayBackup() {
+        viewModelScope.launch {
+            settingsRepository.displayBackup().collect { result ->
+                when (result.code()) {
+                    ResponseCode.SUCCESS.value -> {}
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                }
+            }
+        }
+    }
+
+    private fun symbolListBackup() {
+
+        viewModelScope.launch {
+            settingsRepository.symbolListBackup().collect { result ->
+                when (result.code()) {
+                    ResponseCode.SUCCESS.value -> {}
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                }
+
+            }
+        }
+
+    }
+
+    private fun favoriteSymbolBackup() {
+        viewModelScope.launch {
+            settingsRepository.favoriteSymbolBackup().collect { result ->
+                when (result.code()) {
+                    ResponseCode.SUCCESS.value -> {}
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun weightTableBackup() {
+        viewModelScope.launch {
+            settingsRepository.weightTableBackup().collect { result ->
+                when (result.code()) {
+                    ResponseCode.SUCCESS.value -> { handleSuccess() }
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun backup() {
+        _uiState.update {
+            it.copy(
+                alert = AccountSettingsAlert.LOADING
+            )
+        }
+        displayBackup()
+        symbolListBackup()
+        favoriteSymbolBackup()
+        weightTableBackup()
+    }
+
+    private fun handleNoInternetConnection() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                alert = AccountSettingsAlert.CONNECTION
+            )
+        }
+    }
+
+    private fun handleSuccess() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                alert = AccountSettingsAlert.BACKUP_SUCCESS
+            )
         }
     }
 

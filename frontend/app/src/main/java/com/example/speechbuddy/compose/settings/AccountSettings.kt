@@ -1,5 +1,8 @@
 package com.example.speechbuddy.compose.settings
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,6 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -14,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +32,7 @@ import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettings(
@@ -111,13 +118,31 @@ fun AccountSettings(
             AccountSettingsAlert.BACKUP -> {
                 AlertDialogUi(
                     title = stringResource(id = R.string.logout),
-                    text = stringResource(id = R.string.logout_warning),
+                    text = stringResource(id = R.string.logout_backup),
                     dismissButtonText = stringResource(id = R.string.logout),
                     confirmButtonText = stringResource(id = R.string.backup),
                     onDismiss = { viewModel.showAlert(AccountSettingsAlert.LOGOUT) },
-                    onConfirm = { /* TODO: backup */ }
+                    onConfirm = { viewModel.backup() }
                 )
             }
+
+            AccountSettingsAlert.LOADING -> {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize()
+                )
+            }
+
+            AccountSettingsAlert.BACKUP_SUCCESS -> {
+                Toast.makeText(
+                    LocalContext.current,
+                    stringResource(id = R.string.backup_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+                viewModel.showAlert(AccountSettingsAlert.LOGOUT)
+            }
+
 
             AccountSettingsAlert.LOGOUT -> {
                 AlertDialogUi(
@@ -155,14 +180,12 @@ fun AccountSettings(
             }
 
             AccountSettingsAlert.CONNECTION -> {
-                AlertDialogUi(
-                    title = stringResource(id = R.string.no_connection),
-                    text = stringResource(id = R.string.no_connection_warning),
-                    dismissButtonText = stringResource(id = R.string.cancel),
-                    confirmButtonText = stringResource(id = R.string.confirm),
-                    onDismiss = { viewModel.hideAlert() },
-                    onConfirm = { viewModel.hideAlert() }
-                )
+                viewModel.hideAlert()
+                Toast.makeText(
+                    LocalContext.current,
+                    stringResource(id = R.string.connection_error),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
