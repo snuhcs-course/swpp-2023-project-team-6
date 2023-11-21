@@ -1,10 +1,9 @@
 package com.example.speechbuddy.di
-import javax.inject.Provider
+
 import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.util.Log
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
@@ -33,6 +32,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.net.ConnectException
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -41,7 +41,11 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(@ApplicationContext context: Context, authService: Provider<AuthService>, sessionManager: Provider<SessionManager>): Retrofit {
+    fun provideRetrofit(
+        @ApplicationContext context: Context,
+        authService: Provider<AuthService>,
+        sessionManager: SessionManager
+    ): Retrofit {
         val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
         val client =
@@ -108,7 +112,7 @@ class NetworkModule {
 class AuthInterceptor @Inject constructor(
     private val context: Context,
     private var authService: Provider<AuthService>,
-    private val sessionManager: Provider<SessionManager>
+    private val sessionManager: SessionManager
 ) : Interceptor {
 //    private val sessionManager: SessionManager = SessionManager()
 
@@ -119,26 +123,17 @@ class AuthInterceptor @Inject constructor(
             val originalRequest = chain.request()
             val builder = originalRequest.newBuilder()
             val response = chain.proceed(builder.build())
-            response.close()
-
-            val refreshToken = sessionManager.get().cachedToken.value!!.refreshToken!!
-            Log.d("test", "old Auth: " + sessionManager.get().cachedToken.value?.accessToken)
-            val responseRefreshToken =
-                runBlocking { authService.get().refresh(AuthRefreshRequest(refreshToken)) }
-            val newAuthToken = responseRefreshToken.body()?.accessToken
-            Log.d("test", "new Auth: " + newAuthToken)
+            response.close() // close request that cause 403
 
             return if (response.code == 403) {
-                val refreshToken = sessionManager.get().cachedToken.value!!.refreshToken!!
-                Log.d("test", "old Refresh" + refreshToken)
-                val responseRefreshToken =
+                val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
+                val responseMadeWithRefreshToken =
                     runBlocking { authService.get().refresh(AuthRefreshRequest(refreshToken)) }
-                val newAuthToken = responseRefreshToken.body()?.accessToken
-                Log.d("test", "new Refresh" + newAuthToken)
+                val newAuthToken = responseMadeWithRefreshToken.body()?.accessToken
+
+                sessionManager.setAuthToken(AuthToken(newAuthToken, refreshToken))
 
                 builder.header("Authorization", "Bearer $newAuthToken")
-                sessionManager.get().setAuthToken(AuthToken(newAuthToken))
-
                 chain.proceed(builder.build())
             } else {
                 chain.proceed(builder.build())
