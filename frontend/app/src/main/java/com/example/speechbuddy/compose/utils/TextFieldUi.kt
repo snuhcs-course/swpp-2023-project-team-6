@@ -3,6 +3,7 @@ package com.example.speechbuddy.compose.utils
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -11,6 +12,7 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,7 +45,11 @@ fun TextFieldUi(
     supportingText: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     isValid: Boolean = false,
-    isHidden: Boolean = false
+    isHidden: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Text,
+        autoCorrect = true
+    )
 ) {
     OutlinedTextField(
         value = value,
@@ -64,7 +70,8 @@ fun TextFieldUi(
         },
         singleLine = true,
         shape = RoundedCornerShape(10.dp),
-        colors = getTextFieldColors(isValid)
+        colors = getTextFieldColors(isValid),
+        keyboardOptions = keyboardOptions
     )
 }
 
