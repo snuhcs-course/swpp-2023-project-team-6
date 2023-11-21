@@ -33,7 +33,8 @@ class SettingBackupView(APIView):
         if not Setting.objects.filter(user=user).exists():
             response_data = {
                 "display_mode": 0,
-                "default_menu": 0
+                "default_menu": 0,
+                "updated_at": ""
             }
         else:
             curr_setting = Setting.objects.get(user=user)

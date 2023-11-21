@@ -20,6 +20,7 @@ import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.repository.WeightTableRepository
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
@@ -45,6 +46,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SymbolCreationViewModel @Inject internal constructor(
+    private val weightTableRepository: WeightTableRepository,
     private val repository: SymbolRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
@@ -239,6 +241,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                     // store symbol locally
                     Log.d("guestguest", symbolId.toString())
                     repository.insertSymbol(symbol)
+                    weightTableRepository.updateWeightTableForNewSymbol(symbol)// ------------------------------ modified
 
                     clearInput()
                     // Notify user that the creation was successful
@@ -271,7 +274,10 @@ class SymbolCreationViewModel @Inject internal constructor(
                             // change file name in internal storage
                             changeFileName("$tempFileName.png", "symbol_$symbolId.png", context)
                             // store symbol locally
-                            viewModelScope.launch { repository.insertSymbol(symbol) }
+                            viewModelScope.launch {
+                                repository.insertSymbol(symbol)
+                                weightTableRepository.updateWeightTableForNewSymbol(symbol) // ----------------------- modified
+                            }
                             clearInput()
                             // Notify user that the creation was successful
                             _creationResultMessage.postValue(R.string.create_symbol_success)

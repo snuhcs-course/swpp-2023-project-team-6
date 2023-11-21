@@ -3,7 +3,8 @@ package com.example.speechbuddy
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
@@ -73,6 +74,19 @@ class HomeActivity : BaseActivity() {
 
     private fun getInitialPage(): Boolean {
         return displaySettingsViewModel.getInitialPage()
+    }
+    
+    // hides keyboard
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v != null) {
+                v.clearFocus()
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
 }
