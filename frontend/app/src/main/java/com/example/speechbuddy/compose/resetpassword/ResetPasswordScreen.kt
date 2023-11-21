@@ -60,9 +60,11 @@ fun ResetPasswordScreen(
                 supportingText = {
                     if (isPasswordError) {
                         Text(stringResource(id = uiState.error!!.messageId))
+                    } else {
+                        Text(stringResource(id = R.string.password_too_short))
                     }
                 },
-                isError = isError,
+                isError = isPasswordError,
                 isValid = uiState.isValidPassword,
                 isHidden = true
             )
