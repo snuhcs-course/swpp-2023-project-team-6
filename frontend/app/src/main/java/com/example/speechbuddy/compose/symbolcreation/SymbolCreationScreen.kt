@@ -30,6 +30,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -44,6 +47,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -78,6 +83,8 @@ fun SymbolCreationScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val categories by viewModel.categories.observeAsState(emptyList())
+
+    val showDialog = remember { mutableStateOf(false) }
 
     val isSymbolTextError = uiState.error?.type == SymbolCreationErrorType.SYMBOL_TEXT
     val isCategoryError = uiState.error?.type == SymbolCreationErrorType.CATEGORY
@@ -142,28 +149,35 @@ fun SymbolCreationScreen(
                 Spacer(modifier = Modifier.height(30.dp))
 
                 AddPhotoButton(
-                    onGalleryClick = { galleryLauncher.launch("image/*") },
-                    onCameraClick = {
-                        // Check if permission is already granted
-                        when (PackageManager.PERMISSION_GRANTED) {
-                            ContextCompat.checkSelfPermission(
-                                context,
-                                android.Manifest.permission.CAMERA
-                            ) -> {
-                                // If permission is granted, launch the camera directly
-                                cameraLauncher.launch(null)
-                            }
-
-                            else -> {
-                                // Request the camera permission
-                                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                            }
-                        }
-                        viewModel.photoType = PhotoType.CAMERA
-                    },
+                    onClick = { showDialog.value = true },
                     isError = isPhotoInputError,
                     viewModel = viewModel
                 )
+
+                if (showDialog.value) {
+                    PhotoOptionDialog(
+                        onDismissRequest = { showDialog.value = false },
+                        onCameraClick = {
+                            // Check if permission is already granted
+                            when (PackageManager.PERMISSION_GRANTED) {
+                                ContextCompat.checkSelfPermission(
+                                    context,
+                                    android.Manifest.permission.CAMERA
+                                ) -> {
+                                    // If permission is granted, launch the camera directly
+                                    cameraLauncher.launch(null)
+                                }
+
+                                else -> {
+                                    // Request the camera permission
+                                    requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                                }
+                            }
+                            viewModel.photoType = PhotoType.CAMERA
+                        },
+                        onGalleryClick = { galleryLauncher.launch("image/*") }
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(30.dp))
 
@@ -279,21 +293,22 @@ private fun DropdownUi(
 
 @Composable
 private fun AddPhotoButton(
-    onGalleryClick: () -> Unit,
-    onCameraClick: () -> Unit,
+    onClick: () -> Unit,
     isError: Boolean = false,
     viewModel: SymbolCreationViewModel
 ) {
     val color =
         if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant
 
-    Box(contentAlignment = Alignment.Center,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(140.dp)
-            .clickable { onCameraClick() }
+            .clickable(onClick = onClick)
             .border(
                 border = BorderStroke(1.dp, color), shape = RoundedCornerShape(10.dp)
-            )) {
+            )
+    ) {
         if (viewModel.photoInputBitmap != null) {
             // Display the loaded image if the photo input bitmap is not null
             SymbolPreview(
@@ -307,6 +322,92 @@ private fun AddPhotoButton(
             )
         }
     }
+}
+
+@Composable
+fun PhotoOptionDialog(
+    onDismissRequest: () -> Unit,
+    onCameraClick: () -> Unit,
+    onGalleryClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(text = "Choose Photo Option")
+        },
+        text = {
+            Column {
+                Button(
+                    onClick = {
+                        onCameraClick()
+                        onDismissRequest()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Take Photo")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        onGalleryClick()
+                        onDismissRequest()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Choose from Gallery")
+                }
+            }
+        },
+        confirmButton = {
+            // Optionally, add a confirm button
+        },
+        dismissButton = {
+            Button(onClick = onDismissRequest) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+
+@Composable
+private fun PhotoOptionButton(
+    onCameraClick: () -> Unit,
+    onGalleryClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Button(
+            onClick = onCameraClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            enabled = true,
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
+        ) {
+            Text(text = "Camera", style = MaterialTheme.typography.titleMedium)
+        }
+        Button(
+            onClick = onGalleryClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            enabled = true,
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
+        ) {
+            Text(text = "Gallery", style = MaterialTheme.typography.titleMedium)
+        }
+    }
+
 }
 
 @Composable
