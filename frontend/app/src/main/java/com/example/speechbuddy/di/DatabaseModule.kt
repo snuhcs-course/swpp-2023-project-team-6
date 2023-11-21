@@ -11,6 +11,7 @@ import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.local.models.UserMapper
 import com.example.speechbuddy.data.local.WeightRowDao
+import com.example.speechbuddy.domain.utils.Converters
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,6 +69,12 @@ class DatabaseModule {
     @Provides
     fun provideCategoryMapper(): CategoryMapper {
         return CategoryMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideConverters(): Converters {
+        return Converters()
     }
 
     @Singleton

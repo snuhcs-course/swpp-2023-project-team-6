@@ -131,20 +131,15 @@ class SettingsRepository @Inject constructor(
     suspend fun weightTableBackup(): Flow<Response<Void>> =
         flow {
             try {
-                /*
                 val result = backupService.weightTableBackup(
                     getAuthHeader(),
-                    BackupWeightTableRequest(weightTableRepository.)
+                    weightTableRepository.getBackupWeightTableRequest()
                 )
                 emit(result)
-                 */
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
             }
         }
-
-    /* TODO: weight table backup */
-    /* TODO: setting 관련 get */
 
     private fun getAuthHeader(): String {
         val accessToken = sessionManager.cachedToken.value?.accessToken
