@@ -1,15 +1,11 @@
 package com.example.speechbuddy.viewmodel
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.speechbuddy.data.remote.models.SettingsBackupDto
-import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.repository.SettingsRepository
 import com.example.speechbuddy.ui.models.BackupSettingsAlert
 import com.example.speechbuddy.ui.models.BackupSettingsUiState
@@ -20,13 +16,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class BackupSettingsViewModel @Inject internal constructor(
-    private val repository: SettingsRepository
+    private val repository: SettingsRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(BackupSettingsUiState())
@@ -61,14 +56,7 @@ class BackupSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {}
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                        _loading.value = false
-                        _uiState.update { currentState ->
-                            currentState.copy (
-                                alert = BackupSettingsAlert.CONNECTION
-                            )
-                        }
-                    }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
             }
         }
@@ -81,14 +69,7 @@ class BackupSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {}
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                        _loading.value = false
-                        _uiState.update { currentState ->
-                            currentState.copy (
-                                alert = BackupSettingsAlert.CONNECTION
-                            )
-                        }
-                    }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
 
             }
@@ -102,14 +83,7 @@ class BackupSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {}
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                        _loading.value = false
-                        _uiState.update { currentState ->
-                            currentState.copy (
-                                alert = BackupSettingsAlert.CONNECTION
-                            )
-                        }
-                    }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
             }
         }
@@ -120,24 +94,9 @@ class BackupSettingsViewModel @Inject internal constructor(
         viewModelScope.launch {
             repository.weightTableBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {
-                        _loading.value = false
-                        _uiState.update { currentState ->
-                            currentState.copy (
-                                alert = BackupSettingsAlert.SUCCESS,
-                                lastBackupDate = LocalDate.now().toString()
-                            )
-                        }
-                    }
+                    ResponseCode.SUCCESS.value -> { handleSuccess() }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                        _loading.value = false
-                        _uiState.update { currentState ->
-                            currentState.copy (
-                                alert = BackupSettingsAlert.CONNECTION
-                            )
-                        }
-                    }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
             }
         }
@@ -150,6 +109,26 @@ class BackupSettingsViewModel @Inject internal constructor(
         symbolListBackup()
         favoriteSymbolBackup()
         weightTableBackup()
+    }
+
+    private fun handleNoInternetConnection() {
+        _loading.value = false
+        _uiState.update { currentState ->
+            currentState.copy (
+                alert = BackupSettingsAlert.CONNECTION
+            )
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleSuccess() {
+        _loading.value = false
+        _uiState.update { currentState ->
+            currentState.copy (
+                alert = BackupSettingsAlert.SUCCESS,
+                lastBackupDate = LocalDate.now().toString()
+            )
+        }
     }
 
 
