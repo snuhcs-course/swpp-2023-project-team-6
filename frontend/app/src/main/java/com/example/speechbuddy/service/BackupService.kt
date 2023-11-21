@@ -3,6 +3,7 @@ package com.example.speechbuddy.service
 import com.example.speechbuddy.data.remote.models.FavoritesListDto
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
 import com.example.speechbuddy.data.remote.models.SymbolListDto
+import com.example.speechbuddy.data.remote.requests.BackupWeightTableRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -28,6 +29,12 @@ interface BackupService {
     suspend fun favoriteSymbolBackup(
         @Query("id") id: String? = null,
         @Header("Authorization") header: String
+    ): Response<Void>
+
+    @POST("/weight/backup/")
+    suspend fun weightTableBackup(
+        @Header("Authorization") header: String,
+        @Body backupWeightTableRequest: BackupWeightTableRequest
     ): Response<Void>
 
     @GET("/setting/backup/")

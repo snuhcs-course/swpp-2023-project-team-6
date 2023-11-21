@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
 import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
+import com.example.speechbuddy.data.remote.requests.BackupWeightTableRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
@@ -30,7 +31,8 @@ class SettingsRepository @Inject constructor(
     private val backupService: BackupService,
     private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager,
-    private val symbolRepository: SymbolRepository
+    private val symbolRepository: SymbolRepository,
+    private val weightTableRepository: WeightTableRepository
 ) {
 
     private val _darkModeLiveData = MutableLiveData<Boolean?>()
@@ -109,7 +111,6 @@ class SettingsRepository @Inject constructor(
     suspend fun favoriteSymbolBackup(): Flow<Response<Void>> =
         flow {
             try {
-                Log.d("symbol", symbolRepository.getFavoriteSymbolsIdString())
                 if (symbolRepository.getFavoriteSymbolsIdString().isEmpty()) {
                     val result = backupService.favoriteSymbolBackup(
                         header = getAuthHeader()
@@ -122,6 +123,21 @@ class SettingsRepository @Inject constructor(
                     )
                     emit(result)
                 }
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    suspend fun weightTableBackup(): Flow<Response<Void>> =
+        flow {
+            try {
+                /*
+                val result = backupService.weightTableBackup(
+                    getAuthHeader(),
+                    BackupWeightTableRequest(weightTableRepository.)
+                )
+                emit(result)
+                 */
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
             }

@@ -1,6 +1,8 @@
 package com.example.speechbuddy.viewmodel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -123,8 +125,27 @@ class BackupSettingsViewModel @Inject internal constructor(
         viewModelScope.launch {
             repository.favoriteSymbolBackup().collect { result ->
                 when (result.code()) {
+                    ResponseCode.SUCCESS.value -> {}
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        _loading.value = false
+                        _uiState.update { currentState ->
+                            currentState.copy (
+                                alert = BackupSettingsAlert.CONNECTION
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun weightTableBackup() {
+        viewModelScope.launch {
+            repository.weightTableBackup().collect { result ->
+                when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
-                        /* TODO: 백업 완성됐을 때 여기는 지우고 weight table에 복붙 */
                         _loading.value = false
                         _uiState.update { currentState ->
                             currentState.copy (
@@ -147,18 +168,13 @@ class BackupSettingsViewModel @Inject internal constructor(
         }
     }
 
-    private fun weightTableBackup() {
-        viewModelScope.launch {
-            //repository.weightTableBackup()
-        }
-    }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     fun backup() {
         _loading.value = true
         displayBackup()
         symbolListBackup()
         favoriteSymbolBackup()
-        //weightTableBackup()
+        weightTableBackup()
     }
 
 

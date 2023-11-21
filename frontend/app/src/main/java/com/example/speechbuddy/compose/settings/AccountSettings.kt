@@ -92,7 +92,7 @@ fun AccountSettings(
                     ) {
                         ButtonUi(
                             text = stringResource(id = R.string.logout),
-                            onClick = { viewModel.showAlert(AccountSettingsAlert.LOGOUT) }
+                            onClick = { viewModel.showAlert(AccountSettingsAlert.BACKUP) }
                         )
 
                         ButtonUi(
@@ -108,6 +108,17 @@ fun AccountSettings(
 
     uiState.alert?.let { alert ->
         when (alert) {
+            AccountSettingsAlert.BACKUP -> {
+                AlertDialogUi(
+                    title = stringResource(id = R.string.logout),
+                    text = stringResource(id = R.string.logout_warning),
+                    dismissButtonText = stringResource(id = R.string.logout),
+                    confirmButtonText = stringResource(id = R.string.backup),
+                    onDismiss = { viewModel.showAlert(AccountSettingsAlert.LOGOUT) },
+                    onConfirm = { /* TODO: backup */ }
+                )
+            }
+
             AccountSettingsAlert.LOGOUT -> {
                 AlertDialogUi(
                     title = stringResource(id = R.string.logout),

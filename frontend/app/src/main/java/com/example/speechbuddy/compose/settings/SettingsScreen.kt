@@ -79,5 +79,12 @@ private fun SettingsScreenNavHost(
                 bottomPaddingValues = bottomPaddingValues
             )
         }
+
+        composable("copyright") {
+            Copyright(
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
+            )
+        }
     }
 }
