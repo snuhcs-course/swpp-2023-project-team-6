@@ -1,5 +1,7 @@
 package com.example.speechbuddy.compose
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
@@ -36,6 +38,7 @@ data class BottomNavItem(
     val iconResId: Int
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpeechBuddyHome(
@@ -122,6 +125,7 @@ private fun BottomNavigationBar(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,

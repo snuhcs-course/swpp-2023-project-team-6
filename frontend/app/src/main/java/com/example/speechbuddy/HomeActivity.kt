@@ -1,12 +1,13 @@
 package com.example.speechbuddy
 
-import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
 import com.example.speechbuddy.compose.SpeechBuddyHome
@@ -20,6 +21,7 @@ class HomeActivity : BaseActivity() {
 
     private val displaySettingsViewModel: DisplaySettingsViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -47,6 +49,7 @@ class HomeActivity : BaseActivity() {
         }
 
         settingsRepository.darkModeLiveData.observeForever(darkModeObserver)
+
     }
 
     private fun subscribeObservers() {
