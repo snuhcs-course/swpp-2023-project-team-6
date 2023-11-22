@@ -1,6 +1,8 @@
 package com.example.speechbuddy.compose.settings
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,6 +33,7 @@ import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.BackupSettingsAlert
 import com.example.speechbuddy.viewmodel.BackupSettingsViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BackupSettings(

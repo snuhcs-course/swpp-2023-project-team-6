@@ -122,7 +122,8 @@ fun AccountSettings(
                     dismissButtonText = stringResource(id = R.string.logout),
                     confirmButtonText = stringResource(id = R.string.backup),
                     onDismiss = { viewModel.showAlert(AccountSettingsAlert.LOGOUT) },
-                    onConfirm = { viewModel.backup() }
+                    onConfirm = { viewModel.backup() },
+                    onDismissRequest = { viewModel.hideAlert() }
                 )
             }
 
