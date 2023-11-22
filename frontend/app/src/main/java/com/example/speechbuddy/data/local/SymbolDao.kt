@@ -46,4 +46,7 @@ interface SymbolDao {
 
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)
+
+    @Query("DELETE FROM symbols")
+    suspend fun deleteAllSymbols()
 }

@@ -46,6 +46,10 @@ class WeightTableRepository @Inject constructor(
             }
         }
 
+    suspend fun deleteAllWeightRows() {
+        weightRowDao.deleteAllWeightRows()
+    }
+
     suspend fun getBackupWeightTableRequest(): BackupWeightTableRequest {
         val weightRowList = getAllWeightRows().firstOrNull() ?: emptyList()
         val weightTableEntities = weightRowList.map { weightRow ->

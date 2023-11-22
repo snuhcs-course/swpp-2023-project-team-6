@@ -45,6 +45,10 @@ class SymbolRepository @Inject constructor(
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
 
+    suspend fun deleteAllSymbols() {
+        symbolDao.deleteAllSymbols()
+    }
+
     fun getLastSymbol() = symbolDao.getLastSymbol().map { symbolEntities ->
         symbolEntities.first().let { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
     }
