@@ -73,7 +73,8 @@ fun SymbolSelectionScreen(
                 SelectedSymbolsBox(
                     selectedSymbols = viewModel.selectedSymbols,
                     onClear = { viewModel.clear(it) },
-                    onClearAll = { viewModel.clearAll() }
+                    onClearAll = { viewModel.clearAll() },
+                    onDisplayMax = { /* TODO */ }
                 )
 
                 Column {

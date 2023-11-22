@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +34,7 @@ import com.example.speechbuddy.ui.models.SymbolItem
 fun SelectedSymbolsBox(
     selectedSymbols: List<SymbolItem>,
     onClear: (SymbolItem) -> Unit,
+    onDisplayMax: () -> Unit,
     onClearAll: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -72,10 +74,10 @@ fun SelectedSymbolsBox(
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
             Button(
-                onClick = onClearAll,
+                onClick = onDisplayMax,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(6.dp),
+                    .padding(8.dp),
                 enabled = selectedSymbols.isNotEmpty(),
                 shape = RoundedCornerShape(5.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -85,7 +87,7 @@ fun SelectedSymbolsBox(
                 contentPadding = PaddingValues(2.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.clear_all),
+                    text = stringResource(id = R.string.display_max),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium
                 )

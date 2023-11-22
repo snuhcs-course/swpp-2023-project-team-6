@@ -62,6 +62,7 @@
     <string name="favorite">즐겨찾기</string>
     <string name="currently_selected_menu">현재 선택된 메뉴</string>
     <string name="fill_query">검색어를 입력하세요</string>
+    <string name="display_max">크게 보기</string>
     <string name="clear_all">전체 삭제</string>
     <string name="unselect_symbol">상징 선택 취소</string>
 
