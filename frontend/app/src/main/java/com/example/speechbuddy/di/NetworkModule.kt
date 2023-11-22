@@ -108,7 +108,7 @@ class NetworkModule {
 class AuthInterceptor(private val context: Context) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (!isInternetAvailable(context)) throw ConnectException()
+        //if (!isInternetAvailable(context)) throw ConnectException()
         val builder = chain.request().newBuilder()
         try {
             return chain.proceed(builder.build())
