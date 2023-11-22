@@ -10,7 +10,6 @@ import com.example.speechbuddy.compose.SpeechBuddyHome
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
 

@@ -50,26 +50,10 @@ class SymbolSelectionViewModel @Inject internal constructor(
         getEntries()
     }
 
-    fun expandMenu() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isMenuExpanded = true
-            )
-        }
-    }
-
-    fun dismissMenu() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isMenuExpanded = false
-            )
-        }
-    }
-
     fun selectDisplayMode(displayMode: DisplayMode) {
         _uiState.update { currentState ->
             currentState.copy(
-                isMenuExpanded = false, displayMode = displayMode
+                displayMode = displayMode
             )
         }
         getEntries()
@@ -87,7 +71,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun clear(symbolItem: SymbolItem) {
         selectedSymbols = selectedSymbols.minus(symbolItem)
         // when clearing one left selected symbol
-        if(selectedSymbols.isNotEmpty()){
+        if (selectedSymbols.isNotEmpty()) {
             val lastSelectedSymbol = selectedSymbols.last()
             provideSuggestion(lastSelectedSymbol.symbol)
         }

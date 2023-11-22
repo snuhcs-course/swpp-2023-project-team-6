@@ -61,4 +61,5 @@ class AuthActivity : BaseActivity() {
         }
         return super.dispatchTouchEvent(event)
     }
+
 }

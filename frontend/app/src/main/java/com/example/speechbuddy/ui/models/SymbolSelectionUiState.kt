@@ -3,7 +3,6 @@ package com.example.speechbuddy.ui.models
 import com.example.speechbuddy.domain.models.Symbol
 
 data class SymbolSelectionUiState(
-    val isMenuExpanded: Boolean = false,
     val displayMode: DisplayMode = DisplayMode.CATEGORY
 )
 
