@@ -7,9 +7,12 @@ import android.net.NetworkCapabilities
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
+import com.example.speechbuddy.data.remote.models.UserDtoMapper
+import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
+import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.service.SymbolCreationService
-import com.example.speechbuddy.data.remote.models.UserDtoMapper
 import com.example.speechbuddy.service.UserService
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.ResponseHandler
@@ -20,6 +23,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -27,6 +31,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.net.ConnectException
+import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -35,11 +41,16 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(@ApplicationContext context: Context): Retrofit {
+    fun provideRetrofit(
+        @ApplicationContext context: Context,
+        authService: Provider<AuthService>,
+        sessionManager: SessionManager
+    ): Retrofit {
         val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
         val client =
-            OkHttpClient.Builder().addInterceptor(logger).addInterceptor(AuthInterceptor(context))
+            OkHttpClient.Builder().addInterceptor(logger)
+                .addInterceptor(AuthInterceptor(context, authService, sessionManager))
                 .build()
 
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
@@ -98,13 +109,35 @@ class NetworkModule {
 
 }
 
-class AuthInterceptor(private val context: Context) : Interceptor {
+class AuthInterceptor @Inject constructor(
+    private val context: Context,
+    private var authService: Provider<AuthService>,
+    private val sessionManager: SessionManager
+) : Interceptor {
+//    private val sessionManager: SessionManager = SessionManager()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isInternetAvailable(context)) throw ConnectException()
-        val builder = chain.request().newBuilder()
+
         try {
-            return chain.proceed(builder.build())
+            val originalRequest = chain.request()
+            val builder = originalRequest.newBuilder()
+            val response = chain.proceed(builder.build())
+            response.close() // close request that cause 403
+
+            return if (response.code == 403) {
+                val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
+                val responseMadeWithRefreshToken =
+                    runBlocking { authService.get().refresh(AuthRefreshRequest(refreshToken)) }
+                val newAuthToken = responseMadeWithRefreshToken.body()?.accessToken
+
+                sessionManager.setAuthToken(AuthToken(newAuthToken, refreshToken))
+
+                builder.header("Authorization", "Bearer $newAuthToken")
+                chain.proceed(builder.build())
+            } else {
+                chain.proceed(builder.build())
+            }
         } catch (e: ConnectException) {
             throw e
         }
