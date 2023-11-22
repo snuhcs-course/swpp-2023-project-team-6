@@ -3,6 +3,7 @@ package com.example.speechbuddy.compose.settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -60,6 +61,8 @@ fun GuestSettings(
                     onClick = { viewModel.exitGuestMode() },
                     modifier = Modifier.offset(y = 240.dp)
                 )
+
+                Spacer(modifier = Modifier.padding(70.dp))
             }
         }
     }
