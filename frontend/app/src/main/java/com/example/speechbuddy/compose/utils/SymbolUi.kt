@@ -33,6 +33,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_COUNT
 import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_IMAGE_PATH
 import com.example.speechbuddy.utils.Constants.Companion.MAXIMUM_LINES_FOR_SYMBOL_TEXT
 
@@ -53,11 +54,11 @@ fun SymbolUi(
     onSelect: () -> Unit,
     onFavoriteChange: (Boolean) -> Unit
 ) {
-    val filepath = if(symbol.id>500){
-        LocalContext.current.filesDir.toString().plus("/")  // needs to be modified
-    } else{
-        DEFAULT_SYMBOL_IMAGE_PATH
-    }
+    val filepath =
+        if (symbol.id > DEFAULT_SYMBOL_COUNT)
+            LocalContext.current.filesDir.toString().plus("/")
+        else
+            DEFAULT_SYMBOL_IMAGE_PATH
 
     Card(
         onClick = onSelect,
@@ -96,14 +97,14 @@ fun SymbolUi(
                 GlideImage(
                     model = filepath.plus("symbol_${symbol.id}.png"),
                     contentDescription = symbol.text,
-                    modifier = Modifier.height(95.dp),
+                    modifier = Modifier.height(90.dp),
                     contentScale = ContentScale.FillHeight
                 )
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(45.dp)
+                        .height(50.dp)
                         .background(color = MaterialTheme.colorScheme.secondaryContainer)
                         .padding(horizontal = 10.dp),
                     contentAlignment = Alignment.Center
@@ -112,7 +113,7 @@ fun SymbolUi(
                         text = symbol.text,
                         textAlign = TextAlign.Center,
                         maxLines = MAXIMUM_LINES_FOR_SYMBOL_TEXT,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
