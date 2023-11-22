@@ -1,28 +1,23 @@
 package com.example.speechbuddy.data.local
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.createDataStore
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.SettingsPrefsManager.PreferencesKeys.AUTO_BACKUP
 import com.example.speechbuddy.data.local.SettingsPrefsManager.PreferencesKeys.DARK_MODE
 import com.example.speechbuddy.data.local.SettingsPrefsManager.PreferencesKeys.INITIAL_PAGE
+import com.example.speechbuddy.data.local.SettingsPrefsManager.PreferencesKeys.LAST_BACKUP_DATE
 import com.example.speechbuddy.domain.models.SettingsPreferences
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.utils.Constants.Companion.SETTINGS_PREFS
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class SettingsPrefsManager @Inject constructor(context: Context) {
 
@@ -40,7 +35,8 @@ class SettingsPrefsManager @Inject constructor(context: Context) {
             SettingsPreferences(
                 autoBackup = preferences[AUTO_BACKUP] ?: true,
                 darkMode = preferences[DARK_MODE] ?: false,
-                initialPage = preferences[INITIAL_PAGE] ?: true
+                initialPage = preferences[INITIAL_PAGE] ?: true,
+                lastBackupDate = preferences[LAST_BACKUP_DATE] ?: ""
             )
         }
 
@@ -62,11 +58,18 @@ class SettingsPrefsManager @Inject constructor(context: Context) {
         }
     }
 
+    suspend fun saveLastBackupDate(value: String) {
+        dataStore.edit { preferences ->
+            preferences[LAST_BACKUP_DATE] = value
+        }
+    }
+
     suspend fun resetSettings() {
         dataStore.edit { preferences ->
             preferences[AUTO_BACKUP] = true
             preferences[DARK_MODE] = false
             preferences[INITIAL_PAGE] = true
+            preferences[LAST_BACKUP_DATE] = ""
         }
     }
 
@@ -74,5 +77,6 @@ class SettingsPrefsManager @Inject constructor(context: Context) {
         val AUTO_BACKUP = booleanPreferencesKey(Constants.AUTO_BACKUP_PREF)
         val DARK_MODE = booleanPreferencesKey(Constants.DARK_MODE_PREF)
         val INITIAL_PAGE = booleanPreferencesKey(Constants.INITIAL_PAGE_PREF)
+        val LAST_BACKUP_DATE = stringPreferencesKey(Constants.LAST_BACKUP_DATE_PREF)
     }
 }

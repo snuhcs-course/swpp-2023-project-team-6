@@ -7,5 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class SettingsPreferences(
     val darkMode: Boolean = false,
     val autoBackup: Boolean = true,
-    val initialPage: Boolean = true
+    val initialPage: Boolean = true,
+    val lastBackupDate: String = ""
 ) : Parcelable

@@ -24,7 +24,12 @@ class BackupSettingsViewModel @Inject internal constructor(
     private val repository: SettingsRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(BackupSettingsUiState())
+    private val _uiState = MutableStateFlow(
+        BackupSettingsUiState(
+            lastBackupDate = getLastBackupDate(),
+            isAutoBackupEnabled = getAutoBackup()
+        )
+    )
     val uiState: StateFlow<BackupSettingsUiState> = _uiState.asStateFlow()
 
     private val _loading = MutableLiveData(false)
@@ -40,6 +45,37 @@ class BackupSettingsViewModel @Inject internal constructor(
             repository.setAutoBackup(value)
         }
         // TODO: Implement automated backup
+    }
+
+    private fun setLastBackupDate(value: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                lastBackupDate = value
+            )
+        }
+        viewModelScope.launch {
+            repository.setLastBackupDate(value)
+        }
+    }
+
+    private fun getAutoBackup(): Boolean {
+        var autoBackup = false
+        viewModelScope.launch {
+            repository.getAutoBackup().collect {
+                autoBackup = it.data?: false
+            }
+        }
+        return autoBackup
+    }
+
+    private fun getLastBackupDate(): String {
+        var lastBackupDate = ""
+        viewModelScope.launch {
+            repository.getLastBackupDate().collect {
+                lastBackupDate = it.data?: ""
+            }
+        }
+        return lastBackupDate
     }
 
     fun toastDisplayed() {
@@ -123,10 +159,10 @@ class BackupSettingsViewModel @Inject internal constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun handleSuccess() {
         _loading.value = false
+        setLastBackupDate(LocalDate.now().toString())
         _uiState.update { currentState ->
             currentState.copy (
                 alert = BackupSettingsAlert.SUCCESS,
-                lastBackupDate = LocalDate.now().toString()
             )
         }
     }

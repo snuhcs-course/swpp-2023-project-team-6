@@ -1,15 +1,10 @@
 package com.example.speechbuddy.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
-import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
-import com.example.speechbuddy.data.remote.requests.BackupWeightTableRequest
 import com.example.speechbuddy.domain.SessionManager
-import com.example.speechbuddy.domain.models.Entry
-import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.ui.models.InitialPage
 import com.example.speechbuddy.utils.Resource
@@ -17,7 +12,6 @@ import com.example.speechbuddy.utils.ResponseHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -61,6 +55,10 @@ class SettingsRepository @Inject constructor(
         settingsPrefManager.saveAutoBackup(value)
     }
 
+    suspend fun setLastBackupDate(value: String) {
+        settingsPrefManager.saveLastBackupDate(value)
+    }
+
     fun getDarkMode(): Flow<Resource<Boolean>> {
         return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.darkMode)
@@ -76,6 +74,12 @@ class SettingsRepository @Inject constructor(
     fun getAutoBackup(): Flow<Resource<Boolean>> {
         return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.autoBackup)
+        }
+    }
+
+    fun getLastBackupDate(): Flow<Resource<String>> {
+        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+            Resource.success(settingsPreferences.lastBackupDate)
         }
     }
 

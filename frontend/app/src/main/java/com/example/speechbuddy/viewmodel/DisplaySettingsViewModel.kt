@@ -1,6 +1,5 @@
 package com.example.speechbuddy.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.repository.SettingsRepository
@@ -53,7 +52,7 @@ class DisplaySettingsViewModel @Inject internal constructor(
     }
 
     fun getDarkMode(): Boolean {
-        var darkMode: Boolean = false
+        var darkMode = false
         viewModelScope.launch {
             repository.getDarkMode().collect {
                 darkMode = it.data?: false
@@ -63,7 +62,7 @@ class DisplaySettingsViewModel @Inject internal constructor(
     }
 
     fun getInitialPage(): Boolean {
-        var initialPage: Boolean = true
+        var initialPage = true
         viewModelScope.launch {
             repository.getInitialPage().collect {
                 initialPage = it.data?: true
