@@ -345,7 +345,7 @@ fun PhotoOptionDialog(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Choose Photo Option",
+                    text = stringResource(id = R.string.choose_photo_option),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
@@ -361,7 +361,7 @@ fun PhotoOptionDialog(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = "Take Photo",
+                        text = stringResource(id = R.string.take_photo),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -375,7 +375,7 @@ fun PhotoOptionDialog(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = "Choose from Gallery",
+                        text = stringResource(id = R.string.choose_from_gallery),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -393,7 +393,7 @@ fun PhotoOptionDialog(
                     )
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.cancel),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
