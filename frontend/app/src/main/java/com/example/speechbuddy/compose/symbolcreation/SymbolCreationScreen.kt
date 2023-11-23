@@ -337,16 +337,18 @@ fun PhotoOptionDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        confirmButton = {
-            // Optionally, add a confirm button
-        },
+        confirmButton = {},
         dismissButton = {},
         title = {
-            Text(
-                text = "Choose Photo Option",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Choose Photo Option",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         },
         text = {
             Column {
