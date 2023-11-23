@@ -5,13 +5,17 @@ import com.example.speechbuddy.data.local.WeightRowDao
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.local.models.WeightRowEntity
 import com.example.speechbuddy.data.local.models.WeightRowMapper
+import com.example.speechbuddy.data.remote.requests.BackupWeightTableRequest
+import com.example.speechbuddy.data.remote.requests.WeightTableEntity
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.domain.models.WeightRow
+import com.example.speechbuddy.domain.utils.Converters
 import com.example.speechbuddy.ui.models.SymbolItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -23,7 +27,8 @@ import javax.inject.Singleton
 @Singleton
 class WeightTableRepository @Inject constructor(
     private val symbolDao: SymbolDao,
-    private val weightRowDao: WeightRowDao
+    private val weightRowDao: WeightRowDao,
+    private val converters: Converters
 ) {
     private val symbolMapper = SymbolMapper()
     private val weightRowMapper = WeightRowMapper()
@@ -40,6 +45,21 @@ class WeightTableRepository @Inject constructor(
                 weightRowMapper.mapToDomainModel(weightRowEntity)
             }
         }
+
+    suspend fun deleteAllWeightRows() {
+        weightRowDao.deleteAllWeightRows()
+    }
+
+    suspend fun getBackupWeightTableRequest(): BackupWeightTableRequest {
+        val weightRowList = getAllWeightRows().firstOrNull() ?: emptyList()
+        val weightTableEntities = weightRowList.map { weightRow ->
+            WeightTableEntity(
+                id = weightRow.id,
+                weight = converters.fromList(weightRow.weights)
+            )
+        }
+        return BackupWeightTableRequest(weight_table = weightTableEntities)
+    }
 
     private fun getWeightRowById(rowId: Int) =
         weightRowDao.getWeightRowById(rowId).map { weightRowEntities ->

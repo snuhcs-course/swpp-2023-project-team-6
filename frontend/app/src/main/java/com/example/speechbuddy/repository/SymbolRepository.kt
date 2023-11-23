@@ -6,7 +6,6 @@ import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.remote.MySymbolRemoteSource
-import com.example.speechbuddy.utils.ResponseHandler
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
@@ -15,8 +14,10 @@ import com.example.speechbuddy.domain.models.MySymbol
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
+import com.example.speechbuddy.utils.ResponseHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -43,6 +44,10 @@ class SymbolRepository @Inject constructor(
         else symbolDao.getSymbolsByQuery(query).map { symbolEntities ->
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
+
+    suspend fun deleteAllSymbols() {
+        symbolDao.deleteAllSymbols()
+    }
 
     fun getLastSymbol() = symbolDao.getLastSymbol().map { symbolEntities ->
         symbolEntities.first().let { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
@@ -88,6 +93,16 @@ class SymbolRepository @Inject constructor(
         symbolDao.getSymbolsByCategoryId(category.id).map { symbolEntities ->
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
+
+    suspend fun getUserSymbolsIdString(): String {
+        val idList = symbolDao.getUserSymbolsId().firstOrNull() ?: emptyList()
+        return if (idList.isEmpty()) "" else idList.joinToString(separator = ",")
+    }
+
+    suspend fun getFavoriteSymbolsIdString(): String {
+        val idList = symbolDao.getFavoriteSymbolsId().firstOrNull() ?: emptyList()
+        return if (idList.isEmpty()) "" else idList.joinToString(separator = ",")
+    }
 
     suspend fun updateFavorite(symbol: Symbol, value: Boolean) {
         val symbolEntity = SymbolEntity(

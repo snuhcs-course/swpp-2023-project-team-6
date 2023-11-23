@@ -32,6 +32,12 @@ interface SymbolDao {
     @Query("SELECT * FROM symbols WHERE categoryId = :categoryId")
     fun getSymbolsByCategoryId(categoryId: Int): Flow<List<SymbolEntity>>
 
+    @Query("SELECT id FROM symbols WHERE id > 500")
+    fun getUserSymbolsId(): Flow<List<Int>>
+
+    @Query("SELECT id FROM symbols WHERE isFavorite = 1")
+    fun getFavoriteSymbolsId(): Flow<List<Int>>
+
     @Update
     suspend fun updateSymbol(symbolEntity: SymbolEntity)
 
@@ -40,4 +46,7 @@ interface SymbolDao {
 
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)
+
+    @Query("DELETE FROM symbols")
+    suspend fun deleteAllSymbols()
 }
