@@ -32,6 +32,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -351,56 +352,69 @@ fun PhotoOptionDialog(
             }
         },
         text = {
-            Column {
-                Button(
+            Column(
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                PhotoOptionButton(
                     onClick = {
                         onCameraClick()
                         onDismissRequest()
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.take_photo),
-                        style = MaterialTheme.typography.bodyLarge
+                    text = stringResource(id = R.string.take_photo),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Button(
+                )
+
+                PhotoOptionButton(
                     onClick = {
                         onGalleryClick()
                         onDismissRequest()
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.choose_from_gallery),
-                        style = MaterialTheme.typography.bodyLarge
+                    text = stringResource(id = R.string.choose_from_gallery),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Button(
+                )
+
+                PhotoOptionButton(
                     onClick = {
                         onCancelClick()
                         onDismissRequest()
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    text = stringResource(id = R.string.cancel),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.cancel),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
+                )
             }
         },
         containerColor = MaterialTheme.colorScheme.inverseOnSurface
     )
+}
+
+@Composable
+private fun PhotoOptionButton(
+    onClick: () -> Unit,
+    text: String,
+    colors: ButtonColors
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp),
+        shape = RoundedCornerShape(10.dp),
+        colors = colors
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
 }
 
 @Composable
