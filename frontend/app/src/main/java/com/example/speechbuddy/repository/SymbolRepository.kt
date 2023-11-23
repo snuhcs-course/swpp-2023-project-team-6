@@ -38,20 +38,11 @@ class SymbolRepository @Inject constructor(
     private val categoryMapper: CategoryMapper
 ) {
 
-
     fun getSymbols(query: String) =
         if (query.isBlank()) getAllSymbols()
         else symbolDao.getSymbolsByQuery(query).map { symbolEntities ->
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
-
-    suspend fun deleteAllSymbols() {
-        symbolDao.deleteAllSymbols()
-    }
-
-    fun getLastSymbol() = symbolDao.getLastSymbol().map { symbolEntities ->
-        symbolEntities.first().let { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
-    }
 
     fun getCategories(query: String) =
         if (query.isBlank()) getAllCategories()
@@ -116,6 +107,13 @@ class SymbolRepository @Inject constructor(
         symbolDao.updateSymbol(symbolEntity)
     }
 
+    fun getNextSymbolId() =
+        symbolDao.getLastSymbol().map { symbol -> symbol.id +1 }
+
+    fun clearAllMySymbols() {
+        /* TODO: 내가 만든 상징들 모두 삭제 */
+    }
+
     suspend fun insertSymbol(symbol: Symbol) {
         val symbolEntity = symbolMapper.mapFromDomainModel(symbol)
         symbolDao.insertSymbol(symbolEntity)
@@ -126,7 +124,12 @@ class SymbolRepository @Inject constructor(
         categoryId: Int,
         image: MultipartBody.Part
     ): Flow<Resource<MySymbol>> {
-        return mySymbolRemoteSource.createSymbolBackup(getAuthHeader(), symbolText, categoryId, image)
+        return mySymbolRemoteSource.createSymbolBackup(
+            getAuthHeader(),
+            symbolText,
+            categoryId,
+            image
+        )
             .map { response ->
                 if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                     response.body()?.let { mySymbolDto ->
