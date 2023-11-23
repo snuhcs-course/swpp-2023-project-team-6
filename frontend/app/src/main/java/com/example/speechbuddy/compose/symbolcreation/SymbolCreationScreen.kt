@@ -45,6 +45,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -115,6 +116,13 @@ fun SymbolCreationScreen(
                 "Camera permission is required to take photos",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+
+    if (creationResultMessage != null) {
+        LaunchedEffect(key1 = creationResultMessage) {
+            val toastMessage = context.resources.getString(creationResultMessage!!)
+            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -217,10 +225,6 @@ fun SymbolCreationScreen(
                 )
             }
         }
-    }
-    if (creationResultMessage != null) {
-        val toastMessage = stringResource(id = creationResultMessage!!)
-        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
     }
 }
 

@@ -1,8 +1,7 @@
 package com.example.speechbuddy.ui.models
 
 data class DisplaySettingsUiState(
-    /* TODO */
-    val isDarkModeEnabled: Boolean = true,
+    val isDarkModeEnabled: Boolean = false,
     val initialPage: InitialPage = InitialPage.SYMBOL_SELECTION
 )
 

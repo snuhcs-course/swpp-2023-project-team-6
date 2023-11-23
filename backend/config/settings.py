@@ -114,6 +114,7 @@ INSTALLED_APPS = [
     'entry',
     'setup',
     'storages',
+    'weight_table'
 ]
 
 MIDDLEWARE = [

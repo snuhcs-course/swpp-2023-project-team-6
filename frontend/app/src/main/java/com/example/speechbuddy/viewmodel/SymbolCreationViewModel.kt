@@ -20,6 +20,7 @@ import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.repository.WeightTableRepository
 import com.example.speechbuddy.ui.models.DialogState
 import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationError
@@ -43,6 +44,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SymbolCreationViewModel @Inject internal constructor(
+    private val weightTableRepository: WeightTableRepository,
     private val repository: SymbolRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
@@ -254,11 +256,9 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else {
-            // If guest-mode
-            if (sessionManager.userId.value == -1) {
+            if (sessionManager.userId.value == GUEST) {
                 viewModelScope.launch {
-                    val lastSymbol = repository.getLastSymbol().first()
-                    val symbolId = lastSymbol.id + 1
+                    val symbolId = repository.getNextSymbolId().first()
                     val fileName = "symbol_${symbolId}"
                     bitmapToFile(context, photoInputBitmap!!, fileName)
 
@@ -273,6 +273,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                     // store symbol locally
                     Log.d("guestguest", symbolId.toString())
                     repository.insertSymbol(symbol)
+                    weightTableRepository.updateWeightTableForNewSymbol(symbol)// ------------------------------ modified
 
                     clearInput()
                     // Notify user that the creation was successful
@@ -304,7 +305,10 @@ class SymbolCreationViewModel @Inject internal constructor(
                             // change file name in internal storage
                             changeFileName("$tempFileName.png", "symbol_$symbolId.png", context)
                             // store symbol locally
-                            viewModelScope.launch { repository.insertSymbol(symbol) }
+                            viewModelScope.launch {
+                                repository.insertSymbol(symbol)
+                                weightTableRepository.updateWeightTableForNewSymbol(symbol) // ----------------------- modified
+                            }
                             clearInput()
                             // Notify user that the creation was successful
                             _creationResultMessage.postValue(R.string.create_symbol_success)
@@ -328,5 +332,9 @@ class SymbolCreationViewModel @Inject internal constructor(
                 }
             }
         }
+    }
+
+    companion object {
+        const val GUEST = -1
     }
 }
