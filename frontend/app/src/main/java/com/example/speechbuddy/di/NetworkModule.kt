@@ -1,9 +1,5 @@
 package com.example.speechbuddy.di
 
-import android.content.Context
-import android.content.Context.CONNECTIVITY_SERVICE
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
@@ -16,13 +12,13 @@ import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.service.SymbolCreationService
 import com.example.speechbuddy.service.UserService
 import com.example.speechbuddy.utils.Constants
+import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -43,16 +39,12 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofit(
-        @ApplicationContext context: Context,
-        authService: Provider<AuthService>,
-        sessionManager: SessionManager
+        authServiceProvider: Provider<AuthService>, sessionManager: SessionManager
     ): Retrofit {
         val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
-        val client =
-            OkHttpClient.Builder().addInterceptor(logger)
-                .addInterceptor(AuthInterceptor(context, authService, sessionManager))
-                .build()
+        val client = OkHttpClient.Builder().addInterceptor(logger)
+            .addInterceptor(AuthInterceptor(authServiceProvider, sessionManager)).build()
 
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
@@ -117,49 +109,38 @@ class NetworkModule {
 }
 
 class AuthInterceptor @Inject constructor(
-    private val context: Context,
-    private var authService: Provider<AuthService>,
+    private val authServiceProvider: Provider<AuthService>,
     private val sessionManager: SessionManager
 ) : Interceptor {
-//    private val sessionManager: SessionManager = SessionManager()
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        //if (!isInternetAvailable(context)) throw ConnectException()
-        val builder = chain.request().newBuilder()
+        val authService = authServiceProvider.get()
 
         try {
-            val originalRequest = chain.request()
-            val builder = originalRequest.newBuilder()
-            val response = chain.proceed(builder.build())
-            response.close() // close request that cause 403
+            val builder = chain.request().newBuilder()
+            var response = chain.proceed(builder.build())
 
-            return if (response.code == 403) {
-                val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
-                val responseMadeWithRefreshToken =
-                    runBlocking { authService.get().refresh(AuthRefreshRequest(refreshToken)) }
-                val newAuthToken = responseMadeWithRefreshToken.body()?.accessToken
+            // Attempt refresh when FORBIDDEN is returned
+            if (response.code == ResponseCode.FORBIDDEN.value) {
+                response.close()
 
-                sessionManager.setAuthToken(AuthToken(newAuthToken, refreshToken))
+                val refreshToken = sessionManager.cachedToken.value?.refreshToken ?: ""
+                val authTokenResponse =
+                    runBlocking {
+                        authService.refresh(AuthRefreshRequest(refreshToken))
+                    }
+                val newAccessToken = authTokenResponse.body()?.accessToken
 
-                builder.header("Authorization", "Bearer $newAuthToken")
-                chain.proceed(builder.build())
-            } else {
-                chain.proceed(builder.build())
+                sessionManager.setAuthToken(AuthToken(newAccessToken, refreshToken))
+
+                builder.header("Authorization", "Bearer $newAccessToken")
+                response = chain.proceed(builder.build())
             }
+
+            return response
         } catch (e: ConnectException) {
             throw e
         }
-    }
-
-    private fun isInternetAvailable(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkCapabilities = connectivityManager.activeNetwork ?: return false
-        val actNw =
-            connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
-        return actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(
-            NetworkCapabilities.TRANSPORT_ETHERNET
-        ) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
     }
 
 }
