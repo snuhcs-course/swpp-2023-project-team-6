@@ -374,7 +374,7 @@ fun PhotoOptionDialog(
                     },
                     text = stringResource(id = R.string.choose_from_gallery),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                        containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 )
