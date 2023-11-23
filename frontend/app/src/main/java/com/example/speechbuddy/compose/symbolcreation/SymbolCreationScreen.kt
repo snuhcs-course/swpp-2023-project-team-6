@@ -48,8 +48,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -69,6 +67,7 @@ import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.ui.models.DialogState
 import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
@@ -86,8 +85,6 @@ fun SymbolCreationScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val categories by viewModel.categories.observeAsState(emptyList())
-
-    val showDialog = remember { mutableStateOf(false) }
 
     val isSymbolTextError = uiState.error?.type == SymbolCreationErrorType.SYMBOL_TEXT
     val isCategoryError = uiState.error?.type == SymbolCreationErrorType.CATEGORY
@@ -150,14 +147,14 @@ fun SymbolCreationScreen(
                 Spacer(modifier = Modifier.height(30.dp))
 
                 AddPhotoButton(
-                    onClick = { showDialog.value = true },
+                    onClick = { viewModel.updateDialogState("show") },
                     isError = isPhotoInputError,
                     viewModel = viewModel
                 )
 
-                if (showDialog.value) {
+                if (viewModel.dialogState == DialogState.SHOW) {
                     PhotoOptionDialog(
-                        onDismissRequest = { showDialog.value = false },
+                        onDismissRequest = { viewModel.updateDialogState("hide") },
                         onCameraClick = {
                             // Check if permission is already granted
                             when (PackageManager.PERMISSION_GRANTED) {
@@ -178,7 +175,7 @@ fun SymbolCreationScreen(
                             galleryLauncher.launch("image/*")
                             viewModel.photoType = PhotoType.GALLERY
                         },
-                        onCancelClick = { showDialog.value = false }
+                        onCancelClick = { viewModel.updateDialogState("hide") }
                     )
                 }
 

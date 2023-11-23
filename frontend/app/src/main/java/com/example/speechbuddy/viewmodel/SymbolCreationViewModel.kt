@@ -20,6 +20,7 @@ import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.ui.models.DialogState
 import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
@@ -60,11 +61,25 @@ class SymbolCreationViewModel @Inject internal constructor(
 
     var photoType by mutableStateOf<PhotoType?>(null)
 
+    var dialogState by mutableStateOf<DialogState?>(DialogState.HIDE)
+
     var symbolTextInput by mutableStateOf("")
         private set
 
     var categoryInput by mutableStateOf<Category?>(null)
         private set
+
+    fun updateDialogState(updateState: String) {
+        when (updateState) {
+            "show" -> {
+                dialogState = DialogState.SHOW
+            }
+
+            "hide" -> {
+                dialogState = DialogState.HIDE
+            }
+        }
+    }
 
     fun expandCategory() {
         _uiState.update { currentState ->

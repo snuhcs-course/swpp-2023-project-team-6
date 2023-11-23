@@ -24,3 +24,8 @@ enum class PhotoType {
     GALLERY,
     CAMERA
 }
+
+enum class DialogState {
+    SHOW,
+    HIDE
+}
