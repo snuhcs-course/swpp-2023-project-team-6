@@ -97,11 +97,13 @@
     <string name="account">계정</string>
     <string name="logout">로그아웃</string>
     <string name="logout_warning">정말로 로그아웃하시겠습니까?</string>
+    <string name="logout_backup">로그아웃하기 전 백업하시겠습니까? 변경사항을 백업하지 않으면 이용 기록이 손실될 수 있습니다.</string>
     <string name="withdraw">회원탈퇴</string>
     <string name="withdraw_warning">회원탈퇴를 하면 지금까지의 이용 기록이 모두 사라지며 복구할 수 없습니다. SpeechBuddy를 다시 이용하시려면 게스트 모드를 이용하거나 회원가입을 새로 해야 합니다. 정말로 탈퇴하시겠습니까?</string>
     <string name="withdraw_proceed_warning">정말로 탈퇴하시겠습니까? 이 동작은 취소할 수 없습니다.</string>
     <string name="no_connection">인터넷 연결 없음</string>
-    <string name="no_connection_warning">인터넷 연결을 확인하세요</string>
+    <string name="no_connection_warning">인터넷 연결을 확인하세요</string>업
+    <string name="backup">백업</string>
 
     <!-- Guest Settings -->
     <string name="guest_mode_description">현재 게스트 모드를 사용 중입니다.</string>
@@ -112,6 +114,7 @@
     <string name="last_backup_date">마지막 백업 날짜</string>
     <string name="enable_auto_backup">자동 백업 활성화</string>
     <string name="backup_now">지금 백업하기</string>
+    <string name="backup_success">백업 성공</string>
 
     <!-- Display Settings -->
     <string name="display">디스플레이</string>
@@ -131,4 +134,8 @@
 
     <!-- Developers Info -->
     <string name="developers_info">개발자 정보</string>
+
+    <!-- Copyright Info -->
+    <string name="copyright_info">저작권 정보</string>
+    <string name="copyright">본 서비스의 그림상징은 \'한국형 보완대체의사소통용 기본상징 체계집\'의 일부로 박은혜, 김영태(이화여자대학교), 홍기형(성신여자대학교)에게 저작권이 있습니다.\n자료의 무단 사용 및 2차 가공, 배포, 상업적 용도로 사용하는 것을 금합니다.</string>
 </resources>

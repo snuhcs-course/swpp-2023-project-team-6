@@ -12,6 +12,7 @@ import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.service.AuthService
+import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.service.SymbolCreationService
 import com.example.speechbuddy.service.UserService
 import com.example.speechbuddy.utils.Constants
@@ -73,6 +74,12 @@ class NetworkModule {
 
     @Singleton
     @Provides
+    fun provideBackupService(retrofit: Retrofit): BackupService {
+        return retrofit.create(BackupService::class.java)
+    }
+
+    @Singleton
+    @Provides
     fun provideUserDtoMapper(): UserDtoMapper {
         return UserDtoMapper()
     }
@@ -117,7 +124,8 @@ class AuthInterceptor @Inject constructor(
 //    private val sessionManager: SessionManager = SessionManager()
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (!isInternetAvailable(context)) throw ConnectException()
+        //if (!isInternetAvailable(context)) throw ConnectException()
+        val builder = chain.request().newBuilder()
 
         try {
             val originalRequest = chain.request()

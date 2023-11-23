@@ -21,5 +21,7 @@ interface WeightRowDao {
     @Upsert
     suspend fun upsertAll(weightRowEntities: List<WeightRowEntity>)
 
+    @Query("DELETE FROM weighttable")
+    suspend fun deleteAllWeightRows()
 
 }

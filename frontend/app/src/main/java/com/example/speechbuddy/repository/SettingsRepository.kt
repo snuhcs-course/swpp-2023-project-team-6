@@ -1,0 +1,165 @@
+package com.example.speechbuddy.repository
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.speechbuddy.data.local.SettingsPrefsManager
+import com.example.speechbuddy.data.remote.models.SettingsBackupDto
+import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.service.BackupService
+import com.example.speechbuddy.ui.models.InitialPage
+import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.ResponseHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class SettingsRepository @Inject constructor(
+    private val settingsPrefManager: SettingsPrefsManager,
+    private val backupService: BackupService,
+    private val responseHandler: ResponseHandler,
+    private val sessionManager: SessionManager,
+    private val symbolRepository: SymbolRepository,
+    private val weightTableRepository: WeightTableRepository
+) {
+
+    private val _darkModeLiveData = MutableLiveData<Boolean?>()
+    val darkModeLiveData: LiveData<Boolean?>
+        get() = _darkModeLiveData
+
+    suspend fun setDarkMode(value: Boolean) {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (_darkModeLiveData.value != value) {
+                _darkModeLiveData.value = value
+            }
+        }
+        settingsPrefManager.saveDarkMode(value)
+    }
+
+    suspend fun setInitialPage(page: InitialPage) {
+        if (page == InitialPage.SYMBOL_SELECTION) {
+            settingsPrefManager.saveInitialPage(true)
+        } else {
+            settingsPrefManager.saveInitialPage(false)
+        }
+    }
+
+    suspend fun setAutoBackup(value: Boolean) {
+        settingsPrefManager.saveAutoBackup(value)
+    }
+
+    suspend fun setLastBackupDate(value: String) {
+        settingsPrefManager.saveLastBackupDate(value)
+    }
+
+    fun getDarkMode(): Flow<Resource<Boolean>> {
+        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+            Resource.success(settingsPreferences.darkMode)
+        }
+    }
+
+    fun getInitialPage(): Flow<Resource<Boolean>> {
+        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+            Resource.success(settingsPreferences.initialPage)
+        }
+    }
+
+    fun getAutoBackup(): Flow<Resource<Boolean>> {
+        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+            Resource.success(settingsPreferences.autoBackup)
+        }
+    }
+
+    fun getLastBackupDate(): Flow<Resource<String>> {
+        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+            Resource.success(settingsPreferences.lastBackupDate)
+        }
+    }
+
+    suspend fun displayBackup(): Flow<Response<Void>> =
+        flow {
+            try {
+                var darkMode: Int? = 0
+                var initialPage: Int? = 1
+                getDarkMode().first().data?.let {
+                    darkMode = if (it) 1 else 0
+                }
+                getInitialPage().first().data?.let{
+                    initialPage = if (it) 1 else 0
+                }
+                val result = backupService.displayBackup(
+                    getAuthHeader(),
+                    SettingsBackupDto(darkMode, initialPage)
+                )
+                emit(result)
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    suspend fun symbolListBackup(): Flow<Response<Void>> =
+        flow {
+            try {
+                if (symbolRepository.getUserSymbolsIdString().isEmpty()) {
+                    val result = backupService.symbolListBackup(
+                        header = getAuthHeader()
+                    )
+                    emit(result)
+                } else {
+                    val result = backupService.symbolListBackup(
+                        symbolRepository.getUserSymbolsIdString(),
+                        getAuthHeader()
+                    )
+                    emit(result)
+                }
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    suspend fun favoriteSymbolBackup(): Flow<Response<Void>> =
+        flow {
+            try {
+                if (symbolRepository.getFavoriteSymbolsIdString().isEmpty()) {
+                    val result = backupService.favoriteSymbolBackup(
+                        header = getAuthHeader()
+                    )
+                    emit(result)
+                } else {
+                    val result = backupService.favoriteSymbolBackup(
+                        symbolRepository.getFavoriteSymbolsIdString(),
+                        getAuthHeader()
+                    )
+                    emit(result)
+                }
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    suspend fun weightTableBackup(): Flow<Response<Void>> =
+        flow {
+            try {
+                val result = backupService.weightTableBackup(
+                    getAuthHeader(),
+                    weightTableRepository.getBackupWeightTableRequest()
+                )
+                emit(result)
+            } catch (e: Exception) {
+                emit(responseHandler.getConnectionErrorResponse())
+            }
+        }
+
+    private fun getAuthHeader(): String {
+        val accessToken = sessionManager.cachedToken.value?.accessToken
+        return "Bearer $accessToken"
+    }
+
+}
