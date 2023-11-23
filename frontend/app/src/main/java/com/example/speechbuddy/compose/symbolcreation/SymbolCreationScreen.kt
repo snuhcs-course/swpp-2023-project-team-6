@@ -57,6 +57,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -66,6 +67,7 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.domain.models.Category
+import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
@@ -175,7 +177,8 @@ fun SymbolCreationScreen(
                             }
                             viewModel.photoType = PhotoType.CAMERA
                         },
-                        onGalleryClick = { galleryLauncher.launch("image/*") }
+                        onGalleryClick = { galleryLauncher.launch("image/*") },
+                        onCancelClick = { showDialog.value = false }
                     )
                 }
 
@@ -328,12 +331,21 @@ private fun AddPhotoButton(
 fun PhotoOptionDialog(
     onDismissRequest: () -> Unit,
     onCameraClick: () -> Unit,
-    onGalleryClick: () -> Unit
+    onGalleryClick: () -> Unit,
+    onCancelClick: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
+        confirmButton = {
+            // Optionally, add a confirm button
+        },
+        dismissButton = {},
         title = {
-            Text(text = "Choose Photo Option")
+            Text(
+                text = "Choose Photo Option",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge
+            )
         },
         text = {
             Column {
@@ -342,73 +354,115 @@ fun PhotoOptionDialog(
                         onCameraClick()
                         onDismissRequest()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                 ) {
-                    Text("Take Photo")
+                    Text(
+                        text = "Take Photo",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = {
                         onGalleryClick()
                         onDismissRequest()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                 ) {
-                    Text("Choose from Gallery")
+                    Text(
+                        text = "Choose from Gallery",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        onCancelClick()
+                        onDismissRequest()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                ) {
+                    Text(
+                        text = "Cancel",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         },
-        confirmButton = {
-            // Optionally, add a confirm button
-        },
-        dismissButton = {
-            Button(onClick = onDismissRequest) {
-                Text("Cancel")
-            }
-        }
+        containerColor = MaterialTheme.colorScheme.inverseOnSurface
     )
 }
 
 
-@Composable
-private fun PhotoOptionButton(
-    onCameraClick: () -> Unit,
-    onGalleryClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Button(
-            onClick = onCameraClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            enabled = true,
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
-        ) {
-            Text(text = "Camera", style = MaterialTheme.typography.titleMedium)
-        }
-        Button(
-            onClick = onGalleryClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            enabled = true,
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
-        ) {
-            Text(text = "Gallery", style = MaterialTheme.typography.titleMedium)
-        }
-    }
-
-}
+//@Composable
+//private fun PhotoOptionButton(
+//    onCameraClick: () -> Unit,
+//    onGalleryClick: () -> Unit,
+//    onCancelClick: () -> Unit
+//) {
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+//            .padding(16.dp)
+//    ) {
+//        Button(
+//            onClick = onCameraClick,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(48.dp),
+//            enabled = true,
+//            shape = RoundedCornerShape(10.dp),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = MaterialTheme.colorScheme.primary,
+//                contentColor = MaterialTheme.colorScheme.onPrimary
+//            )
+//        ) {
+//            Text(text = "Camera", style = MaterialTheme.typography.titleMedium)
+//        }
+//
+//        Spacer(modifier = Modifier.height(20.dp))
+//
+//        Button(
+//            onClick = onGalleryClick,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(48.dp),
+//            enabled = true,
+//            shape = RoundedCornerShape(10.dp),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = MaterialTheme.colorScheme.primary,
+//                contentColor = MaterialTheme.colorScheme.onPrimary
+//            )
+//        ) {
+//            Text(text = "Gallery", style = MaterialTheme.typography.titleMedium)
+//        }
+//
+//        Spacer(modifier = Modifier.height(20.dp))
+//
+//        Button(
+//            onClick = onCancelClick,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(48.dp),
+//            enabled = true,
+//            shape = RoundedCornerShape(10.dp),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+//                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+//            )
+//        ) {
+//            Text(text = "Cancel", style = MaterialTheme.typography.titleMedium)
+//        }
+//    }
+//}
 
 @Composable
 private fun SymbolPreview(
@@ -449,5 +503,18 @@ private fun SymbolPreview(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PhotoOptionDialogPreview() {
+    SpeechBuddyTheme {
+        PhotoOptionDialog(
+            onDismissRequest = {},
+            onCameraClick = {},
+            onGalleryClick = {},
+            onCancelClick = {}
+        )
     }
 }
