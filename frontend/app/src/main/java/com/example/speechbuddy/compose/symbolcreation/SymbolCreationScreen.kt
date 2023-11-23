@@ -393,7 +393,7 @@ fun PhotoOptionDialog(
                     )
                 ) {
                     Text(
-                        text = stringResource(R.string.cancel),
+                        text = stringResource(id = R.string.cancel),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
