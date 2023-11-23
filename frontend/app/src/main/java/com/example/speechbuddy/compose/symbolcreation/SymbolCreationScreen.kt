@@ -315,7 +315,6 @@ private fun AddPhotoButton(
             )
     ) {
         if (viewModel.photoInputBitmap != null) {
-            // Display the loaded image if the photo input bitmap is not null
             SymbolPreview(
                 bitmap = viewModel.photoInputBitmap!!.asImageBitmap(),
                 text = viewModel.symbolTextInput
