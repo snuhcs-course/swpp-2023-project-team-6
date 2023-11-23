@@ -4,12 +4,14 @@ import android.content.Context
 import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.local.CategoryDao
+import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.UserDao
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.local.models.UserMapper
 import com.example.speechbuddy.data.local.WeightRowDao
+import com.example.speechbuddy.domain.utils.Converters
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,8 +73,20 @@ class DatabaseModule {
 
     @Singleton
     @Provides
+    fun provideConverters(): Converters {
+        return Converters()
+    }
+
+    @Singleton
+    @Provides
     fun provideAuthTokenPrefsManager(@ApplicationContext context: Context): AuthTokenPrefsManager {
         return AuthTokenPrefsManager(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSettingsPrefsManager(@ApplicationContext context: Context): SettingsPrefsManager {
+        return SettingsPrefsManager(context)
     }
 
 }

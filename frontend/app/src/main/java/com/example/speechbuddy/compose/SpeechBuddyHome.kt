@@ -1,5 +1,7 @@
 package com.example.speechbuddy.compose
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
@@ -36,9 +38,13 @@ data class BottomNavItem(
     val iconResId: Int
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpeechBuddyHome() {
+fun SpeechBuddyHome(
+    initialPage: Boolean,
+    isBeingReloadedForDarkModeChange: Boolean
+) {
     val navController = rememberNavController()
     val navItems = listOf(
         BottomNavItem(
@@ -77,7 +83,9 @@ fun SpeechBuddyHome() {
     ) { paddingValues ->
         SpeechBuddyHomeNavHost(
             navController = navController,
-            bottomPaddingValues = paddingValues
+            bottomPaddingValues = paddingValues,
+            initialPage = initialPage,
+            isBeingReloadedForDarkModeChange = isBeingReloadedForDarkModeChange
         )
     }
 }
@@ -117,12 +125,24 @@ private fun BottomNavigationBar(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,
-    bottomPaddingValues: PaddingValues
+    bottomPaddingValues: PaddingValues,
+    initialPage: Boolean,
+    isBeingReloadedForDarkModeChange: Boolean
 ) {
-    NavHost(navController = navController, startDestination = "symbol_selection") {
+    val startDestination = if (isBeingReloadedForDarkModeChange) {
+            "settings"
+        } else if (initialPage) {
+            "symbol_selection"
+        } else {
+            "text_to_speech"
+        }
+
+
+    NavHost(navController = navController, startDestination = startDestination) {
         composable("symbol_selection") {
             SymbolSelectionScreen(
                 bottomPaddingValues = bottomPaddingValues
@@ -140,7 +160,8 @@ private fun SpeechBuddyHomeNavHost(
         }
         composable("settings") {
             SettingsScreen(
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                isBeingReloadedForDarkModeChange = isBeingReloadedForDarkModeChange
             )
         }
     }

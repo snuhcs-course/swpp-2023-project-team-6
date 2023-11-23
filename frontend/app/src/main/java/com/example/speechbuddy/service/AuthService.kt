@@ -64,4 +64,9 @@ interface AuthService {
         @Body withdrawRequest: AuthRefreshRequest
     ): Response<Void>
 
+    @POST("/user/refresh/")
+    suspend fun refresh(
+        @Body refreshRequest: AuthRefreshRequest
+    ): Response<AuthTokenDto>
+
 }

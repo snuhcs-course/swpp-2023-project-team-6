@@ -16,10 +16,11 @@ fun AlertDialogUi(
     dismissButtonText: String,
     confirmButtonText: String,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
+    onDismissRequest: () -> Unit = onDismiss
 ) {
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = onDismissRequest,
         confirmButton = {
             Button(
                 onClick = onConfirm,

@@ -80,6 +80,9 @@ fun MainSettings(
 
                 SettingsTextButton(text = stringResource(id = R.string.developers_info),
                     onClick = { navController.navigate("developers") })
+
+                SettingsTextButton(text = stringResource(id = R.string.copyright_info),
+                    onClick = { navController.navigate("copyright") })
             }
         }
     }

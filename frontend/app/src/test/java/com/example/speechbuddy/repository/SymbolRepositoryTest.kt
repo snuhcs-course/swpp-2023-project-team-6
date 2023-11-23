@@ -6,9 +6,13 @@ import com.example.speechbuddy.data.local.models.CategoryEntity
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
+import com.example.speechbuddy.data.remote.MySymbolRemoteSource
+import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
+import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Entry
 import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.utils.ResponseHandler
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -27,6 +31,10 @@ class SymbolRepositoryTest {
     private lateinit var symbolMapper: SymbolMapper
     private lateinit var categoryMapper: CategoryMapper
     private lateinit var mockSymbolRepository: SymbolRepository
+    private lateinit var mockMySymbolRemoteSource: MySymbolRemoteSource
+    private lateinit var mockMySymbolDtoMapper: MySymbolDtoMapper
+    private lateinit var mockResponseHandler: ResponseHandler
+    private lateinit var mockSessionManager: SessionManager
 
     val categoryTypes = listOf(
         "가족",
@@ -62,6 +70,10 @@ class SymbolRepositoryTest {
         categoryDao = mockk(relaxed = true)
         symbolMapper = mockk(relaxed = true)
         categoryMapper = mockk(relaxed = true)
+        mockMySymbolDtoMapper = mockk(relaxed = true)
+        mockMySymbolRemoteSource = mockk(relaxed = true)
+        mockResponseHandler = mockk(relaxed = true)
+        mockSessionManager = mockk(relaxed = true)
 
         // create symbolEntities
         val symbolEntities = mutableListOf<SymbolEntity>()
@@ -90,7 +102,16 @@ class SymbolRepositoryTest {
             categoryEntities.toList()
         )
 
-        mockSymbolRepository = SymbolRepository(symbolDao, categoryDao, symbolMapper, categoryMapper)
+        mockSymbolRepository = SymbolRepository(
+            symbolDao,
+            categoryDao,
+            mockMySymbolRemoteSource,
+            mockMySymbolDtoMapper,
+            mockResponseHandler,
+            mockSessionManager,
+            symbolMapper,
+            categoryMapper
+        )
     }
 
     @Test

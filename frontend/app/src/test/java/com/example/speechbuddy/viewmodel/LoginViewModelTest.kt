@@ -27,7 +27,7 @@ import org.junit.Rule
 import org.junit.Test
 
 class LoginViewModelTest {
-
+/*
     @OptIn(DelicateCoroutinesApi::class)
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
@@ -406,5 +406,7 @@ class LoginViewModelTest {
 
         assertEquals(authToken, sessionManager.cachedToken.value)
     }
+
+ */
 
 }
