@@ -112,10 +112,8 @@ fun SymbolCreationScreen(
         contract = RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            // Permission is granted, launch the camera
             cameraLauncher.launch(null)
         } else {
-            // Permission is denied, show a toast or a dialog
             Toast.makeText(
                 context,
                 "Camera permission is required to take photos",
@@ -166,24 +164,26 @@ fun SymbolCreationScreen(
                                     context,
                                     android.Manifest.permission.CAMERA
                                 ) -> {
-                                    // If permission is granted, launch the camera directly
                                     cameraLauncher.launch(null)
                                 }
 
                                 else -> {
-                                    // Request the camera permission
                                     requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
                                 }
                             }
                             viewModel.photoType = PhotoType.CAMERA
                         },
-                        onGalleryClick = { galleryLauncher.launch("image/*") },
+                        onGalleryClick = {
+                            galleryLauncher.launch("image/*")
+                            viewModel.photoType = PhotoType.GALLERY
+                        },
                         onCancelClick = { showDialog.value = false }
                     )
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
 
+                // Symbol Category Field
                 DropdownUi(
                     selectedValue = viewModel.categoryInput,
                     onValueChange = { viewModel.setCategory(it) },
@@ -211,6 +211,7 @@ fun SymbolCreationScreen(
                     isValid = uiState.isValidSymbolText
                 )
 
+                // Symbol Creation Button
                 ButtonUi(
                     text = stringResource(id = R.string.create),
                     onClick = { viewModel.createSymbol(context) },
