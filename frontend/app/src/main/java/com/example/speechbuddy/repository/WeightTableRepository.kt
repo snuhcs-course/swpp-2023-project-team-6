@@ -1,5 +1,6 @@
 package com.example.speechbuddy.repository
 
+import android.util.Log
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.WeightRowDao
 import com.example.speechbuddy.data.local.models.SymbolMapper
@@ -50,6 +51,16 @@ class WeightTableRepository @Inject constructor(
         weightRowDao.deleteAllWeightRows()
     }
 
+    suspend fun replaceWeightTable(weightRowList: List<WeightRow>) {
+        Log.d("test", "inside replace")
+
+        val weightRowEntityList = mutableListOf<WeightRowEntity>()
+        for (weightRow in weightRowList) {
+            weightRowEntityList.add(weightRowMapper.mapFromDomainModel(weightRow))
+        }
+        weightRowDao.upsertAll(weightRowEntityList)
+    }
+
     suspend fun getBackupWeightTableRequest(): BackupWeightTableRequest {
         val weightRowList = getAllWeightRows().firstOrNull() ?: emptyList()
         val weightTableEntities = weightRowList.map { weightRow ->
@@ -76,14 +87,14 @@ class WeightTableRepository @Inject constructor(
         weightRowDao.updateWeightRow(weightRowEntity) // may change to updateWeightRow function
     }
 
-    fun updateWeightTableForNewSymbol(symbol: Symbol){
+    fun updateWeightTableForNewSymbol(symbol: Symbol) {
         CoroutineScope(Dispatchers.IO).launch {
             val weightRows = mutableListOf<WeightRow>()
             weightRows.clear()
             weightRows.addAll(fetchWeightRows())
 
             // update existing weightRows
-            for(weightRow in weightRows){
+            for (weightRow in weightRows) {
                 val newWeights = mutableListOf<Int>()
                 newWeights.addAll(weightRow.weights)
                 newWeights.add(0)
@@ -93,7 +104,7 @@ class WeightTableRepository @Inject constructor(
             // insert new weightRow for new symbol
             val newWeightRowEntity = WeightRowEntity(
                 id = symbol.id,
-                weights = List(weightRows.size + 1){0}
+                weights = List(weightRows.size + 1) { 0 }
             )
             val newWeightRowEntities = mutableListOf<WeightRowEntity>()
             newWeightRowEntities.add(newWeightRowEntity)
@@ -132,7 +143,7 @@ class WeightTableRepository @Inject constructor(
             // loop through every symbol
             for (i in 0 until symbolList.size - 1) {
                 val symbol = symbolList[i].symbol
-                val symbol2 = symbolList[i+1].symbol
+                val symbol2 = symbolList[i + 1].symbol
                 var dbIndex = 0
                 var dbIndex2 = 0
                 // loop through every weight table
@@ -145,8 +156,8 @@ class WeightTableRepository @Inject constructor(
                     }
                 }
                 // 앞 심볼의 weightrow에서 업데이트되어야 할 값이 weights의 몇 번째에 있는지 확인
-                for (j in 0 until weightRows.size){
-                    if(weightRows[j].id == symbol2.id){
+                for (j in 0 until weightRows.size) {
+                    if (weightRows[j].id == symbol2.id) {
                         dbIndex2 = j
                     }
                 }

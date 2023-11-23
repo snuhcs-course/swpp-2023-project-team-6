@@ -6,6 +6,7 @@ import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.remote.MySymbolRemoteSource
+import com.example.speechbuddy.data.remote.RealImageDownloader
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
@@ -68,6 +69,10 @@ class SymbolRepository @Inject constructor(
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
 
+    fun getSymbolsById(id: Int) = symbolDao.getSymbolById(id).map { symbolEntity ->
+        symbolMapper.mapToDomainModel(symbolEntity)
+    }
+
     private fun getAllSymbols() = symbolDao.getSymbols().map { symbolEntities ->
         symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
     }
@@ -108,7 +113,7 @@ class SymbolRepository @Inject constructor(
     }
 
     fun getNextSymbolId() =
-        symbolDao.getLastSymbol().map { symbol -> symbol.id +1 }
+        symbolDao.getLastSymbol().map { symbol -> symbol.id + 1 }
 
     fun clearAllMySymbols() {
         /* TODO: 내가 만든 상징들 모두 삭제 */
