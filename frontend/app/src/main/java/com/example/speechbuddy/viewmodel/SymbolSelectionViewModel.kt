@@ -48,6 +48,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     init {
         getEntries()
+        repository.checkImages()
     }
 
     fun expandMenu() {
@@ -87,7 +88,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun clear(symbolItem: SymbolItem) {
         selectedSymbols = selectedSymbols.minus(symbolItem)
         // when clearing one left selected symbol
-        if(selectedSymbols.isNotEmpty()){
+        if (selectedSymbols.isNotEmpty()) {
             val lastSelectedSymbol = selectedSymbols.last()
             provideSuggestion(lastSelectedSymbol.symbol)
         }
@@ -127,17 +128,17 @@ class SymbolSelectionViewModel @Inject internal constructor(
         }
     }
 
-    private fun provideSuggestion(symbol: Symbol){
+    private fun provideSuggestion(symbol: Symbol) {
         // became independent from selectSymbol function
         // change it so that providing suggestion is available from any screen
 //        if (uiState.value.displayMode == DisplayMode.SYMBOL) {
 
-            getEntriesJob?.cancel()
-            getEntriesJob = viewModelScope.launch {
-                weightTableRepository.provideSuggestion(symbol).collect { symbols ->
-                    _entries.postValue(symbols)
-                }
+        getEntriesJob?.cancel()
+        getEntriesJob = viewModelScope.launch {
+            weightTableRepository.provideSuggestion(symbol).collect { symbols ->
+                _entries.postValue(symbols)
             }
+        }
 //        }
     }
 

@@ -6,7 +6,7 @@ import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.remote.MySymbolRemoteSource
-import com.example.speechbuddy.data.remote.RealImageDownloader
+import com.example.speechbuddy.data.remote.ProxyImageDownloader
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
@@ -18,8 +18,10 @@ import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import okhttp3.MultipartBody
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,8 +38,14 @@ class SymbolRepository @Inject constructor(
     private val sessionManager: SessionManager,
     // For local mapping
     private val symbolMapper: SymbolMapper,
-    private val categoryMapper: CategoryMapper
+    private val categoryMapper: CategoryMapper,
+    // For image download
+    private val proxyImageDownloader: ProxyImageDownloader
 ) {
+
+    fun checkImages() {
+        runBlocking { proxyImageDownloader.checkImage(getAllSymbols().first()) }
+    }
 
     fun getSymbols(query: String) =
         if (query.isBlank()) getAllSymbols()
