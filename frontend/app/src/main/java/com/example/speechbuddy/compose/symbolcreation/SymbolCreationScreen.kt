@@ -56,7 +56,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -66,7 +65,6 @@ import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.domain.models.Category
-import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.ui.models.DialogState
 import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
@@ -452,18 +450,5 @@ private fun SymbolPreview(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun PhotoOptionDialogPreview() {
-    SpeechBuddyTheme {
-        PhotoOptionDialog(
-            onDismissRequest = {},
-            onCameraClick = {},
-            onGalleryClick = {},
-            onCancelClick = {}
-        )
     }
 }
