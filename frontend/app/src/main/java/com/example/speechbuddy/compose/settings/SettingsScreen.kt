@@ -66,7 +66,6 @@ private fun SettingsScreenNavHost(
         }
         composable("my_symbol") {
             MySymbolSettings(
-                onBackClick = navigateToMain,
                 bottomPaddingValues = bottomPaddingValues
             )
         }

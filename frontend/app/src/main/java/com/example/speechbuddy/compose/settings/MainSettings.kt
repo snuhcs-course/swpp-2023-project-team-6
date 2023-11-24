@@ -66,7 +66,6 @@ fun MainSettings(
 
                 SettingsTextButton(text = stringResource(id = R.string.manage_symbols),
                     onClick = { navController.navigate("my_symbol") },
-                    enabled = !isGuestMode
                 )
 
                 SettingsTextButton(
