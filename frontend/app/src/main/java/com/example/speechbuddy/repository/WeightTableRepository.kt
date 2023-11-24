@@ -52,6 +52,8 @@ class WeightTableRepository @Inject constructor(
     }
 
     suspend fun replaceWeightTable(weightRowList: List<WeightRow>) {
+        Log.d("test", "inside replace")
+
         val weightRowEntityList = mutableListOf<WeightRowEntity>()
         for (weightRow in weightRowList) {
             weightRowEntityList.add(weightRowMapper.mapFromDomainModel(weightRow))

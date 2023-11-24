@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 class SeedDatabaseWorker(
     context: Context,
@@ -22,52 +23,55 @@ class SeedDatabaseWorker(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        try {
-            val database = AppDatabase.getInstance(applicationContext)
+        withTimeoutOrNull(10000) {
+            // Force end coroutine after 10 sec
 
-            val weightRows = mutableListOf<WeightRowEntity>()
+            try {
+                val database = AppDatabase.getInstance(applicationContext)
 
-            for(id in 1..500){
-                val weightsList = List(500){0}
-                val weightRowEntity = WeightRowEntity(id, weightsList)
-                weightRows.add(weightRowEntity)
-            }
+                val weightRows = mutableListOf<WeightRowEntity>()
 
-
-            database.weightRowDao().upsertAll(weightRows)
-
-
-
-            Result.success()
-
-
-            applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
-                JsonReader(inputStream.reader()).use { jsonReader ->
-                    val symbolEntityType = object : TypeToken<List<SymbolEntity>>() {}.type
-                    val symbolEntityList: List<SymbolEntity> = Gson().fromJson(jsonReader, symbolEntityType)
-
-                    database.symbolDao().upsertAll(symbolEntityList)
-
-                    Result.success()
+                for(id in 1..500){
+                    val weightsList = List(500){0}
+                    val weightRowEntity = WeightRowEntity(id, weightsList)
+                    weightRows.add(weightRowEntity)
                 }
-            }
 
-            applicationContext.assets.open(CATEGORY_DATA_FILENAME).use { inputStream ->
-                JsonReader(inputStream.reader()).use { jsonReader ->
-                    val categoryEntityType = object : TypeToken<List<CategoryEntity>>() {}.type
-                    val categoryEntityList: List<CategoryEntity> = Gson().fromJson(jsonReader, categoryEntityType)
 
-                    database.categoryDao().upsertAll(categoryEntityList)
+                database.weightRowDao().upsertAll(weightRows)
 
-                    Result.success()
+
+
+                Result.success()
+
+
+                applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
+                    JsonReader(inputStream.reader()).use { jsonReader ->
+                        val symbolEntityType = object : TypeToken<List<SymbolEntity>>() {}.type
+                        val symbolEntityList: List<SymbolEntity> = Gson().fromJson(jsonReader, symbolEntityType)
+
+                        database.symbolDao().upsertAll(symbolEntityList)
+
+                        Result.success()
+                    }
                 }
+
+                applicationContext.assets.open(CATEGORY_DATA_FILENAME).use { inputStream ->
+                    JsonReader(inputStream.reader()).use { jsonReader ->
+                        val categoryEntityType = object : TypeToken<List<CategoryEntity>>() {}.type
+                        val categoryEntityList: List<CategoryEntity> = Gson().fromJson(jsonReader, categoryEntityType)
+
+                        database.categoryDao().upsertAll(categoryEntityList)
+
+                        Result.success()
+                    }
+                }
+
+
+            } catch (ex: Exception) {
+                Log.e("SeedDatabaseWorker", "Error seeding database", ex)
+                Result.failure()
             }
-
-
-        } catch (ex: Exception) {
-            Log.e("SeedDatabaseWorker", "Error seeding database", ex)
-            Result.failure()
-        }
+        } ?: Result.failure()
     }
-
 }
