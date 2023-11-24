@@ -39,6 +39,8 @@ import kotlinx.coroutines.launch
 fun SymbolSelectionScreen(
     modifier: Modifier = Modifier,
     bottomPaddingValues: PaddingValues,
+    showBottomNavBar: () -> Unit,
+    hideBottomNavBar: () -> Unit,
     viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -137,5 +139,11 @@ fun SymbolSelectionScreen(
         }
     }
 
-    if (uiState.isDisplayMax) DisplayMaxScreen(onEscape = { viewModel.escapeDisplayMax() })
+    if (uiState.isDisplayMax) {
+        hideBottomNavBar()
+        DisplayMaxScreen(onEscape = {
+            viewModel.escapeDisplayMax()
+            showBottomNavBar()
+        })
+    }
 }
