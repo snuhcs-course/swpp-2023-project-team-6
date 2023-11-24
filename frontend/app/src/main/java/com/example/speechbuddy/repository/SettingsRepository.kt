@@ -1,12 +1,9 @@
 package com.example.speechbuddy.repository
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.SettingsPrefsManager
-import com.example.speechbuddy.data.remote.RealImageDownloader
 import com.example.speechbuddy.data.remote.SettingsRemoteSource
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
 import com.example.speechbuddy.domain.SessionManager
@@ -270,7 +267,6 @@ class SettingsRepository @Inject constructor(
                             )
                         )
                     }
-                    weightTableRepository.deleteAllWeightRows()
                     weightTableRepository.replaceWeightTable(weightRow.toList())
                     Resource.success(null)
                 } ?: returnUnknownError()
