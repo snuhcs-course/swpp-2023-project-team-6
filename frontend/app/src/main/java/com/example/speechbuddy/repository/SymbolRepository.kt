@@ -110,8 +110,12 @@ class SymbolRepository @Inject constructor(
     fun getNextSymbolId() =
         symbolDao.getLastSymbol().map { symbol -> symbol.id +1 }
 
-    fun clearAllMySymbols() {
-        /* TODO: 내가 만든 상징들 모두 삭제 */
+    suspend fun clearAllMySymbols() {
+        symbolDao.deleteAllMySymbols()
+    }
+
+    suspend fun resetFavoriteSymbols() {
+        symbolDao.resetFavoriteSymbols()
     }
 
     suspend fun insertSymbol(symbol: Symbol) {

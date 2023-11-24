@@ -21,7 +21,9 @@ interface WeightRowDao {
     @Upsert
     suspend fun upsertAll(weightRowEntities: List<WeightRowEntity>)
 
-    @Query("DELETE FROM weighttable")
-    suspend fun deleteAllWeightRows()
+    @Query("DELETE FROM weighttable WHERE id > 500")
+    suspend fun deleteMySymbolsWeightRows()
 
+    @Query("UPDATE weighttable SET weights = :resetWeights WHERE id < 501")
+    suspend fun resetOriginalSymbolsWeightRows(resetWeights: List<Int>)
 }
