@@ -1,20 +1,16 @@
 package com.example.speechbuddy.viewmodel
 
-import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
-import com.example.speechbuddy.data.remote.RealImageDownloader
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.repository.SettingsRepository
 import com.example.speechbuddy.repository.UserRepository
-import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.LoginUiState
@@ -133,13 +129,9 @@ class LoginViewModel @Inject internal constructor(
                         sessionManager.setAuthToken(resource.data!!)
                         runBlocking {
                             getMyInfoFromRemote(resource.data.accessToken)
-                            Log.d("test", "running getMyDisplaySettings")
                             getMyDisplaySettingsFromRemote(resource.data.accessToken)
-                            Log.d("test", "running getSymbolListFromRemote")
                             getSymbolListFromRemote(resource.data.accessToken)
-                            Log.d("test", "running getFavoritesListFromRemote")
                             getFavoritesListFromRemote(resource.data.accessToken)
-                            Log.d("test", "running getWeightTableFromRemote")
                             getWeightTableFromRemote(resource.data.accessToken)
                         }
 
@@ -294,7 +286,6 @@ class LoginViewModel @Inject internal constructor(
     }
 
     private fun getWeightTableFromRemote(accessToken: String?) {
-        Log.d("test", "inside getWeightTableFromRemote")
         viewModelScope.launch {
             settingsRepository.getWeightTableFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
