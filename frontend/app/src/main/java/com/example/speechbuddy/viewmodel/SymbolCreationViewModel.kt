@@ -21,10 +21,11 @@ import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.repository.WeightTableRepository
+import com.example.speechbuddy.ui.models.DialogState
+import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
-import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_COUNT
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidSymbolText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -60,11 +61,27 @@ class SymbolCreationViewModel @Inject internal constructor(
 
     var photoInputBitmap by mutableStateOf<Bitmap?>(null)
 
+    var photoType by mutableStateOf<PhotoType?>(null)
+
+    var dialogState by mutableStateOf<DialogState?>(DialogState.HIDE)
+
     var symbolTextInput by mutableStateOf("")
         private set
 
     var categoryInput by mutableStateOf<Category?>(null)
         private set
+
+    fun updateDialogState(updateState: String) {
+        when (updateState) {
+            "show" -> {
+                dialogState = DialogState.SHOW
+            }
+
+            "hide" -> {
+                dialogState = DialogState.HIDE
+            }
+        }
+    }
 
     fun expandCategory() {
         _uiState.update { currentState ->
@@ -89,6 +106,12 @@ class SymbolCreationViewModel @Inject internal constructor(
         if (photoInputUri != null) photoInputBitmap = uriToBitmap(photoInputUri, context)
     }
 
+    fun updatePhotoInputBitmap(bitmap: Bitmap) {
+        photoInputBitmap = bitmap
+        validatePhotoInput()
+    }
+
+
     fun setSymbolText(input: String) {
         symbolTextInput = input
         if (_uiState.value.error?.type == SymbolCreationErrorType.SYMBOL_TEXT) validateSymbolText()
@@ -100,11 +123,21 @@ class SymbolCreationViewModel @Inject internal constructor(
     }
 
     private fun validatePhotoInput() {
-        if (photoInputUri != null) {
+        if (photoInputBitmap != null) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = true,
                     error = null
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPhotoInput = false,
+                    error = SymbolCreationError(
+                        type = SymbolCreationErrorType.PHOTO_INPUT,
+                        messageId = R.string.no_photo
+                    )
                 )
             }
         }
@@ -209,7 +242,10 @@ class SymbolCreationViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else if (photoInputUri == null || photoInputBitmap == null) {
+        } else if (
+            (photoType == PhotoType.GALLERY && photoInputUri == null)
+            || (photoType == PhotoType.CAMERA && photoInputBitmap == null)
+        ) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = false,
@@ -220,7 +256,6 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else {
-            // If guest-mode
             if (sessionManager.userId.value == GUEST) {
                 viewModelScope.launch {
                     val symbolId = repository.getNextSymbolId().first()

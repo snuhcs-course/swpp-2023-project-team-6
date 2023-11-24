@@ -1,6 +1,6 @@
 package com.example.speechbuddy.ui.models
 
-data class SymbolCreationUiState (
+data class SymbolCreationUiState(
     val isValidSymbolText: Boolean = false,
     val isValidCategory: Boolean = false,
     val isValidPhotoInput: Boolean = false,
@@ -18,4 +18,14 @@ enum class SymbolCreationErrorType {
     CATEGORY,
     PHOTO_INPUT,
     CONNECTION
+}
+
+enum class PhotoType {
+    GALLERY,
+    CAMERA
+}
+
+enum class DialogState {
+    SHOW,
+    HIDE
 }
