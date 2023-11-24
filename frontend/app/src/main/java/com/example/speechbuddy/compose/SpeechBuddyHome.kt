@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -31,6 +32,7 @@ import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
+import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 data class BottomNavItem(
     val route: String,
@@ -122,6 +124,39 @@ private fun BottomNavigationBar(
                 interactionSource = NoRippleInteractionSource()
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun BottomNavigationBarPreview() {
+    SpeechBuddyTheme {
+        BottomNavigationBar(
+            items = listOf(
+                BottomNavItem(
+                    "symbol_selection",
+                    R.string.talk_with_symbols,
+                    R.drawable.outline_touch_app_24
+                ),
+                BottomNavItem(
+                    "text_to_speech",
+                    R.string.talk_with_speech,
+                    R.drawable.outline_volume_up_24
+                ),
+                BottomNavItem(
+                    "symbol_creation",
+                    R.string.create_new_symbol,
+                    R.drawable.outline_add_a_photo_24
+                ),
+                BottomNavItem(
+                    "settings",
+                    R.string.settings,
+                    R.drawable.outline_settings_24
+                )
+            ),
+            navController = rememberNavController(),
+            onItemClick = {}
+        )
     }
 }
 

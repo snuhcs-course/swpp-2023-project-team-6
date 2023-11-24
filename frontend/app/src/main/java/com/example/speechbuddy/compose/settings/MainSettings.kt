@@ -64,7 +64,8 @@ fun MainSettings(
                 SettingsTextButton(text = stringResource(id = R.string.display),
                     onClick = { navController.navigate("display") })
 
-                SettingsTextButton(text = stringResource(id = R.string.manage_symbols),
+                SettingsTextButton(
+                    text = stringResource(id = R.string.manage_symbols),
                     onClick = { navController.navigate("my_symbol") },
                     enabled = !isGuestMode
                 )
@@ -83,6 +84,9 @@ fun MainSettings(
 
                 SettingsTextButton(text = stringResource(id = R.string.copyright_info),
                     onClick = { navController.navigate("copyright") })
+
+                SettingsTextButton(text = "Guide Screen",
+                    onClick = { navController.navigate("guide") })
             }
         }
     }

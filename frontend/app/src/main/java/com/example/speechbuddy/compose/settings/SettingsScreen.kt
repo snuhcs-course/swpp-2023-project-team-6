@@ -32,8 +32,9 @@ private fun SettingsScreenNavHost(
     bottomPaddingValues: PaddingValues,
     isBeingReloadedForDarkModeChange: Boolean
 ) {
-    val flag = remember{ mutableStateOf(false) }
-    val startDestination = if (isBeingReloadedForDarkModeChange && !flag.value) "display" else "main"
+    val flag = remember { mutableStateOf(false) }
+    val startDestination =
+        if (isBeingReloadedForDarkModeChange && !flag.value) "display" else "main"
     if (isBeingReloadedForDarkModeChange && !flag.value) {
         flag.value = true
     }
@@ -88,9 +89,14 @@ private fun SettingsScreenNavHost(
                 bottomPaddingValues = bottomPaddingValues
             )
         }
-
         composable("copyright") {
             Copyright(
+                onBackClick = navigateToMain,
+                bottomPaddingValues = bottomPaddingValues
+            )
+        }
+        composable("guide") {
+            GuideScreen(
                 onBackClick = navigateToMain,
                 bottomPaddingValues = bottomPaddingValues
             )
