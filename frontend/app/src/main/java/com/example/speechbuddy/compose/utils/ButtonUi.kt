@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 
 enum class ButtonLevel {
-    PRIMARY, SECONDARY, TERTIARY, QUATERNARY
+    PRIMARY, SECONDARY, TERTIARY, QUATERNARY, QUINARY
 }
 
 /**
@@ -28,7 +28,7 @@ enum class ButtonLevel {
  * @param modifier the Modifier to be applied to this button
  * @param isEnabled controls the enabled state of this button. When false, this component will not respond to user input, and it will appear visually disabled and disabled to accessibility services
  * @param isError defines the color and the enabled state of this button. When true, this component will be disabled, and it will be displayed in error color
- * @param level should be ButtonLevel.PRIMARY, ButtonLevel.SECONDARY, or ButtonLevel.TERTIARY. ButtonLevel.PRIMARY is the default value
+ * @param level ButtonLevel.PRIMARY is the default value
  */
 @Composable
 fun ButtonUi(
@@ -126,6 +126,28 @@ fun ButtonUi(
             } else ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.inverseSurface,
                 contentColor = MaterialTheme.colorScheme.inverseOnSurface
+            )
+        ) {
+            Text(text = text, style = MaterialTheme.typography.titleMedium)
+        }
+
+        ButtonLevel.QUINARY -> Button(
+            onClick = onClick,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            enabled = isEnabled,
+            shape = RoundedCornerShape(10.dp),
+            colors = if (isError) {
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError,
+                    disabledContainerColor = MaterialTheme.colorScheme.error,
+                    disabledContentColor = MaterialTheme.colorScheme.onError
+                )
+            } else ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         ) {
             Text(text = text, style = MaterialTheme.typography.titleMedium)

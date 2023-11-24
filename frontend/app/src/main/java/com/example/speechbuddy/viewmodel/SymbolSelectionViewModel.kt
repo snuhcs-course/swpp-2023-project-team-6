@@ -58,7 +58,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
         }
     }
 
-    fun escapeDisplayMax() {
+    fun exitDisplayMax() {
         _uiState.update { currentState ->
             currentState.copy(
                 isDisplayMax = false

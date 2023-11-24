@@ -65,6 +65,7 @@
     <string name="display_max">크게 보기</string>
     <string name="clear_all">전체 삭제</string>
     <string name="unselect_symbol">상징 선택 취소</string>
+    <string name="exit">나가기</string>
 
     <!-- Text-to-Speech -->
     <string name="talk_with_speech">음성으로 말하기</string>
