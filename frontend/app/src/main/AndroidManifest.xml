@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SpeechBuddy"
         android:usesCleartextTraffic="true"
+        android:windowSoftInputMode="adjustResize"
         tools:targetApi="31">
         <activity
             android:name=".HomeActivity"

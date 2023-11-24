@@ -133,14 +133,14 @@ private fun SpeechBuddyHomeNavHost(
     initialPage: Boolean,
     isBeingReloadedForDarkModeChange: Boolean
 ) {
-    val startDestination = if (isBeingReloadedForDarkModeChange) {
+    val startDestination =
+        if (isBeingReloadedForDarkModeChange) {
             "settings"
         } else if (initialPage) {
             "symbol_selection"
         } else {
             "text_to_speech"
         }
-
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable("symbol_selection") {
