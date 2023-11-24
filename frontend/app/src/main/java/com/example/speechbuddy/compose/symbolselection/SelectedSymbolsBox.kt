@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +33,7 @@ import com.example.speechbuddy.ui.models.SymbolItem
 @Composable
 fun SelectedSymbolsBox(
     selectedSymbols: List<SymbolItem>,
+    lazyListState: LazyListState,
     onClear: (SymbolItem) -> Unit,
     onDisplayMax: () -> Unit,
     onClearAll: () -> Unit,
@@ -56,7 +57,8 @@ fun SelectedSymbolsBox(
             contentAlignment = Alignment.CenterStart
         ) {
             LazyRow(
-                contentPadding = PaddingValues(10.dp),
+                state = lazyListState,
+                contentPadding = PaddingValues(start = 10.dp, top = 10.dp, bottom = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(selectedSymbols) { symbolItem ->
@@ -71,7 +73,7 @@ fun SelectedSymbolsBox(
         Box(
             modifier = Modifier
                 .width(50.dp)
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.surface)
         ) {
             Button(
                 onClick = onDisplayMax,
