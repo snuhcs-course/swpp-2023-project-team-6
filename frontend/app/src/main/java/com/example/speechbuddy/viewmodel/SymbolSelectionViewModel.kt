@@ -50,6 +50,22 @@ class SymbolSelectionViewModel @Inject internal constructor(
         getEntries()
     }
 
+    fun enterDisplayMax() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isDisplayMax = true
+            )
+        }
+    }
+
+    fun escapeDisplayMax() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isDisplayMax = false
+            )
+        }
+    }
+
     fun selectDisplayMode(displayMode: DisplayMode) {
         _uiState.update { currentState ->
             currentState.copy(

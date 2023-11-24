@@ -77,7 +77,7 @@ fun SymbolSelectionScreen(
                     lazyListState = lazyListState,
                     onClear = { viewModel.clear(it) },
                     onClearAll = { viewModel.clearAll() },
-                    onDisplayMax = { /* TODO */ }
+                    onDisplayMax = { viewModel.enterDisplayMax() }
                 )
 
                 Column {
@@ -136,4 +136,6 @@ fun SymbolSelectionScreen(
             }
         }
     }
+
+    if (uiState.isDisplayMax) DisplayMaxScreen(onEscape = { viewModel.escapeDisplayMax() })
 }
