@@ -1,6 +1,7 @@
 package com.example.speechbuddy.compose.settings
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +22,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,15 +34,33 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.speechbuddy.R
 import kotlinx.coroutines.launch
+
+val pages = listOf<@Composable () -> Unit>(
+    {
+        Image(
+            painter = painterResource(id = R.drawable.bottom_navigation_bar_description),
+            contentDescription = "Description",
+            modifier = Modifier
+                .padding(horizontal = 5.dp)
+                .fillMaxSize()
+        )
+    },
+    { Text("Page 2 Content", fontSize = 40.sp) },
+    { Text("Page 3 Content", fontSize = 40.sp) },
+    { Text("Page 4 Content", fontSize = 40.sp) },
+    { Text("Page 5 Content", fontSize = 40.sp) },
+)
+val pageSize: Int = pages.size
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -52,7 +70,9 @@ fun GuideScreen(
     bottomPaddingValues: PaddingValues
 ) {
     Surface(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .padding(20.dp)
+            .fillMaxSize()
     ) {
         PagerIndicatorSample()
     }
@@ -65,34 +85,24 @@ private fun PagerIndicatorSample() {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Spacer(Modifier.height(40.dp))
+        Spacer(modifier = Modifier.weight(1f)) // Spacer before the pager
         val pagerState1 = rememberPagerState(
             initialPage = 0,
             initialPageOffsetFraction = 0f
         ) {
-            5
+            pageSize
         }
         val coroutineScope = rememberCoroutineScope()
 
-        val pages = listOf<@Composable () -> Unit>(
-            { Text("Page 1 Content", fontSize = 40.sp) },
-            { Text("Page 2 Content", fontSize = 40.sp) },
-            { Text("Page 3 Content", fontSize = 40.sp) },
-            { Text("Page 4 Content", fontSize = 40.sp) },
-            { Text("Page 5 Content", fontSize = 40.sp) },
-        )
-
         HorizontalPager(
-            state = pagerState1
+            state = pagerState1,
+            verticalAlignment = Alignment.CenterVertically
         ) { page ->
             Box(
                 modifier = Modifier
                     .padding(10.dp)
-                    .shadow(1.dp, RoundedCornerShape(8.dp))
-                    .background(Color.White)
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .height(400.dp),
                 contentAlignment = Alignment.Center
             ) {
                 pages[page]()
@@ -104,6 +114,7 @@ private fun PagerIndicatorSample() {
                 pagerState1.scrollToPage(it)
             }
         }
+        Spacer(modifier = Modifier.weight(1f)) // Spacer after the pager
     }
 }
 
@@ -112,7 +123,7 @@ private fun PagerIndicatorSample() {
 fun PagerIndicator(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    indicatorCount: Int = 5,
+    indicatorCount: Int = pageSize,
     indicatorSize: Dp = 16.dp,
     indicatorShape: Shape = CircleShape,
     space: Dp = 8.dp,
@@ -181,7 +192,6 @@ private fun LazyListScope.indicatorItems(
                     scaleX = scale
                     scaleY = scale
                 }
-
                 .clip(indicatorShape)
                 .size(indicatorSize)
                 .background(
