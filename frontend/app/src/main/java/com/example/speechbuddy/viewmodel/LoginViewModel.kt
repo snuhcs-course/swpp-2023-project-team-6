@@ -9,6 +9,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
+import com.example.speechbuddy.repository.SettingsRepository
 import com.example.speechbuddy.repository.UserRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
@@ -22,13 +23,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject internal constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-    private val sessionManager: SessionManager
+    private val settingsRepository: SettingsRepository,
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -124,7 +127,14 @@ class LoginViewModel @Inject internal constructor(
                     if (resource.status == Status.SUCCESS) {
                         // AccessToken is already saved in AuthTokenPrefsManager by the authRepository
                         sessionManager.setAuthToken(resource.data!!)
-                        getMyInfoFromRemote(resource.data.accessToken)
+                        runBlocking {
+                            getMyInfoFromRemote(resource.data.accessToken)
+                            getMyDisplaySettingsFromRemote(resource.data.accessToken)
+                            getSymbolListFromRemote(resource.data.accessToken)
+                            getFavoritesListFromRemote(resource.data.accessToken)
+                            getWeightTableFromRemote(resource.data.accessToken)
+                        }
+
                     } else if (resource.message?.contains("email", ignoreCase = true) == true) {
                         _uiState.update { currentState ->
                             currentState.copy(
@@ -167,6 +177,118 @@ class LoginViewModel @Inject internal constructor(
                 if (resource.status == Status.SUCCESS) {
                     sessionManager.setUserId(resource.data!!.id)
                 } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidEmail = false,
+                            error = LoginError(
+                                type = LoginErrorType.CONNECTION,
+                                messageId = R.string.connection_error
+                            )
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidPassword = false,
+                            error = LoginError(
+                                type = LoginErrorType.UNKNOWN,
+                                messageId = R.string.unknown_error
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getMyDisplaySettingsFromRemote(accessToken: String?) {
+        viewModelScope.launch {
+            settingsRepository.getDisplaySettingsFromRemote(accessToken).collect { resource ->
+                if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidEmail = false,
+                            error = LoginError(
+                                type = LoginErrorType.CONNECTION,
+                                messageId = R.string.connection_error
+                            )
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidPassword = false,
+                            error = LoginError(
+                                type = LoginErrorType.UNKNOWN,
+                                messageId = R.string.unknown_error
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getSymbolListFromRemote(accessToken: String?) {
+        viewModelScope.launch {
+            settingsRepository.getSymbolListFromRemote(accessToken).collect { resource ->
+                if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidEmail = false,
+                            error = LoginError(
+                                type = LoginErrorType.CONNECTION,
+                                messageId = R.string.connection_error
+                            )
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidPassword = false,
+                            error = LoginError(
+                                type = LoginErrorType.UNKNOWN,
+                                messageId = R.string.unknown_error
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getFavoritesListFromRemote(accessToken: String?) {
+        viewModelScope.launch {
+            settingsRepository.getFavoritesListFromRemote(accessToken).collect { resource ->
+                if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidEmail = false,
+                            error = LoginError(
+                                type = LoginErrorType.CONNECTION,
+                                messageId = R.string.connection_error
+                            )
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isValidPassword = false,
+                            error = LoginError(
+                                type = LoginErrorType.UNKNOWN,
+                                messageId = R.string.unknown_error
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getWeightTableFromRemote(accessToken: String?) {
+        viewModelScope.launch {
+            settingsRepository.getWeightTableFromRemote(accessToken).collect { resource ->
+                if (resource.message?.contains("unknown", ignoreCase = true) == true) {
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidEmail = false,

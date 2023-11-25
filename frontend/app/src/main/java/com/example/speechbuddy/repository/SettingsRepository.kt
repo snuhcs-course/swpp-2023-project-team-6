@@ -3,11 +3,16 @@ package com.example.speechbuddy.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.SettingsPrefsManager
+import com.example.speechbuddy.data.remote.SettingsRemoteSource
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
 import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.domain.models.WeightRow
+import com.example.speechbuddy.domain.utils.Converters
 import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.ui.models.InitialPage
 import com.example.speechbuddy.utils.Resource
+import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +32,9 @@ class SettingsRepository @Inject constructor(
     private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager,
     private val symbolRepository: SymbolRepository,
-    private val weightTableRepository: WeightTableRepository
+    private val weightTableRepository: WeightTableRepository,
+    private val settingsRemoteSource: SettingsRemoteSource,
+    private val converters: Converters,
 ) {
 
     private val _darkModeLiveData = MutableLiveData<Boolean?>()
@@ -91,7 +98,7 @@ class SettingsRepository @Inject constructor(
                 getDarkMode().first().data?.let {
                     darkMode = if (it) 1 else 0
                 }
-                getInitialPage().first().data?.let{
+                getInitialPage().first().data?.let {
                     initialPage = if (it) 1 else 0
                 }
                 val result = backupService.displayBackup(
@@ -162,4 +169,120 @@ class SettingsRepository @Inject constructor(
         return "Bearer $accessToken"
     }
 
+    suspend fun getDisplaySettingsFromRemote(accessToken: String?): Flow<Resource<Void>> {
+        return settingsRemoteSource.getDisplaySettings("Bearer $accessToken").map { response ->
+            if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
+                response.body()?.let { settingsDto ->
+                    val displayMode = settingsDto.displayMode
+                    val defaultMenu = settingsDto.defaultMenu
+                    if (displayMode == 0) {
+                        setDarkMode(false)
+                        settingsPrefManager.saveDarkMode(false)
+                    } else {
+                        setDarkMode(true)
+                        settingsPrefManager.saveDarkMode(true)
+                    }
+                    if (defaultMenu == 0) {
+                        setInitialPage(InitialPage.SYMBOL_SELECTION)
+                    } else {
+                        setInitialPage(InitialPage.TEXT_TO_SPEECH)
+                    }
+                    Resource.success(null)
+                } ?: returnUnknownError()
+            } else {
+                response.errorBody()?.let { responseBody ->
+                    val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
+                    Resource.error(
+                        errorMsgKey, null
+                    )
+                } ?: returnUnknownError()
+            }
+        }
+    }
+
+    suspend fun getSymbolListFromRemote(accessToken: String?): Flow<Resource<Void>> {
+        return settingsRemoteSource.getSymbolList("Bearer $accessToken").map { response ->
+            if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
+                response.body()?.let { symbolListDto ->
+                    for (symbolDto in symbolListDto.mySymbols) {
+                        symbolRepository.insertSymbol(
+                            Symbol(
+                                id = symbolDto.id,
+                                text = symbolDto.text,
+                                imageUrl = symbolDto.image,
+                                categoryId = symbolDto.category,
+                                isFavorite = false,
+                                isMine = true
+                            )
+                        )
+                    }
+
+                    Resource.success(null)
+                } ?: returnUnknownError()
+            } else {
+                response.errorBody()?.let { responseBody ->
+                    val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
+                    Resource.error(
+                        errorMsgKey, null
+                    )
+                } ?: returnUnknownError()
+            }
+        }
+    }
+
+    suspend fun getFavoritesListFromRemote(accessToken: String?): Flow<Resource<Void>> {
+        return settingsRemoteSource.getFavoritesList("Bearer $accessToken").map { response ->
+            if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
+                response.body()?.let { favoritesListDto ->
+                    for (symbolIdDto in favoritesListDto.results) {
+                        symbolRepository.getSymbolsById(symbolIdDto.id).collect { symbol ->
+                            symbolRepository.updateFavorite(symbol, true)
+                        }
+                    }
+                    Resource.success(null)
+                } ?: returnUnknownError()
+            } else {
+                response.errorBody()?.let { responseBody ->
+                    val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
+                    Resource.error(
+                        errorMsgKey, null
+                    )
+                } ?: returnUnknownError()
+            }
+        }
+    }
+
+    suspend fun getWeightTableFromRemote(accessToken: String?): Flow<Resource<Void>> {
+        return settingsRemoteSource.getWeightTable("Bearer $accessToken").map { response ->
+            if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
+                response.body()?.let { weightTableListEntity ->
+                    val weightRow = mutableListOf<WeightRow>()
+                    for (weightTableEntity in weightTableListEntity.weight_table) {
+                        weightRow.add(
+                            WeightRow(
+                                weightTableEntity.id,
+                                converters.fromString(weightTableEntity.weight)
+                            )
+                        )
+                    }
+                    weightTableRepository.replaceWeightTable(weightRow.toList())
+                    Resource.success(null)
+                } ?: returnUnknownError()
+            } else {
+                response.errorBody()?.let { responseBody ->
+                    val errorMsgKey = responseHandler.parseErrorResponse(responseBody).key
+                    Resource.error(
+                        errorMsgKey, null
+                    )
+                } ?: returnUnknownError()
+            }
+        }
+    }
+
+
+    private fun <T> returnUnknownError(): Resource<T> {
+        return Resource.error(
+            "Unknown error", null
+        )
+    }
 }

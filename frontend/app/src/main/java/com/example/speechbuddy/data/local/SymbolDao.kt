@@ -38,6 +38,9 @@ interface SymbolDao {
     @Query("SELECT id FROM symbols WHERE isFavorite = 1")
     fun getFavoriteSymbolsId(): Flow<List<Int>>
 
+    @Query("SELECT * FROM symbols WHERE id = :id")
+    fun getSymbolById(id: Int): Flow<SymbolEntity>
+
     @Update
     suspend fun updateSymbol(symbolEntity: SymbolEntity)
 
