@@ -118,7 +118,11 @@ fun SignupScreen(
                 },
                 isError = isPasswordError || isPasswordCheckError,
                 isValid = uiState.isValidPassword,
-                isHidden = true
+                isHidden = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    autoCorrect = false
+                )
             )
 
             Spacer(modifier = Modifier.height(20.dp))
