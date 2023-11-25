@@ -55,75 +55,6 @@ fun GuideScreen(
         modifier = modifier.fillMaxSize()
     ) {
         PagerIndicatorSample()
-
-
-//        val pagerState = rememberPagerState(pageCount = {
-//            4
-//        })
-//        HorizontalPager(
-//            state = pagerState,
-//            modifier = Modifier.fillMaxSize()
-//        ) { page ->
-//            // Our page content
-//            Text(
-//                text = "Page: $page",
-//            )
-//        }
-//        Row(
-//            Modifier
-//                .wrapContentHeight()
-//                .fillMaxWidth()
-//                .padding(bottom = 8.dp),
-//            horizontalArrangement = Arrangement.Center
-//        ) {
-//            repeat(pagerState.pageCount) { iteration ->
-//                val color =
-//                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-//                Box(
-//                    modifier = Modifier
-//                        .padding(2.dp)
-//                        .clip(CircleShape)
-//                        .background(color)
-//                        .size(16.dp)
-//                )
-//            }
-//        }
-//        Scaffold(
-//            topBar = {
-//                TopAppBarUi(
-//                    title = stringResource(id = R.string.settings),
-//                    onBackClick = onBackClick,
-//                    isBackClickEnabled = true
-//                )
-//            }
-//        ) { topPaddingValues ->
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(
-//                        top = topPaddingValues.calculateTopPadding(),
-//                        bottom = bottomPaddingValues.calculateBottomPadding()
-//                    )
-//                    .padding(24.dp)
-//                    .verticalScroll(rememberScrollState()),
-//                verticalArrangement = Arrangement.Center
-//            ) {
-//                TitleUi(title = stringResource(id = R.string.display_settings))
-//
-//                Spacer(modifier = modifier.height(20.dp))
-//
-//                Text("Item 1")
-//                Text("Item 2")
-//                Text("Item 3")
-//                Text("Item 4")
-//                Text("Item 5")
-//                Text("Item 6")
-//                Text("Item 7")
-//                Text("Item 8")
-//                Text("Item 9")
-//                Text("Item 10")
-//            }
-//        }
     }
 }
 
@@ -144,9 +75,17 @@ private fun PagerIndicatorSample() {
         }
         val coroutineScope = rememberCoroutineScope()
 
+        val pages = listOf<@Composable () -> Unit>(
+            { Text("Page 1 Content", fontSize = 40.sp) },
+            { Text("Page 2 Content", fontSize = 40.sp) },
+            { Text("Page 3 Content", fontSize = 40.sp) },
+            { Text("Page 4 Content", fontSize = 40.sp) },
+            { Text("Page 5 Content", fontSize = 40.sp) },
+        )
+
         HorizontalPager(
-            state = pagerState1,
-        ) {
+            state = pagerState1
+        ) { page ->
             Box(
                 modifier = Modifier
                     .padding(10.dp)
@@ -156,11 +95,7 @@ private fun PagerIndicatorSample() {
                     .height(200.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    "Text $it",
-                    fontSize = 40.sp,
-                    color = Color.Gray
-                )
+                pages[page]()
             }
         }
 
@@ -169,83 +104,6 @@ private fun PagerIndicatorSample() {
                 pagerState1.scrollToPage(it)
             }
         }
-
-//        val pagerState2 = rememberPagerState(
-//            initialPage = 0,
-//            initialPageOffsetFraction = 0f
-//        ) {
-//            10
-//        }
-//
-//        PagerIndicator(
-//            pagerState = pagerState2,
-//            indicatorSize = 24.dp,
-//            indicatorCount = 7,
-//            activeColor = Color(0xffFFC107),
-//            inActiveColor = Color(0xffFFECB3),
-//            indicatorShape = CutCornerShape(10.dp)
-//        )
-//        HorizontalPager(
-//            //count = 10,
-//            state = pagerState2,
-//        ) {
-//            Box(
-//                modifier = Modifier
-//                    .padding(10.dp)
-//                    .shadow(1.dp, RoundedCornerShape(8.dp))
-//                    .background(Color.White)
-//                    .fillMaxWidth()
-//                    .height(200.dp),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Text(
-//                    "Text $it",
-//                    fontSize = 40.sp,
-//                    color = Color.Gray
-//                )
-//            }
-//        }
-
-//        Row(
-//            modifier = Modifier.fillMaxSize(),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            val pagerState3 = rememberPagerState(
-//                initialPage = 0,
-//                initialPageOffsetFraction = 0f
-//            ) {
-//                10
-//            }
-//
-//            Spacer(modifier = Modifier.width(10.dp))
-
-//            PagerIndicator(
-//                pagerState = pagerState3,
-//                orientation = IndicatorOrientation.Vertical
-//            )
-
-//            Spacer(modifier = Modifier.width(20.dp))
-//            VerticalPager(
-//                //count = 10,
-//                state = pagerState3,
-//            ) {
-//                Box(
-//                    modifier = Modifier
-//                        .padding(10.dp)
-//                        .shadow(1.dp, RoundedCornerShape(8.dp))
-//                        .background(Color.White)
-//                        .fillMaxWidth()
-//                        .height(200.dp),
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    Text(
-//                        "Text $it",
-//                        fontSize = 40.sp,
-//                        color = Color.Gray
-//                    )
-//                }
-//            }
-//        }
     }
 }
 
@@ -294,7 +152,6 @@ fun PagerIndicator(
         indicatorItems(
             itemCount,
             currentItem,
-//            indicatorCount,
             indicatorShape,
             activeColor,
             inActiveColor,
@@ -307,7 +164,6 @@ fun PagerIndicator(
 private fun LazyListScope.indicatorItems(
     itemCount: Int,
     currentItem: Int,
-//    indicatorCount: Int,
     indicatorShape: Shape,
     activeColor: Color,
     inActiveColor: Color,
@@ -318,40 +174,9 @@ private fun LazyListScope.indicatorItems(
 
         val isSelected = (index == currentItem)
 
-        // Index of item in center when odd number of indicators are set
-        // for 5 indicators this is 2nd indicator place
-//        val centerItemIndex = indicatorCount / 2
-
-//        val right1 =
-//            (currentItem < centerItemIndex &&
-//                    index >= indicatorCount - 1)
-//
-//        val right2 =
-//            (currentItem >= centerItemIndex &&
-//                    index >= currentItem + centerItemIndex &&
-//                    index < itemCount - centerItemIndex + 1)
-//        val isRightEdgeItem = right1 || right2
-
-        // Check if this item's distance to center item is smaller than half size of
-        // the indicator count when current indicator at the center or
-        // when we reach the end of list. End of the list only one item is on edge
-        // with 10 items and 7 indicators
-        // 7-3= 4th item can be the first valid left edge item and
-//        val isLeftEdgeItem =
-//            index <= currentItem - centerItemIndex &&
-//                    currentItem > centerItemIndex &&
-//                    index < itemCount - indicatorCount + 1
-
         Box(
             modifier = Modifier
                 .graphicsLayer {
-//                    val scale = if (isSelected) {
-//                        1f
-//                    } else if (isLeftEdgeItem || isRightEdgeItem) {
-//                        .5f
-//                    } else {
-//                        .8f
-//                    }
                     val scale = 1f
                     scaleX = scale
                     scaleY = scale
