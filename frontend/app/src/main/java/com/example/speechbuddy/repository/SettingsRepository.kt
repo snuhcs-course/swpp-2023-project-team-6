@@ -100,7 +100,6 @@ class SettingsRepository @Inject constructor(
                 }
                 getInitialPage().first().data?.let {
                     initialPage = if (it) 1 else 0
-                    Log.d("test", "initialPage: $initialPage")
                 }
                 val result = backupService.displayBackup(
                     getAuthHeader(),
