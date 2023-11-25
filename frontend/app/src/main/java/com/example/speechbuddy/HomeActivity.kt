@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
@@ -14,7 +15,6 @@ import com.example.speechbuddy.compose.SpeechBuddyHome
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
@@ -25,8 +25,6 @@ class HomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        // Displaying edge-to-edge
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val isBeingReloadedForDarkModeChange = intent.getBooleanExtra("isBeingReloadedForDarkModeChange", false)
 

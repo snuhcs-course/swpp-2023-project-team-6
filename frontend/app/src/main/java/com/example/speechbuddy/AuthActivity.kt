@@ -6,7 +6,6 @@ import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.core.view.WindowCompat
 import com.example.speechbuddy.compose.SpeechBuddyAuth
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.viewmodel.LoginViewModel
@@ -19,9 +18,6 @@ class AuthActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Displaying edge-to-edge
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         subscribeObservers()
         checkPreviousAuthUser()
@@ -61,4 +57,5 @@ class AuthActivity : BaseActivity() {
         }
         return super.dispatchTouchEvent(event)
     }
+
 }
