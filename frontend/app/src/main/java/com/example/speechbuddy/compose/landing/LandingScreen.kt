@@ -58,11 +58,3 @@ fun LandingScreen(
         }
     }
 }
-
-@Preview
-@Composable
-private fun LandingScreenPreview() {
-    SpeechBuddyTheme {
-        LandingScreen(onLoginClick = {})
-    }
-}

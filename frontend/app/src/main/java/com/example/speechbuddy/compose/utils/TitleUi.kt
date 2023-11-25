@@ -39,14 +39,3 @@ fun TitleUi(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun TitleUiPreview() {
-    SpeechBuddyTheme {
-        TitleUi(
-            title = stringResource(id = R.string.signup),
-            description = stringResource(id = R.string.signup_description)
-        )
-    }
-}
