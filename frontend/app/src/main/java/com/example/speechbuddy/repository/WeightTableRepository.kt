@@ -1,6 +1,5 @@
 package com.example.speechbuddy.repository
 
-import android.util.Log
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.WeightRowDao
 import com.example.speechbuddy.data.local.models.SymbolMapper
