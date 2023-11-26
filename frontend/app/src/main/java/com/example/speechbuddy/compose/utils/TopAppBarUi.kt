@@ -74,11 +74,3 @@ fun TopAppBarUi(
         )
     )
 }
-
-@Preview
-@Composable
-fun TopAppBarUiPreview() {
-    SpeechBuddyTheme {
-        TopAppBarUi(title = "title", onBackClick = {})
-    }
-}

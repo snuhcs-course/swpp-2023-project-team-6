@@ -154,16 +154,3 @@ fun ButtonUi(
         }
     }
 }
-
-@Preview
-@Composable
-fun ButtonUiPreview() {
-    SpeechBuddyTheme {
-        ButtonUi(
-            text = "커스텀 버튼",
-            onClick = {},
-            isError = true,
-            level = ButtonLevel.SECONDARY
-        )
-    }
-}

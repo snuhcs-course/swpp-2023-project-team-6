@@ -14,14 +14,12 @@ import androidx.navigation.compose.rememberNavController
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SettingsScreen(
-    bottomPaddingValues: PaddingValues,
-    isBeingReloadedForDarkModeChange: Boolean
+    bottomPaddingValues: PaddingValues
 ) {
     val navController = rememberNavController()
     SettingsScreenNavHost(
         navController = navController,
-        bottomPaddingValues = bottomPaddingValues,
-        isBeingReloadedForDarkModeChange = isBeingReloadedForDarkModeChange
+        bottomPaddingValues = bottomPaddingValues
     )
 }
 
@@ -29,17 +27,11 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenNavHost(
     navController: NavHostController,
-    bottomPaddingValues: PaddingValues,
-    isBeingReloadedForDarkModeChange: Boolean
+    bottomPaddingValues: PaddingValues
 ) {
-    val flag = remember{ mutableStateOf(false) }
-    val startDestination = if (isBeingReloadedForDarkModeChange && !flag.value) "display" else "main"
-    if (isBeingReloadedForDarkModeChange && !flag.value) {
-        flag.value = true
-    }
     val navigateToMain = { navController.navigate("main") }
 
-    NavHost(navController = navController, startDestination = startDestination) {
+    NavHost(navController = navController, startDestination = "main") {
         composable("main") {
             MainSettings(
                 navController = navController,

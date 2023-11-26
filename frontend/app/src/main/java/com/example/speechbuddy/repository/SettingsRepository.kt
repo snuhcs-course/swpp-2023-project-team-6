@@ -36,16 +36,11 @@ class SettingsRepository @Inject constructor(
     private val settingsRemoteSource: SettingsRemoteSource,
     private val converters: Converters,
 ) {
-
-    private val _darkModeLiveData = MutableLiveData<Boolean?>()
-    val darkModeLiveData: LiveData<Boolean?>
-        get() = _darkModeLiveData
-
     suspend fun setDarkMode(value: Boolean) {
-        CoroutineScope(Dispatchers.Main).launch {
-            if (_darkModeLiveData.value != value) {
-                _darkModeLiveData.value = value
-            }
+        if (value) {
+            settingsPrefManager.saveDarkMode(true)
+        } else {
+            settingsPrefManager.saveDarkMode(false)
         }
         settingsPrefManager.saveDarkMode(value)
     }
@@ -69,6 +64,12 @@ class SettingsRepository @Inject constructor(
     fun getDarkMode(): Flow<Resource<Boolean>> {
         return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.darkMode)
+        }
+    }
+
+    fun getDarkModeForChange(): Flow<Boolean> {
+        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+            settingsPreferences.darkMode
         }
     }
 
