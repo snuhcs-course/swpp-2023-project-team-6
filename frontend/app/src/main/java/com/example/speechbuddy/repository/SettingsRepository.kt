@@ -236,9 +236,9 @@ class SettingsRepository @Inject constructor(
             if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                 response.body()?.let { favoritesListDto ->
                     for (symbolIdDto in favoritesListDto.results) {
-                        symbolRepository.getSymbolsById(symbolIdDto.id).collect { symbol ->
-                            symbolRepository.updateFavorite(symbol, true)
-                        }
+                        val symbol = symbolRepository.getSymbolsById(symbolIdDto.id)
+                        symbolRepository.updateFavorite(symbol, true)
+
                     }
                     Resource.success(null)
                 } ?: returnUnknownError()

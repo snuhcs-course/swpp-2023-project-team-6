@@ -77,8 +77,8 @@ class SymbolRepository @Inject constructor(
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
 
-    fun getSymbolsById(id: Int) = symbolDao.getSymbolById(id).map { symbolEntity ->
-        symbolMapper.mapToDomainModel(symbolEntity)
+    fun getSymbolsById(id: Int): Symbol {
+        return runBlocking { symbolMapper.mapToDomainModel(symbolDao.getSymbolById(id).first()) }
     }
 
     private fun getAllSymbols() = symbolDao.getSymbols().map { symbolEntities ->
@@ -108,16 +108,19 @@ class SymbolRepository @Inject constructor(
         return if (idList.isEmpty()) "" else idList.joinToString(separator = ",")
     }
 
-    suspend fun updateFavorite(symbol: Symbol, value: Boolean) {
-        val symbolEntity = SymbolEntity(
-            id = symbol.id,
-            text = symbol.text,
-            imageUrl = symbol.imageUrl,
-            categoryId = symbol.categoryId,
-            isFavorite = value,
-            isMine = symbol.isMine
-        )
-        symbolDao.updateSymbol(symbolEntity)
+    fun updateFavorite(symbol: Symbol, value: Boolean) {
+        runBlocking {
+            val symbolEntity = SymbolEntity(
+                id = symbol.id,
+                text = symbol.text,
+                imageUrl = symbol.imageUrl,
+                categoryId = symbol.categoryId,
+                isFavorite = value,
+                isMine = symbol.isMine
+            )
+            symbolDao.updateSymbol(symbolEntity)
+        }
+
     }
 
     fun getNextSymbolId() =
@@ -127,9 +130,11 @@ class SymbolRepository @Inject constructor(
         /* TODO: 내가 만든 상징들 모두 삭제 */
     }
 
-    suspend fun insertSymbol(symbol: Symbol) {
-        val symbolEntity = symbolMapper.mapFromDomainModel(symbol)
-        symbolDao.insertSymbol(symbolEntity)
+    fun insertSymbol(symbol: Symbol) {
+        runBlocking {
+            val symbolEntity = symbolMapper.mapFromDomainModel(symbol)
+            symbolDao.insertSymbol(symbolEntity)
+        }
     }
 
     suspend fun createSymbolBackup(
