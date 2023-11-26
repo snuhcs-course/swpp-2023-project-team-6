@@ -47,8 +47,8 @@ class SymbolSelectionViewModel @Inject internal constructor(
     private var getEntriesJob: Job? = null
 
     init {
-        getEntries()
         repository.checkImages()
+        getEntries()
     }
 
     fun enterDisplayMax() {
