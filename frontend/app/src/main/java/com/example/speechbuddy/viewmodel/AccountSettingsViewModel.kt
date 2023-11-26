@@ -55,7 +55,8 @@ class AccountSettingsViewModel @Inject internal constructor(
     fun showAlert(alert: AccountSettingsAlert) {
         _uiState.update { currentState ->
             currentState.copy(
-                alert = alert
+                alert = alert,
+                buttonEnabled = false
             )
         }
     }
@@ -63,7 +64,8 @@ class AccountSettingsViewModel @Inject internal constructor(
     fun hideAlert() {
         _uiState.update { currentState ->
             currentState.copy(
-                alert = null
+                alert = null,
+                buttonEnabled = true
             )
         }
     }
@@ -93,8 +95,8 @@ class AccountSettingsViewModel @Inject internal constructor(
     }
 
     fun withdraw() {
+        showAlert(AccountSettingsAlert.LOADING)
         viewModelScope.launch {
-            showAlert(AccountSettingsAlert.LOADING)
             authRepository.withdraw().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
@@ -176,9 +178,10 @@ class AccountSettingsViewModel @Inject internal constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun backup() {
-        _uiState.update {
-            it.copy(
-                alert = AccountSettingsAlert.LOADING
+        _uiState.update { currentState ->
+            currentState.copy(
+                alert = AccountSettingsAlert.LOADING,
+                buttonEnabled = false
             )
         }
         displayBackup()
@@ -190,7 +193,8 @@ class AccountSettingsViewModel @Inject internal constructor(
     private fun handleNoInternetConnection() {
         _uiState.update { currentState ->
             currentState.copy(
-                alert = AccountSettingsAlert.CONNECTION
+                alert = AccountSettingsAlert.CONNECTION,
+                buttonEnabled = false
             )
         }
     }
@@ -202,7 +206,8 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
         _uiState.update { currentState ->
             currentState.copy(
-                alert = AccountSettingsAlert.BACKUP_SUCCESS
+                alert = AccountSettingsAlert.BACKUP_SUCCESS,
+                buttonEnabled = false
             )
         }
     }

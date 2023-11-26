@@ -172,6 +172,15 @@ class SymbolCreationViewModel @Inject internal constructor(
         photoInputBitmap = null
     }
 
+    private fun changeLoadingState() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                loading = !currentState.loading,
+                buttonEnabled = !currentState.buttonEnabled
+            )
+        }
+    }
+
     @Suppress("DEPRECATION", "NewApi")
     private fun uriToBitmap(uri: Uri?, context: Context): Bitmap {
         return when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // version 28
@@ -281,6 +290,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                 }
             } else { // If login-mode
                 // file processing
+                changeLoadingState()
                 val tempFileName = "symbol_${System.currentTimeMillis()}"
                 val imageFile = bitmapToFile(context, photoInputBitmap!!, tempFileName)
                 val imagePart = fileToMultipartBodyPart(imageFile, "image")
@@ -290,6 +300,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                         categoryId = categoryInput!!.id,
                         image = imagePart
                     ).collect { resource ->
+                        changeLoadingState()
                         if (resource.status == Status.SUCCESS) {
                             // Store new symbol in local db
                             val symbolId = resource.data!!.id

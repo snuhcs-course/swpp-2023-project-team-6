@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -36,6 +37,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -220,10 +222,20 @@ fun SymbolCreationScreen(
                     text = stringResource(id = R.string.create),
                     onClick = { viewModel.createSymbol(context) },
                     modifier = Modifier.offset(y = 50.dp),
-                    isEnabled = true,
+                    isEnabled = uiState.buttonEnabled,
                     isError = false
                 )
             }
+        }
+    }
+
+    uiState.loading.let { loading ->
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
+            )
         }
     }
 }
