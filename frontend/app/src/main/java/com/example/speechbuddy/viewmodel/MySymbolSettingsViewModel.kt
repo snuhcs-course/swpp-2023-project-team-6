@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository;
+import com.example.speechbuddy.repository.WeightTableRepository
 import com.example.speechbuddy.ui.models.MySymbolSettingsDisplayMode
 import com.example.speechbuddy.ui.models.MySymbolSettingsUiState
 
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MySymbolSettingsViewModel @Inject internal constructor(
+    private val weightTableRepository: WeightTableRepository,
     private val repository:SymbolRepository
 ) : ViewModel(){
 
@@ -79,6 +81,7 @@ class MySymbolSettingsViewModel @Inject internal constructor(
             val checkedSymbols = _checkedSymbols.toList()
             for (symbol in checkedSymbols) {
                 repository.deleteSymbol(symbol)
+                weightTableRepository.updateWeightTableForDeletedSymbol(symbol)
             }
             _checkedSymbols.clear()
         }

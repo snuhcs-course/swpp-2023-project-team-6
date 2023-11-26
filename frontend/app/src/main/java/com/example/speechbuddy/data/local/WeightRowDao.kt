@@ -24,4 +24,10 @@ interface WeightRowDao {
     @Query("DELETE FROM weighttable")
     suspend fun deleteAllWeightRows()
 
+    @Query("DELETE FROM weighttable WHERE id = :rowId")
+    suspend fun deleteWeightRowById(rowId: Int)
+
+    @Query("SELECT COUNT(*) FROM weighttable WHERE id < :rowId")
+    suspend fun getCountOfRowsWithIdLessThan(rowId: Int): Int
+
 }
