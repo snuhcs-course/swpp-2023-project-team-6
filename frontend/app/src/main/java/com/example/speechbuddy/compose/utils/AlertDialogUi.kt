@@ -52,18 +52,3 @@ fun AlertDialogUi(
         containerColor = MaterialTheme.colorScheme.inverseOnSurface
     )
 }
-
-@Preview
-@Composable
-fun AlertDialogUiPreview() {
-    SpeechBuddyTheme {
-        AlertDialogUi(
-            title = "title",
-            text = "text",
-            dismissButtonText = "dismiss",
-            confirmButtonText = "confirm",
-            onDismiss = {},
-            onConfirm = {}
-        )
-    }
-}

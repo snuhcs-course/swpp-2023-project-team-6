@@ -46,8 +46,9 @@ class WeightTableRepository @Inject constructor(
             }
         }
 
-    suspend fun deleteAllWeightRows() {
-        weightRowDao.deleteAllWeightRows()
+    suspend fun resetAllWeightRows() {
+        weightRowDao.deleteMySymbolsWeightRows()
+        weightRowDao.resetOriginalSymbolsWeightRows(List(500) { 0 })
     }
 
     suspend fun replaceWeightTable(weightRowList: List<WeightRow>) {
