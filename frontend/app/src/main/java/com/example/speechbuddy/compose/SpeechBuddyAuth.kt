@@ -12,23 +12,28 @@ import com.example.speechbuddy.compose.resetpassword.ResetPasswordScreen
 import com.example.speechbuddy.compose.signup.SignupScreen
 
 @Composable
-fun SpeechBuddyAuth() {
+fun SpeechBuddyAuth(
+    isBackup: Boolean
+) {
     val navController = rememberNavController()
     SpeechBuddyAuthNavHost(
-        navController = navController
+        navController = navController,
+        isBackup = isBackup
     )
 }
 
 @Composable
 fun SpeechBuddyAuthNavHost(
-    navController: NavHostController
+    navController: NavHostController,
+    isBackup: Boolean
 ) {
     NavHost(navController = navController, startDestination = "landing") {
         composable("landing") {
             LandingScreen(
                 onLoginClick = {
                     navController.navigate("login")
-                }
+                },
+                isBackup = isBackup
             )
         }
         composable("login") {

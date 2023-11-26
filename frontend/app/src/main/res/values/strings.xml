@@ -15,6 +15,7 @@
     <string name="email_verification_description">이메일 인증을 먼저 진행해주세요</string>
     <string name="verify_email_for_reset_password">비밀번호 변경을 위해 이메일 인증을 먼저 진행해주세요</string>
     <string name="verify_email_for_signup">회원가입을 위해 이메일 인증을 먼저 진행해주세요</string>
+    <string name="backup_info">자동 백업중입니다. 자동 백업을 원하시지 않으시면 설정에서 자동 백업을 꺼 주세요.</string>
 
     <!-- inputs -->
     <string name="email">이메일</string>

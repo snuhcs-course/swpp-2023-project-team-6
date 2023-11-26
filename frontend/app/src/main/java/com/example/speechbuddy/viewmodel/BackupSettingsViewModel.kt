@@ -44,7 +44,6 @@ class BackupSettingsViewModel @Inject internal constructor(
         viewModelScope.launch {
             repository.setAutoBackup(value)
         }
-        // TODO: Implement automated backup
     }
 
     private fun setLastBackupDate(value: String) {
