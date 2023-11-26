@@ -49,6 +49,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -81,6 +83,8 @@ fun SymbolCreationScreen(
     viewModel: SymbolCreationViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    // Define a state for showing the toast
+    val showToast = remember { mutableStateOf(false) }
 
     val uiState by viewModel.uiState.collectAsState()
     val categories by viewModel.categories.observeAsState(emptyList())
@@ -111,12 +115,17 @@ fun SymbolCreationScreen(
         if (isGranted) {
             cameraLauncher.launch(null)
         } else {
-            Toast.makeText(
-                context,
-                "Camera permission is required to take photos",
-                Toast.LENGTH_SHORT
-            ).show()
+            showToast.value = true
         }
+    }
+
+    if (showToast.value) {
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.camera_permisson_request),
+            Toast.LENGTH_SHORT
+        ).show()
+        showToast.value = false
     }
 
     if (creationResultMessage != null) {
@@ -262,7 +271,8 @@ private fun DropdownUi(
                     )
                 } else {
                     label?.invoke() ?: Text(
-                        "Select an option", color = MaterialTheme.colorScheme.onSurface
+                        text = stringResource(id = R.string.choose_a_category),
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Icon(
