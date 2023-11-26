@@ -83,7 +83,7 @@ fun SymbolCreationScreen(
     viewModel: SymbolCreationViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    // Define a state for showing the toast
+
     val showToast = remember { mutableStateOf(false) }
 
     val uiState by viewModel.uiState.collectAsState()
@@ -122,8 +122,8 @@ fun SymbolCreationScreen(
     if (showToast.value) {
         Toast.makeText(
             context,
-            stringResource(id = R.string.camera_permisson_request),
-            Toast.LENGTH_SHORT
+            stringResource(id = R.string.camera_permission_description),
+            Toast.LENGTH_LONG
         ).show()
         showToast.value = false
     }
