@@ -90,6 +90,10 @@ class SettingsRepository @Inject constructor(
         }
     }
 
+    suspend fun resetSettings() {
+        settingsPrefManager.resetSettings()
+    }
+
     suspend fun displayBackup(): Flow<Response<Void>> =
         flow {
             try {

@@ -17,12 +17,9 @@ import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -141,9 +138,6 @@ class AuthRepository @Inject constructor(
                 val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
                 val result =
                     authService.logout(getAuthHeader(), AuthRefreshRequest(refreshToken))
-                CoroutineScope(Dispatchers.IO).launch {
-                    authTokenPrefsManager.clearAuthToken()
-                }
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
@@ -156,9 +150,6 @@ class AuthRepository @Inject constructor(
                 val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
                 val result =
                     authService.withdraw(getAuthHeader(), AuthRefreshRequest(refreshToken))
-                CoroutineScope(Dispatchers.IO).launch {
-                    authTokenPrefsManager.clearAuthToken()
-                }
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
