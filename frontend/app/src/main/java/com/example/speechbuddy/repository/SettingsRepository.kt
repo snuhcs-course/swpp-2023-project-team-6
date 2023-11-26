@@ -175,18 +175,19 @@ class SettingsRepository @Inject constructor(
                 response.body()?.let { settingsDto ->
                     val displayMode = settingsDto.displayMode
                     val defaultMenu = settingsDto.defaultMenu
+                    val updatedAt = settingsDto.updatedAt!!
+                    setLastBackupDate(updatedAt)
                     if (displayMode == 0) {
                         setDarkMode(false)
-                        settingsPrefManager.saveDarkMode(false)
                     } else {
                         setDarkMode(true)
-                        settingsPrefManager.saveDarkMode(true)
                     }
                     if (defaultMenu == 0) {
                         setInitialPage(InitialPage.SYMBOL_SELECTION)
                     } else {
                         setInitialPage(InitialPage.TEXT_TO_SPEECH)
                     }
+
                     Resource.success(null)
                 } ?: returnUnknownError()
             } else {
