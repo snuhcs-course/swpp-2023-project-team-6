@@ -68,6 +68,15 @@ class ResetPasswordViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoadingState() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                loading = !currentState.loading,
+                buttonEnabled = !currentState.buttonEnabled
+            )
+        }
+    }
+
     fun resetPassword(onSuccess: () -> Unit) {
         if (passwordInput.isEmpty()) {
             _uiState.update { currentState ->
@@ -99,12 +108,14 @@ class ResetPasswordViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoadingState()
             viewModelScope.launch {
                 repository.resetPassword(
                     AuthResetPasswordRequest(
                         password = passwordInput
                     )
                 ).collect { result ->
+                    changeLoadingState()
                     when (result.code()) {
                         ResponseCode.SUCCESS.value -> {
                             sessionManager.logout()
