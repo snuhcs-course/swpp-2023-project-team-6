@@ -55,7 +55,15 @@ val pages = listOf<@Composable () -> Unit>(
                 .fillMaxSize()
         )
     },
-    { Text("Page 2 Content", fontSize = 40.sp) },
+    {
+        Image(
+            painter = painterResource(id = R.drawable.symbol_creation_screen_description),
+            contentDescription = "Description",
+            modifier = Modifier
+                .padding(horizontal = 5.dp)
+                .fillMaxSize()
+        )
+    },
     { Text("Page 3 Content", fontSize = 40.sp) },
     { Text("Page 4 Content", fontSize = 40.sp) },
     { Text("Page 5 Content", fontSize = 40.sp) },
@@ -100,9 +108,9 @@ private fun PagerIndicatorSample() {
         ) { page ->
             Box(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .fillMaxWidth()
-                    .height(400.dp),
+                    .height(600.dp),
                 contentAlignment = Alignment.Center
             ) {
                 pages[page]()
