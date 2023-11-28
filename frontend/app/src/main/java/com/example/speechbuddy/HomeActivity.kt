@@ -6,16 +6,10 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.mutableStateOf
-import androidx.core.view.WindowCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.speechbuddy.compose.SpeechBuddyHome
 import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
