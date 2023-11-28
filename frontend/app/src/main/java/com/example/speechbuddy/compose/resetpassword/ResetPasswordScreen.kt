@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -101,7 +103,18 @@ fun ResetPasswordScreen(
                 text = stringResource(id = R.string.next),
                 onClick = { viewModel.resetPassword(onSuccess = navigateToLogin) },
                 isError = isError,
-                level = ButtonLevel.PRIMARY
+                level = ButtonLevel.PRIMARY,
+                isEnabled = uiState.buttonEnabled
+            )
+        }
+    }
+
+    uiState.loading.let { loading ->
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
             )
         }
     }

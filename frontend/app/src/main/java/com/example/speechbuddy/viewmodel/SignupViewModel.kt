@@ -125,6 +125,15 @@ class SignupViewModel @Inject internal constructor(
         }
     }
 
+    private fun changeLoadingState() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                loading = !currentState.loading,
+                buttonEnabled = !currentState.buttonEnabled
+            )
+        }
+    }
+
     fun signup(onSuccess: () -> Unit) {
         if (email.value == null) {
             _uiState.update { currentState ->
@@ -187,6 +196,7 @@ class SignupViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoadingState()
             viewModelScope.launch {
                 repository.signup(
                     AuthSignupRequest(
@@ -195,6 +205,7 @@ class SignupViewModel @Inject internal constructor(
                         password = passwordInput
                     )
                 ).collect { result ->
+                    changeLoadingState()
                     when (result.code()) {
                         ResponseCode.CREATED.value -> {
                             onSuccess()

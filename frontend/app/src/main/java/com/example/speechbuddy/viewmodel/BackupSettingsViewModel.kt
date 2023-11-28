@@ -32,9 +32,6 @@ class BackupSettingsViewModel @Inject internal constructor(
     )
     val uiState: StateFlow<BackupSettingsUiState> = _uiState.asStateFlow()
 
-    private val _loading = MutableLiveData(false)
-    val loading: LiveData<Boolean> get() = _loading
-
     fun setAutoBackup(value: Boolean) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -80,7 +77,18 @@ class BackupSettingsViewModel @Inject internal constructor(
     fun toastDisplayed() {
         _uiState.update { currentState ->
             currentState.copy(
-                alert = null
+                alert = null,
+                loading = false,
+                buttonEnabled = true
+            )
+        }
+    }
+
+    private fun changeLoadingState() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                loading = !currentState.loading,
+                buttonEnabled = !currentState.buttonEnabled
             )
         }
     }
@@ -139,7 +147,7 @@ class BackupSettingsViewModel @Inject internal constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun backup() {
-        _loading.value = true
+        changeLoadingState()
         displayBackup()
         symbolListBackup()
         favoriteSymbolBackup()
@@ -147,7 +155,7 @@ class BackupSettingsViewModel @Inject internal constructor(
     }
 
     private fun handleNoInternetConnection() {
-        _loading.value = false
+        changeLoadingState()
         _uiState.update { currentState ->
             currentState.copy (
                 alert = BackupSettingsAlert.CONNECTION
@@ -157,7 +165,7 @@ class BackupSettingsViewModel @Inject internal constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun handleSuccess() {
-        _loading.value = false
+        changeLoadingState()
         setLastBackupDate(LocalDate.now().toString())
         _uiState.update { currentState ->
             currentState.copy (

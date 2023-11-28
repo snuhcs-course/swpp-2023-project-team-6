@@ -43,7 +43,6 @@ fun BackupSettings(
     viewModel: BackupSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val loading by viewModel.loading.observeAsState()
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -84,7 +83,8 @@ fun BackupSettings(
                             Switch(
                                 checked = uiState.isAutoBackupEnabled,
                                 onCheckedChange = { viewModel.setAutoBackup(it) },
-                                modifier = Modifier.heightIn(max = 32.dp)
+                                modifier = Modifier.heightIn(max = 32.dp),
+                                enabled = uiState.buttonEnabled
                             )
                         }
                     )
@@ -94,7 +94,8 @@ fun BackupSettings(
 
                 ButtonUi(
                     text = stringResource(id = R.string.backup_now),
-                    onClick = { viewModel.backup() }
+                    onClick = { viewModel.backup() },
+                    isEnabled = uiState.buttonEnabled
                 )
             }
         }
@@ -124,11 +125,14 @@ fun BackupSettings(
         }
     }
 
-    if (loading == true) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize()
-        )
+    uiState.loading.let { loading ->
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
+            )
+        }
     }
+
 }

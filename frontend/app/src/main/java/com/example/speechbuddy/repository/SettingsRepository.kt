@@ -91,6 +91,10 @@ class SettingsRepository @Inject constructor(
         }
     }
 
+    suspend fun resetSettings() {
+        settingsPrefManager.resetSettings()
+    }
+
     suspend fun displayBackup(): Flow<Response<Void>> =
         flow {
             try {
@@ -176,18 +180,19 @@ class SettingsRepository @Inject constructor(
                 response.body()?.let { settingsDto ->
                     val displayMode = settingsDto.displayMode
                     val defaultMenu = settingsDto.defaultMenu
+                    val updatedAt = settingsDto.updatedAt!!
+                    setLastBackupDate(updatedAt)
                     if (displayMode == 0) {
                         setDarkMode(false)
-                        settingsPrefManager.saveDarkMode(false)
                     } else {
                         setDarkMode(true)
-                        settingsPrefManager.saveDarkMode(true)
                     }
                     if (defaultMenu == 0) {
                         setInitialPage(InitialPage.SYMBOL_SELECTION)
                     } else {
                         setInitialPage(InitialPage.TEXT_TO_SPEECH)
                     }
+
                     Resource.success(null)
                 } ?: returnUnknownError()
             } else {
@@ -236,9 +241,9 @@ class SettingsRepository @Inject constructor(
             if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                 response.body()?.let { favoritesListDto ->
                     for (symbolIdDto in favoritesListDto.results) {
-                        symbolRepository.getSymbolsById(symbolIdDto.id).collect { symbol ->
-                            symbolRepository.updateFavorite(symbol, true)
-                        }
+                        val symbol = symbolRepository.getSymbolsById(symbolIdDto.id)
+                        symbolRepository.updateFavorite(symbol, true)
+
                     }
                     Resource.success(null)
                 } ?: returnUnknownError()

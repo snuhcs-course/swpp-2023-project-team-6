@@ -18,10 +18,12 @@ import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
 import com.example.speechbuddy.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -42,6 +44,15 @@ class LoginViewModel @Inject internal constructor(
 
     var passwordInput by mutableStateOf("")
         private set
+
+    private fun changeLoadingState() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                loading = !currentState.loading,
+                buttonEnabled = !currentState.buttonEnabled
+            )
+        }
+    }
 
     fun setEmail(input: String) {
         emailInput = input
@@ -117,6 +128,7 @@ class LoginViewModel @Inject internal constructor(
                 )
             }
         } else {
+            changeLoadingState()
             viewModelScope.launch {
                 authRepository.login(
                     AuthLoginRequest(
@@ -128,14 +140,20 @@ class LoginViewModel @Inject internal constructor(
                         // AccessToken is already saved in AuthTokenPrefsManager by the authRepository
                         sessionManager.setAuthToken(resource.data!!)
                         runBlocking {
-                            getMyInfoFromRemote(resource.data.accessToken)
-                            getMyDisplaySettingsFromRemote(resource.data.accessToken)
-                            getSymbolListFromRemote(resource.data.accessToken)
-                            getFavoritesListFromRemote(resource.data.accessToken)
-                            getWeightTableFromRemote(resource.data.accessToken)
+                            val jobs = mutableListOf<Job>()
+                            jobs.add(viewModelScope.launch { getMyInfoFromRemote(resource.data.accessToken) })
+                            jobs.add(viewModelScope.launch { getMyDisplaySettingsFromRemote(resource.data.accessToken) })
+                            jobs.add(viewModelScope.launch { getSymbolListFromRemote(resource.data.accessToken) })
+                            jobs.add(viewModelScope.launch { getFavoritesListFromRemote(resource.data.accessToken) })
+                            jobs.add(viewModelScope.launch { getWeightTableFromRemote(resource.data.accessToken) })
+
+                            jobs.joinAll()
+
+                            changeLoadingState()
                         }
 
                     } else if (resource.message?.contains("email", ignoreCase = true) == true) {
+                        changeLoadingState()
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidEmail = false,
@@ -146,6 +164,7 @@ class LoginViewModel @Inject internal constructor(
                             )
                         }
                     } else if (resource.message?.contains("password", ignoreCase = true) == true) {
+                        changeLoadingState()
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidPassword = false,
@@ -156,6 +175,7 @@ class LoginViewModel @Inject internal constructor(
                             )
                         }
                     } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                        changeLoadingState()
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isValidEmail = false,
@@ -177,6 +197,7 @@ class LoginViewModel @Inject internal constructor(
                 if (resource.status == Status.SUCCESS) {
                     sessionManager.setUserId(resource.data!!.id)
                 } else if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidEmail = false,
@@ -187,6 +208,7 @@ class LoginViewModel @Inject internal constructor(
                         )
                     }
                 } else {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidPassword = false,
@@ -205,6 +227,7 @@ class LoginViewModel @Inject internal constructor(
         viewModelScope.launch {
             settingsRepository.getDisplaySettingsFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidEmail = false,
@@ -215,6 +238,7 @@ class LoginViewModel @Inject internal constructor(
                         )
                     }
                 } else {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidPassword = false,
@@ -233,6 +257,7 @@ class LoginViewModel @Inject internal constructor(
         viewModelScope.launch {
             settingsRepository.getSymbolListFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidEmail = false,
@@ -243,6 +268,7 @@ class LoginViewModel @Inject internal constructor(
                         )
                     }
                 } else {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidPassword = false,
@@ -261,6 +287,7 @@ class LoginViewModel @Inject internal constructor(
         viewModelScope.launch {
             settingsRepository.getFavoritesListFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidEmail = false,
@@ -271,6 +298,7 @@ class LoginViewModel @Inject internal constructor(
                         )
                     }
                 } else {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidPassword = false,
@@ -289,6 +317,7 @@ class LoginViewModel @Inject internal constructor(
         viewModelScope.launch {
             settingsRepository.getWeightTableFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidEmail = false,
@@ -299,6 +328,7 @@ class LoginViewModel @Inject internal constructor(
                         )
                     }
                 } else {
+                    changeLoadingState()
                     _uiState.update { currentState ->
                         currentState.copy(
                             isValidPassword = false,

@@ -48,7 +48,7 @@ class SessionManager {
         }
     }
 
-    fun logout() {
+    fun deleteToken() {
         CoroutineScope(Dispatchers.Main).launch {
             _cachedToken.value = null
             _userId.value = null
