@@ -12,12 +12,22 @@ class SessionManager {
 
     private val _cachedToken = MutableLiveData<AuthToken?>()
     private val _userId = MutableLiveData<Int?>(null)
+    private val _isLogin = MutableLiveData(false)
 
     val cachedToken: LiveData<AuthToken?>
         get() = _cachedToken
 
     val userId: LiveData<Int?>
         get() = _userId
+
+    val isLogin: LiveData<Boolean?>
+        get() = _isLogin
+
+    fun setIsLogin(value: Boolean) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _isLogin.value = value
+        }
+    }
 
     /**
      * Authorized only when _userId is set to GUEST or refreshToken is not null

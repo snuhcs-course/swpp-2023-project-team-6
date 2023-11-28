@@ -3,6 +3,7 @@ package com.example.speechbuddy
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
@@ -23,10 +24,10 @@ class AuthActivity : BaseActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
     private val displaySettingsViewModel: DisplaySettingsViewModel by viewModels()
-    private val isBackupCompleted = mutableStateOf(false)
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         subscribeObservers()
@@ -45,9 +46,16 @@ class AuthActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun subscribeObservers() {
         sessionManager.isAuthorized.observe(this) { isAuthorized ->
-            if (isAuthorized) autoBackup()
+            if (isAuthorized &&
+                sessionManager.userId.value != -1 &&
+                sessionManager.isLogin.value != true
+            ) {
+                Log.d("where", sessionManager.isLogin.value.toString())
+                autoBackup()
+            } else if (isAuthorized){
+                navHomeActivity()
+            }
             // 로그인 아님, 게스트 아님, 날짜 지남
-            else navHomeActivity()
         }
     }
 
@@ -62,7 +70,6 @@ class AuthActivity : BaseActivity() {
             }
         }
         displayBackup()
-        if (isBackupCompleted.value) navHomeActivity()
     }
 
     private fun navHomeActivity() {
@@ -99,7 +106,10 @@ class AuthActivity : BaseActivity() {
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> { symbolListBackup() }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { isBackupCompleted.value = true }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        sessionManager.setIsLogin(false)
+                        navHomeActivity()
+                    }
                 }
             }
         }
@@ -112,7 +122,10 @@ class AuthActivity : BaseActivity() {
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> { favoriteSymbolBackup() }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { isBackupCompleted.value = true }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        sessionManager.setIsLogin(false)
+                        navHomeActivity()
+                    }
                 }
 
             }
@@ -127,7 +140,10 @@ class AuthActivity : BaseActivity() {
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> { weightTableBackup() }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { isBackupCompleted.value = true }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        sessionManager.setIsLogin(false)
+                        navHomeActivity()
+                    }
                 }
             }
         }
@@ -138,9 +154,15 @@ class AuthActivity : BaseActivity() {
         lifecycleScope.launch {
             settingsRepository.weightTableBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { isBackupCompleted.value = true }
+                    ResponseCode.SUCCESS.value -> {
+                        sessionManager.setIsLogin(false)
+                        navHomeActivity()
+                    }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { isBackupCompleted.value = true }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        sessionManager.setIsLogin(false)
+                        navHomeActivity()
+                    }
                 }
             }
         }
