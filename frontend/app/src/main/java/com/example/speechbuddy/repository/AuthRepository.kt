@@ -1,6 +1,8 @@
 package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
+import com.example.speechbuddy.data.local.SettingsPrefsManager
+import com.example.speechbuddy.data.local.UserIdPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
@@ -20,6 +22,7 @@ import com.example.speechbuddy.utils.ResponseHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -30,7 +33,9 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
     private val authService: AuthService,
+    private val userIdPrefsManager: UserIdPrefsManager,
     private val authTokenPrefsManager: AuthTokenPrefsManager,
+    private val settingsPrefsManager: SettingsPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
     private val accessTokenDtoMapper: AccessTokenDtoMapper,
@@ -142,7 +147,9 @@ class AuthRepository @Inject constructor(
                 val result =
                     authService.logout(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
+                    userIdPrefsManager.clearUserId()
                     authTokenPrefsManager.clearAuthToken()
+                    settingsPrefsManager.resetSettings()
                 }
                 emit(result)
             } catch (e: Exception) {
@@ -157,7 +164,9 @@ class AuthRepository @Inject constructor(
                 val result =
                     authService.withdraw(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
+                    userIdPrefsManager.clearUserId()
                     authTokenPrefsManager.clearAuthToken()
+                    settingsPrefsManager.resetSettings()
                 }
                 emit(result)
             } catch (e: Exception) {
@@ -165,11 +174,16 @@ class AuthRepository @Inject constructor(
             }
         }
 
-    fun checkPreviousUser(): Flow<Resource<AuthToken>> {
-        return authTokenPrefsManager.preferencesFlow.map { authToken ->
-            if (!authToken.accessToken.isNullOrEmpty() && !authToken.refreshToken.isNullOrEmpty()) {
-                Resource.success(authToken)
-            } else Resource.error("Couldn't find previous user", null)
+    fun checkPreviousUser(): Flow<Resource<Pair<Int, AuthToken>>> {
+        return userIdPrefsManager.preferencesFlow.combine(
+            authTokenPrefsManager.preferencesFlow
+        ) { userId, authToken ->
+            Pair(userId, authToken)
+        }.map { pair ->
+            if (pair.first != -1 && !pair.second.accessToken.isNullOrEmpty() && !pair.second.refreshToken.isNullOrEmpty())
+                Resource.success(pair)
+            else
+                Resource.error("Couldn't find previous user", null)
         }
     }
 

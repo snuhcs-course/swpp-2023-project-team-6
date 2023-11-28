@@ -33,6 +33,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.utils.Constants
+import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_COUNT
 import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_IMAGE_PATH
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -43,11 +44,11 @@ fun SelectedSymbolUi(
     modifier: Modifier = Modifier,
     onClear: () -> Unit
 ) {
-    val filepath = if(symbol.id>500){
-        LocalContext.current.filesDir.toString().plus("/")  // needs to be modified
-    } else{
-        DEFAULT_SYMBOL_IMAGE_PATH
-    }
+    val symbolImagePath =
+        if (symbol.id > DEFAULT_SYMBOL_COUNT)
+            LocalContext.current.filesDir.toString().plus("/")  // needs to be modified
+        else
+            DEFAULT_SYMBOL_IMAGE_PATH
 
     Card(
         modifier = modifier.size(100.dp),
@@ -61,7 +62,7 @@ fun SelectedSymbolUi(
             IconButton(
                 onClick = onClear,
                 modifier = Modifier
-                    .size(22.dp)
+                    .size(24.dp)
                     .padding(5.dp)
                     .zIndex(1f)
             ) {
@@ -76,7 +77,7 @@ fun SelectedSymbolUi(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 GlideImage(
-                    model = filepath.plus("symbol_${symbol.id}.png"),
+                    model = symbolImagePath.plus("symbol_${symbol.id}.png"),
                     contentDescription = symbol.text,
                     modifier = Modifier.height(65.dp),
                     contentScale = ContentScale.FillHeight

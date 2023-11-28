@@ -4,7 +4,9 @@ data class EmailVerificationUiState(
     val isValidEmail: Boolean = false,
     val isValidCode: Boolean = false,
     val isCodeSuccessfullySent: Boolean = false,
-    val error: EmailVerificationError? = null
+    val error: EmailVerificationError? = null,
+    val loading: Boolean = false,
+    val buttonEnabled: Boolean = true
 )
 
 data class EmailVerificationError(

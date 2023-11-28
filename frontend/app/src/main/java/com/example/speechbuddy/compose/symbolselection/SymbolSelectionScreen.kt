@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +39,8 @@ import kotlinx.coroutines.launch
 fun SymbolSelectionScreen(
     modifier: Modifier = Modifier,
     bottomPaddingValues: PaddingValues,
+    showBottomNavBar: () -> Unit,
+    hideBottomNavBar: () -> Unit,
     viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -45,6 +48,7 @@ fun SymbolSelectionScreen(
 
     // Used for automatic scroll
     val coroutineScope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
     val lazyGridState = rememberLazyGridState()
 
     Surface(
@@ -72,9 +76,10 @@ fun SymbolSelectionScreen(
 
                 SelectedSymbolsBox(
                     selectedSymbols = viewModel.selectedSymbols,
+                    lazyListState = lazyListState,
                     onClear = { viewModel.clear(it) },
                     onClearAll = { viewModel.clearAll() },
-                    onDisplayMax = { /* TODO */ }
+                    onDisplayMax = { viewModel.enterDisplayMax() }
                 )
 
                 Column {
@@ -108,7 +113,12 @@ fun SymbolSelectionScreen(
                             when (entry) {
                                 is Symbol -> SymbolUi(
                                     symbol = entry,
-                                    onSelect = { viewModel.selectSymbol(entry) },
+                                    onSelect = {
+                                        coroutineScope.launch {
+                                            val id = viewModel.selectSymbol(entry)
+                                            lazyListState.animateScrollToItem(id)
+                                        }
+                                    },
                                     onFavoriteChange = { viewModel.updateFavorite(entry, it) }
                                 )
 
@@ -117,7 +127,7 @@ fun SymbolSelectionScreen(
                                     onSelect = {
                                         coroutineScope.launch {
                                             viewModel.selectCategory(entry)
-                                            lazyGridState.scrollToItem(0)
+                                            lazyGridState.animateScrollToItem(0)
                                         }
                                     }
                                 )
@@ -127,5 +137,15 @@ fun SymbolSelectionScreen(
                 }
             }
         }
+    }
+
+    if (uiState.isDisplayMax) {
+        hideBottomNavBar()
+        DisplayMaxScreen(
+            onExit = {
+                viewModel.exitDisplayMax()
+                showBottomNavBar()
+            }
+        )
     }
 }

@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -103,21 +105,33 @@ fun LoginScreen(
                     onClick = {
                         viewModel.login()
                     },
-                    isEnabled = !isError,
+                    isEnabled = !isError && uiState.buttonEnabled,
                     isError = isError
                 )
                 ButtonUi(
                     text = stringResource(id = R.string.forgot_password),
                     onClick = onResetPasswordClick,
                     isError = isError,
-                    level = ButtonLevel.SECONDARY
+                    level = ButtonLevel.SECONDARY,
+                    isEnabled = uiState.buttonEnabled
                 )
             }
 
             ButtonUi(
                 text = stringResource(id = R.string.signup),
                 onClick = onSignupClick,
-                modifier = Modifier.offset(y = 110.dp),
+                modifier = Modifier.offset(y = 152.dp),
+                isEnabled = uiState.buttonEnabled
+            )
+        }
+    }
+
+    uiState.loading.let { loading ->
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
             )
         }
     }

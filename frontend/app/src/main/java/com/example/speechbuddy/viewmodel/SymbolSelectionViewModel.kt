@@ -47,7 +47,24 @@ class SymbolSelectionViewModel @Inject internal constructor(
     private var getEntriesJob: Job? = null
 
     init {
+        repository.checkImages()
         getEntries()
+    }
+
+    fun enterDisplayMax() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isDisplayMax = true
+            )
+        }
+    }
+
+    fun exitDisplayMax() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isDisplayMax = false
+            )
+        }
     }
 
     fun selectDisplayMode(displayMode: DisplayMode) {
@@ -82,12 +99,15 @@ class SymbolSelectionViewModel @Inject internal constructor(
         selectedSymbols = emptyList()
     }
 
-    fun selectSymbol(symbol: Symbol) {
+    fun selectSymbol(symbol: Symbol): Int {
         queryInput = ""
-        selectedSymbols =
-            selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
+
+        val newSymbolItem = SymbolItem(id = selectedSymbols.size, symbol = symbol)
+        selectedSymbols = selectedSymbols.plus(newSymbolItem)
 
         provideSuggestion(symbol)
+
+        return newSymbolItem.id
     }
 
     fun updateFavorite(symbol: Symbol, value: Boolean) {
@@ -111,17 +131,17 @@ class SymbolSelectionViewModel @Inject internal constructor(
         }
     }
 
-    private fun provideSuggestion(symbol: Symbol){
+    private fun provideSuggestion(symbol: Symbol) {
         // became independent from selectSymbol function
         // change it so that providing suggestion is available from any screen
 //        if (uiState.value.displayMode == DisplayMode.SYMBOL) {
 
-            getEntriesJob?.cancel()
-            getEntriesJob = viewModelScope.launch {
-                weightTableRepository.provideSuggestion(symbol).collect { symbols ->
-                    _entries.postValue(symbols)
-                }
+        getEntriesJob?.cancel()
+        getEntriesJob = viewModelScope.launch {
+            weightTableRepository.provideSuggestion(symbol).collect { symbols ->
+                _entries.postValue(symbols)
             }
+        }
 //        }
     }
 

@@ -44,16 +44,3 @@ fun SettingsRowText(
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun SettingsRowPreview() {
-    SpeechBuddyTheme {
-        SettingsRow(
-            label = "이메일",
-            content = {
-                SettingsRowText(text = "example@gmail.com")
-            }
-        )
-    }
-}
