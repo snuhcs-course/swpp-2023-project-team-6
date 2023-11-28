@@ -5,6 +5,7 @@ import com.example.speechbuddy.domain.models.User
 data class AccountSettingsUiState(
     val user: User? = null,
     val alert: AccountSettingsAlert? = null,
+    val buttonEnabled: Boolean = true
 )
 
 enum class AccountSettingsAlert {

@@ -5,7 +5,8 @@ data class SignupUiState(
     val isValidNickname: Boolean = false,
     val isValidPassword: Boolean = false,
     val error: SignupError? = null,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val buttonEnabled: Boolean = true
 )
 
 data class SignupError(

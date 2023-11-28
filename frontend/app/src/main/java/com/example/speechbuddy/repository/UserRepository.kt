@@ -54,6 +54,10 @@ class UserRepository @Inject constructor(
         }
     }
 
+    suspend fun deleteUserInfo() {
+        userDao.deleteUserInfo()
+    }
+
     private fun <T> returnUnknownError(): Resource<T> {
         return Resource.error(
             "Unknown error", null

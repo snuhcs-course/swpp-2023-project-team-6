@@ -38,7 +38,6 @@ fun EmailVerificationScreen(
     viewModel: EmailVerificationViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val loading by viewModel.loading.observeAsState()
 
     val isEmailError = uiState.error?.type == EmailVerificationErrorType.EMAIL
     val isCodeError = uiState.error?.type == EmailVerificationErrorType.CODE
@@ -87,7 +86,7 @@ fun EmailVerificationScreen(
                     ButtonUi(
                         text = stringResource(id = R.string.send_code),
                         onClick = { viewModel.sendCode() },
-                        isEnabled = !isEmailError,
+                        isEnabled = !isEmailError && uiState.buttonEnabled,
                         level = ButtonLevel.TERTIARY
                     )
                 },
@@ -126,16 +125,19 @@ fun EmailVerificationScreen(
             ButtonUi(
                 text = stringResource(id = R.string.next),
                 onClick = { viewModel.verifyEmail(navigateCallback = navigateCallback) },
-                isEnabled = uiState.isCodeSuccessfullySent
+                isEnabled = uiState.isCodeSuccessfullySent && uiState.buttonEnabled
             )
         }
     }
 
-    if (loading == true) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize()
-        )
+    uiState.loading.let { loading ->
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
+            )
+        }
     }
+
 }

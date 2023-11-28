@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
 import com.example.speechbuddy.compose.SpeechBuddyHome
@@ -26,28 +27,16 @@ class HomeActivity : BaseActivity() {
 
         super.onCreate(savedInstanceState)
 
-        val isBeingReloadedForDarkModeChange = intent.getBooleanExtra("isBeingReloadedForDarkModeChange", false)
-
         setContent {
             SpeechBuddyTheme(
-                darkTheme = getDarkMode()
+                settingsRepository = settingsRepository,
+                initialDarkMode = getInitialDarkMode()
             ) {
-                SpeechBuddyHome(getInitialPage(), isBeingReloadedForDarkModeChange)
+                SpeechBuddyHome(getInitialPage())
             }
         }
 
         subscribeObservers()
-
-        val previousDarkMode = getDarkMode()
-
-        val darkModeObserver = Observer<Boolean?> { darkMode ->
-            if (darkMode != previousDarkMode) {
-                recreateHomeActivity()
-            }
-        }
-
-        settingsRepository.darkModeLiveData.observeForever(darkModeObserver)
-
     }
 
     private fun subscribeObservers() {
@@ -62,19 +51,12 @@ class HomeActivity : BaseActivity() {
         finish()
     }
 
-    private fun recreateHomeActivity() {
-        val intent = Intent(this, HomeActivity::class.java)
-        intent.putExtra("isBeingReloadedForDarkModeChange", true)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun getDarkMode(): Boolean {
-        return displaySettingsViewModel.getDarkMode()
-    }
-
     private fun getInitialPage(): Boolean {
         return displaySettingsViewModel.getInitialPage()
+    }
+
+    private fun getInitialDarkMode(): Boolean {
+        return displaySettingsViewModel.getDarkMode()
     }
     
     // hides keyboard
