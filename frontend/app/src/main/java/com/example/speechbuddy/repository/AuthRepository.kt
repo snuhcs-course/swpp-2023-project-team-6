@@ -144,9 +144,10 @@ class AuthRepository @Inject constructor(
                 val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
                 val result =
                     authService.logout(getAuthHeader(), AuthRefreshRequest(refreshToken))
-                CoroutineScope(Dispatchers.IO).launch {
-                    authTokenPrefsManager.clearAuthToken()
-                }
+                if (result.isSuccessful && result.code() == ResponseCode.SUCCESS.value)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        authTokenPrefsManager.clearAuthToken()
+                    }
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
@@ -159,9 +160,10 @@ class AuthRepository @Inject constructor(
                 val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
                 val result =
                     authService.withdraw(getAuthHeader(), AuthRefreshRequest(refreshToken))
-                CoroutineScope(Dispatchers.IO).launch {
-                    authTokenPrefsManager.clearAuthToken()
-                }
+                if (result.isSuccessful && result.code() == ResponseCode.SUCCESS.value)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        authTokenPrefsManager.clearAuthToken()
+                    }
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())

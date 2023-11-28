@@ -129,7 +129,6 @@ class AccountSettingsViewModel @Inject internal constructor(
             settingsRepository.displayBackup().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {}
-
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
                     }
@@ -139,7 +138,6 @@ class AccountSettingsViewModel @Inject internal constructor(
     }
 
     private fun symbolListBackup() {
-
         viewModelScope.launch {
             settingsRepository.symbolListBackup().collect { result ->
                 when (result.code()) {
