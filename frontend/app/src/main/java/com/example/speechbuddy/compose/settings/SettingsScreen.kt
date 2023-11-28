@@ -14,12 +14,12 @@ import androidx.navigation.compose.rememberNavController
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SettingsScreen(
-    bottomPaddingValues: PaddingValues
+    paddingValues: PaddingValues
 ) {
     val navController = rememberNavController()
     SettingsScreenNavHost(
         navController = navController,
-        bottomPaddingValues = bottomPaddingValues
+        paddingValues = paddingValues
     )
 }
 
@@ -27,7 +27,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenNavHost(
     navController: NavHostController,
-    bottomPaddingValues: PaddingValues
+    paddingValues: PaddingValues
 ) {
     val navigateToMain = { navController.navigate("main") }
 
@@ -35,56 +35,48 @@ private fun SettingsScreenNavHost(
         composable("main") {
             MainSettings(
                 navController = navController,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
         composable("account") {
             AccountSettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
         composable("guest") {
             GuestSettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
         composable("display") {
             DisplaySettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
         composable("my_symbol") {
             MySymbolSettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
         composable("backup") {
             BackupSettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
         composable("version") {
             VersionInfo(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
         composable("developers") {
             DevelopersInfo(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
 
         composable("copyright") {
             Copyright(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                paddingValues = paddingValues
             )
         }
     }
