@@ -1,6 +1,7 @@
 package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.UserDao
+import com.example.speechbuddy.data.local.UserIdPrefsManager
 import com.example.speechbuddy.data.local.models.UserMapper
 import com.example.speechbuddy.data.remote.UserRemoteSource
 import com.example.speechbuddy.data.remote.models.UserDtoMapper
@@ -20,6 +21,7 @@ class UserRepository @Inject constructor(
     private val userMapper: UserMapper,
     private val userDtoMapper: UserDtoMapper,
     private val userRemoteSource: UserRemoteSource,
+    private val userIdPrefsManager: UserIdPrefsManager,
     private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager
 ) {
@@ -36,6 +38,7 @@ class UserRepository @Inject constructor(
             if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                 response.body()?.let { userDto ->
                     val user = userDtoMapper.mapToDomainModel(userDto)
+                    userIdPrefsManager.saveUserId(user.id)
                     val userEntity = userMapper.mapFromDomainModel(user)
                     userDao.insertUser(userEntity)
                     Resource.success(user)

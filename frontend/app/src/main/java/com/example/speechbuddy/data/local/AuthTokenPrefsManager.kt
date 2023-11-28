@@ -36,12 +36,6 @@ class AuthTokenPrefsManager @Inject constructor(context: Context) {
             )
         }
 
-    suspend fun saveAccessToken(token: String) {
-        dataStore.edit { preferences ->
-            preferences[ACCESS] = token
-        }
-    }
-
     suspend fun saveAuthToken(authToken: AuthToken) {
         dataStore.edit { preferences ->
             preferences[ACCESS] = authToken.accessToken ?: ""

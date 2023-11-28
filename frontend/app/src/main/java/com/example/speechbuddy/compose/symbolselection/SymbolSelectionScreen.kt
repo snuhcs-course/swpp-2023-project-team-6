@@ -141,9 +141,11 @@ fun SymbolSelectionScreen(
 
     if (uiState.isDisplayMax) {
         hideBottomNavBar()
-        DisplayMaxScreen(onExit = {
-            viewModel.exitDisplayMax()
-            showBottomNavBar()
-        })
+        DisplayMaxScreen(
+            onExit = {
+                viewModel.exitDisplayMax()
+                showBottomNavBar()
+            }
+        )
     }
 }

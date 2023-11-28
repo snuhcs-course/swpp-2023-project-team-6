@@ -1,14 +1,14 @@
 package com.example.speechbuddy.repository
 
-import android.content.Context
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
+import com.example.speechbuddy.data.local.SettingsPrefsManager
+import com.example.speechbuddy.data.local.UserIdPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AccessTokenDto
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
-import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
@@ -37,7 +37,9 @@ class AuthRepositoryTest {
 
     @MockK
     private val authService = mockk<AuthService>()
+    private val userIdPrefsManager = mockk<UserIdPrefsManager>()
     private val authTokenPrefsManager = mockk<AuthTokenPrefsManager>()
+    private val settingsPrefsManager = mockk<SettingsPrefsManager>()
     private val authTokenRemoteSource = mockk<AuthTokenRemoteSource>()
     private val authTokenDtoMapper = AuthTokenDtoMapper()
     private val accessTokenDtoMapper = AccessTokenDtoMapper()
@@ -66,14 +68,13 @@ class AuthRepositoryTest {
     private val mockErrorResponseBody =
         mockErrorJson.toResponseBody("application/json".toMediaType())
 
-    private val temporaryToken = "temporary"
-    private val authHeader = "Bearer $temporaryToken"
-
     @Before
     fun setup() {
         authRepository = AuthRepository(
             authService,
+            userIdPrefsManager,
             authTokenPrefsManager,
+            settingsPrefsManager,
             authTokenRemoteSource,
             authTokenDtoMapper,
             accessTokenDtoMapper,

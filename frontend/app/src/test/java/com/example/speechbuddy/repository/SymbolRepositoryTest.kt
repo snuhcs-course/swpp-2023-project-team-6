@@ -7,6 +7,7 @@ import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.remote.MySymbolRemoteSource
+import com.example.speechbuddy.data.remote.ProxyImageDownloader
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
@@ -35,8 +36,9 @@ class SymbolRepositoryTest {
     private lateinit var mockMySymbolDtoMapper: MySymbolDtoMapper
     private lateinit var mockResponseHandler: ResponseHandler
     private lateinit var mockSessionManager: SessionManager
+    private lateinit var mockProxyImageDownloader: ProxyImageDownloader
 
-    val categoryTypes = listOf(
+    private val categoryTypes = listOf(
         "가족",
         "계절",
         "교통",
@@ -74,6 +76,7 @@ class SymbolRepositoryTest {
         mockMySymbolRemoteSource = mockk(relaxed = true)
         mockResponseHandler = mockk(relaxed = true)
         mockSessionManager = mockk(relaxed = true)
+        mockProxyImageDownloader = mockk(relaxed = true)
 
         // create symbolEntities
         val symbolEntities = mutableListOf<SymbolEntity>()
@@ -110,7 +113,8 @@ class SymbolRepositoryTest {
             mockResponseHandler,
             mockSessionManager,
             symbolMapper,
-            categoryMapper
+            categoryMapper,
+            mockProxyImageDownloader
         )
     }
 
@@ -230,7 +234,7 @@ class SymbolRepositoryTest {
         val mockQuery = "가다"
 
         val entryList = mutableListOf<Entry>()
-        entryList.addAll(listOf(Symbol(3, "가다", null, 1, false, false)))
+        entryList.addAll(listOf(Symbol(3, "가다", null, 1, isFavorite = false, isMine = false)))
 
         coEvery { symbolDao.getSymbolsByQuery(mockQuery) } returns flowOf(
             listOf(
@@ -239,8 +243,8 @@ class SymbolRepositoryTest {
                     "가다",
                     null,
                     1,
-                    false,
-                    false
+                    isFavorite = false,
+                    isMine = false
                 )
             )
         )
@@ -279,7 +283,7 @@ class SymbolRepositoryTest {
 
         val entryList = mutableListOf<Entry>()
         entryList.addAll(listOf(Category(1, "가족")))
-        entryList.addAll(listOf(Symbol(11, "가족", null, 1, false, false)))
+        entryList.addAll(listOf(Symbol(11, "가족", null, 1, isFavorite = false, isMine = false)))
 
         coEvery { symbolDao.getSymbolsByQuery(mockQuery) } returns flowOf(
             listOf(
@@ -288,8 +292,8 @@ class SymbolRepositoryTest {
                     "가족",
                     null,
                     1,
-                    false,
-                    false
+                    isFavorite = false,
+                    isMine = false
                 )
             )
         )

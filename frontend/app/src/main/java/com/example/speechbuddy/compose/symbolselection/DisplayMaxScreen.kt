@@ -78,7 +78,7 @@ fun DisplayMaxScreen(
                     )
             ) {
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     LazyRow(

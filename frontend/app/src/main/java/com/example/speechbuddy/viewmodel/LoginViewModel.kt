@@ -151,7 +151,6 @@ class LoginViewModel @Inject internal constructor(
 
                             changeLoadingState()
                         }
-
                     } else if (resource.message?.contains("email", ignoreCase = true) == true) {
                         changeLoadingState()
                         _uiState.update { currentState ->
@@ -346,7 +345,10 @@ class LoginViewModel @Inject internal constructor(
     fun checkPreviousUser() {
         viewModelScope.launch {
             authRepository.checkPreviousUser().collect { resource ->
-                if (resource.data != null) sessionManager.setAuthToken(resource.data)
+                if (resource.data != null) {
+                    sessionManager.setUserId(resource.data.first)
+                    sessionManager.setAuthToken(resource.data.second)
+                }
             }
         }
     }
