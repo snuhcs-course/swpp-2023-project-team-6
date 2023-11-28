@@ -5,6 +5,7 @@ import com.example.speechbuddy.data.local.WeightRowDao
 import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.WeightRowEntity
 import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.domain.utils.Converters
 import com.example.speechbuddy.ui.models.SymbolItem
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -19,6 +20,7 @@ class WeightTableRepositoryTest {
     private lateinit var mockSymbolDao: SymbolDao
     private lateinit var mockWeightRowDao: WeightRowDao
     private lateinit var weightTableRepository: WeightTableRepository
+    private lateinit var converters: Converters
 
     private val mockSymbol1 = Symbol(
         id = 1,
@@ -49,6 +51,7 @@ class WeightTableRepositoryTest {
     fun setUp() {
         mockWeightRowDao = mockk(relaxed = true)
         mockSymbolDao = mockk(relaxed = true)
+        converters = Converters()
 
         // for `provideSuggestion calls symbolDao insert`()
         val symbolEntities = mutableListOf<SymbolEntity>()
@@ -69,7 +72,7 @@ class WeightTableRepositoryTest {
             symbolEntities.toList()
         )
 
-        weightTableRepository = WeightTableRepository(mockSymbolDao, mockWeightRowDao)
+        weightTableRepository = WeightTableRepository(mockSymbolDao, mockWeightRowDao, converters)
 
     }
 
