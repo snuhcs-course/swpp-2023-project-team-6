@@ -4,8 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,8 +27,6 @@ private fun SettingsScreenNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues
 ) {
-    val navigateToMain = { navController.navigate("main") }
-
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
             MainSettings(

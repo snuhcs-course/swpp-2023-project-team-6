@@ -243,7 +243,6 @@ class SettingsRepository @Inject constructor(
                     for (symbolIdDto in favoritesListDto.results) {
                         val symbol = symbolRepository.getSymbolsById(symbolIdDto.id)
                         symbolRepository.updateFavorite(symbol, true)
-
                     }
                     Resource.success(null)
                 } ?: returnUnknownError()
