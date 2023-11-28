@@ -1,6 +1,7 @@
 package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
+import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.local.UserIdPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
@@ -34,6 +35,7 @@ class AuthRepository @Inject constructor(
     private val authService: AuthService,
     private val userIdPrefsManager: UserIdPrefsManager,
     private val authTokenPrefsManager: AuthTokenPrefsManager,
+    private val settingsPrefsManager: SettingsPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
     private val accessTokenDtoMapper: AccessTokenDtoMapper,
@@ -147,6 +149,7 @@ class AuthRepository @Inject constructor(
                 CoroutineScope(Dispatchers.IO).launch {
                     userIdPrefsManager.clearUserId()
                     authTokenPrefsManager.clearAuthToken()
+                    settingsPrefsManager.resetSettings()
                 }
                 emit(result)
             } catch (e: Exception) {
@@ -163,6 +166,7 @@ class AuthRepository @Inject constructor(
                 CoroutineScope(Dispatchers.IO).launch {
                     userIdPrefsManager.clearUserId()
                     authTokenPrefsManager.clearAuthToken()
+                    settingsPrefsManager.resetSettings()
                 }
                 emit(result)
             } catch (e: Exception) {
