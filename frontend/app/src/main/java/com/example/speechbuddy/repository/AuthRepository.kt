@@ -1,7 +1,6 @@
 package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
-import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.local.UserIdPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
@@ -35,7 +34,6 @@ class AuthRepository @Inject constructor(
     private val authService: AuthService,
     private val userIdPrefsManager: UserIdPrefsManager,
     private val authTokenPrefsManager: AuthTokenPrefsManager,
-    private val settingsPrefsManager: SettingsPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
     private val accessTokenDtoMapper: AccessTokenDtoMapper,
@@ -147,9 +145,7 @@ class AuthRepository @Inject constructor(
                 val result =
                     authService.logout(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
-                    userIdPrefsManager.clearUserId()
                     authTokenPrefsManager.clearAuthToken()
-                    settingsPrefsManager.resetSettings()
                 }
                 emit(result)
             } catch (e: Exception) {
@@ -164,9 +160,7 @@ class AuthRepository @Inject constructor(
                 val result =
                     authService.withdraw(getAuthHeader(), AuthRefreshRequest(refreshToken))
                 CoroutineScope(Dispatchers.IO).launch {
-                    userIdPrefsManager.clearUserId()
                     authTokenPrefsManager.clearAuthToken()
-                    settingsPrefsManager.resetSettings()
                 }
                 emit(result)
             } catch (e: Exception) {
@@ -180,8 +174,10 @@ class AuthRepository @Inject constructor(
         ) { userId, authToken ->
             Pair(userId, authToken)
         }.map { pair ->
-            if (pair.first != -1 && !pair.second.accessToken.isNullOrEmpty() && !pair.second.refreshToken.isNullOrEmpty())
-                Resource.success(pair)
+            val userId = pair.first
+            val authToken = pair.second
+            if (userId != null)
+                Resource.success(Pair(userId, authToken))
             else
                 Resource.error("Couldn't find previous user", null)
         }

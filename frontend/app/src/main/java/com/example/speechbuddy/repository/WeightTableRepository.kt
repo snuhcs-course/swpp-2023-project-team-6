@@ -23,7 +23,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class WeightTableRepository @Inject constructor(
     private val symbolDao: SymbolDao,
@@ -33,7 +32,6 @@ class WeightTableRepository @Inject constructor(
     private val symbolMapper = SymbolMapper()
     private val weightRowMapper = WeightRowMapper()
     private var allSymbols = getAllSymbols()
-
 
     private fun getAllSymbols() = symbolDao.getSymbols().map { symbolEntities ->
         symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
@@ -47,8 +45,10 @@ class WeightTableRepository @Inject constructor(
         }
 
     suspend fun resetAllWeightRows() {
-        weightRowDao.deleteMySymbolsWeightRows()
-        weightRowDao.resetOriginalSymbolsWeightRows(List(500) { 0 })
+        CoroutineScope(Dispatchers.IO).launch {
+            weightRowDao.deleteMySymbolsWeightRows()
+            weightRowDao.resetOriginalSymbolsWeightRows(List(500) { 0 })
+        }
     }
 
     suspend fun replaceWeightTable(weightRowList: List<WeightRow>) {

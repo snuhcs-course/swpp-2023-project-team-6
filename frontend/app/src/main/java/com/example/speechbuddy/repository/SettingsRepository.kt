@@ -1,7 +1,5 @@
 package com.example.speechbuddy.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.remote.SettingsRemoteSource
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
@@ -92,7 +90,9 @@ class SettingsRepository @Inject constructor(
     }
 
     suspend fun resetSettings() {
-        settingsPrefManager.resetSettings()
+        CoroutineScope(Dispatchers.IO).launch {
+            settingsPrefManager.resetSettings()
+        }
     }
 
     suspend fun displayBackup(): Flow<Response<Void>> =

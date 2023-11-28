@@ -16,11 +16,14 @@ import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -31,15 +34,12 @@ import javax.inject.Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
     private val categoryDao: CategoryDao,
-    // For remote-related processing
     private val mySymbolRemoteSource: MySymbolRemoteSource,
     private val mySymbolDtoMapper: MySymbolDtoMapper,
     private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager,
-    // For local mapping
     private val symbolMapper: SymbolMapper,
     private val categoryMapper: CategoryMapper,
-    // For image download
     private val proxyImageDownloader: ProxyImageDownloader
 ) {
 
@@ -126,12 +126,12 @@ class SymbolRepository @Inject constructor(
     fun getNextSymbolId() =
         symbolDao.getLastSymbol().map { symbol -> symbol.id + 1 }
 
-    suspend fun clearAllMySymbols() {
-        symbolDao.deleteAllMySymbols()
-    }
-
-    suspend fun resetFavoriteSymbols() {
-        symbolDao.resetFavoriteSymbols()
+    suspend fun resetSymbolsAndFavorites() {
+        CoroutineScope(Dispatchers.IO).launch {
+            // execute the following dao updates sequentially
+            symbolDao.deleteAllMySymbols()
+            symbolDao.resetFavoriteSymbols()
+        }
     }
 
     fun insertSymbol(symbol: Symbol) {

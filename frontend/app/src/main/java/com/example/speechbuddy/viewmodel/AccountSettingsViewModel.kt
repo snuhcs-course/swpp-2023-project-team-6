@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.repository.SettingsRepository
@@ -31,8 +30,7 @@ class AccountSettingsViewModel @Inject internal constructor(
     private val weightTableRepository: WeightTableRepository,
     private val symbolRepository: SymbolRepository,
     private val userRepository: UserRepository,
-    private val sessionManager: SessionManager,
-    private val authTokenPrefsManager: AuthTokenPrefsManager
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AccountSettingsUiState())
@@ -78,11 +76,10 @@ class AccountSettingsViewModel @Inject internal constructor(
                     ResponseCode.SUCCESS.value -> {
                         settingsRepository.resetSettings()
                         weightTableRepository.resetAllWeightRows()
-                        symbolRepository.clearAllMySymbols()
-                        symbolRepository.resetFavoriteSymbols()
+                        symbolRepository.resetSymbolsAndFavorites()
                         userRepository.deleteUserInfo()
                         sessionManager.deleteToken()
-                        authTokenPrefsManager.clearAuthToken()
+                        // authToken is already cleared by the repository
                         hideAlert()
                     }
 
@@ -102,11 +99,10 @@ class AccountSettingsViewModel @Inject internal constructor(
                     ResponseCode.SUCCESS.value -> {
                         settingsRepository.resetSettings()
                         weightTableRepository.resetAllWeightRows()
-                        symbolRepository.clearAllMySymbols()
-                        symbolRepository.resetFavoriteSymbols()
+                        symbolRepository.resetSymbolsAndFavorites()
                         userRepository.deleteUserInfo()
                         sessionManager.deleteToken()
-                        authTokenPrefsManager.clearAuthToken()
+                        // authToken is already cleared by the repository
                         hideAlert()
                     }
 
@@ -120,6 +116,10 @@ class AccountSettingsViewModel @Inject internal constructor(
 
     fun exitGuestMode() {
         viewModelScope.launch {
+            settingsRepository.resetSettings()
+            weightTableRepository.resetAllWeightRows()
+            symbolRepository.resetSymbolsAndFavorites()
+            userRepository.deleteUserInfo()
             sessionManager.exitGuestMode()
         }
     }
@@ -130,7 +130,9 @@ class AccountSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {}
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }
@@ -143,7 +145,9 @@ class AccountSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {}
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
 
             }
@@ -157,7 +161,9 @@ class AccountSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {}
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }
@@ -168,9 +174,13 @@ class AccountSettingsViewModel @Inject internal constructor(
         viewModelScope.launch {
             settingsRepository.weightTableBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { handleSuccess() }
+                    ResponseCode.SUCCESS.value -> {
+                        handleSuccess()
+                    }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }

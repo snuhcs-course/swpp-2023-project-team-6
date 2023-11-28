@@ -18,7 +18,7 @@ class UserIdPrefsManager @Inject constructor(context: Context) {
 
     private val dataStore = context.createDataStore(name = USER_ID_PREFS)
 
-    val preferencesFlow: Flow<Int> = dataStore.data
+    val preferencesFlow: Flow<Int?> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -27,7 +27,7 @@ class UserIdPrefsManager @Inject constructor(context: Context) {
             }
         }
         .map { preferences ->
-            preferences[USER_ID] ?: -1
+            preferences[USER_ID]
         }
 
     suspend fun saveUserId(id: Int) {

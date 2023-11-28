@@ -355,6 +355,7 @@ class LoginViewModel @Inject internal constructor(
 
     fun enterGuestMode() {
         viewModelScope.launch {
+            userRepository.setGuestMode()
             sessionManager.enterGuestMode()
         }
     }
