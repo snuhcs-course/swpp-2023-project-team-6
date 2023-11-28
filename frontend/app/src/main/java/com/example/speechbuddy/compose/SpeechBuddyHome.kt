@@ -79,11 +79,13 @@ fun SpeechBuddyHome(
         )
     )
 
+    val topAppBarState = rememberSaveable { mutableStateOf(true) }
     val bottomNavBarState = rememberSaveable { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
             TopAppBar(
+                topAppBarState = topAppBarState,
                 items = navItems,
                 navController = navController
             )
@@ -103,8 +105,8 @@ fun SpeechBuddyHome(
             navController = navController,
             paddingValues = paddingValues,
             initialPage = initialPage,
-            showBottomNavBar = { bottomNavBarState.value = true },
-            hideBottomNavBar = { bottomNavBarState.value = false }
+            topAppBarState = topAppBarState,
+            bottomNavBarState = bottomNavBarState
         )
     }
 }
@@ -112,6 +114,7 @@ fun SpeechBuddyHome(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
+    topAppBarState: MutableState<Boolean>,
     items: List<BottomNavItem>,
     navController: NavController
 ) {
@@ -121,30 +124,36 @@ fun TopAppBar(
         if (item.route == backStackEntry.value?.destination?.route) titleResId = item.nameResId
     }
 
-    CenterAlignedTopAppBar(
-        title = {
-            if (titleResId != null) { // ensure that titleResId is properly initialized
-                Text(
-                    text = stringResource(id = titleResId!!),
-                    style = MaterialTheme.typography.titleLarge
+    AnimatedVisibility(
+        visible = topAppBarState.value,
+        enter = slideInVertically(initialOffsetY = { -it }),
+        exit = slideOutVertically(targetOffsetY = { -it })
+    ) {
+        CenterAlignedTopAppBar(
+            title = {
+                if (titleResId != null) { // ensure that titleResId is properly initialized
+                    Text(
+                        text = stringResource(id = titleResId!!),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+            },
+            navigationIcon = {
+                Image(
+                    painter = painterResource(id = R.drawable.speechbuddy_parrot),
+                    contentDescription = stringResource(id = R.string.app_name),
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .size(40.dp),
+                    contentScale = ContentScale.Fit
                 )
-            }
-        },
-        navigationIcon = {
-            Image(
-                painter = painterResource(id = R.drawable.speechbuddy_parrot),
-                contentDescription = stringResource(id = R.string.app_name),
-                modifier = Modifier
-                    .padding(6.dp)
-                    .size(40.dp),
-                contentScale = ContentScale.Fit
+            },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer
             )
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer
         )
-    )
+    }
 }
 
 @Composable
@@ -197,8 +206,8 @@ private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
     initialPage: Boolean,
-    showBottomNavBar: () -> Unit,
-    hideBottomNavBar: () -> Unit,
+    topAppBarState: MutableState<Boolean>,
+    bottomNavBarState: MutableState<Boolean>
 ) {
     val startDestination =
         if (initialPage) {
@@ -211,8 +220,8 @@ private fun SpeechBuddyHomeNavHost(
         composable("symbol_selection") {
             SymbolSelectionScreen(
                 paddingValues = paddingValues,
-                showBottomNavBar = showBottomNavBar,
-                hideBottomNavBar = hideBottomNavBar
+                topAppBarState = topAppBarState,
+                bottomNavBarState = bottomNavBarState
             )
         }
         composable("text_to_speech") {

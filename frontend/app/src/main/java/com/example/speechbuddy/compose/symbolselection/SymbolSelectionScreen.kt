@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -35,8 +36,8 @@ import kotlinx.coroutines.launch
 fun SymbolSelectionScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    showBottomNavBar: () -> Unit,
-    hideBottomNavBar: () -> Unit,
+    topAppBarState: MutableState<Boolean>,
+    bottomNavBarState: MutableState<Boolean>,
     viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -94,11 +95,7 @@ fun SymbolSelectionScreen(
                 ) {
                     /**
                      * Without the elvis operator, null pointer exception arises.
-                     * Do NOT erase the elvis operator although they seem useless!
-                     */
-                    /**
-                     * Without the elvis operator, null pointer exception arises.
-                     * Do NOT erase the elvis operator although they seem useless!
+                     * Do NOT erase the elvis operator although it seems useless!
                      */
                     items(entries ?: emptyList()) { entry ->
                         when (entry) {
@@ -130,11 +127,14 @@ fun SymbolSelectionScreen(
     }
 
     if (uiState.isDisplayMax) {
-        hideBottomNavBar()
         DisplayMaxScreen(
-            onExit = {
-                viewModel.exitDisplayMax()
-                showBottomNavBar()
+            showAppBars = {
+                topAppBarState.value = true
+                bottomNavBarState.value = true
+            },
+            hideAppBars = {
+                topAppBarState.value = false
+                bottomNavBarState.value = false
             }
         )
     }
