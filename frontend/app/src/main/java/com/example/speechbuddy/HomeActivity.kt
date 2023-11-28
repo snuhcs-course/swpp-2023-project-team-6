@@ -12,15 +12,15 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.speechbuddy.compose.SpeechBuddyHome
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
-
-    private val displaySettingsViewModel: DisplaySettingsViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,11 +52,23 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun getInitialPage(): Boolean {
-        return displaySettingsViewModel.getInitialPage()
+        var initialPage = false
+        lifecycleScope.launch {
+            settingsRepository.getInitialPage().collect {
+                initialPage = it.data?: false
+            }
+        }
+        return initialPage
     }
 
     private fun getInitialDarkMode(): Boolean {
-        return displaySettingsViewModel.getDarkMode()
+        var darkMode = false
+        lifecycleScope.launch {
+            settingsRepository.getDarkMode().collect {
+                darkMode = it.data?: false
+            }
+        }
+        return darkMode
     }
     
     // hides keyboard

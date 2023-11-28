@@ -18,12 +18,12 @@ import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
 import com.example.speechbuddy.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class AuthActivity : BaseActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
-    private val displaySettingsViewModel: DisplaySettingsViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,14 +48,14 @@ class AuthActivity : BaseActivity() {
         sessionManager.isAuthorized.observe(this) { isAuthorized ->
             if (isAuthorized &&
                 sessionManager.userId.value != -1 &&
-                sessionManager.isLogin.value != true
+                sessionManager.isLogin.value != true &&
+                getAutoBackup() &&
+                getLastBackupDate() != LocalDate.now().toString()
             ) {
-                Log.d("where", sessionManager.isLogin.value.toString())
                 autoBackup()
             } else if (isAuthorized){
                 navHomeActivity()
             }
-            // 로그인 아님, 게스트 아님, 날짜 지남
         }
     }
 
@@ -79,7 +79,33 @@ class AuthActivity : BaseActivity() {
     }
 
     private fun getInitialDarkMode(): Boolean {
-        return displaySettingsViewModel.getDarkMode()
+        var darkMode = false
+        lifecycleScope.launch {
+            settingsRepository.getDarkMode().collect {
+                darkMode = it.data?: false
+            }
+        }
+        return darkMode
+    }
+
+    private fun getAutoBackup(): Boolean {
+        var autoBackup = true
+        lifecycleScope.launch {
+            settingsRepository.getAutoBackup().collect {
+                autoBackup = it.data?: true
+            }
+        }
+        return autoBackup
+    }
+
+    private fun getLastBackupDate(): String {
+        var lastBackupDate = ""
+        lifecycleScope.launch {
+            settingsRepository.getLastBackupDate().collect {
+                lastBackupDate = it.data?: ""
+            }
+        }
+        return lastBackupDate
     }
 
     private fun checkPreviousAuthUser() {
