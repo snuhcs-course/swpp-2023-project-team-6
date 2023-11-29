@@ -43,7 +43,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.speechbuddy.R
 import kotlinx.coroutines.launch
 
@@ -59,14 +58,27 @@ val pages = listOf<@Composable () -> Unit>(
     {
         GuideScreenPage(
             height = 600.dp,
+            stringId = R.string.guide_screen_symbol_selection_screen,
+            imageId = R.drawable.symbol_selection_screen_description,
+            contentDescription = ""
+        )
+    },
+    {
+        GuideScreenPage(
+            height = 500.dp,
+            stringId = R.string.guide_screen_text_to_speech_screen,
+            imageId = R.drawable.text_to_speech_screen_description,
+            contentDescription = ""
+        )
+    },
+    {
+        GuideScreenPage(
+            height = 600.dp,
             stringId = R.string.guide_screen_symbol_creation_screen,
             imageId = R.drawable.symbol_creation_screen_description,
             contentDescription = ""
         )
-    },
-    { Text("Page 3 Content", fontSize = 40.sp) },
-    { Text("Page 4 Content", fontSize = 40.sp) },
-    { Text("Page 5 Content", fontSize = 40.sp) },
+    }
 )
 val pageSize: Int = pages.size
 
@@ -88,7 +100,7 @@ fun GuideScreenPage(
             text = stringResource(id = stringId),
             style = MaterialTheme.typography.titleLarge
         )
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(25.dp)) // Spacer between text and image
         Image(
             painter = painterResource(id = imageId),
             contentDescription = contentDescription,
@@ -138,7 +150,7 @@ private fun PagerIndicatorSample() {
                 modifier = Modifier
                     .padding(5.dp)
                     .fillMaxWidth()
-                    .height(600.dp),
+                    .height(650.dp),
                 contentAlignment = Alignment.Center
             ) {
                 pages[page]()

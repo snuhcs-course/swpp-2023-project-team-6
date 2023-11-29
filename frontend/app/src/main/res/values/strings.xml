@@ -144,9 +144,8 @@
     <string name="copyright">본 서비스의 그림상징은 \'한국형 보완대체의사소통용 기본상징 체계집\'의 일부로 박은혜, 김영태(이화여자대학교), 홍기형(성신여자대학교)에게 저작권이 있습니다.\n자료의 무단 사용 및 2차 가공, 배포, 상업적 용도로 사용하는 것을 금합니다.</string>
 
     <!-- Guide Screen -->
-    <string name="guide_screen_bottom_navigation_bar">하단 바의 아이콘을 눌러 원하는 기능을 이용해보세요.
-        \n1. 상징으로 말하기\n2. 음성으로 말하기\n3. 새 상징 만들기\n4. 설정
-    </string>
-    <string name="guide_screen_symbol_creation_screen">1. 사진을 선택하세요\n2. 대분류를 선택하세요
-        \n3. 상징 이름을 입력해주세요\n4. 새로운 상징 만들기!</string>
+    <string name="guide_screen_bottom_navigation_bar">하단 바의 아이콘을 눌러 원하는 기능을 이용해보세요\n① 상징으로 말하기\n② 음성으로 말하기\n③ 새 상징 만들기\n④ 설정</string>
+    <string name="guide_screen_symbol_creation_screen">① 사진을 선택하세요\n② 대분류를 선택하세요\n③ 상징 이름을 입력해주세요\n④ 새로운 상징을 만들어보세요</string>
+    <string name="guide_screen_symbol_selection_screen">① 필터를 이용하여 자신이 원하는 상징을 볼 수 있어요\n② 우측 상단 하트 아이콘을 눌러 상징을 즐겨찾기에 추가할 수 있어요\n③ 내가 선택한 상징들을 크게 볼 수 있고 한번에 지울 수 있어요\n④ 대분류를 눌러 상징들을 볼 수 있고, 다시 대분류를 누르면 대분류를 볼 수 있어요</string>
+    <string name="guide_screen_text_to_speech_screen">① 글을 입력해주세요\n② 글을 재생하거나, 재생을 정지할 수 있어요\n③ 글을 한번에 지울 수 있어요</string>
 </resources>
