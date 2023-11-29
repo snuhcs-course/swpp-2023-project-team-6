@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,9 +23,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +43,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.speechbuddy.R
 import kotlinx.coroutines.launch
 
@@ -65,7 +67,7 @@ val pages = listOf<@Composable () -> Unit>(
     },
     {
         GuideScreenPage(
-            height = 500.dp,
+            height = 550.dp,
             stringId = R.string.guide_screen_text_to_speech_screen,
             imageId = R.drawable.text_to_speech_screen_description,
             contentDescription = ""
@@ -91,51 +93,58 @@ fun GuideScreenPage(
 ) {
     Column(
         modifier = Modifier
+            .padding(horizontal = 5.dp)
             .fillMaxWidth()
             .height(height),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.weight(1f))
+        //Spacer(modifier = Modifier.weight(1f))
         Text(
             text = stringResource(id = stringId),
             style = MaterialTheme.typography.titleLarge
         )
-        Spacer(modifier = Modifier.height(25.dp)) // Spacer between text and image
+        Spacer(modifier = Modifier.height(20.dp)) // Spacer between text and image
         Image(
             painter = painterResource(id = imageId),
             contentDescription = contentDescription,
             modifier = Modifier.fillMaxSize()
         )
-        Spacer(modifier = Modifier.weight(1f))
+        //Spacer(modifier = Modifier.weight(1f))
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun GuideScreen(
     showGuide: Boolean,
     onDismissRequest: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     if (showGuide) {
-        AlertDialog(
+        Dialog(
             onDismissRequest = onDismissRequest,
-            confirmButton = {},
-            text = { PagerIndicatorSample() },
-            modifier = modifier
-        )
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                usePlatformDefaultWidth = false // This allows you to set a custom width
+            )
+        ) {
+            Surface {
+                GuideScreenPageList()
+            }
+        }
     }
-
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun PagerIndicatorSample() {
+private fun GuideScreenPageList() {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxWidth(fraction = 0.9f)
+            .fillMaxHeight(fraction = 0.9f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.weight(1f)) // Spacer before the pager
+        //Spacer(modifier = Modifier.weight(1f)) // Spacer before the pager
         val pagerState1 = rememberPagerState(
             initialPage = 0,
             initialPageOffsetFraction = 0f
@@ -150,9 +159,8 @@ private fun PagerIndicatorSample() {
         ) { page ->
             Box(
                 modifier = Modifier
-                    .padding(5.dp)
                     .fillMaxWidth()
-                    .height(650.dp),
+                    .height(700.dp),
                 contentAlignment = Alignment.Center
             ) {
                 pages[page]()
@@ -164,7 +172,7 @@ private fun PagerIndicatorSample() {
                 pagerState1.scrollToPage(it)
             }
         }
-        Spacer(modifier = Modifier.weight(1f)) // Spacer after the pager
+        //Spacer(modifier = Modifier.weight(1f)) // Spacer after the pager
     }
 }
 

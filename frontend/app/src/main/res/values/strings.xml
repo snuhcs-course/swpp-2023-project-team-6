@@ -145,7 +145,7 @@
 
     <!-- Guide Screen -->
     <string name="guide_screen_bottom_navigation_bar">하단 바의 아이콘을 눌러 원하는 기능을 이용해보세요\n① 상징으로 말하기\n② 음성으로 말하기\n③ 새 상징 만들기\n④ 설정</string>
-    <string name="guide_screen_symbol_creation_screen">① 사진을 선택하세요\n② 대분류를 선택하세요\n③ 상징 이름을 입력해주세요\n④ 새로운 상징을 만들어보세요</string>
-    <string name="guide_screen_symbol_selection_screen">① 필터를 이용하여 자신이 원하는 상징을 볼 수 있어요\n② 우측 상단 하트 아이콘을 눌러 상징을 즐겨찾기에 추가할 수 있어요\n③ 내가 선택한 상징들을 크게 볼 수 있고 한번에 지울 수 있어요\n④ 대분류를 눌러 상징들을 볼 수 있고, 다시 대분류를 누르면 대분류를 볼 수 있어요</string>
+    <string name="guide_screen_symbol_creation_screen">① 사진을 선택하세요\n② 대분류를 선택하세요\n③ 상징 이름을 입력해주세요\n④ 새로운 상징을 만들어보아요</string>
+    <string name="guide_screen_symbol_selection_screen">① 자신이 원하는 상징을 볼 수 있어요\n② 하트를 눌러 상징을 즐겨찾기에 추가할 수 있어요\n③ 내가 선택한 상징을 크게 보거나 지울 수 있어요\n④ 다시 대분류를 누르면 대분류를 볼 수 있어요</string>
     <string name="guide_screen_text_to_speech_screen">① 글을 입력해주세요\n② 글을 재생하거나, 재생을 정지할 수 있어요\n③ 글을 한번에 지울 수 있어요</string>
 </resources>
