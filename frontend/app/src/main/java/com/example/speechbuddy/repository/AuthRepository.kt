@@ -178,7 +178,7 @@ class AuthRepository @Inject constructor(
         }.map { pair ->
             val userId = pair.first
             val authToken = pair.second
-            if (userId != null)
+            if (userId != null && authToken.accessToken!!.isNotEmpty() && authToken.refreshToken!!.isNotEmpty())
                 Resource.success(Pair(userId, authToken))
             else
                 Resource.error("Couldn't find previous user", null)

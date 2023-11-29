@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class SessionManager {
 
-    private val _cachedToken = MutableLiveData<AuthToken?>()
+    private val _cachedToken = MutableLiveData<AuthToken?>(null)
     private val _userId = MutableLiveData<Int?>(null)
 
     val cachedToken: LiveData<AuthToken?>
