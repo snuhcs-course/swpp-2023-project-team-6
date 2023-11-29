@@ -48,7 +48,6 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.symbolselection.SymbolSearchTextField
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 import com.example.speechbuddy.compose.utils.SymbolUi
-import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.ui.models.MySymbolSettingsDisplayMode
 import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_COUNT
@@ -79,11 +78,9 @@ fun MySymbolSettings(
                     bottom = paddingValues.calculateBottomPadding()
                 )
                 .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleUi(title = stringResource(id = R.string.manage_symbols))
-
             SymbolSearchTextField(
                 value = viewModel.queryInput,
                 onValueChange = { viewModel.setQuery(it) }
@@ -202,7 +199,8 @@ fun DisplayModeMenu(
                 ) {
                     Text(
                         text = stringResource(id = item.textResId),
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -240,8 +238,8 @@ fun MySymbolUi(
         ) {
             Box(
                 modifier = Modifier
-                    .size(24.dp)
-                    .padding(4.dp)
+                    .padding(6.dp)
+                    .size(16.dp)
                     .border(1.dp, Color.Black)
             ) {
                 Checkbox(
