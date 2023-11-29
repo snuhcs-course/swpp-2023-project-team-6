@@ -49,52 +49,54 @@ import kotlinx.coroutines.launch
 
 val pages = listOf<@Composable () -> Unit>(
     {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = stringResource(id = R.string.guide_screen_bottom_navigation_bar),
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            Image(
-                painter = painterResource(id = R.drawable.bottom_navigation_bar_description),
-                contentDescription = "Description",
-                modifier = Modifier.fillMaxSize()
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
+        GuideScreenPage(
+            height = 300.dp,
+            stringId = R.string.guide_screen_bottom_navigation_bar,
+            imageId = R.drawable.bottom_navigation_bar_description,
+            contentDescription = ""
+        )
     },
     {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(600.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = stringResource(id = R.string.guide_screen_symbol_creation_screen),
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            Image(
-                painter = painterResource(id = R.drawable.symbol_creation_screen_description),
-                contentDescription = "Description",
-                modifier = Modifier.fillMaxSize()
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
+        GuideScreenPage(
+            height = 600.dp,
+            stringId = R.string.guide_screen_symbol_creation_screen,
+            imageId = R.drawable.symbol_creation_screen_description,
+            contentDescription = ""
+        )
     },
     { Text("Page 3 Content", fontSize = 40.sp) },
     { Text("Page 4 Content", fontSize = 40.sp) },
     { Text("Page 5 Content", fontSize = 40.sp) },
 )
 val pageSize: Int = pages.size
+
+@Composable
+fun GuideScreenPage(
+    height: Dp,
+    stringId: Int,
+    imageId: Int,
+    contentDescription: String
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(height),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = stringResource(id = stringId),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+        Image(
+            painter = painterResource(id = imageId),
+            contentDescription = contentDescription,
+            modifier = Modifier.fillMaxSize()
+        )
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
