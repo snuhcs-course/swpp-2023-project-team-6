@@ -69,6 +69,7 @@ import com.example.speechbuddy.ui.models.DialogState
 import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
+import com.example.speechbuddy.ui.models.ToastState
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
@@ -109,12 +110,17 @@ fun SymbolCreationScreen(
         if (isGranted) {
             cameraLauncher.launch(null)
         } else {
-            Toast.makeText(
-                context,
-                "Camera permission is required to take photos",
-                Toast.LENGTH_SHORT
-            ).show()
+            viewModel.updateToastState("show")
         }
+    }
+
+    if (viewModel.toastState == ToastState.SHOW) {
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.camera_permission_description),
+            Toast.LENGTH_LONG
+        ).show()
+        viewModel.updateToastState("hide")
     }
 
     if (creationResultMessage != null) {
@@ -264,7 +270,8 @@ private fun DropdownUi(
                     )
                 } else {
                     label?.invoke() ?: Text(
-                        "Select an option", color = MaterialTheme.colorScheme.onSurface
+                        text = stringResource(id = R.string.choose_a_category),
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Icon(

@@ -91,6 +91,8 @@
     <string name="choose_photo_option">사진을 어떻게 추가하실 건가요?</string>
     <string name="choose_from_gallery">사진 보관함에서 사진 선택하기</string>
     <string name="take_photo">사진 촬영하기</string>
+    <string name="camera_permission_description">기기설정에서 카메라 권한을 허용해주세요</string>
+    <string name="choose_a_category">대분류를 선택하십시오</string>
 
     <!-- Settings -->
     <string name="settings">설정</string>
