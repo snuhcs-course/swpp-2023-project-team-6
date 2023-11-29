@@ -7,11 +7,15 @@ import com.example.speechbuddy.data.remote.UserRemoteSource
 import com.example.speechbuddy.data.remote.models.UserDtoMapper
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.User
+import com.example.speechbuddy.utils.Constants.Companion.GUEST_ID
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +31,7 @@ class UserRepository @Inject constructor(
 ) {
 
     fun getMyInfo(): Flow<Resource<User>> {
-        return userDao.getUserById(sessionManager.userId.value ?: -1).map { userEntity ->
+        return userDao.getUserById(sessionManager.userId.value!!).map { userEntity ->
             if (userEntity != null) Resource.success(userMapper.mapToDomainModel(userEntity))
             else Resource.error("Unable to find user", null)
         }
@@ -54,8 +58,17 @@ class UserRepository @Inject constructor(
         }
     }
 
+    fun setGuestMode() {
+        CoroutineScope(Dispatchers.IO).launch {
+            userIdPrefsManager.saveUserId(GUEST_ID)
+        }
+    }
+
     suspend fun deleteUserInfo() {
-        userDao.deleteUserInfo()
+        CoroutineScope(Dispatchers.IO).launch {
+            userDao.deleteUserById(sessionManager.userId.value!!)
+            userIdPrefsManager.clearUserId()
+        }
     }
 
     private fun <T> returnUnknownError(): Resource<T> {

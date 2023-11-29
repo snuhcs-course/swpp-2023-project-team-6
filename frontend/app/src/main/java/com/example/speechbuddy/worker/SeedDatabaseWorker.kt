@@ -24,22 +24,18 @@ class SeedDatabaseWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val database = AppDatabase.getInstance(applicationContext)
+            if (!applicationContext.getDatabasePath("speechbuddy-db").exists()){
+                val weightRows = mutableListOf<WeightRowEntity>()
 
-            val weightRows = mutableListOf<WeightRowEntity>()
+                for(id in 1..500){
+                    val weightsList = List(500){0}
+                    val weightRowEntity = WeightRowEntity(id, weightsList)
+                    weightRows.add(weightRowEntity)
+                }
+                database.weightRowDao().upsertAll(weightRows)
 
-            for(id in 1..500){
-                val weightsList = List(500){0}
-                val weightRowEntity = WeightRowEntity(id, weightsList)
-                weightRows.add(weightRowEntity)
+                Result.success()
             }
-
-
-            database.weightRowDao().upsertAll(weightRows)
-
-
-
-            Result.success()
-
 
             applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
@@ -62,8 +58,6 @@ class SeedDatabaseWorker(
                     Result.success()
                 }
             }
-
-
         } catch (ex: Exception) {
             Log.e("SeedDatabaseWorker", "Error seeding database", ex)
             Result.failure()

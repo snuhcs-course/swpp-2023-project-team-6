@@ -1,7 +1,5 @@
 package com.example.speechbuddy.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.remote.SettingsRemoteSource
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
@@ -27,7 +25,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SettingsRepository @Inject constructor(
-    private val settingsPrefManager: SettingsPrefsManager,
+    private val settingsPrefsManager: SettingsPrefsManager,
     private val backupService: BackupService,
     private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager,
@@ -38,61 +36,63 @@ class SettingsRepository @Inject constructor(
 ) {
     suspend fun setDarkMode(value: Boolean) {
         if (value) {
-            settingsPrefManager.saveDarkMode(true)
+            settingsPrefsManager.saveDarkMode(true)
         } else {
-            settingsPrefManager.saveDarkMode(false)
+            settingsPrefsManager.saveDarkMode(false)
         }
-        settingsPrefManager.saveDarkMode(value)
+        settingsPrefsManager.saveDarkMode(value)
     }
 
     suspend fun setInitialPage(page: InitialPage) {
         if (page == InitialPage.SYMBOL_SELECTION) {
-            settingsPrefManager.saveInitialPage(true)
+            settingsPrefsManager.saveInitialPage(true)
         } else {
-            settingsPrefManager.saveInitialPage(false)
+            settingsPrefsManager.saveInitialPage(false)
         }
     }
 
     suspend fun setAutoBackup(value: Boolean) {
-        settingsPrefManager.saveAutoBackup(value)
+        settingsPrefsManager.saveAutoBackup(value)
     }
 
     suspend fun setLastBackupDate(value: String) {
-        settingsPrefManager.saveLastBackupDate(value)
+        settingsPrefsManager.saveLastBackupDate(value)
     }
 
     fun getDarkMode(): Flow<Resource<Boolean>> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.darkMode)
         }
     }
 
     fun getDarkModeForChange(): Flow<Boolean> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             settingsPreferences.darkMode
         }
     }
 
     fun getInitialPage(): Flow<Resource<Boolean>> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.initialPage)
         }
     }
 
     fun getAutoBackup(): Flow<Resource<Boolean>> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.autoBackup)
         }
     }
 
     fun getLastBackupDate(): Flow<Resource<String>> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.lastBackupDate)
         }
     }
 
     suspend fun resetSettings() {
-        settingsPrefManager.resetSettings()
+        CoroutineScope(Dispatchers.IO).launch {
+            settingsPrefsManager.resetSettings()
+        }
     }
 
     suspend fun displayBackup(): Flow<Response<Void>> =
@@ -243,7 +243,6 @@ class SettingsRepository @Inject constructor(
                     for (symbolIdDto in favoritesListDto.results) {
                         val symbol = symbolRepository.getSymbolsById(symbolIdDto.id)
                         symbolRepository.updateFavorite(symbol, true)
-
                     }
                     Resource.success(null)
                 } ?: returnUnknownError()
