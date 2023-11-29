@@ -40,10 +40,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,7 +64,6 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TextFieldUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.ui.models.DialogState
 import com.example.speechbuddy.ui.models.PhotoType
@@ -75,11 +72,10 @@ import com.example.speechbuddy.ui.models.SymbolCreationUiState
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SymbolCreationScreen(
     modifier: Modifier = Modifier,
-    bottomPaddingValues: PaddingValues,
+    paddingValues: PaddingValues,
     viewModel: SymbolCreationViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -131,101 +127,95 @@ fun SymbolCreationScreen(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            topBar = {
-                TopAppBarUi(title = stringResource(id = R.string.create_new_symbol))
-            }
-        ) { topPaddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = topPaddingValues.calculateTopPadding(),
-                        bottom = bottomPaddingValues.calculateBottomPadding()
-                    )
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TitleUi(
-                    title = stringResource(id = R.string.create_new_symbol),
-                    description = stringResource(id = R.string.symbol_creation_description)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
                 )
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TitleUi(
+                title = stringResource(id = R.string.create_new_symbol),
+                description = stringResource(id = R.string.symbol_creation_description)
+            )
 
-                Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-                AddPhotoButton(
-                    onClick = { viewModel.updateDialogState("show") },
-                    isError = isPhotoInputError,
-                    viewModel = viewModel
-                )
+            AddPhotoButton(
+                onClick = { viewModel.updateDialogState("show") },
+                isError = isPhotoInputError,
+                viewModel = viewModel
+            )
 
-                if (viewModel.dialogState == DialogState.SHOW) {
-                    PhotoOptionDialog(
-                        onDismissRequest = { viewModel.updateDialogState("hide") },
-                        onCameraClick = {
-                            // Check if permission is already granted
-                            when (PackageManager.PERMISSION_GRANTED) {
-                                ContextCompat.checkSelfPermission(
-                                    context,
-                                    android.Manifest.permission.CAMERA
-                                ) -> {
-                                    cameraLauncher.launch(null)
-                                }
-
-                                else -> {
-                                    requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                                }
+            if (viewModel.dialogState == DialogState.SHOW) {
+                PhotoOptionDialog(
+                    onDismissRequest = { viewModel.updateDialogState("hide") },
+                    onCameraClick = {
+                        // Check if permission is already granted
+                        when (PackageManager.PERMISSION_GRANTED) {
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                android.Manifest.permission.CAMERA
+                            ) -> {
+                                cameraLauncher.launch(null)
                             }
-                            viewModel.photoType = PhotoType.CAMERA
-                        },
-                        onGalleryClick = {
-                            galleryLauncher.launch("image/*")
-                            viewModel.photoType = PhotoType.GALLERY
-                        },
-                        onCancelClick = { viewModel.updateDialogState("hide") }
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(30.dp))
-
-                // Symbol Category Field
-                DropdownUi(
-                    selectedValue = viewModel.categoryInput,
-                    onValueChange = { viewModel.setCategory(it) },
-                    items = categories,
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(R.string.category)) },
-                    isError = isCategoryError,
-                    viewModel = viewModel,
-                    uiState = uiState
-                )
-
-                Spacer(modifier = Modifier.height(15.dp))
-
-                // Symbol Text Field
-                TextFieldUi(
-                    value = viewModel.symbolTextInput,
-                    onValueChange = { viewModel.setSymbolText(it) },
-                    label = { Text(stringResource(R.string.new_symbol_name)) },
-                    supportingText = {
-                        if (isSymbolTextError || isConnectionError) {
-                            Text(stringResource(id = uiState.error!!.messageId))
+                            else -> {
+                                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                            }
                         }
+                        viewModel.photoType = PhotoType.CAMERA
                     },
-                    isError = isSymbolTextError || isConnectionError,
-                    isValid = uiState.isValidSymbolText
-                )
-
-                // Symbol Creation Button
-                ButtonUi(
-                    text = stringResource(id = R.string.create),
-                    onClick = { viewModel.createSymbol(context) },
-                    modifier = Modifier.offset(y = 50.dp),
-                    isEnabled = uiState.buttonEnabled,
-                    isError = false
+                    onGalleryClick = {
+                        galleryLauncher.launch("image/*")
+                        viewModel.photoType = PhotoType.GALLERY
+                    },
+                    onCancelClick = { viewModel.updateDialogState("hide") }
                 )
             }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            // Symbol Category Field
+            DropdownUi(
+                selectedValue = viewModel.categoryInput,
+                onValueChange = { viewModel.setCategory(it) },
+                items = categories,
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(R.string.category)) },
+                isError = isCategoryError,
+                viewModel = viewModel,
+                uiState = uiState
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            // Symbol Text Field
+            TextFieldUi(
+                value = viewModel.symbolTextInput,
+                onValueChange = { viewModel.setSymbolText(it) },
+                label = { Text(stringResource(R.string.new_symbol_name)) },
+                supportingText = {
+                    if (isSymbolTextError || isConnectionError) {
+                        Text(stringResource(id = uiState.error!!.messageId))
+                    }
+                },
+                isError = isSymbolTextError || isConnectionError,
+                isValid = uiState.isValidSymbolText
+            )
+
+            // Symbol Creation Button
+            ButtonUi(
+                text = stringResource(id = R.string.create),
+                onClick = { viewModel.createSymbol(context) },
+                modifier = Modifier.offset(y = 50.dp),
+                isEnabled = uiState.buttonEnabled,
+                isError = false
+            )
         }
     }
 

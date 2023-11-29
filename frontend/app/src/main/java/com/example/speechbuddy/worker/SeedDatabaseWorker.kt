@@ -24,7 +24,7 @@ class SeedDatabaseWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val database = AppDatabase.getInstance(applicationContext)
-
+        
             val weightRows = mutableListOf<WeightRowEntity>()
 
             applicationContext.assets.open("weight_table.txt").use { inputStream ->
@@ -42,13 +42,10 @@ class SeedDatabaseWorker(
                 }
             }
 
-
             database.weightRowDao().upsertAll(weightRows)
-
-
-
+            
             Result.success()
-
+            
 
             applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
@@ -73,8 +70,6 @@ class SeedDatabaseWorker(
                     Result.success()
                 }
             }
-
-
         } catch (ex: Exception) {
             Log.e("SeedDatabaseWorker", "Error seeding database", ex)
             Result.failure()
