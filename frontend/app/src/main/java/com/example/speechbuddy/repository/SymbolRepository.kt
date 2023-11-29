@@ -29,7 +29,6 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
@@ -77,6 +76,16 @@ class SymbolRepository @Inject constructor(
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
 
+    fun getUserSymbols(query: String) =
+        if (query.isBlank()) getAllUserSymbols()
+        else symbolDao.getUserSymbolsByQuery(query).map { symbolEntities ->
+            symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+        }
+
+    private fun getAllUserSymbols() = symbolDao.getUserSymbols().map { symbolEntities ->
+        symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+    }
+
     fun getSymbolsById(id: Int): Symbol {
         return runBlocking { symbolMapper.mapToDomainModel(symbolDao.getSymbolById(id).first()) }
     }
@@ -120,7 +129,6 @@ class SymbolRepository @Inject constructor(
             )
             symbolDao.updateSymbol(symbolEntity)
         }
-
     }
 
     fun getNextSymbolId() =
@@ -139,6 +147,10 @@ class SymbolRepository @Inject constructor(
             val symbolEntity = symbolMapper.mapFromDomainModel(symbol)
             symbolDao.insertSymbol(symbolEntity)
         }
+    }
+
+    suspend fun deleteSymbol(symbol: Symbol) {
+        symbolDao.deleteSymbolById(symbol.id)
     }
 
     suspend fun createSymbolBackup(
@@ -184,4 +196,5 @@ class SymbolRepository @Inject constructor(
             "Unknown error", null
         )
     }
+
 }

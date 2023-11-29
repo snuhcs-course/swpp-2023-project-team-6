@@ -23,7 +23,13 @@ interface SymbolDao {
     @Query("SELECT * FROM symbols WHERE isFavorite = 1")
     fun getFavoriteSymbols(): Flow<List<SymbolEntity>>
 
-    @Query("SELECT * FROM symbols WHERE text LIKE  '%' || :query || '%'")
+    @Query("SELECT * FROM symbols WHERE isMine = 1")
+    fun getUserSymbols(): Flow<List<SymbolEntity>>
+
+    @Query("SELECT * FROM symbols WHERE isMine = 1 AND text LIKE '%' || :query || '%'")
+    fun getUserSymbolsByQuery(query: String): Flow<List<SymbolEntity>>
+
+    @Query("SELECT * FROM symbols WHERE text LIKE '%' || :query || '%'")
     fun getSymbolsByQuery(query: String): Flow<List<SymbolEntity>>
 
     @Query("SELECT * FROM symbols WHERE isFavorite = 1 AND text LIKE '%' || :query || '%'")
@@ -50,6 +56,9 @@ interface SymbolDao {
     @Upsert
     suspend fun upsertAll(symbolEntities: List<SymbolEntity>)
 
+    @Query("DELETE FROM symbols WHERE id = :symbolId")
+    suspend fun deleteSymbolById(symbolId: Int)
+    
     @Query("DELETE FROM symbols WHERE isMine = 1")
     suspend fun deleteAllMySymbols()
 

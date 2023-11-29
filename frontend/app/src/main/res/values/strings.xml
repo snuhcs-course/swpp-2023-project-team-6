@@ -128,6 +128,8 @@
 
     <!-- My Symbol Settings -->
     <string name="manage_symbols">상징 목록 관리</string>
+    <string name="delete_my_symbol">삭제</string>
+    <string name="my_symbol">내가 만든 상징</string>
 
     <!-- Version Info -->
     <string name="version_info">버전 정보</string>
