@@ -173,7 +173,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
                  * retrieve both symbols and categories from the repository
                  */
                 DisplayMode.SYMBOL -> {
-                    if (query != null) // called from setQuery()
+                    if (!query.isNullOrEmpty()) // called from setQuery()
                         repository.getEntries(query).collect { entries ->
                             _entries.postValue(entries)
                         }
@@ -184,7 +184,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
                 }
 
                 DisplayMode.CATEGORY -> {
-                    if (query != null)
+                    if (!query.isNullOrEmpty())
                         repository.getEntries(query).collect { entries ->
                             _entries.postValue(entries)
                         }
