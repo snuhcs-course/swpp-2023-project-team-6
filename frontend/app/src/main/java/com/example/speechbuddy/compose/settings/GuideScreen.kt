@@ -64,9 +64,7 @@ val pages = listOf<@Composable () -> Unit>(
             Image(
                 painter = painterResource(id = R.drawable.bottom_navigation_bar_description),
                 contentDescription = "Description",
-                modifier = Modifier
-                    .padding(horizontal = 5.dp)
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             )
             Spacer(modifier = Modifier.weight(1f))
         }
@@ -87,9 +85,7 @@ val pages = listOf<@Composable () -> Unit>(
             Image(
                 painter = painterResource(id = R.drawable.symbol_creation_screen_description),
                 contentDescription = "Description",
-                modifier = Modifier
-                    .padding(horizontal = 5.dp)
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             )
             Spacer(modifier = Modifier.weight(1f))
         }
