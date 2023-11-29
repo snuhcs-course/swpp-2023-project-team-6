@@ -114,6 +114,29 @@ class WeightTableRepository @Inject constructor(
         }
     }
 
+    fun updateWeightTableForDeletedSymbol(symbol: Symbol) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val deletedSymbolIdx = weightRowDao.getCountOfRowsWithIdLessThan(symbol.id)
+
+            val weightRows = mutableListOf<WeightRow>()
+            weightRows.clear()
+            weightRows.addAll(fetchWeightRows())
+
+            // update existing weightRows
+            for (weightRow in weightRows) {
+                val newWeights = mutableListOf<Int>()
+                newWeights.addAll(weightRow.weights)
+                newWeights.removeAt(deletedSymbolIdx)
+                updateWeightRow(weightRow, newWeights)
+            }
+
+            // delete weightRow for the deleted symbol
+            weightRowDao.deleteWeightRowById(symbol.id)
+
+            allSymbols = getAllSymbols()
+        }
+    }
+
     fun provideSuggestion(symbol: Symbol): Flow<List<Symbol>> = flow {
         val allSymbolList = allSymbols.first()
         val oneWeightRow = getWeightRowById(symbol.id).first()
