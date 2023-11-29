@@ -27,10 +27,19 @@ class SeedDatabaseWorker(
 
             val weightRows = mutableListOf<WeightRowEntity>()
 
-            for(id in 1..500){
-                val weightsList = List(500){0}
-                val weightRowEntity = WeightRowEntity(id, weightsList)
-                weightRows.add(weightRowEntity)
+            applicationContext.assets.open("weight_table.txt").use { inputStream ->
+                val inputList: MutableList<List<Int>> = ArrayList()
+                inputStream.bufferedReader().useLines { lines ->
+                    lines.forEach { line ->
+                        inputList.add(
+                            line.split(",").mapNotNull { it.trim().toIntOrNull() })
+                    }
+                }
+                var id = 1
+                for (weight in inputList) {
+                    val weightRowEntity = WeightRowEntity(id++, weight)
+                    weightRows.add(weightRowEntity)
+                }
             }
 
 
@@ -44,7 +53,8 @@ class SeedDatabaseWorker(
             applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
                     val symbolEntityType = object : TypeToken<List<SymbolEntity>>() {}.type
-                    val symbolEntityList: List<SymbolEntity> = Gson().fromJson(jsonReader, symbolEntityType)
+                    val symbolEntityList: List<SymbolEntity> =
+                        Gson().fromJson(jsonReader, symbolEntityType)
 
                     database.symbolDao().upsertAll(symbolEntityList)
 
@@ -55,7 +65,8 @@ class SeedDatabaseWorker(
             applicationContext.assets.open(CATEGORY_DATA_FILENAME).use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
                     val categoryEntityType = object : TypeToken<List<CategoryEntity>>() {}.type
-                    val categoryEntityList: List<CategoryEntity> = Gson().fromJson(jsonReader, categoryEntityType)
+                    val categoryEntityList: List<CategoryEntity> =
+                        Gson().fromJson(jsonReader, categoryEntityType)
 
                     database.categoryDao().upsertAll(categoryEntityList)
 
