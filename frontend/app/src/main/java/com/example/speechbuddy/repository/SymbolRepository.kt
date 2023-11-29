@@ -85,6 +85,7 @@ class SymbolRepository @Inject constructor(
 
     private fun getAllUserSymbols() = symbolDao.getUserSymbols().map { symbolEntities ->
         symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+    }
 
     fun getSymbolsById(id: Int): Symbol {
         return runBlocking { symbolMapper.mapToDomainModel(symbolDao.getSymbolById(id).first()) }
