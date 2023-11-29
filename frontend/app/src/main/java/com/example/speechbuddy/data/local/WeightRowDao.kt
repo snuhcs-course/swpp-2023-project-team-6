@@ -24,6 +24,13 @@ interface WeightRowDao {
     @Query("DELETE FROM weighttable WHERE id > 500")
     suspend fun deleteMySymbolsWeightRows()
 
+    @Query("DELETE FROM weighttable WHERE id = :rowId")
+    suspend fun deleteWeightRowById(rowId: Int)
+
+    @Query("SELECT COUNT(*) FROM weighttable WHERE id < :rowId")
+    suspend fun getCountOfRowsWithIdLessThan(rowId: Int): Int
+
     @Query("UPDATE weighttable SET weights = :resetWeights WHERE id < 501")
     suspend fun resetOriginalSymbolsWeightRows(resetWeights: List<Int>)
+
 }

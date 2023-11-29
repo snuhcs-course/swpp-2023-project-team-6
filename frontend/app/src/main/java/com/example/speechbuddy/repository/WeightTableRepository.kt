@@ -1,5 +1,6 @@
 package com.example.speechbuddy.repository
 
+import android.util.Log
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.WeightRowDao
 import com.example.speechbuddy.data.local.models.SymbolMapper
@@ -111,6 +112,29 @@ class WeightTableRepository @Inject constructor(
 
             allSymbols = getAllSymbols()
 
+        }
+    }
+
+    fun updateWeightTableForDeletedSymbol(symbol: Symbol){
+        CoroutineScope(Dispatchers.IO).launch {
+            val deletedSymbolIdx = weightRowDao.getCountOfRowsWithIdLessThan(symbol.id)
+
+            val weightRows = mutableListOf<WeightRow>()
+            weightRows.clear()
+            weightRows.addAll(fetchWeightRows())
+
+            // update existing weightRows
+            for(weightRow in weightRows){
+                val newWeights = mutableListOf<Int>()
+                newWeights.addAll(weightRow.weights)
+                newWeights.removeAt(deletedSymbolIdx)
+                updateWeightRow(weightRow, newWeights)
+            }
+
+            // delete weightRow for the deleted symbol
+            weightRowDao.deleteWeightRowById(symbol.id)
+
+            allSymbols = getAllSymbols()
         }
     }
 

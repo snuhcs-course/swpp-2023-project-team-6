@@ -77,6 +77,16 @@ class SymbolRepository @Inject constructor(
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
 
+    fun getUserSymbols(query: String) =
+        if (query.isBlank()) getAllUserSymbols()
+        else symbolDao.getUserSymbolsByQuery(query).map { symbolEntities ->
+            symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+        }
+
+    private fun getAllUserSymbols() = symbolDao.getUserSymbols().map { symbolEntities ->
+        symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+    }
+
     fun getSymbolsById(id: Int): Symbol {
         return runBlocking { symbolMapper.mapToDomainModel(symbolDao.getSymbolById(id).first()) }
     }
@@ -125,6 +135,10 @@ class SymbolRepository @Inject constructor(
 
     fun getNextSymbolId() =
         symbolDao.getLastSymbol().map { symbol -> symbol.id + 1 }
+
+    suspend fun deleteSymbol(symbol: Symbol) {
+        symbolDao.deleteSymbolById(symbol.id)
+    }
 
     suspend fun clearAllMySymbols() {
         symbolDao.deleteAllMySymbols()
