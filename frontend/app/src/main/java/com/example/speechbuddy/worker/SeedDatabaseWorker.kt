@@ -37,8 +37,6 @@ class SeedDatabaseWorker(
                 Result.success()
             }
 
-
-
             applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
                     val symbolEntityType = object : TypeToken<List<SymbolEntity>>() {}.type
@@ -60,8 +58,6 @@ class SeedDatabaseWorker(
                     Result.success()
                 }
             }
-
-
         } catch (ex: Exception) {
             Log.e("SeedDatabaseWorker", "Error seeding database", ex)
             Result.failure()

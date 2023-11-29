@@ -74,6 +74,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
                 displayMode = displayMode
             )
         }
+        queryInput = ""
         getEntries()
     }
 
