@@ -20,6 +20,7 @@ import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,7 +28,8 @@ fun GuestSettings(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     bottomPaddingValues: PaddingValues,
-    viewModel: AccountSettingsViewModel = hiltViewModel()
+    viewModel: AccountSettingsViewModel = hiltViewModel(),
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
@@ -37,7 +39,8 @@ fun GuestSettings(
                 TopAppBarUi(
                     title = stringResource(id = R.string.settings),
                     onBackClick = onBackClick,
-                    isBackClickEnabled = true
+                    isBackClickEnabled = true,
+                    guideScreenViewModel = guideScreenViewModel
                 )
             }
         ) { topPaddingValues ->

@@ -31,6 +31,7 @@ import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +40,8 @@ fun AccountSettings(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     bottomPaddingValues: PaddingValues,
-    viewModel: AccountSettingsViewModel = hiltViewModel()
+    viewModel: AccountSettingsViewModel = hiltViewModel(),
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -56,7 +58,8 @@ fun AccountSettings(
                     TopAppBarUi(
                         title = stringResource(id = R.string.settings),
                         onBackClick = onBackClick,
-                        isBackClickEnabled = true
+                        isBackClickEnabled = true,
+                        guideScreenViewModel = guideScreenViewModel
                     )
                 }
             ) { topPaddingValues ->

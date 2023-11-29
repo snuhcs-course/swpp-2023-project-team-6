@@ -26,6 +26,7 @@ import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.InitialPage
 import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +34,8 @@ fun DisplaySettings(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     bottomPaddingValues: PaddingValues,
-    viewModel: DisplaySettingsViewModel = hiltViewModel()
+    viewModel: DisplaySettingsViewModel = hiltViewModel(),
+    guideScreenViewModel : GuideScreenViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -45,7 +47,8 @@ fun DisplaySettings(
                 TopAppBarUi(
                     title = stringResource(id = R.string.settings),
                     onBackClick = onBackClick,
-                    isBackClickEnabled = true
+                    isBackClickEnabled = true,
+                    guideScreenViewModel = guideScreenViewModel
                 )
             }
         ) { topPaddingValues ->

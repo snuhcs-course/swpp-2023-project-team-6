@@ -58,13 +58,15 @@ import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_COUNT
 import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_IMAGE_PATH
 import com.example.speechbuddy.utils.Constants.Companion.MAXIMUM_LINES_FOR_SYMBOL_TEXT
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MySymbolSettings(
     modifier: Modifier = Modifier,
     bottomPaddingValues: PaddingValues,
-    viewModel: MySymbolSettingsViewModel = hiltViewModel()
+    viewModel: MySymbolSettingsViewModel = hiltViewModel(),
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val symbols by viewModel.symbols.observeAsState(initial = emptyList())
@@ -77,7 +79,8 @@ fun MySymbolSettings(
         Scaffold(
             topBar = {
                 TopAppBarUi(
-                    title = stringResource(id = R.string.settings)
+                    title = stringResource(id = R.string.settings),
+                    guideScreenViewModel = guideScreenViewModel
                 )
             }
         ) { topPaddingValues ->

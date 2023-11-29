@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,11 +32,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.R
+import com.example.speechbuddy.compose.settings.GuideScreen
 import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 data class BottomNavItem(
     val route: String,
@@ -50,6 +53,7 @@ fun SpeechBuddyHome(
     initialPage: Boolean
 ) {
     val navController = rememberNavController()
+    val guideScreenViewModel: GuideScreenViewModel = hiltViewModel()
     val navItems = listOf(
         BottomNavItem(
             "symbol_selection",
@@ -92,7 +96,8 @@ fun SpeechBuddyHome(
             bottomPaddingValues = paddingValues,
             initialPage = initialPage,
             showBottomNavBar = { bottomNavBarState.value = true },
-            hideBottomNavBar = { bottomNavBarState.value = false }
+            hideBottomNavBar = { bottomNavBarState.value = false },
+            guideScreenViewModel = guideScreenViewModel
         )
     }
 }
@@ -149,6 +154,7 @@ private fun SpeechBuddyHomeNavHost(
     initialPage: Boolean,
     showBottomNavBar: () -> Unit,
     hideBottomNavBar: () -> Unit,
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val startDestination =
         if (initialPage) {
@@ -157,27 +163,36 @@ private fun SpeechBuddyHomeNavHost(
             "text_to_speech"
         }
 
+    GuideScreen(
+        showGuide = guideScreenViewModel.showGuide.value,
+        onDismissRequest = { guideScreenViewModel.toggleGuide() }
+    )
+
     NavHost(navController = navController, startDestination = startDestination) {
         composable("symbol_selection") {
             SymbolSelectionScreen(
                 bottomPaddingValues = bottomPaddingValues,
                 showBottomNavBar = showBottomNavBar,
-                hideBottomNavBar = hideBottomNavBar
+                hideBottomNavBar = hideBottomNavBar,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("text_to_speech") {
             TextToSpeechScreen(
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("symbol_creation") {
             SymbolCreationScreen(
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("settings") {
             SettingsScreen(
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
     }

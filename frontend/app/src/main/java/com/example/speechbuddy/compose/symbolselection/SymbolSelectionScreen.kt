@@ -31,6 +31,7 @@ import com.example.speechbuddy.compose.utils.SymbolUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 import kotlinx.coroutines.launch
 
@@ -41,7 +42,8 @@ fun SymbolSelectionScreen(
     bottomPaddingValues: PaddingValues,
     showBottomNavBar: () -> Unit,
     hideBottomNavBar: () -> Unit,
-    viewModel: SymbolSelectionViewModel = hiltViewModel()
+    viewModel: SymbolSelectionViewModel = hiltViewModel(),
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val entries by viewModel.entries.observeAsState(initial = emptyList())
@@ -56,7 +58,10 @@ fun SymbolSelectionScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBarUi(title = stringResource(id = R.string.talk_with_symbols))
+                TopAppBarUi(
+                    title = stringResource(id = R.string.talk_with_symbols),
+                    guideScreenViewModel = guideScreenViewModel
+                )
             }
         ) { topPaddingValues ->
             Column(
@@ -109,7 +114,7 @@ fun SymbolSelectionScreen(
                          * Without the elvis operator, null pointer exception arises.
                          * Do NOT erase the elvis operator although they seem useless!
                          */
-                        items(entries ?: emptyList()) { entry ->
+                        items(entries) { entry ->
                             when (entry) {
                                 is Symbol -> SymbolUi(
                                     symbol = entry,

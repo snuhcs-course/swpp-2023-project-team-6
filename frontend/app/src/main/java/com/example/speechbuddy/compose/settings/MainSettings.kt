@@ -26,6 +26,7 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +34,8 @@ fun MainSettings(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     bottomPaddingValues: PaddingValues,
-    viewModel: AccountSettingsViewModel = hiltViewModel()
+    viewModel: AccountSettingsViewModel = hiltViewModel(),
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isGuestMode = uiState.user == null // user == null 이면 게스트 모드인 것으로 간주
@@ -42,7 +44,10 @@ fun MainSettings(
         modifier = modifier.fillMaxSize()
     ) {
         Scaffold(topBar = {
-            TopAppBarUi(title = stringResource(id = R.string.settings))
+            TopAppBarUi(
+                title = stringResource(id = R.string.settings),
+                guideScreenViewModel = guideScreenViewModel
+            )
         }) { topPaddingValues ->
             Column(
                 modifier = Modifier

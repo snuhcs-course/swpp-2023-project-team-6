@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -18,10 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
-import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 /**
  * Custom UI designed for top app bars used in main activity.
@@ -39,7 +39,15 @@ fun TopAppBarUi(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
     isBackClickEnabled: Boolean = false,
-    actions: @Composable (RowScope.() -> Unit) = {}
+    guideScreenViewModel: GuideScreenViewModel,
+    actions: @Composable (RowScope.() -> Unit) = {
+        IconButton(onClick = { guideScreenViewModel.toggleGuide() }) {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = "guide"
+            )
+        }
+    }
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,

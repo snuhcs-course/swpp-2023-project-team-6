@@ -17,11 +17,15 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DevelopersInfo(
-    modifier: Modifier = Modifier, onBackClick: () -> Unit, bottomPaddingValues: PaddingValues
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    bottomPaddingValues: PaddingValues,
+    guideScreenViewModel : GuideScreenViewModel
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
@@ -30,7 +34,8 @@ fun DevelopersInfo(
             TopAppBarUi(
                 title = stringResource(id = R.string.settings),
                 onBackClick = onBackClick,
-                isBackClickEnabled = true
+                isBackClickEnabled = true,
+                guideScreenViewModel = guideScreenViewModel
             )
         }) { topPaddingValues ->
             Column(

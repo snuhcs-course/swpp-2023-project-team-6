@@ -22,9 +22,9 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -113,17 +113,19 @@ fun GuideScreenPage(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun GuideScreen(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
-    bottomPaddingValues: PaddingValues
+    showGuide: Boolean,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier
-            .padding(20.dp)
-            .fillMaxSize()
-    ) {
-        PagerIndicatorSample()
+    if (showGuide) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            confirmButton = {},
+            text = { PagerIndicatorSample() },
+            modifier = modifier
+        )
     }
+
 }
 
 @OptIn(ExperimentalFoundationApi::class)

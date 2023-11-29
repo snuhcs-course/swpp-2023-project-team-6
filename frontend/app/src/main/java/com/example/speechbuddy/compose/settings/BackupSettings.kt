@@ -32,6 +32,7 @@ import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.BackupSettingsAlert
 import com.example.speechbuddy.viewmodel.BackupSettingsViewModel
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +41,8 @@ fun BackupSettings(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     bottomPaddingValues: PaddingValues,
-    viewModel: BackupSettingsViewModel = hiltViewModel()
+    viewModel: BackupSettingsViewModel = hiltViewModel(),
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -51,7 +53,8 @@ fun BackupSettings(
             TopAppBarUi(
                 title = stringResource(id = R.string.settings),
                 onBackClick = onBackClick,
-                isBackClickEnabled = true
+                isBackClickEnabled = true,
+                guideScreenViewModel = guideScreenViewModel
             )
         }) { topPaddingValues ->
             Column(

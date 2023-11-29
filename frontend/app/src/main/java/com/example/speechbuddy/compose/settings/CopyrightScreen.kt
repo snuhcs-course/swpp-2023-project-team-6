@@ -23,13 +23,15 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Copyright(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    bottomPaddingValues: PaddingValues
+    bottomPaddingValues: PaddingValues,
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
@@ -39,7 +41,8 @@ fun Copyright(
                 TopAppBarUi(
                     title = stringResource(id = R.string.settings),
                     onBackClick = onBackClick,
-                    isBackClickEnabled = true
+                    isBackClickEnabled = true,
+                    guideScreenViewModel = guideScreenViewModel
                 )
             }
         ) { topPaddingValues ->

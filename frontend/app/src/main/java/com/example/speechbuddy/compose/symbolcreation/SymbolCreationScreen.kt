@@ -73,6 +73,7 @@ import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
 import com.example.speechbuddy.utils.Constants
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,7 +81,8 @@ import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 fun SymbolCreationScreen(
     modifier: Modifier = Modifier,
     bottomPaddingValues: PaddingValues,
-    viewModel: SymbolCreationViewModel = hiltViewModel()
+    viewModel: SymbolCreationViewModel = hiltViewModel(),
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val context = LocalContext.current
 
@@ -133,7 +135,10 @@ fun SymbolCreationScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBarUi(title = stringResource(id = R.string.create_new_symbol))
+                TopAppBarUi(
+                    title = stringResource(id = R.string.create_new_symbol),
+                    guideScreenViewModel = guideScreenViewModel
+                )
             }
         ) { topPaddingValues ->
             Column(

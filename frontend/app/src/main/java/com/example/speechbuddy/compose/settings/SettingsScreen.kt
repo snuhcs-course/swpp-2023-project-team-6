@@ -8,16 +8,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SettingsScreen(
-    bottomPaddingValues: PaddingValues
+    bottomPaddingValues: PaddingValues,
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val navController = rememberNavController()
     SettingsScreenNavHost(
         navController = navController,
-        bottomPaddingValues = bottomPaddingValues
+        bottomPaddingValues = bottomPaddingValues,
+        guideScreenViewModel = guideScreenViewModel
     )
 }
 
@@ -25,7 +28,8 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenNavHost(
     navController: NavHostController,
-    bottomPaddingValues: PaddingValues
+    bottomPaddingValues: PaddingValues,
+    guideScreenViewModel: GuideScreenViewModel
 ) {
     val navigateToMain = { navController.navigate("main") }
 
@@ -33,60 +37,63 @@ private fun SettingsScreenNavHost(
         composable("main") {
             MainSettings(
                 navController = navController,
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("account") {
             AccountSettings(
                 onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("guest") {
             GuestSettings(
                 onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("display") {
             DisplaySettings(
                 onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("my_symbol") {
             MySymbolSettings(
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("backup") {
             BackupSettings(
                 onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("version") {
             VersionInfo(
                 onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("developers") {
             DevelopersInfo(
                 onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
         composable("copyright") {
             Copyright(
                 onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
-            )
-        }
-        composable("guide") {
-            GuideScreen(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                guideScreenViewModel = guideScreenViewModel
             )
         }
     }
