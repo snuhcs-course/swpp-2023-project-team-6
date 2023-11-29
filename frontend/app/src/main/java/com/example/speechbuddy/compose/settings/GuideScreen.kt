@@ -23,6 +23,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +40,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,22 +49,50 @@ import kotlinx.coroutines.launch
 
 val pages = listOf<@Composable () -> Unit>(
     {
-        Image(
-            painter = painterResource(id = R.drawable.bottom_navigation_bar_description),
-            contentDescription = "Description",
+        Column(
             modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .fillMaxSize()
-        )
+                .fillMaxWidth()
+                .height(300.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(id = R.string.guide_screen_bottom_navigation_bar),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Image(
+                painter = painterResource(id = R.drawable.bottom_navigation_bar_description),
+                contentDescription = "Description",
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .fillMaxSize()
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
     },
     {
-        Image(
-            painter = painterResource(id = R.drawable.symbol_creation_screen_description),
-            contentDescription = "Description",
+        Column(
             modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .fillMaxSize()
-        )
+                .fillMaxWidth()
+                .height(600.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(id = R.string.guide_screen_symbol_creation_screen),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Image(
+                painter = painterResource(id = R.drawable.symbol_creation_screen_description),
+                contentDescription = "Description",
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .fillMaxSize()
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
     },
     { Text("Page 3 Content", fontSize = 40.sp) },
     { Text("Page 4 Content", fontSize = 40.sp) },

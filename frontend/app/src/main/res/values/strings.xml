@@ -142,4 +142,11 @@
     <!-- Copyright Info -->
     <string name="copyright_info">저작권 정보</string>
     <string name="copyright">본 서비스의 그림상징은 \'한국형 보완대체의사소통용 기본상징 체계집\'의 일부로 박은혜, 김영태(이화여자대학교), 홍기형(성신여자대학교)에게 저작권이 있습니다.\n자료의 무단 사용 및 2차 가공, 배포, 상업적 용도로 사용하는 것을 금합니다.</string>
+
+    <!-- Guide Screen -->
+    <string name="guide_screen_bottom_navigation_bar">하단 바의 아이콘을 눌러 원하는 기능을 이용해보세요.
+        \n1. 상징으로 말하기\n2. 음성으로 말하기\n3. 새 상징 만들기\n4. 설정
+    </string>
+    <string name="guide_screen_symbol_creation_screen">1. 사진을 선택하세요\n2. 대분류를 선택하세요
+        \n3. 상징 이름을 입력해주세요\n4. 새로운 상징 만들기!</string>
 </resources>
