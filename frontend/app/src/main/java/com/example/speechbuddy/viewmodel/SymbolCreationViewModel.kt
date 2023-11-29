@@ -26,6 +26,7 @@ import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
+import com.example.speechbuddy.ui.models.ToastState
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidSymbolText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -65,6 +66,8 @@ class SymbolCreationViewModel @Inject internal constructor(
 
     var dialogState by mutableStateOf<DialogState?>(DialogState.HIDE)
 
+    var toastState by mutableStateOf<ToastState?>(ToastState.HIDE)
+
     var symbolTextInput by mutableStateOf("")
         private set
 
@@ -79,6 +82,18 @@ class SymbolCreationViewModel @Inject internal constructor(
 
             "hide" -> {
                 dialogState = DialogState.HIDE
+            }
+        }
+    }
+
+    fun updateToastState(updateState: String) {
+        when (updateState) {
+            "show" -> {
+                toastState = ToastState.SHOW
+            }
+
+            "hide" -> {
+                toastState = ToastState.HIDE
             }
         }
     }

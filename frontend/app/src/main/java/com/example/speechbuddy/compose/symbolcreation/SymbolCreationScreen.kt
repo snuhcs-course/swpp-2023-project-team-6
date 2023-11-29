@@ -49,8 +49,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -72,6 +70,7 @@ import com.example.speechbuddy.ui.models.DialogState
 import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
+import com.example.speechbuddy.ui.models.ToastState
 import com.example.speechbuddy.utils.Constants
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
@@ -83,8 +82,6 @@ fun SymbolCreationScreen(
     viewModel: SymbolCreationViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-
-    val showToast = remember { mutableStateOf(false) }
 
     val uiState by viewModel.uiState.collectAsState()
     val categories by viewModel.categories.observeAsState(emptyList())
@@ -115,17 +112,17 @@ fun SymbolCreationScreen(
         if (isGranted) {
             cameraLauncher.launch(null)
         } else {
-            showToast.value = true
+            viewModel.updateToastState("show")
         }
     }
 
-    if (showToast.value) {
+    if (viewModel.toastState == ToastState.SHOW) {
         Toast.makeText(
             context,
             stringResource(id = R.string.camera_permission_description),
             Toast.LENGTH_LONG
         ).show()
-        showToast.value = false
+        viewModel.updateToastState("hide")
     }
 
     if (creationResultMessage != null) {
