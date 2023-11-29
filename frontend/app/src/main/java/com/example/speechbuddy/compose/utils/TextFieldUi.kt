@@ -99,27 +99,3 @@ private fun getTextFieldColors(isValid: Boolean): TextFieldColors {
         unfocusedSupportingTextColor = MaterialTheme.colorScheme.outline
     )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun TextFieldUiPreview() {
-    SpeechBuddyTheme {
-        TextFieldUi(
-            value = "wrongaddress@email.com",
-            onValueChange = {},
-            label = { Text("이메일") },
-            supportingButton = {
-                ButtonUi(
-                    text = "인증번호 발송",
-                    onClick = {},
-                    isError = true,
-                    level = ButtonLevel.TERTIARY
-                )
-            },
-            supportingText = { Text("잘못된 이메일 주소입니다.") },
-            isError = true,
-            isValid = false,
-            isHidden = false,
-        )
-    }
-}

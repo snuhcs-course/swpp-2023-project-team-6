@@ -47,21 +47,22 @@ class SymbolSelectionViewModel @Inject internal constructor(
     private var getEntriesJob: Job? = null
 
     init {
+        repository.checkImages()
         getEntries()
     }
 
-    fun expandMenu() {
+    fun enterDisplayMax() {
         _uiState.update { currentState ->
             currentState.copy(
-                isMenuExpanded = true
+                isDisplayMax = true
             )
         }
     }
 
-    fun dismissMenu() {
+    fun exitDisplayMax() {
         _uiState.update { currentState ->
             currentState.copy(
-                isMenuExpanded = false
+                isDisplayMax = false
             )
         }
     }
@@ -69,7 +70,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun selectDisplayMode(displayMode: DisplayMode) {
         _uiState.update { currentState ->
             currentState.copy(
-                isMenuExpanded = false, displayMode = displayMode
+                displayMode = displayMode
             )
         }
         getEntries()
@@ -87,7 +88,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun clear(symbolItem: SymbolItem) {
         selectedSymbols = selectedSymbols.minus(symbolItem)
         // when clearing one left selected symbol
-        if(selectedSymbols.isNotEmpty()){
+        if (selectedSymbols.isNotEmpty()) {
             val lastSelectedSymbol = selectedSymbols.last()
             provideSuggestion(lastSelectedSymbol.symbol)
         }
@@ -98,12 +99,15 @@ class SymbolSelectionViewModel @Inject internal constructor(
         selectedSymbols = emptyList()
     }
 
-    fun selectSymbol(symbol: Symbol) {
+    fun selectSymbol(symbol: Symbol): Int {
         queryInput = ""
-        selectedSymbols =
-            selectedSymbols.plus(SymbolItem(id = selectedSymbols.size, symbol = symbol))
+
+        val newSymbolItem = SymbolItem(id = selectedSymbols.size, symbol = symbol)
+        selectedSymbols = selectedSymbols.plus(newSymbolItem)
 
         provideSuggestion(symbol)
+
+        return newSymbolItem.id
     }
 
     fun updateFavorite(symbol: Symbol, value: Boolean) {
@@ -127,17 +131,17 @@ class SymbolSelectionViewModel @Inject internal constructor(
         }
     }
 
-    private fun provideSuggestion(symbol: Symbol){
+    private fun provideSuggestion(symbol: Symbol) {
         // became independent from selectSymbol function
         // change it so that providing suggestion is available from any screen
 //        if (uiState.value.displayMode == DisplayMode.SYMBOL) {
 
-            getEntriesJob?.cancel()
-            getEntriesJob = viewModelScope.launch {
-                weightTableRepository.provideSuggestion(symbol).collect { symbols ->
-                    _entries.postValue(symbols)
-                }
+        getEntriesJob?.cancel()
+        getEntriesJob = viewModelScope.launch {
+            weightTableRepository.provideSuggestion(symbol).collect { symbols ->
+                _entries.postValue(symbols)
             }
+        }
 //        }
     }
 

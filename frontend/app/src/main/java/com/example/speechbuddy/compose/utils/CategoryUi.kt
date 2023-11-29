@@ -54,21 +54,21 @@ fun CategoryUi(
                 GlideImage(
                     model = CATEGORY_IMAGE_PATH.plus("category_${category.id}.png"),
                     contentDescription = category.text,
-                    modifier = Modifier.height(95.dp),
+                    modifier = Modifier.height(90.dp),
                     contentScale = ContentScale.FillHeight
                 )
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(45.dp)
+                        .height(50.dp)
                         .background(color = MaterialTheme.colorScheme.tertiaryContainer)
                         .padding(horizontal = 10.dp), contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = category.text,
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }

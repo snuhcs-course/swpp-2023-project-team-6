@@ -7,6 +7,7 @@ import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.UserDao
+import com.example.speechbuddy.data.local.UserIdPrefsManager
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.local.models.UserMapper
@@ -82,6 +83,13 @@ class DatabaseModule {
     fun provideAuthTokenPrefsManager(@ApplicationContext context: Context): AuthTokenPrefsManager {
         return AuthTokenPrefsManager(context)
     }
+
+    @Singleton
+    @Provides
+    fun provideUserIdPrefsManager(@ApplicationContext context: Context): UserIdPrefsManager {
+        return UserIdPrefsManager(context)
+    }
+
 
     @Singleton
     @Provides

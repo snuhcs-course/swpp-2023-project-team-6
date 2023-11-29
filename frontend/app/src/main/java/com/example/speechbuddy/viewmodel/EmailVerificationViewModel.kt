@@ -41,9 +41,6 @@ class EmailVerificationViewModel @Inject internal constructor(
 
     private val source = mutableStateOf<String?>(null)
 
-    private val _loading = MutableLiveData(false)
-    val loading: LiveData<Boolean> get() = _loading
-
     var emailInput by mutableStateOf("")
         private set
 
@@ -62,6 +59,15 @@ class EmailVerificationViewModel @Inject internal constructor(
     fun setCode(input: String) {
         codeInput = input
         if (_uiState.value.error?.type == EmailVerificationErrorType.CODE) validateCode()
+    }
+
+    private fun changeLoadingState(){
+        _uiState.update {currentState ->
+            currentState.copy(
+                loading = !currentState.loading,
+                buttonEnabled = !currentState.buttonEnabled
+            )
+        }
     }
 
     private fun validateEmail() {
@@ -123,14 +129,14 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     private fun sendCodeForSignup() {
-        _loading.value = true
+        changeLoadingState()
         viewModelScope.launch {
             repository.sendCodeForSignup(
                 AuthSendCodeRequest(
                     email = emailInput
                 )
             ).collect { result ->
-                _loading.value = false
+                changeLoadingState()
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         _uiState.update { currentState ->
@@ -188,14 +194,14 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     private fun sendCodeForResetPassword() {
-        _loading.value = true
+        changeLoadingState()
         viewModelScope.launch {
             repository.sendCodeForResetPassword(
                 AuthSendCodeRequest(
                     email = emailInput
                 )
             ).collect { result ->
-                _loading.value = false
+                changeLoadingState()
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         _uiState.update { currentState ->
@@ -289,6 +295,7 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     private fun verifyEmailForSignup(navigateCallback: (String) -> Unit) {
+        changeLoadingState()
         viewModelScope.launch {
             repository.verifyEmailForSignup(
                 AuthVerifyEmailRequest(
@@ -296,6 +303,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                     code = codeInput
                 )
             ).collect { result ->
+                changeLoadingState()
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         navigateCallback("signup/$emailInput")
@@ -342,6 +350,7 @@ class EmailVerificationViewModel @Inject internal constructor(
     }
 
     private fun verifyEmailForResetPassword(navigateCallback: (String) -> Unit) {
+        changeLoadingState()
         viewModelScope.launch {
             repository.verifyEmailForResetPassword(
                 AuthVerifyEmailRequest(
@@ -349,6 +358,7 @@ class EmailVerificationViewModel @Inject internal constructor(
                     code = codeInput
                 )
             ).collect { resource ->
+                changeLoadingState()
                 if (resource.status == Status.SUCCESS) {
                     val temporaryToken = AuthToken(resource.data?.accessToken, null)
                     sessionManager.setAuthToken(temporaryToken)

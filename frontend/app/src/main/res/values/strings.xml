@@ -56,16 +56,16 @@
     <!-- SpeechBuddyHome -->
     <!-- Symbol Selection -->
     <string name="talk_with_symbols">상징으로 말하기</string>
-    <string name="menu">메뉴</string>
-    <string name="display_all">모두 보기</string>
-    <string name="display_symbols">상징 보기</string>
-    <string name="display_categories">대분류로 보기</string>
-    <string name="display_favorites">즐겨찾기만 보기</string>
+    <string name="all">전체</string>
+    <string name="symbol">상징</string>
+    <string name="category">대분류</string>
+    <string name="favorite">즐겨찾기</string>
     <string name="currently_selected_menu">현재 선택된 메뉴</string>
     <string name="fill_query">검색어를 입력하세요</string>
-    <string name="clear_all">전체 삭제</string>
+    <string name="display_max">크게 보기</string>
+    <string name="clear_all">모두 삭제</string>
     <string name="unselect_symbol">상징 선택 취소</string>
-    <string name="favorite">즐겨찾기</string>
+    <string name="exit">나가기</string>
 
     <!-- Text-to-Speech -->
     <string name="talk_with_speech">음성으로 말하기</string>
@@ -78,7 +78,6 @@
     <!-- Symbol Creation -->
     <string name="create_new_symbol">새 상징 만들기</string>
     <string name="symbol_creation_description">직접 찍은 사진으로 새로운 상징을 만들어보세요</string>
-    <string name="category">대분류</string>
     <string name="dropdown">드롭다운</string>
     <string name="create">만들기</string>
     <string name="new_symbol_photo">새 상징 사진</string>
@@ -89,6 +88,9 @@
     <string name="no_photo">사진을 선택해주세요</string>
     <string name="create_symbol_success">상징이 성공적으로 추가되었습니다</string>
     <string name="create_symbol_error">상징 생성에 실패하였습니다\n다시 시도해 주세요</string>
+    <string name="choose_photo_option">사진을 어떻게 추가하실 건가요?</string>
+    <string name="choose_from_gallery">사진 보관함에서 사진 선택하기</string>
+    <string name="take_photo">사진 촬영하기</string>
 
     <!-- Settings -->
     <string name="settings">설정</string>
@@ -126,6 +128,8 @@
 
     <!-- My Symbol Settings -->
     <string name="manage_symbols">상징 목록 관리</string>
+    <string name="delete_my_symbol">삭제</string>
+    <string name="my_symbol">내가 만든 상징</string>
 
     <!-- Version Info -->
     <string name="version_info">버전 정보</string>

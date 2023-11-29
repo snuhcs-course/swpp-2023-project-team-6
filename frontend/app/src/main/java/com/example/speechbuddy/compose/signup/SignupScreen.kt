@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -118,7 +120,11 @@ fun SignupScreen(
                 },
                 isError = isPasswordError || isPasswordCheckError,
                 isValid = uiState.isValidPassword,
-                isHidden = true
+                isHidden = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    autoCorrect = false
+                )
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -128,7 +134,18 @@ fun SignupScreen(
                 isError = isError,
                 onClick = {
                     viewModel.signup(onSuccess = navigateToLogin)
-                }
+                },
+                isEnabled = uiState.buttonEnabled
+            )
+        }
+    }
+
+    uiState.loading.let { loading ->
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
             )
         }
     }

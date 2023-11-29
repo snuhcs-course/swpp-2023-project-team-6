@@ -21,10 +21,11 @@ import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.repository.WeightTableRepository
+import com.example.speechbuddy.ui.models.DialogState
+import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
-import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_COUNT
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidSymbolText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,7 +45,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SymbolCreationViewModel @Inject internal constructor(
     private val weightTableRepository: WeightTableRepository,
-    private val repository: SymbolRepository,
+    private val symbolRepository: SymbolRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -54,17 +55,33 @@ class SymbolCreationViewModel @Inject internal constructor(
     private val _creationResultMessage = MutableLiveData<Int>()
     val creationResultMessage: LiveData<Int> = _creationResultMessage
 
-    val categories = repository.getAllCategories().asLiveData()
+    val categories = symbolRepository.getAllCategories().asLiveData()
 
     var photoInputUri by mutableStateOf<Uri?>(null)
 
     var photoInputBitmap by mutableStateOf<Bitmap?>(null)
+
+    var photoType by mutableStateOf<PhotoType?>(null)
+
+    var dialogState by mutableStateOf<DialogState?>(DialogState.HIDE)
 
     var symbolTextInput by mutableStateOf("")
         private set
 
     var categoryInput by mutableStateOf<Category?>(null)
         private set
+
+    fun updateDialogState(updateState: String) {
+        when (updateState) {
+            "show" -> {
+                dialogState = DialogState.SHOW
+            }
+
+            "hide" -> {
+                dialogState = DialogState.HIDE
+            }
+        }
+    }
 
     fun expandCategory() {
         _uiState.update { currentState ->
@@ -89,6 +106,12 @@ class SymbolCreationViewModel @Inject internal constructor(
         if (photoInputUri != null) photoInputBitmap = uriToBitmap(photoInputUri, context)
     }
 
+    fun updatePhotoInputBitmap(bitmap: Bitmap) {
+        photoInputBitmap = bitmap
+        validatePhotoInput()
+    }
+
+
     fun setSymbolText(input: String) {
         symbolTextInput = input
         if (_uiState.value.error?.type == SymbolCreationErrorType.SYMBOL_TEXT) validateSymbolText()
@@ -100,11 +123,21 @@ class SymbolCreationViewModel @Inject internal constructor(
     }
 
     private fun validatePhotoInput() {
-        if (photoInputUri != null) {
+        if (photoInputBitmap != null) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = true,
                     error = null
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isValidPhotoInput = false,
+                    error = SymbolCreationError(
+                        type = SymbolCreationErrorType.PHOTO_INPUT,
+                        messageId = R.string.no_photo
+                    )
                 )
             }
         }
@@ -137,6 +170,15 @@ class SymbolCreationViewModel @Inject internal constructor(
         categoryInput = null
         photoInputUri = null
         photoInputBitmap = null
+    }
+
+    private fun changeLoadingState() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                loading = !currentState.loading,
+                buttonEnabled = !currentState.buttonEnabled
+            )
+        }
     }
 
     @Suppress("DEPRECATION", "NewApi")
@@ -209,7 +251,10 @@ class SymbolCreationViewModel @Inject internal constructor(
                     )
                 )
             }
-        } else if (photoInputUri == null || photoInputBitmap == null) {
+        } else if (
+            (photoType == PhotoType.GALLERY && photoInputUri == null)
+            || (photoType == PhotoType.CAMERA && photoInputBitmap == null)
+        ) {
             _uiState.update { currentState ->
                 currentState.copy(
                     isValidPhotoInput = false,
@@ -220,10 +265,9 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else {
-            // If guest-mode
             if (sessionManager.userId.value == GUEST) {
                 viewModelScope.launch {
-                    val symbolId = repository.getNextSymbolId().first()
+                    val symbolId = symbolRepository.getNextSymbolId().first()
                     val fileName = "symbol_${symbolId}"
                     bitmapToFile(context, photoInputBitmap!!, fileName)
 
@@ -237,7 +281,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                     )
                     // store symbol locally
                     Log.d("guestguest", symbolId.toString())
-                    repository.insertSymbol(symbol)
+                    symbolRepository.insertSymbol(symbol)
                     weightTableRepository.updateWeightTableForNewSymbol(symbol)// ------------------------------ modified
 
                     clearInput()
@@ -246,15 +290,17 @@ class SymbolCreationViewModel @Inject internal constructor(
                 }
             } else { // If login-mode
                 // file processing
+                changeLoadingState()
                 val tempFileName = "symbol_${System.currentTimeMillis()}"
                 val imageFile = bitmapToFile(context, photoInputBitmap!!, tempFileName)
                 val imagePart = fileToMultipartBodyPart(imageFile, "image")
                 viewModelScope.launch {
-                    repository.createSymbolBackup(
+                    symbolRepository.createSymbolBackup(
                         symbolText = symbolTextInput,
                         categoryId = categoryInput!!.id,
                         image = imagePart
                     ).collect { resource ->
+                        changeLoadingState()
                         if (resource.status == Status.SUCCESS) {
                             // Store new symbol in local db
                             val symbolId = resource.data!!.id
@@ -271,7 +317,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                             changeFileName("$tempFileName.png", "symbol_$symbolId.png", context)
                             // store symbol locally
                             viewModelScope.launch {
-                                repository.insertSymbol(symbol)
+                                symbolRepository.insertSymbol(symbol)
                                 weightTableRepository.updateWeightTableForNewSymbol(symbol) // ----------------------- modified
                             }
                             clearInput()

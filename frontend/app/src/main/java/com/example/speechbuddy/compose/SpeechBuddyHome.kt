@@ -2,10 +2,12 @@ package com.example.speechbuddy.compose
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -15,6 +17,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,8 +47,7 @@ data class BottomNavItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpeechBuddyHome(
-    initialPage: Boolean,
-    isBeingReloadedForDarkModeChange: Boolean
+    initialPage: Boolean
 ) {
     val navController = rememberNavController()
     val navItems = listOf(
@@ -69,10 +73,12 @@ fun SpeechBuddyHome(
         )
     )
 
+    val bottomNavBarState = rememberSaveable { mutableStateOf(true) }
+
     Scaffold(
-        modifier = Modifier.padding(bottom = 48.dp), // System Bar Padding
         bottomBar = {
             BottomNavigationBar(
+                bottomNavBarState = bottomNavBarState,
                 items = navItems,
                 navController = navController,
                 onItemClick = {
@@ -85,42 +91,52 @@ fun SpeechBuddyHome(
             navController = navController,
             bottomPaddingValues = paddingValues,
             initialPage = initialPage,
-            isBeingReloadedForDarkModeChange = isBeingReloadedForDarkModeChange
+            showBottomNavBar = { bottomNavBarState.value = true },
+            hideBottomNavBar = { bottomNavBarState.value = false }
         )
     }
 }
 
 @Composable
 private fun BottomNavigationBar(
+    bottomNavBarState: MutableState<Boolean>,
     items: List<BottomNavItem>,
     navController: NavController,
     onItemClick: (BottomNavItem) -> Unit
 ) {
-    val backStackEntry = navController.currentBackStackEntryAsState()
-
-    NavigationBar(
-        modifier = Modifier.height(64.dp),
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        windowInsets = WindowInsets(top = 16.dp)
+    AnimatedVisibility(
+        visible = bottomNavBarState.value,
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it })
     ) {
-        items.forEach { item ->
-            val selected = item.route == backStackEntry.value?.destination?.route
-            NavigationBarItem(
-                selected = selected,
-                onClick = { onItemClick(item) },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = item.iconResId),
-                        contentDescription = stringResource(id = item.nameResId)
-                    )
-                },
-                modifier = Modifier.size(32.dp),
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = .5f)
-                ),
-                interactionSource = NoRippleInteractionSource()
-            )
+        val backStackEntry = navController.currentBackStackEntryAsState()
+
+        NavigationBar(
+            modifier = Modifier.height(64.dp),
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            windowInsets = WindowInsets(top = 16.dp)
+        ) {
+            items.forEach { item ->
+                val selected = item.route == backStackEntry.value?.destination?.route
+                NavigationBarItem(
+                    selected = selected,
+                    onClick = { onItemClick(item) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = item.iconResId),
+                            contentDescription = stringResource(id = item.nameResId)
+                        )
+                    },
+                    modifier = Modifier.size(32.dp),
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(
+                            alpha = .5f
+                        )
+                    ),
+                    interactionSource = NoRippleInteractionSource()
+                )
+            }
         }
     }
 }
@@ -131,21 +147,22 @@ private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,
     bottomPaddingValues: PaddingValues,
     initialPage: Boolean,
-    isBeingReloadedForDarkModeChange: Boolean
+    showBottomNavBar: () -> Unit,
+    hideBottomNavBar: () -> Unit,
 ) {
-    val startDestination = if (isBeingReloadedForDarkModeChange) {
-        "settings"
-    } else if (initialPage) {
-        "symbol_selection"
-    } else {
-        "text_to_speech"
-    }
-
+    val startDestination =
+        if (initialPage) {
+            "symbol_selection"
+        } else {
+            "text_to_speech"
+        }
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable("symbol_selection") {
             SymbolSelectionScreen(
-                bottomPaddingValues = bottomPaddingValues
+                bottomPaddingValues = bottomPaddingValues,
+                showBottomNavBar = showBottomNavBar,
+                hideBottomNavBar = hideBottomNavBar
             )
         }
         composable("text_to_speech") {
@@ -160,8 +177,7 @@ private fun SpeechBuddyHomeNavHost(
         }
         composable("settings") {
             SettingsScreen(
-                bottomPaddingValues = bottomPaddingValues,
-                isBeingReloadedForDarkModeChange = isBeingReloadedForDarkModeChange
+                bottomPaddingValues = bottomPaddingValues
             )
         }
     }

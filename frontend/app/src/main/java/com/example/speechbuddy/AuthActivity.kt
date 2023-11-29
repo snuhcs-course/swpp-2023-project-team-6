@@ -6,9 +6,9 @@ import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.core.view.WindowCompat
 import com.example.speechbuddy.compose.SpeechBuddyAuth
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
 import com.example.speechbuddy.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,18 +16,19 @@ import dagger.hilt.android.AndroidEntryPoint
 class AuthActivity : BaseActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
+    private val displaySettingsViewModel: DisplaySettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Displaying edge-to-edge
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         subscribeObservers()
         checkPreviousAuthUser()
 
         setContent {
-            SpeechBuddyTheme {
+            SpeechBuddyTheme(
+                settingsRepository = settingsRepository,
+                initialDarkMode = getInitialDarkMode()
+            ) {
                 SpeechBuddyAuth()
             }
         }
@@ -43,6 +44,10 @@ class AuthActivity : BaseActivity() {
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun getInitialDarkMode(): Boolean {
+        return displaySettingsViewModel.getDarkMode()
     }
 
     private fun checkPreviousAuthUser() {
@@ -61,4 +66,5 @@ class AuthActivity : BaseActivity() {
         }
         return super.dispatchTouchEvent(event)
     }
+
 }

@@ -99,13 +99,15 @@ fun AccountSettings(
                     ) {
                         ButtonUi(
                             text = stringResource(id = R.string.logout),
-                            onClick = { viewModel.showAlert(AccountSettingsAlert.BACKUP) }
+                            onClick = { viewModel.showAlert(AccountSettingsAlert.BACKUP) },
+                            isEnabled = uiState.buttonEnabled
                         )
 
                         ButtonUi(
                             text = stringResource(id = R.string.withdraw),
                             onClick = { viewModel.showAlert(AccountSettingsAlert.WITHDRAW) },
-                            level = ButtonLevel.QUATERNARY
+                            level = ButtonLevel.QUATERNARY,
+                            isEnabled = uiState.buttonEnabled
                         )
                     }
                 }

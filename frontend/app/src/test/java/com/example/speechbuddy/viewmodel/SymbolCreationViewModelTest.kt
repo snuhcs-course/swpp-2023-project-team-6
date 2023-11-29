@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.repository.SymbolRepository
+import com.example.speechbuddy.repository.WeightTableRepository
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -29,9 +30,10 @@ class SymbolCreationViewModelTest {
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     @MockK
-    private val repository: SymbolRepository = mockk()
+    private val symbolRepository: SymbolRepository = mockk()
+    private val weightTableRepository: WeightTableRepository = mockk()
     private val sessionManager: SessionManager = mockk()
-    val context: Context = mockk()
+    private val context: Context = mockk()
     private lateinit var viewModel: SymbolCreationViewModel
 
     private val emptySymbolText = ""
@@ -40,8 +42,6 @@ class SymbolCreationViewModelTest {
 
     private val validCategory = Category(1, "validCategory")
 
-    val validUri: Uri = mockk(relaxed = true)
-
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
@@ -49,8 +49,8 @@ class SymbolCreationViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(mainThreadSurrogate)
-        coEvery { repository.getAllCategories() } returns flowOf(emptyList())
-        viewModel = SymbolCreationViewModel(repository, sessionManager)
+        coEvery { symbolRepository.getAllCategories() } returns flowOf(emptyList())
+        viewModel = SymbolCreationViewModel(weightTableRepository, symbolRepository, sessionManager)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
