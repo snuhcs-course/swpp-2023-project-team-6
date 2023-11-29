@@ -96,8 +96,7 @@ fun GuideScreenPage(
             .padding(horizontal = 5.dp)
             .fillMaxWidth()
             .height(height),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.Center
     ) {
         //Spacer(modifier = Modifier.weight(1f))
         Text(
