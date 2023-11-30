@@ -41,11 +41,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.settings.GuideScreen
 import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
+import com.example.speechbuddy.compose.utils.GuideScreen
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 
 data class BottomNavItem(

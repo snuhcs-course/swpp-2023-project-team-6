@@ -1,4 +1,4 @@
-package com.example.speechbuddy.compose.settings
+package com.example.speechbuddy.compose.utils
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
