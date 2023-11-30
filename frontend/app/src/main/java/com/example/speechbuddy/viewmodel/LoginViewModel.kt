@@ -14,6 +14,7 @@ import com.example.speechbuddy.repository.UserRepository
 import com.example.speechbuddy.ui.models.LoginError
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.ui.models.LoginUiState
+import com.example.speechbuddy.utils.Constants.Companion.GUEST_ID
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
 import com.example.speechbuddy.utils.isValidPassword
@@ -346,8 +347,14 @@ class LoginViewModel @Inject internal constructor(
         viewModelScope.launch {
             authRepository.checkPreviousUser().collect { resource ->
                 if (resource.data != null) {
-                    sessionManager.setUserId(resource.data.first)
-                    sessionManager.setAuthToken(resource.data.second)
+                    val userId = resource.data.first
+                    val authToken = resource.data.second
+                    if (userId == GUEST_ID) {
+                        sessionManager.enterGuestMode()
+                    } else {
+                        sessionManager.setUserId(userId)
+                        sessionManager.setAuthToken(authToken)
+                    }
                 }
             }
         }
