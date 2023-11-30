@@ -240,11 +240,6 @@ private fun SpeechBuddyHomeNavHost(
             "text_to_speech"
         }
 
-//    GuideScreen(
-//        showGuide = guideScreenViewModel.showGuide.value,
-//        onDismissRequest = { guideScreenViewModel.toggleGuide() }
-//    )
-
     NavHost(navController = navController, startDestination = startDestination) {
         composable("symbol_selection") {
             SymbolSelectionScreen(

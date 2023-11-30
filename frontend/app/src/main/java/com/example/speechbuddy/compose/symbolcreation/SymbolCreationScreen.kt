@@ -71,7 +71,6 @@ import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
 import com.example.speechbuddy.ui.models.ToastState
 import com.example.speechbuddy.utils.Constants
-import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
 
 @Composable

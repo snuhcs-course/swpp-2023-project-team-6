@@ -28,7 +28,6 @@ import com.example.speechbuddy.compose.utils.CategoryUi
 import com.example.speechbuddy.compose.utils.SymbolUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
-import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 import kotlinx.coroutines.launch
 
@@ -98,7 +97,7 @@ fun SymbolSelectionScreen(
                      * Without the elvis operator, null pointer exception arises.
                      * Do NOT erase the elvis operator although it seems useless!
                      */
-                    items(entries ?: emptyList()) { entry ->
+                    items(entries) { entry ->
                         when (entry) {
                             is Symbol -> SymbolUi(
                                 symbol = entry,

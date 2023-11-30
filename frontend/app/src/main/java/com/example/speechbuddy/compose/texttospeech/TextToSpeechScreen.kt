@@ -37,9 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.models.ButtonStatusType
-import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

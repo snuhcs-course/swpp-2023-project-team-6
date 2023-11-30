@@ -23,7 +23,6 @@ import androidx.navigation.NavHostController
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
-import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @Composable
 fun MainSettings(

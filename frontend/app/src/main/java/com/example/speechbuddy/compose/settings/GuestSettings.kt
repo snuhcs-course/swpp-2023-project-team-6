@@ -16,7 +16,6 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
-import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @Composable
 fun GuestSettings(

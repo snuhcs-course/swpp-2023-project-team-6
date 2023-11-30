@@ -26,7 +26,6 @@ import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.InitialPage
 import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
-import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @Composable
 fun DisplaySettings(

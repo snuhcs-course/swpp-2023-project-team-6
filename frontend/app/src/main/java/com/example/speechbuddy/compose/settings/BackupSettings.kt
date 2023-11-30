@@ -28,7 +28,6 @@ import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.BackupSettingsAlert
 import com.example.speechbuddy.viewmodel.BackupSettingsViewModel
-import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
