@@ -26,6 +26,7 @@ import com.example.speechbuddy.ui.models.PhotoType
 import com.example.speechbuddy.ui.models.SymbolCreationError
 import com.example.speechbuddy.ui.models.SymbolCreationErrorType
 import com.example.speechbuddy.ui.models.SymbolCreationUiState
+import com.example.speechbuddy.ui.models.ToastState
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidSymbolText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +46,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SymbolCreationViewModel @Inject internal constructor(
     private val weightTableRepository: WeightTableRepository,
-    private val repository: SymbolRepository,
+    private val symbolRepository: SymbolRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -55,7 +56,7 @@ class SymbolCreationViewModel @Inject internal constructor(
     private val _creationResultMessage = MutableLiveData<Int>()
     val creationResultMessage: LiveData<Int> = _creationResultMessage
 
-    val categories = repository.getAllCategories().asLiveData()
+    val categories = symbolRepository.getAllCategories().asLiveData()
 
     var photoInputUri by mutableStateOf<Uri?>(null)
 
@@ -64,6 +65,8 @@ class SymbolCreationViewModel @Inject internal constructor(
     var photoType by mutableStateOf<PhotoType?>(null)
 
     var dialogState by mutableStateOf<DialogState?>(DialogState.HIDE)
+
+    var toastState by mutableStateOf<ToastState?>(ToastState.HIDE)
 
     var symbolTextInput by mutableStateOf("")
         private set
@@ -79,6 +82,18 @@ class SymbolCreationViewModel @Inject internal constructor(
 
             "hide" -> {
                 dialogState = DialogState.HIDE
+            }
+        }
+    }
+
+    fun updateToastState(updateState: String) {
+        when (updateState) {
+            "show" -> {
+                toastState = ToastState.SHOW
+            }
+
+            "hide" -> {
+                toastState = ToastState.HIDE
             }
         }
     }
@@ -252,7 +267,8 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else if (
-            (photoType == PhotoType.GALLERY && photoInputUri == null)
+            (photoType == null)
+            || (photoType == PhotoType.GALLERY && photoInputUri == null)
             || (photoType == PhotoType.CAMERA && photoInputBitmap == null)
         ) {
             _uiState.update { currentState ->
@@ -267,7 +283,7 @@ class SymbolCreationViewModel @Inject internal constructor(
         } else {
             if (sessionManager.userId.value == GUEST) {
                 viewModelScope.launch {
-                    val symbolId = repository.getNextSymbolId().first()
+                    val symbolId = symbolRepository.getNextSymbolId().first()
                     val fileName = "symbol_${symbolId}"
                     bitmapToFile(context, photoInputBitmap!!, fileName)
 
@@ -281,7 +297,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                     )
                     // store symbol locally
                     Log.d("guestguest", symbolId.toString())
-                    repository.insertSymbol(symbol)
+                    symbolRepository.insertSymbol(symbol)
                     weightTableRepository.updateWeightTableForNewSymbol(symbol)// ------------------------------ modified
 
                     clearInput()
@@ -295,7 +311,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                 val imageFile = bitmapToFile(context, photoInputBitmap!!, tempFileName)
                 val imagePart = fileToMultipartBodyPart(imageFile, "image")
                 viewModelScope.launch {
-                    repository.createSymbolBackup(
+                    symbolRepository.createSymbolBackup(
                         symbolText = symbolTextInput,
                         categoryId = categoryInput!!.id,
                         image = imagePart
@@ -317,7 +333,7 @@ class SymbolCreationViewModel @Inject internal constructor(
                             changeFileName("$tempFileName.png", "symbol_$symbolId.png", context)
                             // store symbol locally
                             viewModelScope.launch {
-                                repository.insertSymbol(symbol)
+                                symbolRepository.insertSymbol(symbol)
                                 weightTableRepository.updateWeightTableForNewSymbol(symbol) // ----------------------- modified
                             }
                             clearInput()

@@ -1,6 +1,7 @@
 package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.AuthTokenPrefsManager
+import com.example.speechbuddy.data.local.UserIdPrefsManager
 import com.example.speechbuddy.data.remote.AuthTokenRemoteSource
 import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
@@ -17,9 +18,13 @@ import com.example.speechbuddy.service.AuthService
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,6 +32,7 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
     private val authService: AuthService,
+    private val userIdPrefsManager: UserIdPrefsManager,
     private val authTokenPrefsManager: AuthTokenPrefsManager,
     private val authTokenRemoteSource: AuthTokenRemoteSource,
     private val authTokenDtoMapper: AuthTokenDtoMapper,
@@ -139,6 +145,10 @@ class AuthRepository @Inject constructor(
                 val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
                 val result =
                     authService.logout(getAuthHeader(), AuthRefreshRequest(refreshToken))
+                if (result.isSuccessful && result.code() == ResponseCode.SUCCESS.value)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        authTokenPrefsManager.clearAuthToken()
+                    }
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
@@ -151,17 +161,28 @@ class AuthRepository @Inject constructor(
                 val refreshToken = sessionManager.cachedToken.value!!.refreshToken!!
                 val result =
                     authService.withdraw(getAuthHeader(), AuthRefreshRequest(refreshToken))
+                if (result.isSuccessful && result.code() == ResponseCode.SUCCESS.value)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        authTokenPrefsManager.clearAuthToken()
+                    }
                 emit(result)
             } catch (e: Exception) {
                 emit(responseHandler.getConnectionErrorResponse())
             }
         }
 
-    fun checkPreviousUser(): Flow<Resource<AuthToken>> {
-        return authTokenPrefsManager.preferencesFlow.map { authToken ->
-            if (!authToken.accessToken.isNullOrEmpty() && !authToken.refreshToken.isNullOrEmpty()) {
-                Resource.success(authToken)
-            } else Resource.error("Couldn't find previous user", null)
+    fun checkPreviousUser(): Flow<Resource<Pair<Int, AuthToken>>> {
+        return userIdPrefsManager.preferencesFlow.combine(
+            authTokenPrefsManager.preferencesFlow
+        ) { userId, authToken ->
+            Pair(userId, authToken)
+        }.map { pair ->
+            val userId = pair.first
+            val authToken = pair.second
+            if (userId != null && authToken.accessToken!!.isNotEmpty() && authToken.refreshToken!!.isNotEmpty())
+                Resource.success(Pair(userId, authToken))
+            else
+                Resource.error("Couldn't find previous user", null)
         }
     }
 

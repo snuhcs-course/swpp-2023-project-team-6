@@ -4,13 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.domain.models.AuthToken
+import com.example.speechbuddy.utils.Constants.Companion.GUEST_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SessionManager {
 
-    private val _cachedToken = MutableLiveData<AuthToken?>()
+    private val _cachedToken = MutableLiveData<AuthToken?>(null)
     private val _userId = MutableLiveData<Int?>(null)
     private val _isLogin = MutableLiveData(false)
 
@@ -39,7 +40,7 @@ class SessionManager {
     }
 
     private fun checkAuthorization(): Boolean {
-        return _cachedToken.value?.refreshToken != null || _userId.value == GUEST
+        return _cachedToken.value?.refreshToken != null || _userId.value == GUEST_ID
     }
 
     fun setAuthToken(value: AuthToken) {
@@ -67,7 +68,7 @@ class SessionManager {
 
     fun enterGuestMode() {
         CoroutineScope(Dispatchers.Main).launch {
-            _userId.value = GUEST
+            _userId.value = GUEST_ID
         }
     }
 
@@ -75,10 +76,6 @@ class SessionManager {
         CoroutineScope(Dispatchers.Main).launch {
             _userId.value = null
         }
-    }
-
-    companion object {
-        const val GUEST = -1
     }
 
 }

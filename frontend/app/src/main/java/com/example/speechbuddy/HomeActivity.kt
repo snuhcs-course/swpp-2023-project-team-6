@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
+import androidx.activity.viewModels
 import com.example.speechbuddy.compose.SpeechBuddyHome
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,15 +65,14 @@ class HomeActivity : BaseActivity() {
         }
         return darkMode
     }
-    
-    // hides keyboard
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
             if (v != null) {
                 v.clearFocus()
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
             }
         }
         return super.dispatchTouchEvent(event)

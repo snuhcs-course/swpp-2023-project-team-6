@@ -31,3 +31,8 @@ enum class DialogState {
     SHOW,
     HIDE
 }
+
+enum class ToastState {
+    SHOW,
+    HIDE
+}

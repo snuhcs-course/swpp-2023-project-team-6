@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -52,7 +52,6 @@ fun SelectedSymbolsBox(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
                 .weight(1f),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -70,16 +69,17 @@ fun SelectedSymbolsBox(
             }
         }
 
-        Box(
+        Column(
             modifier = Modifier
                 .width(50.dp)
                 .background(color = MaterialTheme.colorScheme.surface)
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
                 onClick = onDisplayMax,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
+                    .weight(1f),
                 enabled = selectedSymbols.isNotEmpty(),
                 shape = RoundedCornerShape(5.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -90,6 +90,25 @@ fun SelectedSymbolsBox(
             ) {
                 Text(
                     text = stringResource(id = R.string.display_max),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Button(
+                onClick = onClearAll,
+                modifier = Modifier
+                    .weight(1f),
+                enabled = selectedSymbols.isNotEmpty(),
+                shape = RoundedCornerShape(5.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
+                ),
+                contentPadding = PaddingValues(2.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.clear_all),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium
                 )

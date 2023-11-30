@@ -21,7 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -37,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.ButtonStatusType
 import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
@@ -46,7 +44,7 @@ import com.example.speechbuddy.viewmodel.TextToSpeechViewModel
 @Composable
 fun TextToSpeechScreen(
     modifier: Modifier = Modifier,
-    bottomPaddingValues: PaddingValues,
+    paddingValues: PaddingValues,
     viewModel: TextToSpeechViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -58,72 +56,68 @@ fun TextToSpeechScreen(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(topBar = {
-            TopAppBarUi(title = stringResource(id = R.string.talk_with_speech))
-        }) { topPaddingValues ->
-            Column(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
+                )
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TitleUi(
+                title = stringResource(id = R.string.talk_with_sound),
+                description = stringResource(id = R.string.tts_description)
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            OutlinedTextField(
+                value = viewModel.textInput,
+                onValueChange = {
+                    viewModel.setText(it)
+                },
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = topPaddingValues.calculateTopPadding(),
-                        bottom = bottomPaddingValues.calculateBottomPadding()
-                    )
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .height(200.dp),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                shape = RoundedCornerShape(10.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                )
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TitleUi(
-                    title = stringResource(id = R.string.talk_with_sound),
-                    description = stringResource(id = R.string.tts_description)
+                Spacer(modifier = Modifier.weight(1f))
+
+                TextToSpeechButton(
+                    buttonStatus = uiState.buttonStatus,
+                    activatedColor = activatedColor,
+                    deactivatedColor = deactivatedColor,
+                    onPlay = { viewModel.ttsStart(context) },
+                    onStop = { viewModel.ttsStop() },
+                    enabled = viewModel.textInput.isNotEmpty()
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.weight(1f))
 
-                OutlinedTextField(
-                    value = viewModel.textInput,
-                    onValueChange = {
-                        viewModel.setText(it)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState())
-                        .height(200.dp),
-                    textStyle = MaterialTheme.typography.bodyMedium,
-                    shape = RoundedCornerShape(10.dp),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline
-                    )
+                TextClearButton(
+                    activatedColor = activatedColor,
+                    deactivatedColor = deactivatedColor,
+                    onClick = { viewModel.clearText() },
+                    enabled = uiState.buttonStatus == ButtonStatusType.PLAY && viewModel.textInput.isNotEmpty()
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    TextToSpeechButton(
-                        buttonStatus = uiState.buttonStatus,
-                        activatedColor = activatedColor,
-                        deactivatedColor = deactivatedColor,
-                        onPlay = { viewModel.ttsStart(context) },
-                        onStop = { viewModel.ttsStop() },
-                        enabled = viewModel.textInput.isNotEmpty()
-                    )
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    TextClearButton(
-                        activatedColor = activatedColor,
-                        deactivatedColor = deactivatedColor,
-                        onClick = { viewModel.clearText() },
-                        enabled = uiState.buttonStatus == ButtonStatusType.PLAY && !viewModel.textInput.isEmpty()
-                    )
-
-                    Spacer(modifier = Modifier.weight(1f))
-                }
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
     }
