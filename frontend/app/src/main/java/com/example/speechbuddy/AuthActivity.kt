@@ -44,7 +44,7 @@ class AuthActivity : BaseActivity() {
     private fun subscribeObservers() {
         sessionManager.isAuthorized.observe(this) { isAuthorized ->
             if (isAuthorized &&
-                sessionManager.userId.value != -1 &&
+                sessionManager.userId.value != GUEST &&
                 sessionManager.isLogin.value != true &&
                 getAutoBackup() &&
                 getLastBackupDate() != LocalDate.now().toString()
@@ -54,6 +54,10 @@ class AuthActivity : BaseActivity() {
                 navHomeActivity()
             }
         }
+    }
+
+    companion object {
+        const val GUEST = -1
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
