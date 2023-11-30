@@ -2,7 +2,6 @@ package com.example.speechbuddy.ui
 
 import android.app.Activity
 import android.os.Build
-import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -18,9 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.example.speechbuddy.repository.SettingsRepository
-import com.example.speechbuddy.viewmodel.DisplaySettingsViewModel
-import com.example.speechbuddy.viewmodel.LoginViewModel
-import dagger.hilt.android.migration.CustomInjection.inject
 
 private val _lightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
