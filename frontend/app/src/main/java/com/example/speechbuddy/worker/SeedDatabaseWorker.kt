@@ -24,27 +24,28 @@ class SeedDatabaseWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val database = AppDatabase.getInstance(applicationContext)
-        
-            val weightRows = mutableListOf<WeightRowEntity>()
+            if (!applicationContext.getDatabasePath("speechbuddy-db").exists()) {
+                val weightRows = mutableListOf<WeightRowEntity>()
 
-            applicationContext.assets.open("weight_table.txt").use { inputStream ->
-                val inputList: MutableList<List<Int>> = ArrayList()
-                inputStream.bufferedReader().useLines { lines ->
-                    lines.forEach { line ->
-                        inputList.add(
-                            line.split(",").mapNotNull { it.trim().toIntOrNull() })
+                applicationContext.assets.open("weight_table.txt").use { inputStream ->
+                    val inputList: MutableList<List<Int>> = ArrayList()
+                    inputStream.bufferedReader().useLines { lines ->
+                        lines.forEach { line ->
+                            inputList.add(
+                                line.split(",").mapNotNull { it.trim().toIntOrNull() })
+                        }
+                    }
+                    var id = 1
+                    for (weight in inputList) {
+                        val weightRowEntity = WeightRowEntity(id++, weight)
+                        weightRows.add(weightRowEntity)
                     }
                 }
-                var id = 1
-                for (weight in inputList) {
-                    val weightRowEntity = WeightRowEntity(id++, weight)
-                    weightRows.add(weightRowEntity)
-                }
-            }
 
-            database.weightRowDao().upsertAll(weightRows)
-            
-            Result.success()
+                database.weightRowDao().upsertAll(weightRows)
+
+                Result.success()
+            }
             
 
             applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
