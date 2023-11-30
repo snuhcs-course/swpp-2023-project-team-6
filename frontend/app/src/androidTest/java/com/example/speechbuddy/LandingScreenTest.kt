@@ -6,12 +6,18 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import com.example.speechbuddy.compose.landing.LandingScreen
+import com.example.speechbuddy.repository.SettingsRepository
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.components.SingletonComponent
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.inject.Singleton
 
 @HiltAndroidTest
 class LandingScreenTest {
@@ -27,7 +33,7 @@ class LandingScreenTest {
         hiltRule.inject()
         composeTestRule.activity.setContent {
             SpeechBuddyTheme {
-                LandingScreen( onLoginClick = {})
+                LandingScreen( onLoginClick = {}, isBackup = false)
             }
         }
     }
