@@ -124,24 +124,24 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun displayBackup() {
         viewModelScope.launch {
             settingsRepository.displayBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {}
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                        handleNoInternetConnection()
-                    }
+                    ResponseCode.SUCCESS.value -> { symbolListBackup() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
             }
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun symbolListBackup() {
         viewModelScope.launch {
             settingsRepository.symbolListBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {}
+                    ResponseCode.SUCCESS.value -> { favoriteSymbolBackup() }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
@@ -153,11 +153,12 @@ class AccountSettingsViewModel @Inject internal constructor(
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun favoriteSymbolBackup() {
         viewModelScope.launch {
             settingsRepository.favoriteSymbolBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {}
+                    ResponseCode.SUCCESS.value -> { weightTableBackup() }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
@@ -193,9 +194,6 @@ class AccountSettingsViewModel @Inject internal constructor(
             )
         }
         displayBackup()
-        symbolListBackup()
-        favoriteSymbolBackup()
-        weightTableBackup()
     }
 
     private fun handleNoInternetConnection() {
