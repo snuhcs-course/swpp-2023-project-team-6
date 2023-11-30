@@ -16,12 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TitleUi
-<<<<<<< HEAD
-import com.example.speechbuddy.compose.utils.TopAppBarUi
-import com.example.speechbuddy.ui.SpeechBuddyTheme
-import com.example.speechbuddy.viewmodel.GuideScreenViewModel
-=======
->>>>>>> main
+
 
 @Composable
 fun Copyright(
