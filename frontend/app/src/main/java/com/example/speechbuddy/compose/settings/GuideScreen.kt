@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +23,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -86,7 +86,9 @@ fun GuideScreenPage(
         Image(
             painter = painterResource(id = imageId),
             contentDescription = stringResource(id = contentDescriptionId),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(10f / 19f) // image width-height ratio
         )
     }
 }
@@ -101,9 +103,7 @@ fun GuideScreen(
             usePlatformDefaultWidth = false // Allow custom width
         )
     ) {
-        Surface {
-            GuideScreenPageList()
-        }
+        GuideScreenPageList()
     }
 }
 
@@ -112,11 +112,11 @@ fun GuideScreen(
 private fun GuideScreenPageList() {
     Column(
         modifier = Modifier
-            .fillMaxWidth(fraction = 0.9f)
-            .fillMaxHeight(fraction = 0.9f),
+            .fillMaxWidth(0.85f),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val pagerState1 = rememberPagerState(
+        val pagerState = rememberPagerState(
             initialPage = 0,
             initialPageOffsetFraction = 0f
         ) {
@@ -125,13 +125,13 @@ private fun GuideScreenPageList() {
         val coroutineScope = rememberCoroutineScope()
 
         HorizontalPager(
-            state = pagerState1,
+            state = pagerState,
             verticalAlignment = Alignment.CenterVertically
         ) { page ->
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(700.dp),
+                    .fillMaxHeight(0.85f)
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 pages[page]()
@@ -140,9 +140,9 @@ private fun GuideScreenPageList() {
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        PagerIndicator(pagerState = pagerState1) {
+        PagerIndicator(pagerState = pagerState) {
             coroutineScope.launch {
-                pagerState1.scrollToPage(it)
+                pagerState.scrollToPage(it)
             }
         }
     }
