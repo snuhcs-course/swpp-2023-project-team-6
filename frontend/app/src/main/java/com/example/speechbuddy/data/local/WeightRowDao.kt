@@ -32,5 +32,4 @@ interface WeightRowDao {
 
     @Query("UPDATE weighttable SET weights = :resetWeights WHERE id < 501")
     suspend fun resetOriginalSymbolsWeightRows(resetWeights: List<Int>)
-
 }

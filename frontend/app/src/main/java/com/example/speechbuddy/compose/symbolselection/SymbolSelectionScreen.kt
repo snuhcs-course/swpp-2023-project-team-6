@@ -14,21 +14,18 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.CategoryUi
 import com.example.speechbuddy.compose.utils.SymbolUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.domain.models.Category
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.viewmodel.GuideScreenViewModel
@@ -39,11 +36,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun SymbolSelectionScreen(
     modifier: Modifier = Modifier,
-    bottomPaddingValues: PaddingValues,
-    showBottomNavBar: () -> Unit,
-    hideBottomNavBar: () -> Unit,
-    viewModel: SymbolSelectionViewModel = hiltViewModel(),
-    guideScreenViewModel: GuideScreenViewModel
+    paddingValues: PaddingValues,
+    topAppBarState: MutableState<Boolean>,
+    bottomNavBarState: MutableState<Boolean>,
+    viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val entries by viewModel.entries.observeAsState(initial = emptyList())
@@ -56,87 +52,74 @@ fun SymbolSelectionScreen(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            topBar = {
-                TopAppBarUi(
-                    title = stringResource(id = R.string.talk_with_symbols),
-                    guideScreenViewModel = guideScreenViewModel
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
                 )
-            }
-        ) { topPaddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = topPaddingValues.calculateTopPadding(),
-                        bottom = bottomPaddingValues.calculateBottomPadding()
-                    )
-                    .padding(start = 24.dp, top = 24.dp, end = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                SymbolSearchTextField(
-                    value = viewModel.queryInput,
-                    onValueChange = { viewModel.setQuery(it) }
-                )
+                .padding(start = 24.dp, top = 24.dp, end = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            SymbolSearchTextField(
+                value = viewModel.queryInput,
+                onValueChange = { viewModel.setQuery(it) }
+            )
 
-                SelectedSymbolsBox(
-                    selectedSymbols = viewModel.selectedSymbols,
-                    lazyListState = lazyListState,
-                    onClear = { viewModel.clear(it) },
-                    onClearAll = { viewModel.clearAll() },
-                    onDisplayMax = { viewModel.enterDisplayMax() }
+            SelectedSymbolsBox(
+                selectedSymbols = viewModel.selectedSymbols,
+                lazyListState = lazyListState,
+                onClear = { viewModel.clear(it) },
+                onClearAll = { viewModel.clearAll() },
+                onDisplayMax = { viewModel.enterDisplayMax() }
+            )
+
+            Column {
+                DisplayModeMenu(
+                    currentDisplayMode = uiState.displayMode,
+                    onSelectDisplayMode = { viewModel.selectDisplayMode(it) }
                 )
 
-                Column {
-                    DisplayModeMenu(
-                        currentDisplayMode = uiState.displayMode,
-                        onSelectDisplayMode = { viewModel.selectDisplayMode(it) }
-                    )
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceVariant,
-                                shape = RoundedCornerShape(topEnd = 20.dp)
-                            ),
-                        state = lazyGridState,
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        /**
-                         * Without the elvis operator, null pointer exception arises.
-                         * Do NOT erase the elvis operator although they seem useless!
-                         */
-                        /**
-                         * Without the elvis operator, null pointer exception arises.
-                         * Do NOT erase the elvis operator although they seem useless!
-                         */
-                        items(entries) { entry ->
-                            when (entry) {
-                                is Symbol -> SymbolUi(
-                                    symbol = entry,
-                                    onSelect = {
-                                        coroutineScope.launch {
-                                            val id = viewModel.selectSymbol(entry)
-                                            lazyListState.animateScrollToItem(id)
-                                        }
-                                    },
-                                    onFavoriteChange = { viewModel.updateFavorite(entry, it) }
-                                )
-
-                                is Category -> CategoryUi(
-                                    category = entry,
-                                    onSelect = {
-                                        coroutineScope.launch {
-                                            viewModel.selectCategory(entry)
-                                            lazyGridState.animateScrollToItem(0)
-                                        }
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            shape = RoundedCornerShape(topEnd = 20.dp)
+                        ),
+                    state = lazyGridState,
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    /**
+                     * Without the elvis operator, null pointer exception arises.
+                     * Do NOT erase the elvis operator although it seems useless!
+                     */
+                    items(entries ?: emptyList()) { entry ->
+                        when (entry) {
+                            is Symbol -> SymbolUi(
+                                symbol = entry,
+                                onSelect = {
+                                    coroutineScope.launch {
+                                        val id = viewModel.selectSymbol(entry)
+                                        lazyListState.animateScrollToItem(id)
                                     }
-                                )
-                            }
+                                },
+                                onFavoriteChange = { viewModel.updateFavorite(entry, it) }
+                            )
+
+                            is Category -> CategoryUi(
+                                category = entry,
+                                onSelect = {
+                                    coroutineScope.launch {
+                                        viewModel.selectCategory(entry)
+                                        lazyGridState.animateScrollToItem(0)
+                                    }
+                                }
+                            )
                         }
                     }
                 }
@@ -145,11 +128,14 @@ fun SymbolSelectionScreen(
     }
 
     if (uiState.isDisplayMax) {
-        hideBottomNavBar()
         DisplayMaxScreen(
-            onExit = {
-                viewModel.exitDisplayMax()
-                showBottomNavBar()
+            showAppBars = {
+                topAppBarState.value = true
+                bottomNavBarState.value = true
+            },
+            hideAppBars = {
+                topAppBarState.value = false
+                bottomNavBarState.value = false
             }
         )
     }

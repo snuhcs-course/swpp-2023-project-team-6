@@ -1,4 +1,4 @@
-package com.example.speechbuddy.viewmodel;
+package com.example.speechbuddy.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -9,26 +9,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.domain.models.Symbol
-import com.example.speechbuddy.repository.SymbolRepository;
+import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.repository.WeightTableRepository
 import com.example.speechbuddy.ui.models.MySymbolSettingsDisplayMode
 import com.example.speechbuddy.ui.models.MySymbolSettingsUiState
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.lifecycle.HiltViewModel;
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class MySymbolSettingsViewModel @Inject internal constructor(
     private val weightTableRepository: WeightTableRepository,
-    private val repository:SymbolRepository
-) : ViewModel(){
+    private val symbolRepository: SymbolRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MySymbolSettingsUiState())
     val uiState: StateFlow<MySymbolSettingsUiState> = _uiState.asStateFlow()
@@ -63,7 +61,7 @@ class MySymbolSettingsViewModel @Inject internal constructor(
 
     fun updateFavorite(symbol: Symbol, value: Boolean) {
         viewModelScope.launch {
-            repository.updateFavorite(symbol, value)
+            symbolRepository.updateFavorite(symbol, value)
         }
     }
 
@@ -80,7 +78,7 @@ class MySymbolSettingsViewModel @Inject internal constructor(
         viewModelScope.launch {
             val checkedSymbols = _checkedSymbols.toList()
             for (symbol in checkedSymbols) {
-                repository.deleteSymbol(symbol)
+                symbolRepository.deleteSymbol(symbol)
                 weightTableRepository.updateWeightTableForDeletedSymbol(symbol)
             }
             _checkedSymbols.clear()
@@ -92,20 +90,19 @@ class MySymbolSettingsViewModel @Inject internal constructor(
         getSymbolsJob = viewModelScope.launch {
             when (_uiState.value.mySymbolSettingsDisplayMode) {
                 MySymbolSettingsDisplayMode.SYMBOL -> {
-                    if(query!=null){
-                        repository.getUserSymbols(query).collect{ symbols ->
+                    if (query != null) {
+                        symbolRepository.getUserSymbols(query).collect { symbols ->
                             _symbols.postValue(symbols)
                         }
-                    }
-                    else {
-                        repository.getUserSymbols(queryInput).collect{ symbols ->
+                    } else {
+                        symbolRepository.getUserSymbols(queryInput).collect { symbols ->
                             _symbols.postValue(symbols)
                         }
                     }
                 }
 
                 MySymbolSettingsDisplayMode.FAVORITE -> {
-                    repository.getFavoriteSymbols(queryInput).collect { symbols ->
+                    symbolRepository.getFavoriteSymbols(queryInput).collect { symbols ->
                         _symbols.postValue(symbols)
                     }
                 }

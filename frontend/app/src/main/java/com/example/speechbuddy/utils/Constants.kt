@@ -31,5 +31,7 @@ class Constants {
         const val MAXIMUM_SYMBOL_TEXT_LENGTH = 20
 
         const val DEFAULT_SYMBOL_COUNT = 500
+
+        const val GUEST_ID = -1
     }
 }

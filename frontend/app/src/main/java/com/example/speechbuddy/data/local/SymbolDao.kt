@@ -26,10 +26,10 @@ interface SymbolDao {
     @Query("SELECT * FROM symbols WHERE isMine = 1")
     fun getUserSymbols(): Flow<List<SymbolEntity>>
 
-    @Query("SELECT * FROM symbols WHERE isMine = 1 AND text LIKE  '%' || :query || '%'")
+    @Query("SELECT * FROM symbols WHERE isMine = 1 AND text LIKE '%' || :query || '%'")
     fun getUserSymbolsByQuery(query: String): Flow<List<SymbolEntity>>
 
-    @Query("SELECT * FROM symbols WHERE text LIKE  '%' || :query || '%'")
+    @Query("SELECT * FROM symbols WHERE text LIKE '%' || :query || '%'")
     fun getSymbolsByQuery(query: String): Flow<List<SymbolEntity>>
 
     @Query("SELECT * FROM symbols WHERE isFavorite = 1 AND text LIKE '%' || :query || '%'")
@@ -64,5 +64,4 @@ interface SymbolDao {
 
     @Query("UPDATE symbols SET isFavorite = 0 WHERE isFavorite = 1")
     suspend fun resetFavoriteSymbols()
-
 }

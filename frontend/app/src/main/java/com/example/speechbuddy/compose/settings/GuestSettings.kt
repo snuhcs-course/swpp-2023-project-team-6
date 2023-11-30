@@ -3,12 +3,9 @@ package com.example.speechbuddy.compose.settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,41 +15,31 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
 import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GuestSettings(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
-    bottomPaddingValues: PaddingValues,
-    viewModel: AccountSettingsViewModel = hiltViewModel(),
-    guideScreenViewModel: GuideScreenViewModel
+    paddingValues: PaddingValues,
+    viewModel: AccountSettingsViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        Scaffold(
-            topBar = {
-                TopAppBarUi(
-                    title = stringResource(id = R.string.settings),
-                    onBackClick = onBackClick,
-                    isBackClickEnabled = true,
-                    guideScreenViewModel = guideScreenViewModel
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
                 )
-            }
-        ) { topPaddingValues ->
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = topPaddingValues.calculateTopPadding(),
-                        bottom = bottomPaddingValues.calculateBottomPadding()
-                    )
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier.height(240.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 TitleUi(
                     title = stringResource(id = R.string.account),
@@ -61,11 +48,8 @@ fun GuestSettings(
 
                 ButtonUi(
                     text = stringResource(id = R.string.exit_guest_mode),
-                    onClick = { viewModel.exitGuestMode() },
-                    modifier = Modifier.offset(y = 240.dp)
+                    onClick = { viewModel.exitGuestMode() }
                 )
-
-                Spacer(modifier = Modifier.padding(70.dp))
             }
         }
     }

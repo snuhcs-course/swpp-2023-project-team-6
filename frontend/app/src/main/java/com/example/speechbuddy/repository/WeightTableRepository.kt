@@ -1,6 +1,5 @@
 package com.example.speechbuddy.repository
 
-import android.util.Log
 import com.example.speechbuddy.data.local.SymbolDao
 import com.example.speechbuddy.data.local.WeightRowDao
 import com.example.speechbuddy.data.local.models.SymbolMapper
@@ -24,7 +23,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class WeightTableRepository @Inject constructor(
     private val symbolDao: SymbolDao,
@@ -34,7 +32,6 @@ class WeightTableRepository @Inject constructor(
     private val symbolMapper = SymbolMapper()
     private val weightRowMapper = WeightRowMapper()
     private var allSymbols = getAllSymbols()
-
 
     private fun getAllSymbols() = symbolDao.getSymbols().map { symbolEntities ->
         symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
@@ -48,8 +45,10 @@ class WeightTableRepository @Inject constructor(
         }
 
     suspend fun resetAllWeightRows() {
-        weightRowDao.deleteMySymbolsWeightRows()
-        weightRowDao.resetOriginalSymbolsWeightRows(List(500) { 0 })
+        CoroutineScope(Dispatchers.IO).launch {
+            weightRowDao.deleteMySymbolsWeightRows()
+            weightRowDao.resetOriginalSymbolsWeightRows(List(500) { 0 })
+        }
     }
 
     suspend fun replaceWeightTable(weightRowList: List<WeightRow>) {
@@ -115,7 +114,7 @@ class WeightTableRepository @Inject constructor(
         }
     }
 
-    fun updateWeightTableForDeletedSymbol(symbol: Symbol){
+    fun updateWeightTableForDeletedSymbol(symbol: Symbol) {
         CoroutineScope(Dispatchers.IO).launch {
             val deletedSymbolIdx = weightRowDao.getCountOfRowsWithIdLessThan(symbol.id)
 
@@ -124,7 +123,7 @@ class WeightTableRepository @Inject constructor(
             weightRows.addAll(fetchWeightRows())
 
             // update existing weightRows
-            for(weightRow in weightRows){
+            for (weightRow in weightRows) {
                 val newWeights = mutableListOf<Int>()
                 newWeights.addAll(weightRow.weights)
                 newWeights.removeAt(deletedSymbolIdx)

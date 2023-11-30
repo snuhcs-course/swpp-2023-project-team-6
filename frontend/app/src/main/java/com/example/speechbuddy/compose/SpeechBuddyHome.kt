@@ -5,10 +5,13 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -16,11 +19,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -77,9 +83,17 @@ fun SpeechBuddyHome(
         )
     )
 
+    val topAppBarState = rememberSaveable { mutableStateOf(true) }
     val bottomNavBarState = rememberSaveable { mutableStateOf(true) }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                topAppBarState = topAppBarState,
+                items = navItems,
+                navController = navController
+            )
+        },
         bottomBar = {
             BottomNavigationBar(
                 bottomNavBarState = bottomNavBarState,
@@ -93,11 +107,55 @@ fun SpeechBuddyHome(
     ) { paddingValues ->
         SpeechBuddyHomeNavHost(
             navController = navController,
-            bottomPaddingValues = paddingValues,
+            paddingValues = paddingValues,
             initialPage = initialPage,
-            showBottomNavBar = { bottomNavBarState.value = true },
-            hideBottomNavBar = { bottomNavBarState.value = false },
-            guideScreenViewModel = guideScreenViewModel
+            topAppBarState = topAppBarState,
+            bottomNavBarState = bottomNavBarState
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopAppBar(
+    topAppBarState: MutableState<Boolean>,
+    items: List<BottomNavItem>,
+    navController: NavController
+) {
+    val backStackEntry = navController.currentBackStackEntryAsState()
+    var titleResId: Int? = null
+    items.forEach { item ->
+        if (item.route == backStackEntry.value?.destination?.route) titleResId = item.nameResId
+    }
+
+    AnimatedVisibility(
+        visible = topAppBarState.value,
+        enter = slideInVertically(initialOffsetY = { -it }),
+        exit = slideOutVertically(targetOffsetY = { -it })
+    ) {
+        CenterAlignedTopAppBar(
+            title = {
+                if (titleResId != null) { // ensure that titleResId is properly initialized
+                    Text(
+                        text = stringResource(id = titleResId!!),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+            },
+            navigationIcon = {
+                Image(
+                    painter = painterResource(id = R.drawable.speechbuddy_parrot),
+                    contentDescription = stringResource(id = R.string.app_name),
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .size(40.dp),
+                    contentScale = ContentScale.Fit
+                )
+            },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            )
         )
     }
 }
@@ -150,11 +208,10 @@ private fun BottomNavigationBar(
 @Composable
 private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,
-    bottomPaddingValues: PaddingValues,
+    paddingValues: PaddingValues,
     initialPage: Boolean,
-    showBottomNavBar: () -> Unit,
-    hideBottomNavBar: () -> Unit,
-    guideScreenViewModel: GuideScreenViewModel
+    topAppBarState: MutableState<Boolean>,
+    bottomNavBarState: MutableState<Boolean>
 ) {
     val startDestination =
         if (initialPage) {
@@ -163,36 +220,32 @@ private fun SpeechBuddyHomeNavHost(
             "text_to_speech"
         }
 
-    GuideScreen(
-        showGuide = guideScreenViewModel.showGuide.value,
-        onDismissRequest = { guideScreenViewModel.toggleGuide() }
-    )
+//    GuideScreen(
+//        showGuide = guideScreenViewModel.showGuide.value,
+//        onDismissRequest = { guideScreenViewModel.toggleGuide() }
+//    )
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable("symbol_selection") {
             SymbolSelectionScreen(
-                bottomPaddingValues = bottomPaddingValues,
-                showBottomNavBar = showBottomNavBar,
-                hideBottomNavBar = hideBottomNavBar,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues,
+                topAppBarState = topAppBarState,
+                bottomNavBarState = bottomNavBarState
             )
         }
         composable("text_to_speech") {
             TextToSpeechScreen(
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("symbol_creation") {
             SymbolCreationScreen(
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("settings") {
             SettingsScreen(
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
     }

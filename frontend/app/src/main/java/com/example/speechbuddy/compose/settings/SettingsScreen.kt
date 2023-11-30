@@ -13,14 +13,12 @@ import com.example.speechbuddy.viewmodel.GuideScreenViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SettingsScreen(
-    bottomPaddingValues: PaddingValues,
-    guideScreenViewModel: GuideScreenViewModel
+    paddingValues: PaddingValues
 ) {
     val navController = rememberNavController()
     SettingsScreenNavHost(
         navController = navController,
-        bottomPaddingValues = bottomPaddingValues,
-        guideScreenViewModel = guideScreenViewModel
+        paddingValues = paddingValues
     )
 }
 
@@ -28,72 +26,53 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenNavHost(
     navController: NavHostController,
-    bottomPaddingValues: PaddingValues,
-    guideScreenViewModel: GuideScreenViewModel
+    paddingValues: PaddingValues
 ) {
-    val navigateToMain = { navController.navigate("main") }
-
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
             MainSettings(
                 navController = navController,
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("account") {
             AccountSettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("guest") {
             GuestSettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("display") {
             DisplaySettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("my_symbol") {
             MySymbolSettings(
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("backup") {
             BackupSettings(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("version") {
             VersionInfo(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("developers") {
             DevelopersInfo(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
         composable("copyright") {
             Copyright(
-                onBackClick = navigateToMain,
-                bottomPaddingValues = bottomPaddingValues,
-                guideScreenViewModel = guideScreenViewModel
+                paddingValues = paddingValues
             )
         }
     }
