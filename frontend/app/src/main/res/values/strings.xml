@@ -63,7 +63,7 @@
     <string name="currently_selected_menu">현재 선택된 메뉴</string>
     <string name="fill_query">검색어를 입력하세요</string>
     <string name="display_max">크게 보기</string>
-    <string name="clear_all">전체 삭제</string>
+    <string name="clear_all">모두 삭제</string>
     <string name="unselect_symbol">상징 선택 취소</string>
     <string name="exit">나가기</string>
 
@@ -91,6 +91,8 @@
     <string name="choose_photo_option">사진을 어떻게 추가하실 건가요?</string>
     <string name="choose_from_gallery">사진 보관함에서 사진 선택하기</string>
     <string name="take_photo">사진 촬영하기</string>
+    <string name="camera_permission_description">기기설정에서 카메라 권한을 허용해주세요</string>
+    <string name="choose_a_category">대분류를 선택하십시오</string>
 
     <!-- Settings -->
     <string name="settings">설정</string>
@@ -128,6 +130,8 @@
 
     <!-- My Symbol Settings -->
     <string name="manage_symbols">상징 목록 관리</string>
+    <string name="delete_my_symbol">삭제</string>
+    <string name="my_symbol">내가 만든 상징</string>
 
     <!-- Version Info -->
     <string name="version_info">버전 정보</string>

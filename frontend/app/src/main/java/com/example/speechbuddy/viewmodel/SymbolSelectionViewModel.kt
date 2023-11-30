@@ -45,10 +45,11 @@ class SymbolSelectionViewModel @Inject internal constructor(
     val entries: LiveData<List<Entry>> get() = _entries
 
     private var getEntriesJob: Job? = null
+    private var needsToBeRecalled: Boolean = false
 
     init {
-        getEntries()
         repository.checkImages()
+        getEntries()
     }
 
     fun enterDisplayMax() {
@@ -73,6 +74,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
                 displayMode = displayMode
             )
         }
+        queryInput = ""
         getEntries()
     }
 
@@ -87,11 +89,10 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     fun clear(symbolItem: SymbolItem) {
         selectedSymbols = selectedSymbols.minus(symbolItem)
-        // when clearing one left selected symbol
-        if (selectedSymbols.isNotEmpty()) {
-            val lastSelectedSymbol = selectedSymbols.last()
-            provideSuggestion(lastSelectedSymbol.symbol)
-        }
+        if (selectedSymbols.isEmpty())
+            getEntries()
+        else
+            provideSuggestion(selectedSymbols.last().symbol)
     }
 
     fun clearAll() {
@@ -114,12 +115,23 @@ class SymbolSelectionViewModel @Inject internal constructor(
         viewModelScope.launch {
             repository.updateFavorite(symbol, value)
         }
+        if (needsToBeRecalled) {
+            /**
+             * selectedSymbols should always be NOT EMPTY in this case,
+             * thus executing provideSuggestion() as expected.
+             */
+            if (selectedSymbols.isEmpty())
+                getEntries()
+            else
+                provideSuggestion(selectedSymbols.last().symbol)
+        }
     }
 
     fun selectCategory(category: Category) {
         if (category != selectedCategory) {
             selectedCategory = category
             getEntriesJob?.cancel()
+            needsToBeRecalled = false
             getEntriesJob = viewModelScope.launch {
                 repository.getSymbolsByCategory(category).collect { symbols ->
                     _entries.postValue(listOf(category) + symbols)
@@ -132,21 +144,22 @@ class SymbolSelectionViewModel @Inject internal constructor(
     }
 
     private fun provideSuggestion(symbol: Symbol) {
-        // became independent from selectSymbol function
-        // change it so that providing suggestion is available from any screen
-//        if (uiState.value.displayMode == DisplayMode.SYMBOL) {
-
+        /**
+         * became independent from selectSymbol function
+         * change it so that providing suggestion is available from any screen
+         */
         getEntriesJob?.cancel()
+        needsToBeRecalled = true
         getEntriesJob = viewModelScope.launch {
             weightTableRepository.provideSuggestion(symbol).collect { symbols ->
                 _entries.postValue(symbols)
             }
         }
-//        }
     }
 
     private fun getEntries(query: String? = null) {
         getEntriesJob?.cancel()
+        needsToBeRecalled = false
         getEntriesJob = viewModelScope.launch {
             when (_uiState.value.displayMode) {
                 DisplayMode.ALL -> {
@@ -161,7 +174,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
                  * retrieve both symbols and categories from the repository
                  */
                 DisplayMode.SYMBOL -> {
-                    if (query != null) // called from setQuery()
+                    if (!query.isNullOrEmpty()) // called from setQuery()
                         repository.getEntries(query).collect { entries ->
                             _entries.postValue(entries)
                         }
@@ -172,7 +185,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
                 }
 
                 DisplayMode.CATEGORY -> {
-                    if (query != null)
+                    if (!query.isNullOrEmpty())
                         repository.getEntries(query).collect { entries ->
                             _entries.postValue(entries)
                         }

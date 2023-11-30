@@ -50,14 +50,3 @@ fun SymbolSearchTextField(
         )
     )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun SymbolSearchTextFieldPreview() {
-    SpeechBuddyTheme {
-        SymbolSearchTextField(
-            value = "검색어",
-            onValueChange = {}
-        )
-    }
-}

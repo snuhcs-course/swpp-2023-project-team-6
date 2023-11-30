@@ -16,30 +16,29 @@ import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.MultipartBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class SymbolRepository @Inject constructor(
     private val symbolDao: SymbolDao,
     private val categoryDao: CategoryDao,
-    // For remote-related processing
     private val mySymbolRemoteSource: MySymbolRemoteSource,
     private val mySymbolDtoMapper: MySymbolDtoMapper,
     private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager,
-    // For local mapping
     private val symbolMapper: SymbolMapper,
     private val categoryMapper: CategoryMapper,
-    // For image download
     private val proxyImageDownloader: ProxyImageDownloader
 ) {
 
@@ -77,8 +76,18 @@ class SymbolRepository @Inject constructor(
             symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
         }
 
-    fun getSymbolsById(id: Int) = symbolDao.getSymbolById(id).map { symbolEntity ->
-        symbolMapper.mapToDomainModel(symbolEntity)
+    fun getUserSymbols(query: String) =
+        if (query.isBlank()) getAllUserSymbols()
+        else symbolDao.getUserSymbolsByQuery(query).map { symbolEntities ->
+            symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+        }
+
+    private fun getAllUserSymbols() = symbolDao.getUserSymbols().map { symbolEntities ->
+        symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
+    }
+
+    fun getSymbolsById(id: Int): Symbol {
+        return runBlocking { symbolMapper.mapToDomainModel(symbolDao.getSymbolById(id).first()) }
     }
 
     private fun getAllSymbols() = symbolDao.getSymbols().map { symbolEntities ->
@@ -108,28 +117,40 @@ class SymbolRepository @Inject constructor(
         return if (idList.isEmpty()) "" else idList.joinToString(separator = ",")
     }
 
-    suspend fun updateFavorite(symbol: Symbol, value: Boolean) {
-        val symbolEntity = SymbolEntity(
-            id = symbol.id,
-            text = symbol.text,
-            imageUrl = symbol.imageUrl,
-            categoryId = symbol.categoryId,
-            isFavorite = value,
-            isMine = symbol.isMine
-        )
-        symbolDao.updateSymbol(symbolEntity)
+    fun updateFavorite(symbol: Symbol, value: Boolean) {
+        runBlocking {
+            val symbolEntity = SymbolEntity(
+                id = symbol.id,
+                text = symbol.text,
+                imageUrl = symbol.imageUrl,
+                categoryId = symbol.categoryId,
+                isFavorite = value,
+                isMine = symbol.isMine
+            )
+            symbolDao.updateSymbol(symbolEntity)
+        }
     }
 
     fun getNextSymbolId() =
         symbolDao.getLastSymbol().map { symbol -> symbol.id + 1 }
 
-    fun clearAllMySymbols() {
-        /* TODO: 내가 만든 상징들 모두 삭제 */
+    suspend fun resetSymbolsAndFavorites() {
+        CoroutineScope(Dispatchers.IO).launch {
+            // execute the following dao updates sequentially
+            symbolDao.deleteAllMySymbols()
+            symbolDao.resetFavoriteSymbols()
+        }
     }
 
-    suspend fun insertSymbol(symbol: Symbol) {
-        val symbolEntity = symbolMapper.mapFromDomainModel(symbol)
-        symbolDao.insertSymbol(symbolEntity)
+    fun insertSymbol(symbol: Symbol) {
+        runBlocking {
+            val symbolEntity = symbolMapper.mapFromDomainModel(symbol)
+            symbolDao.insertSymbol(symbolEntity)
+        }
+    }
+
+    suspend fun deleteSymbol(symbol: Symbol) {
+        symbolDao.deleteSymbolById(symbol.id)
     }
 
     suspend fun createSymbolBackup(
@@ -175,4 +196,5 @@ class SymbolRepository @Inject constructor(
             "Unknown error", null
         )
     }
+
 }

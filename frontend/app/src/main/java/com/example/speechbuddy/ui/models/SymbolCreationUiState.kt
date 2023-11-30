@@ -5,7 +5,9 @@ data class SymbolCreationUiState(
     val isValidCategory: Boolean = false,
     val isValidPhotoInput: Boolean = false,
     val isCategoryExpanded: Boolean = false,
-    val error: SymbolCreationError? = null
+    val error: SymbolCreationError? = null,
+    val loading: Boolean = false,
+    val buttonEnabled: Boolean = true
 )
 
 data class SymbolCreationError(
@@ -26,6 +28,11 @@ enum class PhotoType {
 }
 
 enum class DialogState {
+    SHOW,
+    HIDE
+}
+
+enum class ToastState {
     SHOW,
     HIDE
 }

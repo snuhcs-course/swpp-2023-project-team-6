@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,86 +26,75 @@ import com.example.speechbuddy.compose.utils.AlertDialogUi
 import com.example.speechbuddy.compose.utils.ButtonLevel
 import com.example.speechbuddy.compose.utils.ButtonUi
 import com.example.speechbuddy.compose.utils.TitleUi
-import com.example.speechbuddy.compose.utils.TopAppBarUi
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.viewmodel.AccountSettingsViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettings(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
-    bottomPaddingValues: PaddingValues,
+    paddingValues: PaddingValues,
     viewModel: AccountSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     /**
      * Wait until user info is successfully retrieved
-     * in init{} of the viewmodel.
+     * in init{} of the view model.
      */
     uiState.user?.let { user ->
         Surface(
             modifier = modifier.fillMaxSize()
         ) {
-            Scaffold(
-                topBar = {
-                    TopAppBarUi(
-                        title = stringResource(id = R.string.settings),
-                        onBackClick = onBackClick,
-                        isBackClickEnabled = true
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = paddingValues.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding()
+                    )
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                TitleUi(title = stringResource(id = R.string.account))
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    SettingsRow(
+                        label = stringResource(id = R.string.email),
+                        content = {
+                            SettingsRowText(text = user.email)
+                        }
+                    )
+
+                    SettingsRow(
+                        label = stringResource(id = R.string.nickname),
+                        content = {
+                            SettingsRowText(text = user.nickname)
+                        }
                     )
                 }
-            ) { topPaddingValues ->
+
+                Spacer(modifier = Modifier.height(80.dp))
+
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            top = topPaddingValues.calculateTopPadding(),
-                            bottom = bottomPaddingValues.calculateBottomPadding()
-                        )
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    TitleUi(title = stringResource(id = R.string.account))
+                    ButtonUi(
+                        text = stringResource(id = R.string.logout),
+                        onClick = { viewModel.showAlert(AccountSettingsAlert.BACKUP) },
+                        isEnabled = uiState.buttonEnabled
+                    )
 
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        SettingsRow(
-                            label = stringResource(id = R.string.email),
-                            content = {
-                                SettingsRowText(text = user.email)
-                            }
-                        )
-
-                        SettingsRow(
-                            label = stringResource(id = R.string.nickname),
-                            content = {
-                                SettingsRowText(text = user.nickname)
-                            }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(80.dp))
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(14.dp)
-                    ) {
-                        ButtonUi(
-                            text = stringResource(id = R.string.logout),
-                            onClick = { viewModel.showAlert(AccountSettingsAlert.BACKUP) }
-                        )
-
-                        ButtonUi(
-                            text = stringResource(id = R.string.withdraw),
-                            onClick = { viewModel.showAlert(AccountSettingsAlert.WITHDRAW) },
-                            level = ButtonLevel.QUATERNARY
-                        )
-                    }
+                    ButtonUi(
+                        text = stringResource(id = R.string.withdraw),
+                        onClick = { viewModel.showAlert(AccountSettingsAlert.WITHDRAW) },
+                        level = ButtonLevel.QUATERNARY,
+                        isEnabled = uiState.buttonEnabled
+                    )
                 }
             }
         }

@@ -1,9 +1,8 @@
 package com.example.speechbuddy.compose.symbolselection
 
 import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,15 +27,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.speechbuddy.R
@@ -48,10 +50,29 @@ import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 
 @Composable
 fun DisplayMaxScreen(
-    onExit: () -> Unit,
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    showAppBars: () -> Unit,
+    hideAppBars: () -> Unit,
     viewModel: SymbolSelectionViewModel = hiltViewModel()
 ) {
-    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+    val activity = LocalContext.current as Activity
+
+    BackHandler(true) {
+        viewModel.exitDisplayMax()
+    }
+
+    LaunchedEffect(true) {
+        hideAppBars()
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val originalOrientation = activity.requestedOrientation
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        onDispose {
+            activity.requestedOrientation = originalOrientation
+            showAppBars()
+        }
+    }
 
     Surface(
         modifier = Modifier
@@ -78,7 +99,7 @@ fun DisplayMaxScreen(
                     )
             ) {
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     LazyRow(
@@ -96,7 +117,7 @@ fun DisplayMaxScreen(
 
             ButtonUi(
                 text = stringResource(id = R.string.exit),
-                onClick = onExit,
+                onClick = { viewModel.exitDisplayMax() },
                 modifier = Modifier.widthIn(max = 312.dp),
                 level = ButtonLevel.QUINARY
             )
@@ -153,24 +174,4 @@ fun DisplayMaxSymbolUi(
             }
         }
     }
-}
-
-@Composable
-fun LockScreenOrientation(orientation: Int) {
-    val context = LocalContext.current
-    DisposableEffect(orientation) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
-        val originalOrientation = activity.requestedOrientation
-        activity.requestedOrientation = orientation
-        onDispose {
-            // restore original orientation when view disappears
-            activity.requestedOrientation = originalOrientation
-        }
-    }
-}
-
-fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
 }

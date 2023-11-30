@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.repository.SettingsRepository
+import com.example.speechbuddy.repository.SymbolRepository
 import com.example.speechbuddy.repository.UserRepository
+import com.example.speechbuddy.repository.WeightTableRepository
 import com.example.speechbuddy.ui.models.AccountSettingsAlert
 import com.example.speechbuddy.ui.models.AccountSettingsUiState
 import com.example.speechbuddy.utils.ResponseCode
@@ -25,6 +27,8 @@ import javax.inject.Inject
 class AccountSettingsViewModel @Inject internal constructor(
     private val authRepository: AuthRepository,
     private val settingsRepository: SettingsRepository,
+    private val weightTableRepository: WeightTableRepository,
+    private val symbolRepository: SymbolRepository,
     private val userRepository: UserRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
@@ -49,7 +53,8 @@ class AccountSettingsViewModel @Inject internal constructor(
     fun showAlert(alert: AccountSettingsAlert) {
         _uiState.update { currentState ->
             currentState.copy(
-                alert = alert
+                alert = alert,
+                buttonEnabled = false
             )
         }
     }
@@ -57,7 +62,8 @@ class AccountSettingsViewModel @Inject internal constructor(
     fun hideAlert() {
         _uiState.update { currentState ->
             currentState.copy(
-                alert = null
+                alert = null,
+                buttonEnabled = true
             )
         }
     }
@@ -68,8 +74,12 @@ class AccountSettingsViewModel @Inject internal constructor(
             authRepository.logout().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
-                        /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
-                        sessionManager.logout()
+                        settingsRepository.resetSettings()
+                        weightTableRepository.resetAllWeightRows()
+                        symbolRepository.resetSymbolsAndFavorites()
+                        userRepository.deleteUserInfo()
+                        sessionManager.deleteToken()
+                        // authToken is already cleared by the repository
                         hideAlert()
                     }
 
@@ -82,13 +92,17 @@ class AccountSettingsViewModel @Inject internal constructor(
     }
 
     fun withdraw() {
+        showAlert(AccountSettingsAlert.LOADING)
         viewModelScope.launch {
-            showAlert(AccountSettingsAlert.LOADING)
             authRepository.withdraw().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
-                        /* TODO: 디바이스에 저장돼 있는 유저 정보 초기화(토큰 말고) */
-                        sessionManager.logout()
+                        settingsRepository.resetSettings()
+                        weightTableRepository.resetAllWeightRows()
+                        symbolRepository.resetSymbolsAndFavorites()
+                        userRepository.deleteUserInfo()
+                        sessionManager.deleteToken()
+                        // authToken is already cleared by the repository
                         hideAlert()
                     }
 
@@ -102,6 +116,10 @@ class AccountSettingsViewModel @Inject internal constructor(
 
     fun exitGuestMode() {
         viewModelScope.launch {
+            settingsRepository.resetSettings()
+            weightTableRepository.resetAllWeightRows()
+            symbolRepository.resetSymbolsAndFavorites()
+            userRepository.deleteUserInfo()
             sessionManager.exitGuestMode()
         }
     }
@@ -112,7 +130,6 @@ class AccountSettingsViewModel @Inject internal constructor(
             settingsRepository.displayBackup().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> { symbolListBackup() }
-
                     ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
             }
@@ -126,7 +143,9 @@ class AccountSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> { favoriteSymbolBackup() }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
 
             }
@@ -141,7 +160,9 @@ class AccountSettingsViewModel @Inject internal constructor(
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> { weightTableBackup() }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }
@@ -152,9 +173,13 @@ class AccountSettingsViewModel @Inject internal constructor(
         viewModelScope.launch {
             settingsRepository.weightTableBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { handleSuccess() }
+                    ResponseCode.SUCCESS.value -> {
+                        handleSuccess()
+                    }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }
@@ -164,7 +189,8 @@ class AccountSettingsViewModel @Inject internal constructor(
     fun backup() {
         _uiState.update { currentState ->
             currentState.copy(
-                alert = AccountSettingsAlert.LOADING
+                alert = AccountSettingsAlert.LOADING,
+                buttonEnabled = false
             )
         }
         displayBackup()
@@ -173,7 +199,8 @@ class AccountSettingsViewModel @Inject internal constructor(
     private fun handleNoInternetConnection() {
         _uiState.update { currentState ->
             currentState.copy(
-                alert = AccountSettingsAlert.CONNECTION
+                alert = AccountSettingsAlert.CONNECTION,
+                buttonEnabled = false
             )
         }
     }
@@ -185,7 +212,8 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
         _uiState.update { currentState ->
             currentState.copy(
-                alert = AccountSettingsAlert.BACKUP_SUCCESS
+                alert = AccountSettingsAlert.BACKUP_SUCCESS,
+                buttonEnabled = false
             )
         }
     }

@@ -15,6 +15,9 @@ class Constants {
         const val ACCESS_TOKEN_PREF: String = "com.example.speechbuddy.ACCESS_TOKEN_PREF"
         const val REFRESH_TOKEN_PREF: String = "com.example.speechbuddy.REFRESH_TOKEN_PREF"
 
+        const val USER_ID_PREFS: String = "com.example.speechbuddy.USER_ID_PREFS"
+        const val USER_ID_PREF: String = "com.example.speechbuddy.USER_ID_PREF"
+
         const val SETTINGS_PREFS: String = "com.example.speechbuddy.SETTINGS_PREFS"
         const val AUTO_BACKUP_PREF: String = "com.example.speechbuddy.AUTO_BACKUP_PREF"
         const val DARK_MODE_PREF: String = "com.example.speechbuddy.DARK_MODE_PREF"
@@ -28,5 +31,7 @@ class Constants {
         const val MAXIMUM_SYMBOL_TEXT_LENGTH = 20
 
         const val DEFAULT_SYMBOL_COUNT = 500
+
+        const val GUEST_ID = -1
     }
 }

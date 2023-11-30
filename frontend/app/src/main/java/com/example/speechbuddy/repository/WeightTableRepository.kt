@@ -23,7 +23,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class WeightTableRepository @Inject constructor(
     private val symbolDao: SymbolDao,
@@ -33,7 +32,6 @@ class WeightTableRepository @Inject constructor(
     private val symbolMapper = SymbolMapper()
     private val weightRowMapper = WeightRowMapper()
     private var allSymbols = getAllSymbols()
-
 
     private fun getAllSymbols() = symbolDao.getSymbols().map { symbolEntities ->
         symbolEntities.map { symbolEntity -> symbolMapper.mapToDomainModel(symbolEntity) }
@@ -46,8 +44,11 @@ class WeightTableRepository @Inject constructor(
             }
         }
 
-    suspend fun deleteAllWeightRows() {
-        weightRowDao.deleteAllWeightRows()
+    suspend fun resetAllWeightRows() {
+        CoroutineScope(Dispatchers.IO).launch {
+            weightRowDao.deleteMySymbolsWeightRows()
+            weightRowDao.resetOriginalSymbolsWeightRows(List(500) { 0 })
+        }
     }
 
     suspend fun replaceWeightTable(weightRowList: List<WeightRow>) {
@@ -110,6 +111,29 @@ class WeightTableRepository @Inject constructor(
 
             allSymbols = getAllSymbols()
 
+        }
+    }
+
+    fun updateWeightTableForDeletedSymbol(symbol: Symbol) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val deletedSymbolIdx = weightRowDao.getCountOfRowsWithIdLessThan(symbol.id)
+
+            val weightRows = mutableListOf<WeightRow>()
+            weightRows.clear()
+            weightRows.addAll(fetchWeightRows())
+
+            // update existing weightRows
+            for (weightRow in weightRows) {
+                val newWeights = mutableListOf<Int>()
+                newWeights.addAll(weightRow.weights)
+                newWeights.removeAt(deletedSymbolIdx)
+                updateWeightRow(weightRow, newWeights)
+            }
+
+            // delete weightRow for the deleted symbol
+            weightRowDao.deleteWeightRowById(symbol.id)
+
+            allSymbols = getAllSymbols()
         }
     }
 

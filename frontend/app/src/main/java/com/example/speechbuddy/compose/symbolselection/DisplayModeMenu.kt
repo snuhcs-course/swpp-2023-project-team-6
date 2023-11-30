@@ -88,7 +88,8 @@ fun DisplayModeMenu(
                 ) {
                     Text(
                         text = stringResource(id = item.textResId),
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }

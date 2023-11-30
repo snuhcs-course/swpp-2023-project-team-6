@@ -1,7 +1,5 @@
 package com.example.speechbuddy.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.speechbuddy.data.local.SettingsPrefsManager
 import com.example.speechbuddy.data.remote.SettingsRemoteSource
 import com.example.speechbuddy.data.remote.models.SettingsBackupDto
@@ -27,7 +25,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SettingsRepository @Inject constructor(
-    private val settingsPrefManager: SettingsPrefsManager,
+    private val settingsPrefsManager: SettingsPrefsManager,
     private val backupService: BackupService,
     private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager,
@@ -36,57 +34,64 @@ class SettingsRepository @Inject constructor(
     private val settingsRemoteSource: SettingsRemoteSource,
     private val converters: Converters,
 ) {
-
-    private val _darkModeLiveData = MutableLiveData<Boolean?>()
-    val darkModeLiveData: LiveData<Boolean?>
-        get() = _darkModeLiveData
-
     suspend fun setDarkMode(value: Boolean) {
-        CoroutineScope(Dispatchers.Main).launch {
-            if (_darkModeLiveData.value != value) {
-                _darkModeLiveData.value = value
-            }
+        if (value) {
+            settingsPrefsManager.saveDarkMode(true)
+        } else {
+            settingsPrefsManager.saveDarkMode(false)
         }
-        settingsPrefManager.saveDarkMode(value)
+        settingsPrefsManager.saveDarkMode(value)
     }
 
     suspend fun setInitialPage(page: InitialPage) {
         if (page == InitialPage.SYMBOL_SELECTION) {
-            settingsPrefManager.saveInitialPage(true)
+            settingsPrefsManager.saveInitialPage(true)
         } else {
-            settingsPrefManager.saveInitialPage(false)
+            settingsPrefsManager.saveInitialPage(false)
         }
     }
 
     suspend fun setAutoBackup(value: Boolean) {
-        settingsPrefManager.saveAutoBackup(value)
+        settingsPrefsManager.saveAutoBackup(value)
     }
 
     suspend fun setLastBackupDate(value: String) {
-        settingsPrefManager.saveLastBackupDate(value)
+        settingsPrefsManager.saveLastBackupDate(value)
     }
 
     fun getDarkMode(): Flow<Resource<Boolean>> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.darkMode)
         }
     }
 
+    fun getDarkModeForChange(): Flow<Boolean> {
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
+            settingsPreferences.darkMode
+        }
+    }
+
     fun getInitialPage(): Flow<Resource<Boolean>> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.initialPage)
         }
     }
 
     fun getAutoBackup(): Flow<Resource<Boolean>> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.autoBackup)
         }
     }
 
     fun getLastBackupDate(): Flow<Resource<String>> {
-        return settingsPrefManager.settingsPreferencesFlow.map { settingsPreferences ->
+        return settingsPrefsManager.settingsPreferencesFlow.map { settingsPreferences ->
             Resource.success(settingsPreferences.lastBackupDate)
+        }
+    }
+
+    suspend fun resetSettings() {
+        CoroutineScope(Dispatchers.IO).launch {
+            settingsPrefsManager.resetSettings()
         }
     }
 
@@ -175,18 +180,19 @@ class SettingsRepository @Inject constructor(
                 response.body()?.let { settingsDto ->
                     val displayMode = settingsDto.displayMode
                     val defaultMenu = settingsDto.defaultMenu
+                    val updatedAt = settingsDto.updatedAt!!
+                    setLastBackupDate(updatedAt)
                     if (displayMode == 0) {
                         setDarkMode(false)
-                        settingsPrefManager.saveDarkMode(false)
                     } else {
                         setDarkMode(true)
-                        settingsPrefManager.saveDarkMode(true)
                     }
                     if (defaultMenu == 0) {
                         setInitialPage(InitialPage.SYMBOL_SELECTION)
                     } else {
                         setInitialPage(InitialPage.TEXT_TO_SPEECH)
                     }
+
                     Resource.success(null)
                 } ?: returnUnknownError()
             } else {
@@ -235,9 +241,8 @@ class SettingsRepository @Inject constructor(
             if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                 response.body()?.let { favoritesListDto ->
                     for (symbolIdDto in favoritesListDto.results) {
-                        symbolRepository.getSymbolsById(symbolIdDto.id).collect { symbol ->
-                            symbolRepository.updateFavorite(symbol, true)
-                        }
+                        val symbol = symbolRepository.getSymbolsById(symbolIdDto.id)
+                        symbolRepository.updateFavorite(symbol, true)
                     }
                     Resource.success(null)
                 } ?: returnUnknownError()
