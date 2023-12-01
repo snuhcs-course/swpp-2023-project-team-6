@@ -58,6 +58,7 @@ class AuthRepository @Inject constructor(
                 response.body()?.let { authTokenDto ->
                     authTokenDto.let {
                         val authToken = authTokenDtoMapper.mapToDomainModel(authTokenDto)
+                        sessionManager.setIsLogin(true)
                         authTokenPrefsManager.saveAuthToken(authToken)
                         Resource.success(authToken)
                     }

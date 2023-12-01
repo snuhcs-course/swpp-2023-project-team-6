@@ -41,7 +41,6 @@ class BackupSettingsViewModel @Inject internal constructor(
         viewModelScope.launch {
             repository.setAutoBackup(value)
         }
-        // TODO: Implement automated backup
     }
 
     private fun setLastBackupDate(value: String) {
@@ -94,11 +93,12 @@ class BackupSettingsViewModel @Inject internal constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun displayBackup() {
         viewModelScope.launch {
             repository.displayBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {}
+                    ResponseCode.SUCCESS.value -> { symbolListBackup() }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
@@ -106,12 +106,12 @@ class BackupSettingsViewModel @Inject internal constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun symbolListBackup() {
-
         viewModelScope.launch {
             repository.symbolListBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {}
+                    ResponseCode.SUCCESS.value -> { favoriteSymbolBackup() }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
@@ -121,11 +121,12 @@ class BackupSettingsViewModel @Inject internal constructor(
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun favoriteSymbolBackup() {
         viewModelScope.launch {
             repository.favoriteSymbolBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {}
+                    ResponseCode.SUCCESS.value -> { weightTableBackup() }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
                 }
@@ -150,9 +151,6 @@ class BackupSettingsViewModel @Inject internal constructor(
     fun backup() {
         changeLoadingState()
         displayBackup()
-        symbolListBackup()
-        favoriteSymbolBackup()
-        weightTableBackup()
     }
 
     private fun handleNoInternetConnection() {

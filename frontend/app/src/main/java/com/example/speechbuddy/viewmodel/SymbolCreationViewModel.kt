@@ -267,7 +267,8 @@ class SymbolCreationViewModel @Inject internal constructor(
                 )
             }
         } else if (
-            (photoType == PhotoType.GALLERY && photoInputUri == null)
+            (photoType == null)
+            || (photoType == PhotoType.GALLERY && photoInputUri == null)
             || (photoType == PhotoType.CAMERA && photoInputBitmap == null)
         ) {
             _uiState.update { currentState ->

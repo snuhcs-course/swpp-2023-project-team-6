@@ -8,6 +8,9 @@
     <string name="reset_password">비밀번호 변경</string>
     <string name="email_verification">이메일 인증</string>
 
+    <!-- auto backup -->
+    <string name="auto_backup_title">자동 백업 중</string>
+
     <!-- descriptions -->
     <string name="login_description">로그인해 SpeechBuddy의 다양한 기능을 사용해보세요</string>
     <string name="signup_description">SpeechBuddy에 오신 것을 환영합니다!</string>
@@ -15,6 +18,7 @@
     <string name="email_verification_description">이메일 인증을 먼저 진행해주세요</string>
     <string name="verify_email_for_reset_password">비밀번호 변경을 위해 이메일 인증을 먼저 진행해주세요</string>
     <string name="verify_email_for_signup">회원가입을 위해 이메일 인증을 먼저 진행해주세요</string>
+    <string name="auto_backup_info">자동 백업을 원하시지 않으시면 설정의 서버에 백업하기 메뉴에서 자동 백업을 꺼 주세요.</string>
 
     <!-- inputs -->
     <string name="email">이메일</string>
