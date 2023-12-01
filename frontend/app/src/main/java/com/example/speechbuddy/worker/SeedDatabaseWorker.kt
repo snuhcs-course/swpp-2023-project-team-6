@@ -33,11 +33,13 @@ class SeedDatabaseWorker(
             }
             else{ // check if the weight table is filled with 0
                 val currentDb = database.weightRowDao().getAllWeightRows().first()
-                var flag = true
+                var cnt = 1
                 for (currentWeightRowEntity in currentDb) {
-                    flag = currentWeightRowEntity.weights.all{it == 0}
+                    if (currentWeightRowEntity.weights.all{it == 0}){
+                        cnt+=1 // count the rows with 0 weights
+                    }
                 }
-                if (flag){ // if weight table is filled with 0
+                if (cnt == currentDb.size){ // if weight table is filled with 0
                     createWeightTable(database)
                 }
             }
