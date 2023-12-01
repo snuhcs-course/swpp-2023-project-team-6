@@ -8,8 +8,11 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.speechbuddy.compose.SpeechBuddyHome
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.worker.SeedDatabaseWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -20,7 +23,10 @@ class HomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-
+        // force the database worker to build a new db
+        // in order to check if the weight-db is empty or not and fill it
+        val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>().build()
+        WorkManager.getInstance(this).enqueue(request)
         setContent {
             SpeechBuddyTheme(
                 settingsRepository = settingsRepository,

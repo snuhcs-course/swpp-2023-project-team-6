@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class SeedDatabaseWorker(
@@ -24,27 +25,22 @@ class SeedDatabaseWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val database = AppDatabase.getInstance(applicationContext)
-        
-            val weightRows = mutableListOf<WeightRowEntity>()
 
-            applicationContext.assets.open("weight_table.txt").use { inputStream ->
-                val inputList: MutableList<List<Int>> = ArrayList()
-                inputStream.bufferedReader().useLines { lines ->
-                    lines.forEach { line ->
-                        inputList.add(
-                            line.split(",").mapNotNull { it.trim().toIntOrNull() })
-                    }
+
+
+            if (!applicationContext.getDatabasePath("speechbuddy-db").exists()) {
+                createWeightTable(database)
+            }
+            else{ // check if the weight table is filled with 0
+                val currentDb = database.weightRowDao().getAllWeightRows().first()
+                var flag = true
+                for (currentWeightRowEntity in currentDb) {
+                    flag = currentWeightRowEntity.weights.all{it == 0}
                 }
-                var id = 1
-                for (weight in inputList) {
-                    val weightRowEntity = WeightRowEntity(id++, weight)
-                    weightRows.add(weightRowEntity)
+                if (flag){ // if weight table is filled with 0
+                    createWeightTable(database)
                 }
             }
-
-            database.weightRowDao().upsertAll(weightRows)
-            
-            Result.success()
             
 
             applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
@@ -74,6 +70,29 @@ class SeedDatabaseWorker(
             Log.e("SeedDatabaseWorker", "Error seeding database", ex)
             Result.failure()
         }
+    }
+
+    private suspend fun createWeightTable(database: AppDatabase){
+        val weightRows = mutableListOf<WeightRowEntity>()
+
+        applicationContext.assets.open("weight_table.txt").use { inputStream ->
+            val inputList: MutableList<List<Int>> = ArrayList()
+            inputStream.bufferedReader().useLines { lines ->
+                lines.forEach { line ->
+                    inputList.add(
+                        line.split(",").mapNotNull { it.trim().toIntOrNull() })
+                }
+            }
+            var id = 1
+            for (weight in inputList) {
+                val weightRowEntity = WeightRowEntity(id++, weight)
+                weightRows.add(weightRowEntity)
+            }
+        }
+
+        database.weightRowDao().upsertAll(weightRows)
+
+        Result.success()
     }
 
 }
