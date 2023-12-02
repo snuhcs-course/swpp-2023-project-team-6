@@ -69,7 +69,6 @@ private fun SettingsScreenNavHost(
                 paddingValues = paddingValues
             )
         }
-
         composable("copyright") {
             Copyright(
                 paddingValues = paddingValues
