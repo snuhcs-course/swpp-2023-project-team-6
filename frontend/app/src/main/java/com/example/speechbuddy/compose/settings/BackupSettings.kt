@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -70,7 +71,7 @@ fun BackupSettings(
                         Switch(
                             checked = uiState.isAutoBackupEnabled,
                             onCheckedChange = { viewModel.setAutoBackup(it) },
-                            modifier = Modifier.heightIn(max = 32.dp),
+                            modifier = Modifier.heightIn(max = 32.dp).testTag("auto_backup"),
                             enabled = uiState.buttonEnabled
                         )
                     }
@@ -117,6 +118,7 @@ fun BackupSettings(
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentSize()
+                    .testTag("backup_loading")
             )
         }
     }

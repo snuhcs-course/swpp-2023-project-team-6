@@ -5,6 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
@@ -59,6 +60,9 @@ class DisplaySettingsScreenTest {
         composeTestRule.onNodeWithText(INITIAL_PAGE).assertIsDisplayed()
         composeTestRule.onNodeWithText(SYMBOL).assertIsDisplayed()
         composeTestRule.onNodeWithText(TTS).assertIsDisplayed()
+        composeTestRule.onNodeWithTag("dark_mode").assertIsDisplayed().assertIsEnabled()
+        composeTestRule.onNodeWithTag("initial_page_symbol").assertIsDisplayed().assertIsEnabled()
+        composeTestRule.onNodeWithTag("initial_page_tts").assertIsDisplayed().assertIsEnabled()
     }
 
     @Test

@@ -77,7 +77,7 @@ class AccountSettingsScreenTest {
     }
 
     @Test
-    fun should_display_loading_indicator_when_clicking_backup_button_in_backup_dialog() {
+    fun should_remove_dialog_when_clicking_backup_button_in_backup_dialog() {
         composeTestRule.onNodeWithText(LOGOUT).performClick()
         composeTestRule.onNodeWithText(BACKUP).performClick()
         composeTestRule.onNodeWithText(BACKUP_DIALOG).assertDoesNotExist()
