@@ -1,25 +1,20 @@
 package com.example.speechbuddy
 
-import android.content.Context
 import android.content.Intent
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.captureToImage
-import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.compose.ui.test.performClick
 import com.example.speechbuddy.compose.settings.AccountSettings
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Assert
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,11 +22,13 @@ import org.junit.Test
 @HiltAndroidTest
 class AccountSettingsScreenTest {
 
+    private val androidTestUtil = AndroidTestUtil()
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = createAndroidIntentComposeRule<HomeActivity> {
+    val composeTestRule = androidTestUtil.createAndroidIntentComposeRule<HomeActivity> {
         Intent(it, HomeActivity::class.java).apply {
             putExtra("isTest", true)
         }
@@ -59,12 +56,135 @@ class AccountSettingsScreenTest {
 
     @Test
     fun should_display_all_elements_when_account_settings_screen_appears() {
-
         composeTestRule.onNodeWithText(ACCOUNT).assertIsDisplayed()
         composeTestRule.onNodeWithText(EMAIL).assertIsDisplayed()
         composeTestRule.onNodeWithText(NICKNAME).assertIsDisplayed()
         composeTestRule.onNodeWithText(LOGOUT).assertIsDisplayed().assertHasClickAction().assertIsEnabled()
         composeTestRule.onNodeWithText(WITHDRAW).assertIsDisplayed().assertHasClickAction().assertIsEnabled()
+        composeTestRule.onNodeWithText(FAKE_EMAIL).assertIsDisplayed()
+        composeTestRule.onNodeWithText(FAKE_NICKNAME).assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_backup_dialog_when_clicking_backup_button() {
+        composeTestRule.onAllNodesWithText(LOGOUT)[0].performClick()
+        composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
+        composeTestRule.onNodeWithText(WITHDRAW).assertIsNotEnabled()
+        composeTestRule.onNodeWithText(BACKUP).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText(BACKUP_DIALOG).assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].assertIsDisplayed().assertHasClickAction()
+    }
+
+    @Test
+    fun should_display_loading_indicator_when_clicking_backup_button_in_backup_dialog() {
+        composeTestRule.onNodeWithText(LOGOUT).performClick()
+        composeTestRule.onNodeWithText(BACKUP).performClick()
+        composeTestRule.onNodeWithText(BACKUP_DIALOG).assertDoesNotExist()
+        composeTestRule.onNodeWithText(BACKUP).assertDoesNotExist()
+        composeTestRule.onNodeWithText(LOGOUT).assertIsNotEnabled()
+        composeTestRule.onNodeWithText(WITHDRAW).assertIsNotEnabled()
+    }
+
+    @Test
+    fun should_display_logout_dialog_when_clicking_logout_button_in_backup_dialog() {
+        composeTestRule.onNodeWithText(LOGOUT).performClick()
+        composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].performClick()
+        composeTestRule.onNodeWithText(CANCEL).assertIsDisplayed()
+        composeTestRule.onNodeWithText(LOGOUT_DIALOG).assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
+        composeTestRule.onNodeWithText(WITHDRAW).assertIsNotEnabled()
+    }
+
+    @Test
+    fun should_display_loading_indicator_when_clicking_logout_button_in_logout_dialog() {
+        composeTestRule.onNodeWithText(LOGOUT).performClick()
+        composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].performClick()
+        composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].performClick()
+        composeTestRule.onNodeWithText(LOGOUT_DIALOG).assertDoesNotExist()
+        composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
+    }
+
+    @Test
+    fun should_display_account_settings_screen_when_clicking_cancel_button_in_logout_dialog() {
+        composeTestRule.onNodeWithText(LOGOUT).performClick()
+        composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
+        composeTestRule.onAllNodesWithText(LOGOUT)[2].performClick()
+        composeTestRule.onNodeWithText(CANCEL).performClick()
+        composeTestRule.onNodeWithText(LOGOUT_DIALOG).assertDoesNotExist()
+        composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
+    }
+
+    @Test
+    fun should_display_first_withdraw_dialog_when_clicking_withdraw_button() {
+        composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.onNodeWithText(FIRST_WITHDRAW_DIALOG).assertIsDisplayed()
+        composeTestRule.onNodeWithText(CANCEL).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText(PROCEED).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText(LOGOUT).assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[0].assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[1].assertIsEnabled()
+    }
+
+    @Test
+    fun should_display_second_withdraw_dialog_when_clicking_progress_button_in_first_withdraw_dialog() {
+        composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.onNodeWithText(PROCEED).performClick()
+        composeTestRule.onNodeWithText(SECOND_WITHDRAW_DIALOG).assertIsDisplayed()
+        composeTestRule.onNodeWithText(CANCEL).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText(LOGOUT).assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[0].assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[1].assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[2].assertHasClickAction().assertIsEnabled()
+    }
+
+    @Test
+    fun should_display_account_settings_screen_when_clicking_cancel_button_in_first_withdraw_dialog() {
+        composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.onNodeWithText(CANCEL).performClick()
+        composeTestRule.onNodeWithText(FIRST_WITHDRAW_DIALOG).assertDoesNotExist()
+        composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
+        composeTestRule.onNodeWithText(LOGOUT).assertIsEnabled()
+        composeTestRule.onNodeWithText(WITHDRAW).assertIsEnabled()
+    }
+
+    @Test
+    fun should_display_loading_indicator_when_clicking_withdraw_button_in_second_withdraw_dialog() {
+        composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.onNodeWithText(PROCEED).performClick()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[0].assertIsNotEnabled()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[1].assertIsDisplayed()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[2].assertHasClickAction().assertIsEnabled()
+        composeTestRule.onAllNodesWithText(WITHDRAW)[2].performClick()
+        composeTestRule.onNodeWithText(SECOND_WITHDRAW_DIALOG).assertDoesNotExist()
+        composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
+    }
+
+    @Test
+    fun should_display_account_settings_screen_when_clicking_cancel_button_in_second_withdraw_dialog() {
+        composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.onNodeWithText(PROCEED).performClick()
+        composeTestRule.onNodeWithText(CANCEL).performClick()
+        composeTestRule.onNodeWithText(SECOND_WITHDRAW_DIALOG).assertDoesNotExist()
+        composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
+    }
+
+    @After
+    fun tearDown() {
+        composeTestRule.activityRule.scenario.close()
     }
 
     companion object {
@@ -73,45 +193,15 @@ class AccountSettingsScreenTest {
         const val NICKNAME = "닉네임"
         const val LOGOUT = "로그아웃"
         const val WITHDRAW = "회원탈퇴"
-
-        val PRIMARY_COLOR = Color(0xFF0D6D35)
-        val SECONDARY_CONTAINER_COLOR = Color(0xFFD3E8D2)
-
-        const val USER_EMAIL = "test@test.com"
-        const val USER_NICKNAME = "test"
-
-        fun SemanticsNodeInteraction.assertBackgroundColor(expectedBackground: Color) {
-            val capturedName = captureToImage().colorSpace.name
-            Assert.assertEquals(expectedBackground.colorSpace.name, capturedName)
-        }
+        const val FAKE_EMAIL = "email@email.com"
+        const val FAKE_NICKNAME = "nickname"
+        const val BACKUP = "백업"
+        const val BACKUP_DIALOG = "로그아웃하기 전 백업하시겠습니까? 변경사항을 백업하지 않으면 이용 기록이 손실될 수 있습니다."
+        const val LOGOUT_DIALOG = "정말로 로그아웃하시겠습니까?"
+        const val CANCEL = "취소"
+        const val PROCEED = "진행"
+        const val FIRST_WITHDRAW_DIALOG = "회원탈퇴를 하면 지금까지의 이용 기록이 모두 사라지며 복구할 수 없습니다. SpeechBuddy를 다시 이용하시려면 게스트 모드를 이용하거나 회원가입을 새로 해야 합니다. 정말로 탈퇴하시겠습니까?"
+        const val SECOND_WITHDRAW_DIALOG = "정말로 탈퇴하시겠습니까? 이 동작은 취소할 수 없습니다."
     }
 
-    /**
-     * Factory method to provide Android specific implementation of createComposeRule, for a given
-     * activity class type A that needs to be launched via an intent.
-     *
-     * @param intentFactory A lambda that provides a Context that can used to create an intent. A intent needs to be returned.
-     */
-    inline fun <A: ComponentActivity> createAndroidIntentComposeRule(intentFactory: (context: Context) -> Intent) : AndroidComposeTestRule<ActivityScenarioRule<A>, A> {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        val intent = intentFactory(context)
-
-        return AndroidComposeTestRule(
-            activityRule = ActivityScenarioRule(intent),
-            activityProvider = { scenarioRule -> scenarioRule.getActivity() }
-        )
-    }
-
-    /**
-     * Gets the activity from a scenarioRule.
-     *
-     * https://androidx.tech/artifacts/compose.ui/ui-test-junit4/1.0.0-alpha11-source/androidx/compose/ui/test/junit4/AndroidComposeTestRule.kt.html
-     */
-    fun <A : ComponentActivity> ActivityScenarioRule<A>.getActivity(): A {
-        var activity: A? = null
-
-        scenario.onActivity { activity = it }
-
-        return activity ?: throw IllegalStateException("Activity was not set in the ActivityScenarioRule!")
-    }
 }

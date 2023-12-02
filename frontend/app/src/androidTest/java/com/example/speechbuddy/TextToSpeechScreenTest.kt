@@ -33,7 +33,10 @@ class TextToSpeechScreenTest {
     fun setUp() {
         composeTestRule.activity.setContent {
             hiltRule.inject()
-            SpeechBuddyTheme {
+            SpeechBuddyTheme(
+                settingsRepository = composeTestRule.activity.settingsRepository,
+                initialDarkMode = false
+            ) {
                 TextToSpeechScreen(
                     paddingValues = PaddingValues()
                 )

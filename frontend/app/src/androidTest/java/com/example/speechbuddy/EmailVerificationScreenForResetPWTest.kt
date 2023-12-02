@@ -31,7 +31,10 @@ class EmailVerificationScreenForResetPWTest {
         hiltRule.inject()
         composeTestRule.activity.setContent {
             val fakeSource = "reset_password"
-            SpeechBuddyTheme {
+            SpeechBuddyTheme(
+                settingsRepository = composeTestRule.activity.settingsRepository,
+                initialDarkMode = false
+            ) {
                 EmailVerificationScreen(
                     source = fakeSource,
                     navigateCallback = {}
