@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.domain.models.User
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.repository.SettingsRepository
 import com.example.speechbuddy.repository.SymbolRepository

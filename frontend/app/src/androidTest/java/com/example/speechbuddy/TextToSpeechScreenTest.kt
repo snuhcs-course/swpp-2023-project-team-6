@@ -35,7 +35,7 @@ class TextToSpeechScreenTest {
             hiltRule.inject()
             SpeechBuddyTheme {
                 TextToSpeechScreen(
-                    bottomPaddingValues = PaddingValues(16.dp)
+                    paddingValues = PaddingValues()
                 )
             }
         }

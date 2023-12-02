@@ -21,7 +21,6 @@ class HomeActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         // force the database worker to build a new db
         // in order to check if the weight-db is empty or not and fill it
@@ -41,7 +40,7 @@ class HomeActivity : BaseActivity() {
 
     private fun subscribeObservers() {
         sessionManager.isAuthorized.observe(this) { isAuthorized ->
-            if (!isAuthorized) navAuthActivity()
+            if (!isAuthorized && !intent.getBooleanExtra("isTest", false)) navAuthActivity()
         }
     }
 
