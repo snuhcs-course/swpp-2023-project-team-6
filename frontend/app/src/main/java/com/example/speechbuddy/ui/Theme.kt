@@ -100,7 +100,7 @@ fun SpeechBuddyTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkModeState == true -> _darkColorScheme
+        darkModeState -> _darkColorScheme
         else -> _lightColorScheme
     }
     val view = LocalView.current
