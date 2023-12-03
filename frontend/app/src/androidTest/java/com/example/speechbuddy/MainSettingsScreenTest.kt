@@ -5,7 +5,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.NavHostController
 import com.example.speechbuddy.compose.settings.MainSettings
