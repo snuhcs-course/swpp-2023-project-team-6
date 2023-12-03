@@ -97,7 +97,7 @@ fun SymbolSelectionScreen(
                      * Without the elvis operator, null pointer exception arises.
                      * Do NOT erase the elvis operator although it seems useless!
                      */
-                    items(entries ?: emptyList()) { entry ->
+                    items(entries) { entry ->
                         when (entry) {
                             is Symbol -> SymbolUi(
                                 symbol = entry,

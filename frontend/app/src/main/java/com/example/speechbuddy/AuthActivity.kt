@@ -183,6 +183,7 @@ class AuthActivity : BaseActivity() {
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {
                         sessionManager.setIsLogin(false)
+                        settingsRepository.setLastBackupDate(LocalDate.now().toString())
                         navHomeActivity()
                     }
 
