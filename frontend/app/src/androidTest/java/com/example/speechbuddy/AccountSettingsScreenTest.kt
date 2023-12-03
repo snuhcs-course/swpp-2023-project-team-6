@@ -14,6 +14,7 @@ import com.example.speechbuddy.compose.settings.AccountSettings
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -56,6 +57,9 @@ class AccountSettingsScreenTest {
 
     @Test
     fun should_display_all_elements_when_account_settings_screen_appears() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(LOGOUT).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(ACCOUNT).assertIsDisplayed()
         composeTestRule.onNodeWithText(EMAIL).assertIsDisplayed()
         composeTestRule.onNodeWithText(NICKNAME).assertIsDisplayed()
@@ -67,7 +71,13 @@ class AccountSettingsScreenTest {
 
     @Test
     fun should_display_backup_dialog_when_clicking_backup_button() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(LOGOUT).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onAllNodesWithText(LOGOUT)[0].performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(BACKUP_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
         composeTestRule.onNodeWithText(WITHDRAW).assertIsNotEnabled()
         composeTestRule.onNodeWithText(BACKUP).assertIsDisplayed().assertHasClickAction()
@@ -78,8 +88,17 @@ class AccountSettingsScreenTest {
 
     @Test
     fun should_remove_dialog_when_clicking_backup_button_in_backup_dialog() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(LOGOUT).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(LOGOUT).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(BACKUP_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(BACKUP).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(BACKUP_DIALOG).fetchSemanticsNodes().isEmpty()
+        }
         composeTestRule.onNodeWithText(BACKUP_DIALOG).assertDoesNotExist()
         composeTestRule.onNodeWithText(BACKUP).assertDoesNotExist()
         composeTestRule.onNodeWithText(LOGOUT).assertIsNotEnabled()
@@ -88,11 +107,20 @@ class AccountSettingsScreenTest {
 
     @Test
     fun should_display_logout_dialog_when_clicking_logout_button_in_backup_dialog() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(LOGOUT).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(LOGOUT).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(BACKUP_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
         composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
         composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
         composeTestRule.onAllNodesWithText(LOGOUT)[2].performClick()
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithText(LOGOUT_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(CANCEL).assertIsDisplayed()
         composeTestRule.onNodeWithText(LOGOUT_DIALOG).assertIsDisplayed()
         composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
@@ -102,35 +130,62 @@ class AccountSettingsScreenTest {
     }
 
     @Test
-    fun should_display_loading_indicator_when_clicking_logout_button_in_logout_dialog() {
+    fun should_remove_dialog_when_clicking_logout_button_in_logout_dialog() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(LOGOUT).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(LOGOUT).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(BACKUP_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
         composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
         composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
         composeTestRule.onAllNodesWithText(LOGOUT)[2].performClick()
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithText(LOGOUT_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
         composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
         composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
         composeTestRule.onAllNodesWithText(LOGOUT)[2].performClick()
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithText(LOGOUT_DIALOG).fetchSemanticsNodes().isEmpty()
+        }
         composeTestRule.onNodeWithText(LOGOUT_DIALOG).assertDoesNotExist()
         composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
     }
 
     @Test
     fun should_display_account_settings_screen_when_clicking_cancel_button_in_logout_dialog() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(LOGOUT).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(LOGOUT).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(BACKUP_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onAllNodesWithText(LOGOUT)[0].assertIsNotEnabled()
         composeTestRule.onAllNodesWithText(LOGOUT)[1].assertIsDisplayed()
         composeTestRule.onAllNodesWithText(LOGOUT)[2].assertHasClickAction().assertIsEnabled()
         composeTestRule.onAllNodesWithText(LOGOUT)[2].performClick()
         composeTestRule.onNodeWithText(CANCEL).performClick()
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithText(LOGOUT_DIALOG).fetchSemanticsNodes().isEmpty()
+        }
         composeTestRule.onNodeWithText(LOGOUT_DIALOG).assertDoesNotExist()
         composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
     }
 
     @Test
     fun should_display_first_withdraw_dialog_when_clicking_withdraw_button() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(WITHDRAW).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(FIRST_WITHDRAW_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(FIRST_WITHDRAW_DIALOG).assertIsDisplayed()
         composeTestRule.onNodeWithText(CANCEL).assertIsDisplayed().assertHasClickAction()
         composeTestRule.onNodeWithText(PROCEED).assertIsDisplayed().assertHasClickAction()
@@ -141,8 +196,17 @@ class AccountSettingsScreenTest {
 
     @Test
     fun should_display_second_withdraw_dialog_when_clicking_progress_button_in_first_withdraw_dialog() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(WITHDRAW).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(FIRST_WITHDRAW_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(PROCEED).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(SECOND_WITHDRAW_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(SECOND_WITHDRAW_DIALOG).assertIsDisplayed()
         composeTestRule.onNodeWithText(CANCEL).assertIsDisplayed().assertHasClickAction()
         composeTestRule.onNodeWithText(LOGOUT).assertIsNotEnabled()
@@ -152,9 +216,18 @@ class AccountSettingsScreenTest {
     }
 
     @Test
-    fun should_display_account_settings_screen_when_clicking_cancel_button_in_first_withdraw_dialog() {
+    fun should_remove_dialog_when_clicking_cancel_button_in_first_withdraw_dialog() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(WITHDRAW).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(FIRST_WITHDRAW_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(CANCEL).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(FIRST_WITHDRAW_DIALOG).fetchSemanticsNodes().isEmpty()
+        }
         composeTestRule.onNodeWithText(FIRST_WITHDRAW_DIALOG).assertDoesNotExist()
         composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
         composeTestRule.onNodeWithText(LOGOUT).assertIsEnabled()
@@ -162,22 +235,46 @@ class AccountSettingsScreenTest {
     }
 
     @Test
-    fun should_display_loading_indicator_when_clicking_withdraw_button_in_second_withdraw_dialog() {
+    fun should_remove_dialog_when_clicking_withdraw_button_in_second_withdraw_dialog() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(WITHDRAW).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(FIRST_WITHDRAW_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(PROCEED).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(SECOND_WITHDRAW_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onAllNodesWithText(WITHDRAW)[0].assertIsNotEnabled()
         composeTestRule.onAllNodesWithText(WITHDRAW)[1].assertIsDisplayed()
         composeTestRule.onAllNodesWithText(WITHDRAW)[2].assertHasClickAction().assertIsEnabled()
         composeTestRule.onAllNodesWithText(WITHDRAW)[2].performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(SECOND_WITHDRAW_DIALOG).fetchSemanticsNodes().isEmpty()
+        }
         composeTestRule.onNodeWithText(SECOND_WITHDRAW_DIALOG).assertDoesNotExist()
         composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
     }
 
     @Test
     fun should_display_account_settings_screen_when_clicking_cancel_button_in_second_withdraw_dialog() {
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(WITHDRAW).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(WITHDRAW).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(FIRST_WITHDRAW_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(PROCEED).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(SECOND_WITHDRAW_DIALOG).fetchSemanticsNodes().size == 1
+        }
         composeTestRule.onNodeWithText(CANCEL).performClick()
+        composeTestRule.waitUntil{
+            composeTestRule.onAllNodesWithText(SECOND_WITHDRAW_DIALOG).fetchSemanticsNodes().isEmpty()
+        }
         composeTestRule.onNodeWithText(SECOND_WITHDRAW_DIALOG).assertDoesNotExist()
         composeTestRule.onNodeWithText(CANCEL).assertDoesNotExist()
     }
