@@ -52,10 +52,10 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun getInitialPage(): Boolean {
-        var initialPage = false
+        var initialPage = true
         lifecycleScope.launch {
             settingsRepository.getInitialPage().collect {
-                initialPage = it.data?: false
+                initialPage = it.data?: true
             }
         }
         return initialPage

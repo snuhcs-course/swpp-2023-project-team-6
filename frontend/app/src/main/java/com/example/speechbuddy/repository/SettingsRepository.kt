@@ -187,7 +187,7 @@ class SettingsRepository @Inject constructor(
                     } else {
                         setDarkMode(true)
                     }
-                    if (defaultMenu == 0) {
+                    if (defaultMenu == 1) {
                         setInitialPage(InitialPage.SYMBOL_SELECTION)
                     } else {
                         setInitialPage(InitialPage.TEXT_TO_SPEECH)
