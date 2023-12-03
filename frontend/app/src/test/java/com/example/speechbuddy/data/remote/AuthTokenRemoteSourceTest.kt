@@ -24,6 +24,9 @@ class AuthTokenRemoteSourceTest {
     private lateinit var authTokenRemoteSource: AuthTokenRemoteSource
     private val responseHandler = ResponseHandler()
 
+    private val internetErrorResponseBody =
+        "{\"code\": 600, \"message\": \"No Internet Connection\"}".toResponseBody()
+
     private val errorResponseBody =
         "{\"error\":\"Something went wrong\"}".toResponseBody("application/json".toMediaType())
 
@@ -77,6 +80,31 @@ class AuthTokenRemoteSourceTest {
 
         authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).collect { result ->
             assertEquals(expectedResponse, result)
+        }
+        coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
+    }
+
+    @Test
+    fun `should return internet error when exception happens for login`(): Unit = runBlocking {
+        val request = AuthLoginRequest(email = "test@example.com", password = "password123")
+        val errorResponse = Response.error<AuthTokenDto>(600, internetErrorResponseBody)
+        coEvery { authService.login(request) } throws Exception()
+
+        authTokenRemoteSource.loginAuthToken(request).collect { result ->
+            assertEquals(errorResponse.code(), result.code())
+        }
+        coVerify(exactly = 1) { authService.login(request) }
+    }
+
+
+    @Test
+    fun `should return internet error when exception happens for verifyEmailForResetPasswordAuthToken`(): Unit = runBlocking {
+        val request = AuthVerifyEmailRequest(email = "test@example.com", code = "123456")
+        val errorResponse = Response.error<AccessTokenDto>(600, internetErrorResponseBody)
+        coEvery { authService.verifyEmailForResetPassword(request) } throws Exception()
+
+        authTokenRemoteSource.verifyEmailForResetPasswordAuthToken(request).collect { result ->
+            assertEquals(errorResponse.code(), result.code())
         }
         coVerify(exactly = 1) { authService.verifyEmailForResetPassword(request) }
     }
