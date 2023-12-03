@@ -78,9 +78,6 @@ class BackupSettingsScreenTest {
         const val LAST_BACKUP_DATE = "마지막 백업 날짜"
         const val ENABLE_AUTO_BACKUP = "자동 백업 활성화"
         const val BACKUP_NOW = "지금 백업하기"
-
-        val LIGHT_COLOR = Color(0xFF000000)
-        val DARK_COLOR = Color(0xFFFFFFFF)
     }
 
 }
