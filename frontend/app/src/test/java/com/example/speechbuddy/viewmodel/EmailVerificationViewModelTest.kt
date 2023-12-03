@@ -238,14 +238,14 @@ class EmailVerificationViewModelTest {
     }
 
     //This test should be fixed
-    //Can't handle the response to be ResponseCode.SUCCESS.value, so UNKNOWN error occurs
-    //which is not the situation we want
+    //Can't handle the response to be ResponseCode.SUCCESS.value, so UNKNOWN error occurs, which is not the situation we want
     //Just modified the code to pass the test
+    //Expect the test coverage to increase when this is fixed correctly
     @Test
     fun `should success email send when called with valid email`() {
         val validSendCodeRequest = AuthSendCodeRequest(viewModel.emailInput)
         val successResponse: Response<Void> = Response.success(null)
-        
+
         coEvery { authRepository.sendCodeForSignup(validSendCodeRequest) } returns flowOf(
             successResponse
         )
