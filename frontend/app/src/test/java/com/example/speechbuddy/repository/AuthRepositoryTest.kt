@@ -9,6 +9,8 @@ import com.example.speechbuddy.data.remote.models.AccessTokenDtoMapper
 import com.example.speechbuddy.data.remote.models.AuthTokenDto
 import com.example.speechbuddy.data.remote.models.AuthTokenDtoMapper
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
+import com.example.speechbuddy.data.remote.requests.AuthRefreshRequest
+import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
@@ -22,6 +24,8 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaType
@@ -30,7 +34,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
-/*
+
 class AuthRepositoryTest {
 
     private lateinit var authRepository: AuthRepository
@@ -52,6 +56,7 @@ class AuthRepositoryTest {
     private val mockCode = "123456"
     private val mockAccessToken = "testAccessToken"
     private val mockRefreshToken = "testRefreshToken"
+    private val mockAuthHeader = "Bearer $mockAccessToken"
 
     private val mockErrorJson = """
     {
@@ -74,7 +79,6 @@ class AuthRepositoryTest {
             authService,
             userIdPrefsManager,
             authTokenPrefsManager,
-            settingsPrefsManager,
             authTokenRemoteSource,
             authTokenDtoMapper,
             accessTokenDtoMapper,
@@ -159,6 +163,7 @@ class AuthRepositoryTest {
             )
 
             coEvery { authTokenPrefsManager.saveAuthToken(authToken) } returns Unit
+            coEvery { sessionManager.setIsLogin(true) } returns Unit
 
             val result = authRepository.login(authLoginRequest)
 
@@ -362,7 +367,6 @@ class AuthRepositoryTest {
         }
     }
 
-    /*
     @Test
     fun `should return successful response when resetPassword request is valid`() {
         runBlocking {
@@ -371,9 +375,9 @@ class AuthRepositoryTest {
             )
             val successResponse = Response.success<Void>(200, null)
 
-            coEvery { sessionManager.temporaryToken.value } returns temporaryToken
+            coEvery { sessionManager.cachedToken.value?.accessToken } returns mockAccessToken
 
-            coEvery { authService.resetPassword(authHeader, authResetPasswordRequest) } returns successResponse
+            coEvery { authService.resetPassword(mockAuthHeader, authResetPasswordRequest) } returns successResponse
 
             val result = authRepository.resetPassword(authResetPasswordRequest)
             // 아래 resource는 Response<Void> 타입
@@ -393,9 +397,9 @@ class AuthRepositoryTest {
             )
             val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
 
-            coEvery { sessionManager.temporaryToken.value } returns temporaryToken
+            coEvery { sessionManager.cachedToken.value?.accessToken } returns mockAccessToken
 
-            coEvery { authService.resetPassword(authHeader, authResetPasswordRequest) } returns errorResponse
+            coEvery { authService.resetPassword(mockAuthHeader, authResetPasswordRequest) } returns errorResponse
 
             val result = authRepository.resetPassword(authResetPasswordRequest)
             result.collect { resource ->
@@ -405,8 +409,148 @@ class AuthRepositoryTest {
         }
     }
 
-     */
+    private fun mockEmptyAuthToken(): Flow<AuthToken> {
+        return flow {
+            emit(AuthToken("", ""))
+        }
+    }
+    @Test
+    fun `should return successful response when logout request is valid`() {
+        runBlocking {
+            val authRefreshRequest = AuthRefreshRequest(
+                refresh = mockRefreshToken
+            )
+            val successResponse = Response.success<Void>(200, null)
 
+            coEvery { sessionManager.cachedToken.value?.accessToken } returns mockAccessToken
+            coEvery { sessionManager.cachedToken.value?.refreshToken } returns mockRefreshToken
+            coEvery { authService.logout(mockAuthHeader, authRefreshRequest) } returns successResponse
+            coEvery { authTokenPrefsManager.preferencesFlow } returns mockEmptyAuthToken()
+            coEvery { userIdPrefsManager.clearUserId() } returns Unit
+            coEvery { settingsPrefsManager.resetSettings() } returns Unit
+
+            val result = authRepository.logout()
+            result.collect { resource ->
+                assert(resource.isSuccessful)
+                assert(resource.code() == 200)
+                assert(resource.body() == null)
+            }
+
+            val authTokenFlow = authTokenPrefsManager.preferencesFlow
+            authTokenFlow.collect { authToken ->
+                authToken.accessToken?.let { assert(it.isEmpty()) }
+                authToken.refreshToken?.let { assert(it.isEmpty()) }
+            }
+        }
+    }
+
+    @Test
+    fun `should return error response when logout request is invalid`() {
+        runBlocking {
+            val authRefreshRequest = AuthRefreshRequest(
+                refresh = ""
+            )
+            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
+
+            coEvery { sessionManager.cachedToken.value?.accessToken } returns mockAccessToken
+            coEvery { sessionManager.cachedToken.value?.refreshToken } returns ""
+            coEvery { authService.logout(mockAuthHeader, authRefreshRequest) } returns errorResponse
+
+            val result = authRepository.logout()
+            result.collect { resource ->
+                assert(!resource.isSuccessful)
+                assert(resource.code() == 400)
+            }
+        }
+    }
+
+    @Test
+    fun `should return successful response when withdraw request is valid`() {
+        runBlocking {
+            val authRefreshRequest = AuthRefreshRequest(
+                refresh = mockRefreshToken
+            )
+            val successResponse = Response.success<Void>(200, null)
+
+            coEvery { sessionManager.cachedToken.value?.accessToken } returns mockAccessToken
+            coEvery { sessionManager.cachedToken.value?.refreshToken } returns mockRefreshToken
+            coEvery { authService.withdraw(mockAuthHeader, authRefreshRequest) } returns successResponse
+            coEvery { authTokenPrefsManager.preferencesFlow } returns mockEmptyAuthToken()
+            coEvery { userIdPrefsManager.clearUserId() } returns Unit
+            coEvery { settingsPrefsManager.resetSettings() } returns Unit
+
+            val result = authRepository.withdraw()
+            result.collect { resource ->
+                assert(resource.isSuccessful)
+                assert(resource.code() == 200)
+                assert(resource.body() == null)
+            }
+
+            val authTokenFlow = authTokenPrefsManager.preferencesFlow
+            authTokenFlow.collect { authToken ->
+                authToken.accessToken?.let { assert(it.isEmpty()) }
+                authToken.refreshToken?.let { assert(it.isEmpty()) }
+            }
+        }
+    }
+
+    @Test
+    fun `should return error response when withdraw request is invalid`() {
+        runBlocking {
+            val authRefreshRequest = AuthRefreshRequest(
+                refresh = ""
+            )
+            val errorResponse = Response.error<Void>(400, mockErrorResponseBody)
+
+            coEvery { sessionManager.cachedToken.value?.accessToken } returns mockAccessToken
+            coEvery { sessionManager.cachedToken.value?.refreshToken } returns ""
+            coEvery { authService.withdraw(mockAuthHeader, authRefreshRequest) } returns errorResponse
+
+            val result = authRepository.withdraw()
+            result.collect { resource ->
+                assert(!resource.isSuccessful)
+                assert(resource.code() == 400)
+            }
+        }
+    }
+
+    fun mockUserId(defaultUserId: Int): Flow<Int> {
+        return flow {
+            emit(defaultUserId)
+        }
+    }
+
+    @Test
+    fun `should return successful response when tokens are not empty for checkPreviousUser`() {
+        runBlocking {
+            val authToken = AuthToken(mockAccessToken, mockRefreshToken)
+
+            coEvery { userIdPrefsManager.preferencesFlow } returns mockUserId(1)
+            coEvery { authTokenPrefsManager.preferencesFlow } returns flowOf(authToken)
+
+            val result = authRepository.checkPreviousUser()
+
+            result.collect{ resource ->
+                assert(Status.SUCCESS == resource.status)
+                assert(authToken == resource.data!!.second)
+                assert(null == resource.message)
+            }
+        }
+    }
+
+    @Test
+    fun `should return error response when tokens are empty for checkPreviousUser`() {
+        runBlocking {
+            coEvery { userIdPrefsManager.preferencesFlow } returns mockUserId(1)
+            coEvery { authTokenPrefsManager.preferencesFlow } returns mockEmptyAuthToken()
+
+            val result = authRepository.checkPreviousUser()
+
+            result.collect{ resource ->
+                assert(Status.ERROR == resource.status)
+                assert(null == resource.data)
+                assert("Couldn't find previous user" == resource.message)
+            }
+        }
+    }
 }
-
- */
