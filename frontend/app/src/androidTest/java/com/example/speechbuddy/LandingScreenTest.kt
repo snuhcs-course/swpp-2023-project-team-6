@@ -26,7 +26,10 @@ class LandingScreenTest {
     fun setUp() {
         hiltRule.inject()
         composeTestRule.activity.setContent {
-            SpeechBuddyTheme {
+            SpeechBuddyTheme(
+                settingsRepository = composeTestRule.activity.settingsRepository,
+                initialDarkMode = false
+            ) {
                 LandingScreen( onLoginClick = {}, isBackup = false)
             }
         }

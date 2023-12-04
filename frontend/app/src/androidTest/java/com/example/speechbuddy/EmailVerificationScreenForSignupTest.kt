@@ -31,7 +31,10 @@ class EmailVerificationScreenForSignupTest {
         hiltRule.inject()
         composeTestRule.activity.setContent {
             val fakeSource = "signup"
-            SpeechBuddyTheme {
+            SpeechBuddyTheme(
+                settingsRepository = composeTestRule.activity.settingsRepository,
+                initialDarkMode = false
+            ) {
                 EmailVerificationScreen(
                     source = fakeSource,
                     navigateCallback = {}

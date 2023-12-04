@@ -2,6 +2,7 @@ package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.UserDao
 import com.example.speechbuddy.data.local.UserIdPrefsManager
+import com.example.speechbuddy.data.local.models.UserEntity
 import com.example.speechbuddy.data.local.models.UserMapper
 import com.example.speechbuddy.data.remote.UserRemoteSource
 import com.example.speechbuddy.data.remote.models.UserDtoMapper
@@ -32,8 +33,12 @@ class UserRepository @Inject constructor(
 
     fun getMyInfo(): Flow<Resource<User>> {
         return userDao.getUserById(sessionManager.userId.value!!).map { userEntity ->
-            if (userEntity != null) Resource.success(userMapper.mapToDomainModel(userEntity))
-            else Resource.error("Unable to find user", null)
+            if (userEntity != null) {
+                Resource.success(userMapper.mapToDomainModel(userEntity))
+            }
+            else {
+                Resource.error("Unable to find user", null)
+            }
         }
     }
 
@@ -75,6 +80,13 @@ class UserRepository @Inject constructor(
         return Resource.error(
             "Unknown error", null
         )
+    }
+
+    fun setMyInfo(id: Int, email: String, nickname: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            userIdPrefsManager.saveUserId(id)
+            userDao.insertUser(UserEntity(id, email, nickname))
+        }
     }
 
 }

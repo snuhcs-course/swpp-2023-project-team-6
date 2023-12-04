@@ -23,7 +23,6 @@ class HomeActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         if(sessionManager.userId.value==GUEST_ID) {
             // only activates if it is in guest mode.
@@ -48,7 +47,7 @@ class HomeActivity : BaseActivity() {
 
     private fun subscribeObservers() {
         sessionManager.isAuthorized.observe(this) { isAuthorized ->
-            if (!isAuthorized) navAuthActivity()
+            if (!isAuthorized && !intent.getBooleanExtra("isTest", false)) navAuthActivity()
         }
     }
 

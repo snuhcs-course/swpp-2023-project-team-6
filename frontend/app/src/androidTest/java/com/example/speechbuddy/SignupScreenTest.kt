@@ -31,7 +31,10 @@ class SignupScreenTest {
         hiltRule.inject()
         composeTestRule.activity.setContent {
             val fakeEmail = "test@example.com"
-            SpeechBuddyTheme {
+            SpeechBuddyTheme(
+                settingsRepository = composeTestRule.activity.settingsRepository,
+                initialDarkMode = false
+            ) {
                 SignupScreen(
                     email = fakeEmail,
                     navigateToLogin = {}
