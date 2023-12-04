@@ -14,9 +14,12 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.room.Database
 
 import androidx.room.Room
@@ -51,6 +54,7 @@ import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 import com.example.speechbuddy.worker.SeedDatabaseWorker
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
 import org.junit.After
@@ -111,9 +115,8 @@ class SymbolSelectionScreenTest {
         runBlocking {
             val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>().build()
             WorkManager.getInstance(context).enqueue(request)
-            Thread.sleep(10000)
+            Thread.sleep(5000)
         }
-
 
         composeTestRule.activity.setContent {
             SpeechBuddyTheme(
@@ -172,25 +175,86 @@ class SymbolSelectionScreenTest {
         composeTestRule.onNodeWithText(SYMBOL_MENU_TEXT).assertIsDisplayed()
         composeTestRule.onNodeWithText(BIG_CATEGORY_TEXT).assertIsDisplayed()
         composeTestRule.onNodeWithText(FAVORITE_MENU_TEXT).assertIsDisplayed()
-        //composeTestRule.onNodeWithText(ALL_MENU_TEXT).assertIsFocused()
-        Thread.sleep(5000)
+
     }
 
     @Test
     fun should_change_symbols_displayed_when_each_menu_clicked() {
         composeTestRule.onNodeWithText(ALL_MENU_TEXT).performClick()
-        Thread.sleep(10000)
+        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText(TEST_CATEGORY_TEXT).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText(SYMBOL_MENU_TEXT).performClick()
+        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText(TEST_SYMBOL_TEXT).assertIsDisplayed()
 
+        composeTestRule.onNodeWithText(BIG_CATEGORY_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(TEST_CATEGORY_TEXT).assertIsDisplayed()
     }
 
+    @Test
+    fun should_display_proper_symbols_when_each_category_clicked() {
+//        composeTestRule.onNodeWithText(TEST_CATEGORY_TEXT).performClick()
+//        Thread.sleep(3000)
+//        composeTestRule.onAllNodesWithText("가족")[0].performClick()
+        composeTestRule.onNodeWithText("가족").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_proper_symbols_when_search_box_typed() {
+        composeTestRule.onNodeWithText(SEARCH_BOX_TEXT).performTextInput("가")
+        //composeTestRule.waitForIdle()
+        //composeTestRule.onNodeWithText(DELETE_ALL_BUTTON_TEXT).performClick()
+        //composeTestRule.waitForIdle()
+
+        //composeTestRule.onNodeWithText("가게").assertIsDisplayed()
+        //composeTestRule.onNodeWithText("가다").assertIsDisplayed()
+        //composeTestRule.onNodeWithText("가방").assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_proper_symbols_on_selected_symbols_when_symbols_clicked(){
+        composeTestRule.onNodeWithText("가족").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(BIG_CATEGORY_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").assertIsDisplayed()
+    }
+
+    @Test
+    fun should_clear_symbols_on_selected_symbols_when_DELETE_ALL_BUTTON_clicked(){
+        composeTestRule.onNodeWithText("가족").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(BIG_CATEGORY_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_in_SEE_BIG_mode_when_SEE_BIG_BUTTON_clicked(){
+        composeTestRule.onNodeWithText("가족").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(SEE_BIG_BUTTON_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(EXIT_BUTTON_TEXT).assertIsDisplayed()
+
+    }
 
 
     //
 
 
     companion object {
+        //const val SEARCH_BOX_TEXT = "SymbolSearchTextField"
         const val SEARCH_BOX_TEXT = "검색어를 입력하세요"
         const val SEE_BIG_BUTTON_TEXT = "크게 보기"
         const val DELETE_ALL_BUTTON_TEXT = "모두 삭제"
@@ -200,6 +264,7 @@ class SymbolSelectionScreenTest {
         const val FAVORITE_MENU_TEXT = "즐겨찾기"
         const val TEST_CATEGORY_TEXT = "가족"
         const val TEST_SYMBOL_TEXT = "119에 전화해주세요"
+        const val EXIT_BUTTON_TEXT = "나가기"
     }
 
 }
