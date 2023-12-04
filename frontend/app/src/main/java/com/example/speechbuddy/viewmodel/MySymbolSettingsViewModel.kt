@@ -43,6 +43,7 @@ class MySymbolSettingsViewModel @Inject internal constructor(
     private var getSymbolsJob: Job? = null
 
     init {
+        symbolRepository.checkImages()
         getSymbols()
     }
 
