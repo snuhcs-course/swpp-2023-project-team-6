@@ -104,6 +104,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
+    androidTestImplementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    androidTestImplementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
