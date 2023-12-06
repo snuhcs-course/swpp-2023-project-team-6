@@ -5,6 +5,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from user.models import EmailVerification
 from user.utils import normalize_email
+from weight_table.models import WeightTable
 
 User = get_user_model()
 
@@ -30,6 +31,12 @@ class UserSignUpSerializer(serializers.Serializer):
         password = validated_data.get('password')
         nickname = validated_data.get('nickname')
         user = User.objects.create_user(nickname, email, password)
+
+        with open('./weight_table.txt', 'r') as file:
+            for symbol_id, line in enumerate(file, start=1):
+                weight = f"[{line}]"
+                WeightTable.objects.create(symbol_id=symbol_id, weight=weight, user=user)
+
         return user
 
 
