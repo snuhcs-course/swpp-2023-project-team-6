@@ -8,6 +8,7 @@ import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.utils.ResponseHandler
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -237,13 +238,9 @@ class EmailVerificationViewModelTest {
         assertEquals(viewModel.uiState.value.isValidCode, true)
     }
 
-    //This test should be fixed
-    //Can't handle the response to be ResponseCode.SUCCESS.value, so UNKNOWN error occurs, which is not the situation we want
-    //Just modified the code to pass the test
-    //Expect the test coverage to increase when this is fixed correctly
     @Test
     fun `should success email send when called with valid email`() {
-        val validSendCodeRequest = AuthSendCodeRequest(viewModel.emailInput)
+        val validSendCodeRequest = AuthSendCodeRequest(validEmail)
         val successResponse: Response<Void> = Response.success(null)
 
         coEvery { authRepository.sendCodeForSignup(validSendCodeRequest) } returns flowOf(
@@ -252,12 +249,19 @@ class EmailVerificationViewModelTest {
         coEvery { authRepository.sendCodeForResetPassword(validSendCodeRequest) } returns flowOf(
             successResponse
         )
-        sourceList.forEach {
-            viewModel.setSource(it)
-            viewModel.setEmail(validEmail)
-            viewModel.sendCode()
-            assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.UNKNOWN)
-            assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
-        }
+
+        viewModel.setSource("signup")
+        viewModel.setEmail(validEmail)
+        viewModel.sendCode()
+        coVerify { authRepository.sendCodeForSignup(validSendCodeRequest) }
+        assertEquals(viewModel.uiState.value.error, null)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, true)
+
+        viewModel.setSource("reset_password")
+        viewModel.setEmail(validEmail)
+        viewModel.sendCode()
+        coVerify { authRepository.sendCodeForResetPassword(validSendCodeRequest) }
+        assertEquals(viewModel.uiState.value.error, null)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, true)
     }
 }
