@@ -1,9 +1,5 @@
 package com.example.speechbuddy.viewmodel
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.repository.SettingsRepository
@@ -11,6 +7,8 @@ import com.example.speechbuddy.ui.models.BackupSettingsAlert
 import com.example.speechbuddy.ui.models.BackupSettingsUiState
 import com.example.speechbuddy.utils.ResponseCode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -58,7 +56,7 @@ class BackupSettingsViewModel @Inject internal constructor(
         var autoBackup = false
         viewModelScope.launch {
             repository.getAutoBackup().collect {
-                autoBackup = it.data?: false
+                autoBackup = it.data ?: false
             }
         }
         return autoBackup
@@ -68,7 +66,7 @@ class BackupSettingsViewModel @Inject internal constructor(
         var lastBackupDate = ""
         viewModelScope.launch {
             repository.getLastBackupDate().collect {
-                lastBackupDate = it.data?: ""
+                lastBackupDate = it.data ?: ""
             }
         }
         return lastBackupDate
@@ -93,27 +91,33 @@ class BackupSettingsViewModel @Inject internal constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun displayBackup() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.displayBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { symbolListBackup() }
+                    ResponseCode.SUCCESS.value -> {
+                        symbolListBackup()
+                    }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun symbolListBackup() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.symbolListBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { favoriteSymbolBackup() }
+                    ResponseCode.SUCCESS.value -> {
+                        favoriteSymbolBackup()
+                    }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
 
             }
@@ -121,33 +125,38 @@ class BackupSettingsViewModel @Inject internal constructor(
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun favoriteSymbolBackup() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.favoriteSymbolBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { weightTableBackup() }
+                    ResponseCode.SUCCESS.value -> {
+                        weightTableBackup()
+                    }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun weightTableBackup() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.weightTableBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { handleSuccess() }
+                    ResponseCode.SUCCESS.value -> {
+                        handleSuccess()
+                    }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun backup() {
         changeLoadingState()
         displayBackup()
@@ -156,22 +165,20 @@ class BackupSettingsViewModel @Inject internal constructor(
     private fun handleNoInternetConnection() {
         changeLoadingState()
         _uiState.update { currentState ->
-            currentState.copy (
+            currentState.copy(
                 alert = BackupSettingsAlert.CONNECTION
             )
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun handleSuccess() {
         changeLoadingState()
         setLastBackupDate(LocalDate.now().toString())
         _uiState.update { currentState ->
-            currentState.copy (
+            currentState.copy(
                 alert = BackupSettingsAlert.SUCCESS,
             )
         }
     }
-
 
 }

@@ -3,8 +3,6 @@ package com.example.speechbuddy.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
@@ -61,8 +59,8 @@ class EmailVerificationViewModel @Inject internal constructor(
         if (_uiState.value.error?.type == EmailVerificationErrorType.CODE) validateCode()
     }
 
-    private fun changeLoadingState(){
-        _uiState.update {currentState ->
+    private fun changeLoadingState() {
+        _uiState.update { currentState ->
             currentState.copy(
                 loading = !currentState.loading,
                 buttonEnabled = !currentState.buttonEnabled

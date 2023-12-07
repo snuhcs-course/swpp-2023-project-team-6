@@ -1,8 +1,6 @@
 package com.example.speechbuddy.compose.settings
 
-import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,7 +28,6 @@ import com.example.speechbuddy.compose.utils.TitleUi
 import com.example.speechbuddy.ui.models.BackupSettingsAlert
 import com.example.speechbuddy.viewmodel.BackupSettingsViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BackupSettings(
     modifier: Modifier = Modifier,
@@ -71,7 +68,9 @@ fun BackupSettings(
                         Switch(
                             checked = uiState.isAutoBackupEnabled,
                             onCheckedChange = { viewModel.setAutoBackup(it) },
-                            modifier = Modifier.heightIn(max = 32.dp).testTag("auto_backup"),
+                            modifier = Modifier
+                                .heightIn(max = 32.dp)
+                                .testTag("auto_backup"),
                             enabled = uiState.buttonEnabled
                         )
                     }

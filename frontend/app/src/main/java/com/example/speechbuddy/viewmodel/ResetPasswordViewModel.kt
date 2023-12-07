@@ -118,7 +118,7 @@ class ResetPasswordViewModel @Inject internal constructor(
                     changeLoadingState()
                     when (result.code()) {
                         ResponseCode.SUCCESS.value -> {
-                            sessionManager.deleteToken()
+                            sessionManager.nullify()
                             onSuccess()
                         }
 

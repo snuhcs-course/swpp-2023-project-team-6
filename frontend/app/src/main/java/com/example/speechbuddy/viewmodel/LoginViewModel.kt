@@ -342,17 +342,6 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
-    fun checkPreviousUser() {
-        viewModelScope.launch {
-            authRepository.checkPreviousUser().collect { resource ->
-                if (resource.data != null) {
-                    sessionManager.setUserId(resource.data.first)
-                    sessionManager.setAuthToken(resource.data.second)
-                }
-            }
-        }
-    }
-
     fun enterGuestMode() {
         viewModelScope.launch {
             userRepository.setGuestMode()

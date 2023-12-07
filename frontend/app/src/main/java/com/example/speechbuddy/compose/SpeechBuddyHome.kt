@@ -1,7 +1,5 @@
 package com.example.speechbuddy.compose
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -54,7 +52,6 @@ data class BottomNavItem(
     val iconResId: Int
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpeechBuddyHome(
@@ -224,7 +221,6 @@ private fun BottomNavigationBar(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,
