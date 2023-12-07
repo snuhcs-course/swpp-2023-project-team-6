@@ -3,9 +3,12 @@ package com.example.speechbuddy.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
+import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.domain.models.AccessToken
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
+import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseHandler
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -43,6 +46,7 @@ class EmailVerificationViewModelTest {
     private val sourceList = arrayListOf(signup, resetPassword)
 
     private val validCode = "123456" //length == 6
+    private val wrongCode = "123450" //length == 6, but assumed as wrong code
     private val inValidCode = "1" //length != 6
     private val emptyCode = ""
 
@@ -263,5 +267,92 @@ class EmailVerificationViewModelTest {
         coVerify { authRepository.sendCodeForResetPassword(validSendCodeRequest) }
         assertEquals(viewModel.uiState.value.error, null)
         assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, true)
+    }
+
+    @Test
+    fun `should success code verification when called with valid code`() {
+        val navigateCallback: (String) -> Unit = mockk(relaxed = true)
+        val successResponse: Response<Void> = Response.success(null)
+        val accessToken = AccessToken("access")
+
+        val validEmailVerificationRequest = AuthVerifyEmailRequest(
+            validEmail, validCode
+        )
+        coEvery { authRepository.verifyEmailForSignup(validEmailVerificationRequest) } returns flowOf(
+            successResponse
+        )
+        coEvery { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) } returns flowOf(
+            Resource.success(accessToken)
+        )
+
+        viewModel.setSource("signup")
+        viewModel.setEmail(validEmail)
+        viewModel.setCode(validCode)
+
+        viewModel.verifyEmail(navigateCallback)
+
+        coVerify { authRepository.verifyEmailForSignup(validEmailVerificationRequest) }
+
+        coVerify { navigateCallback("signup/$validEmail") }
+
+        viewModel.setSource("reset_password")
+        viewModel.setEmail(validEmail)
+        viewModel.setCode(validCode)
+
+        viewModel.verifyEmail(navigateCallback)
+
+        coVerify { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) }
+
+        coVerify { navigateCallback("reset_password") }
+    }
+
+    // ResetPassword
+    @Test
+    fun `should fail code verification when internet connection fails`() {
+        val navigateCallback: (String) -> Unit = mockk(relaxed = true)
+        val accessToken = AccessToken("access")
+
+        val validEmailVerificationRequest = AuthVerifyEmailRequest(
+            validEmail, validCode
+        )
+        coEvery { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) } returns flowOf(
+            Resource.error("unknown", accessToken)
+        )
+
+        viewModel.setSource("reset_password")
+        viewModel.setEmail(validEmail)
+        viewModel.setCode(validCode)
+
+        viewModel.verifyEmail(navigateCallback)
+
+        coVerify { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) }
+
+        assertEquals(viewModel.uiState.value.isValidCode, false)
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CONNECTION)
+    }
+
+    // ResetPassword
+    @Test
+    fun `should fail code verification when code is wrong`() {
+        val navigateCallback: (String) -> Unit = mockk(relaxed = true)
+        val accessToken = AccessToken("access")
+
+        val validEmailVerificationRequest = AuthVerifyEmailRequest(
+            validEmail, wrongCode
+        )
+        coEvery { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) } returns flowOf(
+            Resource.error("", accessToken)
+        )
+
+        viewModel.setSource("reset_password")
+        viewModel.setEmail(validEmail)
+        viewModel.setCode(wrongCode)
+
+        viewModel.verifyEmail(navigateCallback)
+
+        coVerify { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) }
+
+        assertEquals(viewModel.uiState.value.isValidCode, false)
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CODE)
     }
 }
