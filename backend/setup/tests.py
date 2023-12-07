@@ -55,7 +55,7 @@ class SettingsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.json()
         self.assertEqual(data['display_mode'], 0)  # 0 is the default value
-        self.assertEqual(data['default_menu'], 0)  # 0 is the default value
+        self.assertEqual(data['default_menu'], 1)  # 1 is the default value
 
 
 
