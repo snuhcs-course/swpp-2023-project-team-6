@@ -40,7 +40,6 @@ class SettingsRepository @Inject constructor(
         } else {
             settingsPrefsManager.saveDarkMode(false)
         }
-        settingsPrefsManager.saveDarkMode(value)
     }
 
     suspend fun setInitialPage(page: InitialPage) {
