@@ -18,6 +18,8 @@ import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidEmail
 import com.example.speechbuddy.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -139,13 +141,14 @@ class LoginViewModel @Inject internal constructor(
                     if (resource.status == Status.SUCCESS) {
                         // AccessToken is already saved in AuthTokenPrefsManager by the authRepository
                         sessionManager.setAuthToken(resource.data!!)
+
                         runBlocking {
                             val jobs = mutableListOf<Job>()
-                            jobs.add(viewModelScope.launch { getMyInfoFromRemote(resource.data.accessToken) })
-                            jobs.add(viewModelScope.launch { getMyDisplaySettingsFromRemote(resource.data.accessToken) })
-                            jobs.add(viewModelScope.launch { getSymbolListFromRemote(resource.data.accessToken) })
-                            jobs.add(viewModelScope.launch { getFavoritesListFromRemote(resource.data.accessToken) })
-                            jobs.add(viewModelScope.launch { getWeightTableFromRemote(resource.data.accessToken) })
+                            jobs.add(getMyInfoFromRemote(resource.data.accessToken))
+                            jobs.add(getMyDisplaySettingsFromRemote(resource.data.accessToken))
+                            jobs.add(getSymbolListFromRemote(resource.data.accessToken))
+                            jobs.add(getFavoritesListFromRemote(resource.data.accessToken))
+                            jobs.add(getWeightTableFromRemote(resource.data.accessToken))
 
                             jobs.joinAll()
 
@@ -190,8 +193,8 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
-    private fun getMyInfoFromRemote(accessToken: String?) {
-        viewModelScope.launch {
+    private fun getMyInfoFromRemote(accessToken: String?): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
             userRepository.getMyInfoFromRemote(accessToken).collect { resource ->
                 if (resource.status == Status.SUCCESS) {
                     sessionManager.setUserId(resource.data!!.id)
@@ -222,8 +225,8 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
-    private fun getMyDisplaySettingsFromRemote(accessToken: String?) {
-        viewModelScope.launch {
+    private fun getMyDisplaySettingsFromRemote(accessToken: String?): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.getDisplaySettingsFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
                     changeLoadingState()
@@ -252,8 +255,8 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
-    private fun getSymbolListFromRemote(accessToken: String?) {
-        viewModelScope.launch {
+    private fun getSymbolListFromRemote(accessToken: String?): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.getSymbolListFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
                     changeLoadingState()
@@ -282,8 +285,8 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
-    private fun getFavoritesListFromRemote(accessToken: String?) {
-        viewModelScope.launch {
+    private fun getFavoritesListFromRemote(accessToken: String?): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.getFavoritesListFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
                     changeLoadingState()
@@ -312,8 +315,8 @@ class LoginViewModel @Inject internal constructor(
         }
     }
 
-    private fun getWeightTableFromRemote(accessToken: String?) {
-        viewModelScope.launch {
+    private fun getWeightTableFromRemote(accessToken: String?): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.getWeightTableFromRemote(accessToken).collect { resource ->
                 if (resource.message?.contains("unknown", ignoreCase = true) == true) {
                     changeLoadingState()
