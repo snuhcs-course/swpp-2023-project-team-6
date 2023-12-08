@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -161,7 +162,41 @@ class ResetPasswordViewModelTest {
         viewModel.resetPassword(onSuccess)
         Thread.sleep(10)
 
-        assertEquals(null, viewModel.uiState.value.error?.type)
+        assertEquals(viewModel.uiState.value.error?.type, null)
         coVerify { sessionManager.deleteToken() }
+    }
+
+    @Test
+    fun `should fail when bad request occurs`() {
+        val onSuccess: () -> Unit = mockk(relaxed = true)
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.error(400, errorResponseBody)
+        viewModel.setPassword(validPassword)
+        viewModel.setPasswordCheck(validPassword)
+        coEvery {
+            repository.resetPassword(AuthResetPasswordRequest(validPassword))
+        } returns flowOf(errorResponse)
+        viewModel.resetPassword(onSuccess)
+        Thread.sleep(10)
+
+        assertEquals(viewModel.uiState.value.error?.type, ResetPasswordErrorType.PASSWORD)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.unknown_error)
+    }
+
+    @Test
+    fun `should fail when no internet connection`() {
+        val onSuccess: () -> Unit = mockk(relaxed = true)
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.error(600, errorResponseBody)
+        viewModel.setPassword(validPassword)
+        viewModel.setPasswordCheck(validPassword)
+        coEvery {
+            repository.resetPassword(AuthResetPasswordRequest(validPassword))
+        } returns flowOf(errorResponse)
+        viewModel.resetPassword(onSuccess)
+        Thread.sleep(10)
+
+        assertEquals(viewModel.uiState.value.error?.type, ResetPasswordErrorType.CONNECTION)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.connection_error)
     }
 }
