@@ -183,7 +183,7 @@ class EmailVerificationViewModelTest {
     }
 
     @Test
-    fun `should return no error when verify code is empty before next button click`() {
+    fun `should return no error when code is empty before verification`() {
         viewModel.setCode(emptyCode)
 
         assertEquals(emptyCode, viewModel.codeInput)
@@ -192,7 +192,7 @@ class EmailVerificationViewModelTest {
     }
 
     @Test
-    fun `should return no error when verify code is invalid before next button click`() {
+    fun `should return no error when code is invalid before verification`() {
         viewModel.setCode(inValidCode)
 
         assertEquals(inValidCode, viewModel.codeInput)
@@ -201,7 +201,7 @@ class EmailVerificationViewModelTest {
     }
 
     @Test
-    fun `should return no error when verify code is valid before next button click`() {
+    fun `should return no error when code is valid before verification`() {
         viewModel.setCode(validCode)
 
         assertEquals(validCode, viewModel.codeInput)
@@ -210,28 +210,33 @@ class EmailVerificationViewModelTest {
     }
 
     @Test
-    fun `should change error state when invalid verify code is changed to valid verify code`() {
+    fun `should change error state when invalid code is changed to valid code`() {
         val navigateCallback: (String) -> Unit = mockk(relaxed = true)
 
         viewModel.setCode(inValidCode)
         viewModel.verifyEmail(navigateCallback)
 
         assertEquals(inValidCode, viewModel.codeInput)
-        assertEquals(
-            viewModel.uiState.value.error?.type,
-            EmailVerificationErrorType.CODE
-        )
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CODE)
         assertEquals(viewModel.uiState.value.error?.messageId, R.string.wrong_code)
         assertEquals(viewModel.uiState.value.isValidCode, false)
+
+        viewModel.setCode(validCode)
+
+        assertEquals(validCode, viewModel.codeInput)
+        assertEquals(viewModel.uiState.value.error?.type, null)
+        assertEquals(viewModel.uiState.value.isValidCode, true)
+    }
+
+    @Test
+    fun `should change error state when empty code is changed to valid code`() {
+        val navigateCallback: (String) -> Unit = mockk(relaxed = true)
 
         viewModel.setCode(emptyCode)
         viewModel.verifyEmail(navigateCallback)
 
         assertEquals(emptyCode, viewModel.codeInput)
-        assertEquals(
-            viewModel.uiState.value.error?.type,
-            EmailVerificationErrorType.CODE
-        )
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CODE)
         assertEquals(viewModel.uiState.value.error?.messageId, R.string.no_code)
         assertEquals(viewModel.uiState.value.isValidCode, false)
 
@@ -243,7 +248,7 @@ class EmailVerificationViewModelTest {
     }
 
     @Test
-    fun `should success email send when called with valid email`() {
+    fun `should success code send when called with valid email`() {
         val validSendCodeRequest = AuthSendCodeRequest(validEmail)
         val successResponse: Response<Void> = Response.success(null)
 
@@ -270,7 +275,7 @@ class EmailVerificationViewModelTest {
     }
 
     @Test
-    fun `should success code verification when called with valid code`() {
+    fun `should success verification when called with valid code`() {
         val navigateCallback: (String) -> Unit = mockk(relaxed = true)
         val successResponse: Response<Void> = Response.success(null)
         val accessToken = AccessToken("access")
@@ -306,9 +311,35 @@ class EmailVerificationViewModelTest {
         coVerify { navigateCallback("reset_password") }
     }
 
+    @Test
+    fun `should fail code send when source is invalid`() {
+        viewModel.setSource("invalid source")
+        viewModel.setEmail(validEmail)
+        viewModel.sendCode()
+
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.UNKNOWN)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.unknown_error)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
+    }
+
+    @Test
+    fun `should fail verification when source is invalid`() {
+        val navigateCallback: (String) -> Unit = mockk(relaxed = true)
+
+        viewModel.setSource("invalid source")
+        viewModel.setEmail(validEmail)
+        viewModel.setCode(validCode)
+
+        viewModel.verifyEmail(navigateCallback)
+
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.UNKNOWN)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.unknown_error)
+        assertEquals(viewModel.uiState.value.isValidCode, false)
+    }
+
     // ResetPassword
     @Test
-    fun `should fail code verification when internet connection fails`() {
+    fun `should fail verification when internet connection fails`() {
         val navigateCallback: (String) -> Unit = mockk(relaxed = true)
         val accessToken = AccessToken("access")
 
@@ -333,7 +364,7 @@ class EmailVerificationViewModelTest {
 
     // ResetPassword
     @Test
-    fun `should fail code verification when code is wrong`() {
+    fun `should fail verification when code is wrong`() {
         val navigateCallback: (String) -> Unit = mockk(relaxed = true)
         val accessToken = AccessToken("access")
 
