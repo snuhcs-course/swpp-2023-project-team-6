@@ -1,6 +1,7 @@
 package com.example.speechbuddy.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.speechbuddy.R
 import com.example.speechbuddy.data.remote.requests.AuthResetPasswordRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
@@ -102,6 +103,7 @@ class ResetPasswordViewModelTest {
             assertEquals(viewModel.passwordInput, emptyPassword)
             assertEquals(viewModel.passwordCheckInput, it)
             assertEquals(viewModel.uiState.value.error?.type, ResetPasswordErrorType.PASSWORD)
+            assertEquals(viewModel.uiState.value.error?.messageId, R.string.no_password)
             assertEquals(viewModel.uiState.value.isValidPassword, false)
 
             viewModel.setPassword(validPassword)
@@ -121,6 +123,7 @@ class ResetPasswordViewModelTest {
             assertEquals(viewModel.passwordInput, invalidPassword)
             assertEquals(viewModel.passwordCheckInput, it)
             assertEquals(viewModel.uiState.value.error?.type, ResetPasswordErrorType.PASSWORD)
+            assertEquals(viewModel.uiState.value.error?.messageId, R.string.password_too_short)
             assertEquals(viewModel.uiState.value.isValidPassword, false)
 
             viewModel.setPassword(validPassword)
@@ -141,6 +144,7 @@ class ResetPasswordViewModelTest {
             assertEquals(viewModel.passwordInput, validPassword)
             assertEquals(viewModel.passwordCheckInput, it)
             assertEquals(viewModel.uiState.value.error?.type, ResetPasswordErrorType.PASSWORD_CHECK)
+            assertEquals(viewModel.uiState.value.error?.messageId, R.string.wrong_password_check)
             assertEquals(viewModel.uiState.value.isValidPassword, false)
             //isValidPassword doesn't turn true when password was valid from the start
         }
