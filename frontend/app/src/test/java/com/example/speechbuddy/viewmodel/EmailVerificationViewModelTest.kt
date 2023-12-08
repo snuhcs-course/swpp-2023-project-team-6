@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -41,6 +42,7 @@ class EmailVerificationViewModelTest {
     private val validEmail = "test@test.com"
     private val invalidEmail = "test"
     private val emptyEmail = ""
+    private val wrongEmail = "wrongemail@test.com"
     private val signup = "signup"
     private val resetPassword = "reset_password"
     private val sourceList = arrayListOf(signup, resetPassword)
@@ -323,6 +325,106 @@ class EmailVerificationViewModelTest {
     }
 
     @Test
+    fun `should fail code send when bad request occurs`() {
+        val sendCodeRequest = AuthSendCodeRequest(wrongEmail)
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.error(400, errorResponseBody)
+
+        coEvery { authRepository.sendCodeForSignup(sendCodeRequest) } returns flowOf(
+            errorResponse
+        )
+        coEvery { authRepository.sendCodeForResetPassword(sendCodeRequest) } returns flowOf(
+            errorResponse
+        )
+        coEvery { responseHandler.parseErrorResponse(any()).key } returns "email"
+        viewModel.setSource("signup")
+        viewModel.setEmail(wrongEmail)
+        viewModel.sendCode()
+
+        coVerify { authRepository.sendCodeForSignup(sendCodeRequest) }
+
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.EMAIL)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.wrong_email)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
+
+        viewModel.setSource("reset_password")
+        viewModel.setEmail(wrongEmail)
+        viewModel.sendCode()
+
+        coVerify { authRepository.sendCodeForResetPassword(sendCodeRequest) }
+
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.EMAIL)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.wrong_email)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
+    }
+
+    @Test
+    fun `should fail code send when internet connection fails`() {
+        val validSendCodeRequest = AuthSendCodeRequest(validEmail)
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.error(600, errorResponseBody)
+
+        coEvery { authRepository.sendCodeForSignup(validSendCodeRequest) } returns flowOf(
+            errorResponse
+        )
+        coEvery { authRepository.sendCodeForResetPassword(validSendCodeRequest) } returns flowOf(
+            errorResponse
+        )
+        viewModel.setSource("signup")
+        viewModel.setEmail(validEmail)
+        viewModel.sendCode()
+
+        coVerify { authRepository.sendCodeForSignup(validSendCodeRequest) }
+
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CONNECTION)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.connection_error)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
+
+        viewModel.setSource("reset_password")
+        viewModel.setEmail(validEmail)
+        viewModel.sendCode()
+
+        coVerify { authRepository.sendCodeForResetPassword(validSendCodeRequest) }
+
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CONNECTION)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.connection_error)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
+    }
+
+    @Test
+    fun `should fail code send when unknown error occurs`() {
+        val validSendCodeRequest = AuthSendCodeRequest(validEmail)
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.error(404, errorResponseBody)
+
+        coEvery { authRepository.sendCodeForSignup(validSendCodeRequest) } returns flowOf(
+            errorResponse
+        )
+        coEvery { authRepository.sendCodeForResetPassword(validSendCodeRequest) } returns flowOf(
+            errorResponse
+        )
+        viewModel.setSource("signup")
+        viewModel.setEmail(validEmail)
+        viewModel.sendCode()
+
+        coVerify { authRepository.sendCodeForSignup(validSendCodeRequest) }
+
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.UNKNOWN)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.unknown_error)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
+
+        viewModel.setSource("reset_password")
+        viewModel.setEmail(validEmail)
+        viewModel.sendCode()
+
+        coVerify { authRepository.sendCodeForResetPassword(validSendCodeRequest) }
+
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.UNKNOWN)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.unknown_error)
+        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
+    }
+
+    @Test
     fun `should fail verification when source is invalid`() {
         val navigateCallback: (String) -> Unit = mockk(relaxed = true)
 
@@ -337,7 +439,6 @@ class EmailVerificationViewModelTest {
         assertEquals(viewModel.uiState.value.isValidCode, false)
     }
 
-    // ResetPassword
     @Test
     fun `should fail verification when internet connection fails`() {
         val navigateCallback: (String) -> Unit = mockk(relaxed = true)
@@ -346,9 +447,25 @@ class EmailVerificationViewModelTest {
         val validEmailVerificationRequest = AuthVerifyEmailRequest(
             validEmail, validCode
         )
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.error(600, errorResponseBody)
+        coEvery { authRepository.verifyEmailForSignup(validEmailVerificationRequest) } returns flowOf(
+            errorResponse
+        )
         coEvery { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) } returns flowOf(
             Resource.error("unknown", accessToken)
         )
+        viewModel.setSource("signup")
+        viewModel.setEmail(validEmail)
+        viewModel.setCode(validCode)
+
+        viewModel.verifyEmail(navigateCallback)
+
+        coVerify { authRepository.verifyEmailForSignup(validEmailVerificationRequest) }
+
+        assertEquals(viewModel.uiState.value.isValidCode, false)
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CONNECTION)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.connection_error)
 
         viewModel.setSource("reset_password")
         viewModel.setEmail(validEmail)
@@ -360,20 +477,36 @@ class EmailVerificationViewModelTest {
 
         assertEquals(viewModel.uiState.value.isValidCode, false)
         assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CONNECTION)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.connection_error)
     }
 
-    // ResetPassword
     @Test
     fun `should fail verification when code is wrong`() {
         val navigateCallback: (String) -> Unit = mockk(relaxed = true)
         val accessToken = AccessToken("access")
 
-        val validEmailVerificationRequest = AuthVerifyEmailRequest(
+        val emailVerificationRequest = AuthVerifyEmailRequest(
             validEmail, wrongCode
         )
-        coEvery { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) } returns flowOf(
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.error(400, errorResponseBody)
+        coEvery { authRepository.verifyEmailForSignup(emailVerificationRequest) } returns flowOf(
+            errorResponse
+        )
+        coEvery { authRepository.verifyEmailForResetPassword(emailVerificationRequest) } returns flowOf(
             Resource.error("", accessToken)
         )
+        viewModel.setSource("signup")
+        viewModel.setEmail(validEmail)
+        viewModel.setCode(wrongCode)
+
+        viewModel.verifyEmail(navigateCallback)
+
+        coVerify { authRepository.verifyEmailForSignup(emailVerificationRequest) }
+
+        assertEquals(viewModel.uiState.value.isValidCode, false)
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CODE)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.wrong_code)
 
         viewModel.setSource("reset_password")
         viewModel.setEmail(validEmail)
@@ -381,9 +514,35 @@ class EmailVerificationViewModelTest {
 
         viewModel.verifyEmail(navigateCallback)
 
-        coVerify { authRepository.verifyEmailForResetPassword(validEmailVerificationRequest) }
+        coVerify { authRepository.verifyEmailForResetPassword(emailVerificationRequest) }
 
         assertEquals(viewModel.uiState.value.isValidCode, false)
         assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.CODE)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.wrong_code)
+    }
+
+    // Signup
+    @Test
+    fun `should fail verification when unknown error occurs`() {
+        val navigateCallback: (String) -> Unit = mockk(relaxed = true)
+        val validEmailVerificationRequest = AuthVerifyEmailRequest(
+            validEmail, validCode
+        )
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.error(404, errorResponseBody)
+        coEvery { authRepository.verifyEmailForSignup(validEmailVerificationRequest) } returns flowOf(
+            errorResponse
+        )
+        viewModel.setSource("signup")
+        viewModel.setEmail(validEmail)
+        viewModel.setCode(validCode)
+
+        viewModel.verifyEmail(navigateCallback)
+
+        coVerify { authRepository.verifyEmailForSignup(validEmailVerificationRequest) }
+
+        assertEquals(viewModel.uiState.value.isValidCode, false)
+        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.UNKNOWN)
+        assertEquals(viewModel.uiState.value.error?.messageId, R.string.unknown_error)
     }
 }
