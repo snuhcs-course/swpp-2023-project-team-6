@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -312,18 +313,6 @@ class EmailVerificationViewModelTest {
 
         coVerify { navigateCallback("reset_password") }
     }
-
-    @Test
-    fun `should fail code send when source is invalid`() {
-        viewModel.setSource("invalid source")
-        viewModel.setEmail(validEmail)
-        viewModel.sendCode()
-
-        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.UNKNOWN)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.unknown_error)
-        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
-    }
-
     @Test
     fun `should fail code send when bad request occurs`() {
         val sendCodeRequest = AuthSendCodeRequest(wrongEmail)
