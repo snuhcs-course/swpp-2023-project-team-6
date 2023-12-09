@@ -112,7 +112,7 @@ class BackupSettingsViewModelTest {
             alert = BackupSettingsAlert.SUCCESS
         )
 
-        assertEquals(expectedValue1, observedUiStates)
+        assertEquals(expectedValue1, observedUiStates[0])
         coVerify { mockSettingsRepository.setLastBackupDate(date) }
     }
 
