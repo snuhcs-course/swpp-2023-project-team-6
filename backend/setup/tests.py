@@ -33,7 +33,8 @@ class SettingsTest(TestCase):
         }
         data = {
             'display_mode': 0,
-            'default_menu': 1
+            'default_menu': 1,
+            'auto_backup': 1,
         }
         # when attempting backup for the first time
         response = self.client.post('/setting/backup/', data, **headers)
@@ -42,7 +43,8 @@ class SettingsTest(TestCase):
         # when attempting backup repetitively
         data = {
             'display_mode': 1,
-            'default_menu': 0
+            'default_menu': 0,
+            'auto_backup': 1,
         }
         response = self.client.post('/setting/backup/', data, **headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -55,7 +57,8 @@ class SettingsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.json()
         self.assertEqual(data['display_mode'], 0)  # 0 is the default value
-        self.assertEqual(data['default_menu'], 0)  # 0 is the default value
+        self.assertEqual(data['default_menu'], 1)  # 1 is the default value
+        self.assertEqual(data['auto_backup'], 1)
 
 
 

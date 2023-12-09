@@ -1,6 +1,7 @@
 import boto3
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
+from django.db import transaction
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -22,6 +23,7 @@ User = get_user_model()
 class UserSignUpView(APIView):
     permission_classes = (permissions.AllowAny,)
 
+    @transaction.atomic
     def post(self, request):
         serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

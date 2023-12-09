@@ -97,14 +97,14 @@ fun SymbolSelectionScreen(
                      * Without the elvis operator, null pointer exception arises.
                      * Do NOT erase the elvis operator although it seems useless!
                      */
-                    items(entries ?: emptyList()) { entry ->
+                    items(entries) { entry ->
                         when (entry) {
                             is Symbol -> SymbolUi(
                                 symbol = entry,
                                 onSelect = {
                                     coroutineScope.launch {
                                         val id = viewModel.selectSymbol(entry)
-                                        lazyListState.animateScrollToItem(id)
+                                        lazyGridState.animateScrollToItem(0)
                                     }
                                 },
                                 onFavoriteChange = { viewModel.updateFavorite(entry, it) }

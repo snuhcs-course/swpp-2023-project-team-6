@@ -35,11 +35,6 @@ class SettingsRepository @Inject constructor(
     private val converters: Converters,
 ) {
     suspend fun setDarkMode(value: Boolean) {
-        if (value) {
-            settingsPrefsManager.saveDarkMode(true)
-        } else {
-            settingsPrefsManager.saveDarkMode(false)
-        }
         settingsPrefsManager.saveDarkMode(value)
     }
 
@@ -98,8 +93,12 @@ class SettingsRepository @Inject constructor(
     suspend fun displayBackup(): Flow<Response<Void>> =
         flow {
             try {
+                var autoBackup: Int? = 1
                 var darkMode: Int? = 0
                 var initialPage: Int? = 1
+                getAutoBackup().first().data?.let {
+                    autoBackup = if (it) 1 else 0
+                }
                 getDarkMode().first().data?.let {
                     darkMode = if (it) 1 else 0
                 }
@@ -108,7 +107,7 @@ class SettingsRepository @Inject constructor(
                 }
                 val result = backupService.displayBackup(
                     getAuthHeader(),
-                    SettingsBackupDto(darkMode, initialPage)
+                    SettingsBackupDto(autoBackup, darkMode, initialPage)
                 )
                 emit(result)
             } catch (e: Exception) {
@@ -178,19 +177,25 @@ class SettingsRepository @Inject constructor(
         return settingsRemoteSource.getDisplaySettings("Bearer $accessToken").map { response ->
             if (response.isSuccessful && response.code() == ResponseCode.SUCCESS.value) {
                 response.body()?.let { settingsDto ->
+                    val autoBackup = settingsDto.autoBackup
                     val displayMode = settingsDto.displayMode
                     val defaultMenu = settingsDto.defaultMenu
                     val updatedAt = settingsDto.updatedAt!!
                     setLastBackupDate(updatedAt)
-                    if (displayMode == 0) {
-                        setDarkMode(false)
+                    if (autoBackup == 0) {
+                        setAutoBackup(false)
                     } else {
+                        setAutoBackup(true)
+                    }
+                    if (displayMode == 1) {
                         setDarkMode(true)
+                    } else {
+                        setDarkMode(false)
                     }
                     if (defaultMenu == 0) {
-                        setInitialPage(InitialPage.SYMBOL_SELECTION)
-                    } else {
                         setInitialPage(InitialPage.TEXT_TO_SPEECH)
+                    } else {
+                        setInitialPage(InitialPage.SYMBOL_SELECTION)
                     }
 
                     Resource.success(null)

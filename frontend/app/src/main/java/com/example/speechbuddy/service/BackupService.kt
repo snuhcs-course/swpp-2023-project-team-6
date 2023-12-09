@@ -5,7 +5,6 @@ import com.example.speechbuddy.data.remote.models.SettingsBackupDto
 import com.example.speechbuddy.data.remote.models.SymbolListDto
 import com.example.speechbuddy.data.remote.requests.BackupWeightTableRequest
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

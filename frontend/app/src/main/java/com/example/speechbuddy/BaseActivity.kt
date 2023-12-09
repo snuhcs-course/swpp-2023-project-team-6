@@ -2,8 +2,8 @@ package com.example.speechbuddy
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.speechbuddy.domain.SessionManager
+import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.repository.SettingsRepository
-import com.example.speechbuddy.repository.UserRepository
 import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -12,9 +12,9 @@ abstract class BaseActivity : AppCompatActivity() {
     lateinit var sessionManager: SessionManager
 
     @Inject
-    lateinit var settingsRepository: SettingsRepository
+    lateinit var authRepository: AuthRepository
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var settingsRepository: SettingsRepository
 
 }

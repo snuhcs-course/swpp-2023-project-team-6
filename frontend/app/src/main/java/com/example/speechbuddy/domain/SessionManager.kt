@@ -7,6 +7,7 @@ import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.utils.Constants.Companion.GUEST_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class SessionManager {
@@ -43,8 +44,8 @@ class SessionManager {
         return _cachedToken.value?.refreshToken != null || _userId.value == GUEST_ID
     }
 
-    fun setAuthToken(value: AuthToken) {
-        CoroutineScope(Dispatchers.Main).launch {
+    fun setAuthToken(value: AuthToken): Job {
+        return CoroutineScope(Dispatchers.Main).launch {
             if (_cachedToken.value != value) {
                 _cachedToken.value = value
             }
@@ -59,7 +60,7 @@ class SessionManager {
         }
     }
 
-    fun deleteToken() {
+    fun nullify() {
         CoroutineScope(Dispatchers.Main).launch {
             _cachedToken.value = null
             _userId.value = null
@@ -69,12 +70,6 @@ class SessionManager {
     fun enterGuestMode() {
         CoroutineScope(Dispatchers.Main).launch {
             _userId.value = GUEST_ID
-        }
-    }
-
-    fun exitGuestMode() {
-        CoroutineScope(Dispatchers.Main).launch {
-            _userId.value = null
         }
     }
 

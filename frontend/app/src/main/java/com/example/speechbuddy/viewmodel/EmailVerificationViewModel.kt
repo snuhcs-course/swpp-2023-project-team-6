@@ -3,12 +3,9 @@ package com.example.speechbuddy.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speechbuddy.R
-import com.example.speechbuddy.data.remote.requests.AuthSendCodeRequest
 import com.example.speechbuddy.data.remote.requests.AuthVerifyEmailRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AuthToken
@@ -21,6 +18,7 @@ import com.example.speechbuddy.utils.ResponseHandler
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidCode
 import com.example.speechbuddy.utils.isValidEmail
+import com.example.speechbuddy.viewmodel.strategy.NavigationSendCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -61,8 +59,8 @@ class EmailVerificationViewModel @Inject internal constructor(
         if (_uiState.value.error?.type == EmailVerificationErrorType.CODE) validateCode()
     }
 
-    private fun changeLoadingState(){
-        _uiState.update {currentState ->
+    fun changeLoadingState() {
+        _uiState.update { currentState ->
             currentState.copy(
                 loading = !currentState.loading,
                 buttonEnabled = !currentState.buttonEnabled
@@ -114,147 +112,54 @@ class EmailVerificationViewModel @Inject internal constructor(
                 )
             }
         } else {
-            if (source.value == "signup") sendCodeForSignup()
-            if (source.value == "reset_password") sendCodeForResetPassword()
-            else _uiState.update { currentState ->
-                currentState.copy(
-                    isValidEmail = false,
-                    error = EmailVerificationError(
-                        type = EmailVerificationErrorType.UNKNOWN,
-                        messageId = R.string.unknown_error
-                    )
-                )
-            }
+            val navigationSendCode = NavigationSendCode()
+            navigationSendCode.setSource(source.value!!)
+            navigationSendCode.sendCode(this, repository, responseHandler)
         }
     }
 
-    private fun sendCodeForSignup() {
-        changeLoadingState()
-        viewModelScope.launch {
-            repository.sendCodeForSignup(
-                AuthSendCodeRequest(
-                    email = emailInput
-                )
-            ).collect { result ->
-                changeLoadingState()
-                when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isCodeSuccessfullySent = true,
-                                error = null
-                            )
-                        }
-                    }
-
-                    ResponseCode.BAD_REQUEST.value -> {
-                        val errorMessageId =
-                            when (responseHandler.parseErrorResponse(result.errorBody()!!).key) {
-                                "email" -> R.string.wrong_email
-                                "already_taken" -> R.string.email_already_taken
-                                else -> R.string.unknown_error
-                            }
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidEmail = false,
-                                error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.EMAIL,
-                                    messageId = errorMessageId
-                                )
-                            )
-                        }
-                    }
-
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidEmail = false,
-                                error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.CONNECTION,
-                                    messageId = R.string.connection_error
-                                )
-                            )
-                        }
-                    }
-
-                    else -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidEmail = false,
-                                error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.UNKNOWN,
-                                    messageId = R.string.unknown_error
-                                )
-                            )
-                        }
-                    }
-                }
-            }
+    fun handleSendCodeSuccess() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isCodeSuccessfullySent = true,
+                error = null
+            )
         }
     }
 
-    private fun sendCodeForResetPassword() {
-        changeLoadingState()
-        viewModelScope.launch {
-            repository.sendCodeForResetPassword(
-                AuthSendCodeRequest(
-                    email = emailInput
+    fun handleSendCodeBadRequest(errorMessageId: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isValidEmail = false,
+                error = EmailVerificationError(
+                    type = EmailVerificationErrorType.EMAIL,
+                    messageId = errorMessageId
                 )
-            ).collect { result ->
-                changeLoadingState()
-                when (result.code()) {
-                    ResponseCode.SUCCESS.value -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isCodeSuccessfullySent = true,
-                                error = null
-                            )
-                        }
-                    }
+            )
+        }
+    }
 
-                    ResponseCode.BAD_REQUEST.value -> {
-                        val errorMessageId =
-                            when (responseHandler.parseErrorResponse(result.errorBody()!!).key) {
-                                "email" -> R.string.wrong_email
-                                "no_user" -> R.string.unregistered_email
-                                else -> R.string.unknown_error
-                            }
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidEmail = false,
-                                error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.EMAIL,
-                                    messageId = errorMessageId
-                                )
-                            )
-                        }
-                    }
+    fun handleSendCodeNoInternetConnection() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isValidEmail = false,
+                error = EmailVerificationError(
+                    type = EmailVerificationErrorType.CONNECTION,
+                    messageId = R.string.connection_error
+                )
+            )
+        }
+    }
 
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidEmail = false,
-                                error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.CONNECTION,
-                                    messageId = R.string.connection_error
-                                )
-                            )
-                        }
-                    }
-
-                    else -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isValidEmail = false,
-                                error = EmailVerificationError(
-                                    type = EmailVerificationErrorType.UNKNOWN,
-                                    messageId = R.string.unknown_error
-                                )
-                            )
-                        }
-                    }
-                }
-            }
+    fun handleSendCodeUnknownError() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isValidEmail = false,
+                error = EmailVerificationError(
+                    type = EmailVerificationErrorType.UNKNOWN,
+                    messageId = R.string.unknown_error
+                )
+            )
         }
     }
 

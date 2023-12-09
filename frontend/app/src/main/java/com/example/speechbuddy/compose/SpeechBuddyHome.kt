@@ -1,7 +1,5 @@
 package com.example.speechbuddy.compose
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -11,9 +9,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -24,6 +25,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -41,6 +43,7 @@ import com.example.speechbuddy.compose.settings.SettingsScreen
 import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.compose.texttospeech.TextToSpeechScreen
+import com.example.speechbuddy.compose.utils.GuideScreen
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
 
 data class BottomNavItem(
@@ -49,13 +52,13 @@ data class BottomNavItem(
     val iconResId: Int
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpeechBuddyHome(
     initialPage: Boolean
 ) {
     val navController = rememberNavController()
+
     val navItems = listOf(
         BottomNavItem(
             "symbol_selection",
@@ -82,12 +85,15 @@ fun SpeechBuddyHome(
     val topAppBarState = rememberSaveable { mutableStateOf(true) }
     val bottomNavBarState = rememberSaveable { mutableStateOf(true) }
 
+    val showGuide = remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 topAppBarState = topAppBarState,
                 items = navItems,
-                navController = navController
+                navController = navController,
+                showGuide = showGuide
             )
         },
         bottomBar = {
@@ -109,6 +115,12 @@ fun SpeechBuddyHome(
             bottomNavBarState = bottomNavBarState
         )
     }
+
+    if (showGuide.value) {
+        GuideScreen(
+            onDismissRequest = { showGuide.value = false }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,7 +128,8 @@ fun SpeechBuddyHome(
 fun TopAppBar(
     topAppBarState: MutableState<Boolean>,
     items: List<BottomNavItem>,
-    navController: NavController
+    navController: NavController,
+    showGuide: MutableState<Boolean>
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     var titleResId: Int? = null
@@ -147,6 +160,14 @@ fun TopAppBar(
                         .size(40.dp),
                     contentScale = ContentScale.Fit
                 )
+            },
+            actions = {
+                IconButton(onClick = { showGuide.value = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "guide"
+                    )
+                }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -200,7 +221,6 @@ private fun BottomNavigationBar(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun SpeechBuddyHomeNavHost(
     navController: NavHostController,

@@ -6,21 +6,24 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.speechbuddy.compose.SpeechBuddyAuth
 import com.example.speechbuddy.ui.SpeechBuddyTheme
+import com.example.speechbuddy.utils.Constants.Companion.GUEST_ID
 import com.example.speechbuddy.utils.ResponseCode
-import com.example.speechbuddy.viewmodel.LoginViewModel
+import com.example.speechbuddy.worker.SeedDatabaseWorker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @AndroidEntryPoint
 class AuthActivity : BaseActivity() {
-
-    private val loginViewModel: LoginViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,24 +43,10 @@ class AuthActivity : BaseActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun subscribeObservers() {
         sessionManager.isAuthorized.observe(this) { isAuthorized ->
-            if (isAuthorized &&
-                sessionManager.userId.value != GUEST &&
-                sessionManager.isLogin.value != true &&
-                getAutoBackup() &&
-                getLastBackupDate() != LocalDate.now().toString()
-            ) {
-                autoBackup()
-            } else if (isAuthorized){
-                navHomeActivity()
-            }
+            if (isAuthorized) navHomeActivity()
         }
-    }
-
-    companion object {
-        const val GUEST = -1
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -83,34 +72,40 @@ class AuthActivity : BaseActivity() {
         var darkMode = false
         lifecycleScope.launch {
             settingsRepository.getDarkMode().collect {
-                darkMode = it.data?: false
+                darkMode = it.data ?: false
             }
         }
         return darkMode
     }
 
-    private fun getAutoBackup(): Boolean {
-        var autoBackup = true
-        lifecycleScope.launch {
-            settingsRepository.getAutoBackup().collect {
-                autoBackup = it.data?: true
-            }
-        }
-        return autoBackup
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun isBackupNecessary(): Boolean {
+        val autoBackup = settingsRepository.getAutoBackup().first().data
+        if (autoBackup == null || autoBackup == false) return false
+        val lastBackupDate = settingsRepository.getLastBackupDate().first().data
+        if (lastBackupDate == null || lastBackupDate == LocalDate.now().toString()) return false
+        return true
     }
 
-    private fun getLastBackupDate(): String {
-        var lastBackupDate = ""
-        lifecycleScope.launch {
-            settingsRepository.getLastBackupDate().collect {
-                lastBackupDate = it.data?: ""
-            }
-        }
-        return lastBackupDate
-    }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkPreviousAuthUser() {
-        loginViewModel.checkPreviousUser()
+        lifecycleScope.launch {
+            authRepository.checkPreviousUser().collect {
+                if (it.data != null) {
+                    val userId = it.data.first
+                    val authToken = it.data.second
+                    val setAuthTokenJob = sessionManager.setAuthToken(authToken)
+                    setAuthTokenJob.join()
+
+                    if (userId != GUEST_ID && sessionManager.isLogin.value != true && isBackupNecessary())
+                        autoBackup()
+                    sessionManager.setUserId(userId)
+                } else {
+                    val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>().build()
+                    WorkManager.getInstance(applicationContext).enqueue(request)
+                }
+            }
+        }
     }
 
     // hides keyboard
@@ -120,7 +115,7 @@ class AuthActivity : BaseActivity() {
             if (v != null) {
                 v.clearFocus()
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
             }
         }
         return super.dispatchTouchEvent(event)
@@ -128,10 +123,12 @@ class AuthActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun displayBackup() {
-        lifecycleScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.displayBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { symbolListBackup() }
+                    ResponseCode.SUCCESS.value -> {
+                        symbolListBackup()
+                    }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         sessionManager.setIsLogin(false)
@@ -144,28 +141,30 @@ class AuthActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun symbolListBackup() {
-        lifecycleScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.symbolListBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { favoriteSymbolBackup() }
+                    ResponseCode.SUCCESS.value -> {
+                        favoriteSymbolBackup()
+                    }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         sessionManager.setIsLogin(false)
                         navHomeActivity()
                     }
                 }
-
             }
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun favoriteSymbolBackup() {
-        lifecycleScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.favoriteSymbolBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { weightTableBackup() }
+                    ResponseCode.SUCCESS.value -> {
+                        weightTableBackup()
+                    }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         sessionManager.setIsLogin(false)
@@ -178,7 +177,7 @@ class AuthActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun weightTableBackup() {
-        lifecycleScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.weightTableBackup().collect { result ->
                 when (result.code()) {
                     ResponseCode.SUCCESS.value -> {

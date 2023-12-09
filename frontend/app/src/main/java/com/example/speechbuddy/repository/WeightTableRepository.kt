@@ -51,13 +51,15 @@ class WeightTableRepository @Inject constructor(
         }
     }
 
-    suspend fun replaceWeightTable(weightRowList: List<WeightRow>) {
-
-        val weightRowEntityList = mutableListOf<WeightRowEntity>()
-        for (weightRow in weightRowList) {
-            weightRowEntityList.add(weightRowMapper.mapFromDomainModel(weightRow))
+    fun replaceWeightTable(weightRowList: List<WeightRow>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val weightRowEntityList = mutableListOf<WeightRowEntity>()
+            for (weightRow in weightRowList) {
+                weightRowEntityList.add(weightRowMapper.mapFromDomainModel(weightRow))
+            }
+            weightRowDao.upsertAll(weightRowEntityList)
         }
-        weightRowDao.upsertAll(weightRowEntityList)
+
     }
 
     suspend fun getBackupWeightTableRequest(): BackupWeightTableRequest {
@@ -144,7 +146,7 @@ class WeightTableRepository @Inject constructor(
         val listOfSymCntPairs = mutableListOf<Pair<Symbol, Int>>()
         val weights = oneWeightRow[0].weights
 
-        for (i in 0 until allSymbolList.size) {
+        for (i in allSymbolList.indices) {
             listOfSymCntPairs.add(Pair(allSymbolList[i], weights[i]))
         }
 
@@ -187,11 +189,11 @@ class WeightTableRepository @Inject constructor(
                 val weights = targetRow.weights
                 val preSymbolWeights = weights.toIntArray() // 앞 symbol의 weights
 
-                preSymbolWeights[dbIndex2] += 5
 
-                val aftSymbolWeights = preSymbolWeights
+                preSymbolWeights[dbIndex2] += 10
 
-                updateWeightRow(targetRow, aftSymbolWeights.toList())
+
+                updateWeightRow(targetRow, preSymbolWeights.toList())
             }
         }
     }

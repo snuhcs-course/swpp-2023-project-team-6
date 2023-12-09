@@ -1,40 +1,46 @@
 package com.example.speechbuddy.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.liveData
 import com.example.speechbuddy.R
-import com.example.speechbuddy.data.local.AuthTokenPrefsManager
 import com.example.speechbuddy.data.remote.requests.AuthLoginRequest
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.repository.AuthRepository
+import com.example.speechbuddy.repository.SettingsRepository
+import com.example.speechbuddy.repository.UserRepository
 import com.example.speechbuddy.ui.models.LoginErrorType
 import com.example.speechbuddy.utils.Resource
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.coroutines.CoroutineContext
 
 class LoginViewModelTest {
-/*
+
     @OptIn(DelicateCoroutinesApi::class)
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     @MockK
-    private val repository: AuthRepository = mockk()
-    private val authTokenPrefsManager: AuthTokenPrefsManager = mockk()
-    private val sessionManager = SessionManager(authTokenPrefsManager)
+    private val mockAuthRepository: AuthRepository = mockk()
+    private val mockUserRepository: UserRepository = mockk()
+    private val mockSettingsRepository: SettingsRepository = mockk()
+    private val mockSessionManager: SessionManager = mockk()
     private lateinit var viewModel: LoginViewModel
 
     // boundary condition: 8 characters in password field
@@ -52,7 +58,12 @@ class LoginViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(mainThreadSurrogate)
-        viewModel = LoginViewModel(repository, sessionManager)
+        viewModel = LoginViewModel(
+            mockAuthRepository,
+            mockUserRepository,
+            mockSettingsRepository,
+            mockSessionManager
+        )
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -110,7 +121,7 @@ class LoginViewModelTest {
         viewModel.setPassword(validPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(unregisteredEmail, validPassword))
+            mockAuthRepository.login(AuthLoginRequest(unregisteredEmail, validPassword))
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
@@ -133,7 +144,7 @@ class LoginViewModelTest {
         viewModel.setPassword(validPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(unregisteredEmail, validPassword))
+            mockAuthRepository.login(AuthLoginRequest(unregisteredEmail, validPassword))
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
@@ -158,7 +169,7 @@ class LoginViewModelTest {
         viewModel.setPassword(wrongPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+            mockAuthRepository.login(AuthLoginRequest(validEmail, wrongPassword))
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
@@ -181,7 +192,7 @@ class LoginViewModelTest {
         viewModel.setPassword(wrongPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+            mockAuthRepository.login(AuthLoginRequest(validEmail, wrongPassword))
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
@@ -250,7 +261,7 @@ class LoginViewModelTest {
         viewModel.setPassword(wrongPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+            mockAuthRepository.login(AuthLoginRequest(validEmail, wrongPassword))
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
@@ -272,7 +283,7 @@ class LoginViewModelTest {
         viewModel.setPassword(wrongPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+            mockAuthRepository.login(AuthLoginRequest(validEmail, wrongPassword))
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
@@ -335,7 +346,7 @@ class LoginViewModelTest {
         viewModel.setPassword(validPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(unregisteredEmail, validPassword))
+            mockAuthRepository.login(AuthLoginRequest(unregisteredEmail, validPassword))
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_email\":[\"wrong email address\"]}}",
@@ -371,7 +382,7 @@ class LoginViewModelTest {
         viewModel.setPassword(wrongPassword)
 
         coEvery {
-            repository.login(AuthLoginRequest(validEmail, wrongPassword))
+            mockAuthRepository.login(AuthLoginRequest(validEmail, wrongPassword))
         } returns flowOf(
             Resource.error(
                 "{\"code\":400,\"message\":{\"wrong_password\":[\"wrong password\"]}}",
@@ -396,17 +407,27 @@ class LoginViewModelTest {
         val authToken = AuthToken("access", "refresh")
 
         coEvery {
-            repository.login(AuthLoginRequest(validEmail, validPassword))
+            mockAuthRepository.login(AuthLoginRequest(validEmail, validPassword))
         } returns flowOf(
             Resource.success(authToken)
         )
+        coEvery { mockSessionManager.setAuthToken(authToken) } returns Job()
+        coEvery { mockSessionManager.cachedToken.value } returns AuthToken("access", "refresh")
 
         viewModel.login()
         Thread.sleep(10) //viewModel.login() does not immediately produce result
 
-        assertEquals(authToken, sessionManager.cachedToken.value)
+        assertEquals(authToken, mockSessionManager.cachedToken.value)
     }
 
- */
+    @Test
+    fun `should enter guest mode when called`() = runBlocking {
+        coEvery { mockUserRepository.setGuestMode() } returns Unit
+        coEvery { mockSessionManager.enterGuestMode() } returns Unit
 
+        viewModel.enterGuestMode()
+
+        coVerify { mockUserRepository.setGuestMode() }
+        coVerify { mockSessionManager.enterGuestMode() }
+    }
 }
