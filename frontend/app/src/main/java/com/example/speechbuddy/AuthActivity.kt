@@ -1,10 +1,12 @@
 package com.example.speechbuddy
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -23,6 +25,7 @@ import java.time.LocalDate
 @AndroidEntryPoint
 class AuthActivity : BaseActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -46,6 +49,7 @@ class AuthActivity : BaseActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun autoBackup() {
         setContent {
             SpeechBuddyTheme(
@@ -74,6 +78,7 @@ class AuthActivity : BaseActivity() {
         return darkMode
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun isBackupNecessary(): Boolean {
         val autoBackup = settingsRepository.getAutoBackup().first().data
         if (autoBackup == null || autoBackup == false) return false
@@ -82,6 +87,7 @@ class AuthActivity : BaseActivity() {
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkPreviousAuthUser() {
         lifecycleScope.launch {
             authRepository.checkPreviousUser().collect {
@@ -115,6 +121,7 @@ class AuthActivity : BaseActivity() {
         return super.dispatchTouchEvent(event)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun displayBackup() {
         CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.displayBackup().collect { result ->
@@ -132,6 +139,7 @@ class AuthActivity : BaseActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun symbolListBackup() {
         CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.symbolListBackup().collect { result ->
@@ -149,6 +157,7 @@ class AuthActivity : BaseActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun favoriteSymbolBackup() {
         CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.favoriteSymbolBackup().collect { result ->
@@ -166,6 +175,7 @@ class AuthActivity : BaseActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun weightTableBackup() {
         CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.weightTableBackup().collect { result ->

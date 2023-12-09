@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class SeedDatabaseWorker(
@@ -25,26 +26,41 @@ class SeedDatabaseWorker(
         try {
             val database = AppDatabase.getInstance(applicationContext)
 
-            applicationContext.assets.open("weight_table.txt").use { inputStream ->
-                val weightRows = mutableListOf<WeightRowEntity>()
-
-                val inputList: MutableList<List<Int>> = ArrayList()
-                inputStream.bufferedReader().useLines { lines ->
-                    lines.forEach { line ->
-                        inputList.add(
-                            line.split(",").mapNotNull { it.trim().toIntOrNull() })
-                    }
+            val currentDb = database.weightRowDao().getAllWeightRows().first()
+            var cnt = 0
+            for (currentWeightRowEntity in currentDb) {
+                if (currentWeightRowEntity.weights.all{it == 0}){
+                    cnt+=1 // count the rows with 0 weights
                 }
-                var id = 1
-                for (weight in inputList) {
-                    val weightRowEntity = WeightRowEntity(id++, weight)
-                    weightRows.add(weightRowEntity)
-                }
-
-                database.weightRowDao().upsertAll(weightRows)
-
-                Result.success()
             }
+            if (cnt == currentDb.size){ // if weight table is filled with 0
+                Log.d("create-db", "empty db->initializing db")
+                applicationContext.assets.open("weight_table.txt").use { inputStream ->
+                    val weightRows = mutableListOf<WeightRowEntity>()
+
+                    val inputList: MutableList<List<Int>> = ArrayList()
+                    inputStream.bufferedReader().useLines { lines ->
+                        lines.forEach { line ->
+                            inputList.add(
+                                line.split(",").mapNotNull { it.trim().toIntOrNull() })
+                        }
+                    }
+                    var id = 1
+                    for (weight in inputList) {
+                        val weightRowEntity = WeightRowEntity(id++, weight)
+                        weightRows.add(weightRowEntity)
+                    }
+
+                    database.weightRowDao().upsertAll(weightRows)
+
+                    Result.success()
+                }
+            }
+            else{
+                Log.d("create-db", "db exists")
+            }
+
+
 
             applicationContext.assets.open(SYMBOL_DATA_FILENAME).use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
