@@ -104,7 +104,7 @@ fun SymbolSelectionScreen(
                                 onSelect = {
                                     coroutineScope.launch {
                                         val id = viewModel.selectSymbol(entry)
-                                        lazyListState.animateScrollToItem(id)
+                                        lazyGridState.animateScrollToItem(0)
                                     }
                                 },
                                 onFavoriteChange = { viewModel.updateFavorite(entry, it) }
