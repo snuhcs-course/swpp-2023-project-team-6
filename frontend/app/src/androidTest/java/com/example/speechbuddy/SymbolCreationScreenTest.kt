@@ -1,30 +1,17 @@
 package com.example.speechbuddy
 
-import android.app.Activity
-import android.app.Instrumentation
-import android.content.ContentResolver
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.speechbuddy.compose.emailverification.EmailVerificationScreen
 import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.CategoryDao
@@ -49,14 +36,11 @@ import com.example.speechbuddy.worker.SeedDatabaseWorker
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 
 @HiltAndroidTest
 class SymbolCreationScreenTest {
@@ -86,7 +70,7 @@ class SymbolCreationScreenTest {
         hiltRule.inject()
 
         val context = ApplicationProvider.getApplicationContext<Context>()
-//        val worker = SeedDatabaseWorker(context, WorkerParameters.DEFAULT)
+
         val path = context.getDatabasePath("speechbuddy-db")
 
         database = Room.databaseBuilder(
@@ -124,10 +108,10 @@ class SymbolCreationScreenTest {
                                 realImageDownloader = RealImageDownloader(
                                     backupService = backupService,
                                     context = context
-                                    //InstrumentationRegistry.getInstrumentation().context
+
                                 ),
                                 context = context
-                                //InstrumentationRegistry.getInstrumentation().context
+
                             ),
                             mySymbolDtoMapper = MySymbolDtoMapper(),
                             symbolMapper = SymbolMapper(),
@@ -158,7 +142,7 @@ class SymbolCreationScreenTest {
     }
 
     @Test
-    fun should_display_alertdialog_with_three_options_when_symbolcreation_clicked(){
+    fun should_display_alertdialog_with_three_options_when_symbolcreation_clicked() {
         composeTestRule.onNodeWithContentDescription(PHOTO_ICON_DESCRIPTION).performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText(ALERT_MESSAGE).assertIsDisplayed()
@@ -166,8 +150,9 @@ class SymbolCreationScreenTest {
         composeTestRule.onNodeWithText(SELECT_FROM_EXISTING).assertIsDisplayed()
         composeTestRule.onNodeWithText(CANCEL).assertIsDisplayed()
     }
+
     @Test
-    fun should_display_all_categories_when_category_selection_is_clicked(){
+    fun should_display_all_categories_when_category_selection_is_clicked() {
         composeTestRule.onNodeWithText(BIG_CATEGORY_BOX_TEXT).performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("가족").assertIsDisplayed()

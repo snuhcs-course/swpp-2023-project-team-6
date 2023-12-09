@@ -1,41 +1,23 @@
 package com.example.speechbuddy
 
 import android.content.Context
-import android.provider.ContactsContract.Data
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsFocused
-import androidx.compose.ui.test.assertIsNotDisplayed
-import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.performTextReplacement
-import androidx.room.Database
-
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkerParameters
-
 import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
-
 import com.example.speechbuddy.data.local.WeightRowDao
 import com.example.speechbuddy.data.local.models.CategoryMapper
 import com.example.speechbuddy.data.local.models.SymbolMapper
@@ -55,12 +37,8 @@ import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 import com.example.speechbuddy.worker.SeedDatabaseWorker
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import okhttp3.internal.wait
-
 import org.junit.After
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -96,7 +74,7 @@ class SymbolSelectionScreenTest {
         hiltRule.inject()
 
         val context = ApplicationProvider.getApplicationContext<Context>()
-//        val worker = SeedDatabaseWorker(context, WorkerParameters.DEFAULT)
+
         val path = context.getDatabasePath("speechbuddy-db")
 
         database = Room.databaseBuilder(
@@ -105,10 +83,7 @@ class SymbolSelectionScreenTest {
             path.toString()
         ).build()
 
-//        database = Room.inMemoryDatabaseBuilder(
-//            context,
-//            AppDatabase::class.java
-//        ).build()
+
 
         symbolDao = database.symbolDao()
         categoryDao = database.categoryDao()
@@ -127,8 +102,8 @@ class SymbolSelectionScreenTest {
             ) {
                 SymbolSelectionScreen(
                     paddingValues = PaddingValues(),
-                    topAppBarState = remember{ mutableStateOf(true) },
-                    bottomNavBarState = remember{ mutableStateOf(true) },
+                    topAppBarState = remember { mutableStateOf(true) },
+                    bottomNavBarState = remember { mutableStateOf(true) },
                     viewModel = SymbolSelectionViewModel(
                         repository = SymbolRepository(
                             symbolDao = symbolDao,
@@ -141,10 +116,10 @@ class SymbolSelectionScreenTest {
                                 realImageDownloader = RealImageDownloader(
                                     backupService = backupService,
                                     context = context
-                                    //InstrumentationRegistry.getInstrumentation().context
+
                                 ),
                                 context = context
-                                //InstrumentationRegistry.getInstrumentation().context
+
                             ),
                             mySymbolDtoMapper = MySymbolDtoMapper(),
                             symbolMapper = SymbolMapper(),
@@ -164,7 +139,7 @@ class SymbolSelectionScreenTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         database.close()
     }
 
@@ -197,18 +172,15 @@ class SymbolSelectionScreenTest {
 
     @Test
     fun should_display_proper_symbols_when_each_category_clicked() {
-//        composeTestRule.onNodeWithText(TEST_CATEGORY_TEXT).performClick()
-//        Thread.sleep(3000)
-//        composeTestRule.onAllNodesWithText("가족")[0].performClick()
+
         composeTestRule.onNodeWithText("가족").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("남동생").assertIsDisplayed()
     }
 
 
-
     @Test
-    fun should_display_proper_symbols_on_selected_symbols_when_symbols_clicked(){
+    fun should_display_proper_symbols_on_selected_symbols_when_symbols_clicked() {
         composeTestRule.onNodeWithText("가족").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("남동생").performClick()
@@ -219,7 +191,7 @@ class SymbolSelectionScreenTest {
     }
 
     @Test
-    fun should_clear_symbols_on_selected_symbols_when_DELETE_ALL_BUTTON_clicked(){
+    fun should_clear_symbols_on_selected_symbols_when_DELETE_ALL_BUTTON_clicked() {
         composeTestRule.onNodeWithText("가족").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("남동생").performClick()
@@ -230,7 +202,7 @@ class SymbolSelectionScreenTest {
     }
 
     @Test
-    fun should_display_in_SEE_BIG_mode_when_SEE_BIG_BUTTON_clicked(){
+    fun should_display_in_SEE_BIG_mode_when_SEE_BIG_BUTTON_clicked() {
         composeTestRule.onNodeWithText("가족").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("남동생").performClick()
@@ -239,7 +211,7 @@ class SymbolSelectionScreenTest {
         composeTestRule.waitForIdle()
         composeTestRule.waitUntil {
             composeTestRule.onAllNodesWithText(EXIT_BUTTON_TEXT).fetchSemanticsNodes().size == 1
-            //composeTestRule.onNodeWithText(EXIT_BUTTON_TEXT).assertIsDisplayed()
+
         }
 
 
@@ -250,7 +222,7 @@ class SymbolSelectionScreenTest {
 
 
     companion object {
-        //const val SEARCH_BOX_TEXT = "SymbolSearchTextField"
+
         const val SEARCH_BOX_TEXT = "검색어를 입력하세요"
         const val SEE_BIG_BUTTON_TEXT = "크게 보기"
         const val DELETE_ALL_BUTTON_TEXT = "모두 삭제"

@@ -3,26 +3,15 @@ package com.example.speechbuddy
 import android.content.Context
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotDisplayed
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.speechbuddy.compose.emailverification.EmailVerificationScreen
 import com.example.speechbuddy.compose.settings.MySymbolSettings
-import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
 import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
@@ -48,7 +37,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -148,10 +136,10 @@ class MySymbolSettingsScreenTest {
                                 realImageDownloader = RealImageDownloader(
                                     backupService = backupService,
                                     context = context
-                                    //InstrumentationRegistry.getInstrumentation().context
+
                                 ),
                                 context = context
-                                //InstrumentationRegistry.getInstrumentation().context
+
                             ),
                             mySymbolDtoMapper = MySymbolDtoMapper(),
                             symbolMapper = SymbolMapper(),
@@ -185,8 +173,6 @@ class MySymbolSettingsScreenTest {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText(TEST_SYMBOL_TEXT_FOR_FAVORITE).assertIsDisplayed()
     }
-
-
 
 
     //
