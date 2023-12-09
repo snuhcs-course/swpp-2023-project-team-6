@@ -189,7 +189,9 @@ class WeightTableRepository @Inject constructor(
                 val weights = targetRow.weights
                 val preSymbolWeights = weights.toIntArray() // 앞 symbol의 weights
 
+
                 preSymbolWeights[dbIndex2] += 10
+
 
                 updateWeightRow(targetRow, preSymbolWeights.toList())
             }

@@ -3,16 +3,18 @@ package com.example.speechbuddy
 import android.content.Context
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.speechbuddy.compose.symbolcreation.SymbolCreationScreen
+import com.example.speechbuddy.compose.symbolselection.SymbolSelectionScreen
 import com.example.speechbuddy.data.local.AppDatabase
 import com.example.speechbuddy.data.local.CategoryDao
 import com.example.speechbuddy.data.local.SymbolDao
@@ -31,19 +33,21 @@ import com.example.speechbuddy.service.BackupService
 import com.example.speechbuddy.service.SymbolCreationService
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.utils.ResponseHandler
-import com.example.speechbuddy.viewmodel.SymbolCreationViewModel
+import com.example.speechbuddy.viewmodel.SymbolSelectionViewModel
 import com.example.speechbuddy.worker.SeedDatabaseWorker
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
 @HiltAndroidTest
-class SymbolCreationScreenTest {
+class SymbolSelectionScreenTest {
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
@@ -79,6 +83,8 @@ class SymbolCreationScreenTest {
             path.toString()
         ).build()
 
+
+
         symbolDao = database.symbolDao()
         categoryDao = database.categoryDao()
         weightRowDao = database.weightRowDao()
@@ -94,10 +100,12 @@ class SymbolCreationScreenTest {
                 settingsRepository = composeTestRule.activity.settingsRepository,
                 initialDarkMode = false
             ) {
-                SymbolCreationScreen(
+                SymbolSelectionScreen(
                     paddingValues = PaddingValues(),
-                    viewModel = SymbolCreationViewModel(
-                        symbolRepository = SymbolRepository(
+                    topAppBarState = remember { mutableStateOf(true) },
+                    bottomNavBarState = remember { mutableStateOf(true) },
+                    viewModel = SymbolSelectionViewModel(
+                        repository = SymbolRepository(
                             symbolDao = symbolDao,
                             categoryDao = categoryDao,
                             mySymbolRemoteSource = MySymbolRemoteSource(
@@ -124,53 +132,107 @@ class SymbolCreationScreenTest {
                             weightRowDao = weightRowDao,
                             converters = Converters(),
                         ),
-                        sessionManager = SessionManager()
                     )
                 )
             }
         }
     }
 
-    @Test
-    fun should_display_all_elements_when_symbolcreation_screen_appears() {
-        composeTestRule.onNodeWithText(CREATE_NEW_SYMBOL).assertIsDisplayed()
-        composeTestRule.onNodeWithText(CREATE_NEW_SYMBOL_TEXT).assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription(PHOTO_ICON_DESCRIPTION).assertIsDisplayed()
-        composeTestRule.onNodeWithText(BIG_CATEGORY_BOX_TEXT).assertIsDisplayed()
-        composeTestRule.onNodeWithText(SYMBOL_NAME_BOX_TEXT).assertIsDisplayed()
-        composeTestRule.onNodeWithText(MAKE_BUTTON_TEXT).assertIsDisplayed()
+    @After
+    fun tearDown() {
+        database.close()
     }
 
     @Test
-    fun should_display_alertdialog_with_three_options_when_symbolcreation_clicked() {
-        composeTestRule.onNodeWithContentDescription(PHOTO_ICON_DESCRIPTION).performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(ALERT_MESSAGE).assertIsDisplayed()
-        composeTestRule.onNodeWithText(TAKE_PICTURE).assertIsDisplayed()
-        composeTestRule.onNodeWithText(SELECT_FROM_EXISTING).assertIsDisplayed()
-        composeTestRule.onNodeWithText(CANCEL).assertIsDisplayed()
+    fun should_display_all_elements_when_mysybolsettings_screen_with_big_category_menu_appears() {
+        composeTestRule.onNodeWithText(SEARCH_BOX_TEXT).assertIsDisplayed()
+        composeTestRule.onNodeWithText(SEE_BIG_BUTTON_TEXT).assertIsDisplayed()
+        composeTestRule.onNodeWithText(DELETE_ALL_BUTTON_TEXT).assertIsDisplayed()
+        composeTestRule.onNodeWithText(ALL_MENU_TEXT).assertIsDisplayed()
+        composeTestRule.onNodeWithText(SYMBOL_MENU_TEXT).assertIsDisplayed()
+        composeTestRule.onNodeWithText(BIG_CATEGORY_TEXT).assertIsDisplayed()
+        composeTestRule.onNodeWithText(FAVORITE_MENU_TEXT).assertIsDisplayed()
+
     }
 
     @Test
-    fun should_display_all_categories_when_category_selection_is_clicked() {
-        composeTestRule.onNodeWithText(BIG_CATEGORY_BOX_TEXT).performClick()
+    fun should_change_symbols_displayed_when_each_menu_clicked() {
+        composeTestRule.onNodeWithText(ALL_MENU_TEXT).performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("가족").assertIsDisplayed()
+        composeTestRule.onNodeWithText(TEST_CATEGORY_TEXT).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText(SYMBOL_MENU_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(TEST_SYMBOL_TEXT).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText(BIG_CATEGORY_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(TEST_CATEGORY_TEXT).assertIsDisplayed()
     }
+
+    @Test
+    fun should_display_proper_symbols_when_each_category_clicked() {
+
+        composeTestRule.onNodeWithText("가족").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").assertIsDisplayed()
+    }
+
+
+    @Test
+    fun should_display_proper_symbols_on_selected_symbols_when_symbols_clicked() {
+        composeTestRule.onNodeWithText("가족").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(BIG_CATEGORY_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").assertIsDisplayed()
+    }
+
+    @Test
+    fun should_clear_symbols_on_selected_symbols_when_DELETE_ALL_BUTTON_clicked() {
+        composeTestRule.onNodeWithText("가족").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(BIG_CATEGORY_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_in_SEE_BIG_mode_when_SEE_BIG_BUTTON_clicked() {
+        composeTestRule.onNodeWithText("가족").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("남동생").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(SEE_BIG_BUTTON_TEXT).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithText(EXIT_BUTTON_TEXT).fetchSemanticsNodes().size == 1
+
+        }
+
+
+    }
+
 
     //
 
+
     companion object {
-        const val CREATE_NEW_SYMBOL = "새 상징 만들기"
-        const val CREATE_NEW_SYMBOL_TEXT = "직접 찍은 사진으로 새로운 상징을 만들어보세요"
-        const val BIG_CATEGORY_BOX_TEXT = "대분류"
-        const val SYMBOL_NAME_BOX_TEXT = "상징 이름을 입력해주세요"
-        const val MAKE_BUTTON_TEXT = "만들기"
-        const val PHOTO_ICON_DESCRIPTION = "새 상징 만들기"
-        const val ALERT_MESSAGE = "사진을 어떻게 추가하실 건가요?"
-        const val TAKE_PICTURE = "사진 촬영하기"
-        const val SELECT_FROM_EXISTING = "사진 보관함에서 사진 선택하기"
-        const val CANCEL = "취소"
+
+        const val SEARCH_BOX_TEXT = "검색어를 입력하세요"
+        const val SEE_BIG_BUTTON_TEXT = "크게 보기"
+        const val DELETE_ALL_BUTTON_TEXT = "모두 삭제"
+        const val ALL_MENU_TEXT = "전체"
+        const val SYMBOL_MENU_TEXT = "상징"
+        const val BIG_CATEGORY_TEXT = "대분류"
+        const val FAVORITE_MENU_TEXT = "즐겨찾기"
+        const val TEST_CATEGORY_TEXT = "가족"
+        const val TEST_SYMBOL_TEXT = "119에 전화해주세요"
+        const val EXIT_BUTTON_TEXT = "나가기"
     }
 
 }

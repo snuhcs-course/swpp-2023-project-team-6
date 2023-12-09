@@ -136,7 +136,7 @@ class EmailVerificationScreenForResetPWTest {
         // inputs
         const val INVALID_EMAIL = "invalidemail"
         const val UNREGISTERED_EMAIL_EXAMPLE = "noSuchEmail@test.com"
-        const val REGISTERED_EMAIL = "hahaa@gmail.com"
+        const val REGISTERED_EMAIL = "chess109@snu.ac.kr"
         const val INVALID_CODE = "invalid"
     }
 

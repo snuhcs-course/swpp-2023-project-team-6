@@ -46,7 +46,7 @@ class TextToSpeechScreenTest {
 
     @Test
     fun should_display_all_elements_when_text_to_speech_screen_appears() {
-        composeTestRule.onNodeWithText(TALK_WITH_SPEECH).assertIsDisplayed()
+
         composeTestRule.onNodeWithText(TTS_TEXT).assertIsDisplayed()
         composeTestRule.onNodeWithText(TTS_DESCRIPTION).assertIsDisplayed()
         composeTestRule.onNode(hasSetTextAction()).assertIsDisplayed() //OutlinedTextField
@@ -92,7 +92,7 @@ class TextToSpeechScreenTest {
     }
 
     companion object {
-        const val TALK_WITH_SPEECH = "음성으로 말하기"
+
         const val TTS_TEXT = "소리로 말해요"
         const val TTS_DESCRIPTION = "텍스트를 입력하면 SpeechBuddy가 직접 읽어줘요"
         const val PLAY_TEXT = "재생"

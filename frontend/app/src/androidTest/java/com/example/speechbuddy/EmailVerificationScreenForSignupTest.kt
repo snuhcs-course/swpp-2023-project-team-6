@@ -74,7 +74,7 @@ class EmailVerificationScreenForSignupTest {
         composeTestRule.onNodeWithText(EMAIL).performTextInput(ALREADY_TAKEN_EMAIL)
         composeTestRule.onNodeWithText(SEND_CODE).performClick()
         // wait for server's response
-        Thread.sleep(5000)
+        Thread.sleep(10000)
 
         composeTestRule.onNodeWithText(EMAIL_ALREADY_TAKEN).assertIsDisplayed()
         composeTestRule.onNodeWithText(NEXT).assertIsDisplayed().assertHasClickAction().assertIsNotEnabled()
@@ -135,7 +135,7 @@ class EmailVerificationScreenForSignupTest {
 
         // inputs
         const val INVALID_EMAIL = "invalidemail"
-        const val ALREADY_TAKEN_EMAIL = "hahaa@gmail.com"
+        const val ALREADY_TAKEN_EMAIL = "chess109@snu.ac.kr"
         const val VALID_EMAIL = "valid@test.com"
         const val INVALID_CODE = "invalid"
     }
