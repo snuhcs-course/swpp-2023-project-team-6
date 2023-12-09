@@ -163,7 +163,6 @@ class ResetPasswordViewModelTest {
         Thread.sleep(10)
 
         assertEquals(viewModel.uiState.value.error?.type, null)
-        coVerify { sessionManager.deleteToken() }
     }
 
     @Test

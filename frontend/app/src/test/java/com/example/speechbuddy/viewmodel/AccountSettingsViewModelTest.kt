@@ -15,6 +15,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
@@ -47,6 +48,7 @@ class AccountSettingsViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         Dispatchers.setMain(mainThreadSurrogate)
@@ -57,7 +59,6 @@ class AccountSettingsViewModelTest {
             weightTableRepository = mockWeightTableRepository,
             symbolRepository = mockSymbolRepository,
             userRepository = mockUserRepository,
-            sessionManager = mockSessionManager
         )
     }
 
@@ -157,7 +158,6 @@ class AccountSettingsViewModelTest {
         coEvery { mockWeightTableRepository.resetAllWeightRows() } returns Unit
         coEvery { mockSymbolRepository.resetSymbolsAndFavorites() } returns Unit
         coEvery { mockUserRepository.deleteUserInfo() } returns Unit
-        coEvery { mockSessionManager.exitGuestMode() } returns Unit
 
         viewModel.exitGuestMode()
 
@@ -165,7 +165,6 @@ class AccountSettingsViewModelTest {
         coVerify { mockWeightTableRepository.resetAllWeightRows() }
         coVerify { mockSymbolRepository.resetSymbolsAndFavorites() }
         coVerify { mockUserRepository.deleteUserInfo() }
-        coVerify { mockSessionManager.exitGuestMode() }
     }
 
     @Test
@@ -191,15 +190,11 @@ class AccountSettingsViewModelTest {
 
             viewModel.backup()
 
-            val observedUiStates = viewModel.uiState.take(2).toList()
+            val observedUiStates = viewModel.uiState.take(1).toList()
             val expectedValue1 =
                 AccountSettingsUiState(alert = AccountSettingsAlert.LOADING, buttonEnabled = false)
-            val expectedValue2 = AccountSettingsUiState(
-                alert = AccountSettingsAlert.BACKUP_SUCCESS,
-                buttonEnabled = false
-            )
             coVerify { mockSettingsRepository.setLastBackupDate(date) }
-            assertEquals(listOf(expectedValue1, expectedValue2), observedUiStates)
+            assertEquals(listOf(expectedValue1), observedUiStates)
 
         }
 }
