@@ -1,10 +1,7 @@
 package com.example.speechbuddy.viewmodel
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.repository.AuthRepository
 import com.example.speechbuddy.repository.SettingsRepository
 import com.example.speechbuddy.repository.SymbolRepository
@@ -29,8 +26,7 @@ class AccountSettingsViewModel @Inject internal constructor(
     private val settingsRepository: SettingsRepository,
     private val weightTableRepository: WeightTableRepository,
     private val symbolRepository: SymbolRepository,
-    private val userRepository: UserRepository,
-    private val sessionManager: SessionManager
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AccountSettingsUiState())
@@ -78,8 +74,6 @@ class AccountSettingsViewModel @Inject internal constructor(
                         weightTableRepository.resetAllWeightRows()
                         symbolRepository.resetSymbolsAndFavorites()
                         userRepository.deleteUserInfo()
-                        sessionManager.deleteToken()
-                        // authToken is already cleared by the repository
                         hideAlert()
                     }
 
@@ -101,8 +95,6 @@ class AccountSettingsViewModel @Inject internal constructor(
                         weightTableRepository.resetAllWeightRows()
                         symbolRepository.resetSymbolsAndFavorites()
                         userRepository.deleteUserInfo()
-                        sessionManager.deleteToken()
-                        // authToken is already cleared by the repository
                         hideAlert()
                     }
 
@@ -120,28 +112,32 @@ class AccountSettingsViewModel @Inject internal constructor(
             weightTableRepository.resetAllWeightRows()
             symbolRepository.resetSymbolsAndFavorites()
             userRepository.deleteUserInfo()
-            sessionManager.exitGuestMode()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun displayBackup() {
         viewModelScope.launch {
             settingsRepository.displayBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { symbolListBackup() }
-                    ResponseCode.NO_INTERNET_CONNECTION.value -> { handleNoInternetConnection() }
+                    ResponseCode.SUCCESS.value -> {
+                        symbolListBackup()
+                    }
+
+                    ResponseCode.NO_INTERNET_CONNECTION.value -> {
+                        handleNoInternetConnection()
+                    }
                 }
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun symbolListBackup() {
         viewModelScope.launch {
             settingsRepository.symbolListBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { favoriteSymbolBackup() }
+                    ResponseCode.SUCCESS.value -> {
+                        favoriteSymbolBackup()
+                    }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
@@ -153,12 +149,13 @@ class AccountSettingsViewModel @Inject internal constructor(
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun favoriteSymbolBackup() {
         viewModelScope.launch {
             settingsRepository.favoriteSymbolBackup().collect { result ->
                 when (result.code()) {
-                    ResponseCode.SUCCESS.value -> { weightTableBackup() }
+                    ResponseCode.SUCCESS.value -> {
+                        weightTableBackup()
+                    }
 
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
@@ -168,7 +165,6 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun weightTableBackup() {
         viewModelScope.launch {
             settingsRepository.weightTableBackup().collect { result ->
@@ -185,7 +181,6 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun backup() {
         _uiState.update { currentState ->
             currentState.copy(
@@ -205,7 +200,6 @@ class AccountSettingsViewModel @Inject internal constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun handleSuccess() {
         viewModelScope.launch {
             settingsRepository.setLastBackupDate(LocalDate.now().toString())

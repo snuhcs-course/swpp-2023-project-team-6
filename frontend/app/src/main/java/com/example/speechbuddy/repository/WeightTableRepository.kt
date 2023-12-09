@@ -146,7 +146,7 @@ class WeightTableRepository @Inject constructor(
         val listOfSymCntPairs = mutableListOf<Pair<Symbol, Int>>()
         val weights = oneWeightRow[0].weights
 
-        for (i in 0 until allSymbolList.size) {
+        for (i in allSymbolList.indices) {
             listOfSymCntPairs.add(Pair(allSymbolList[i], weights[i]))
         }
 
@@ -191,9 +191,7 @@ class WeightTableRepository @Inject constructor(
 
                 preSymbolWeights[dbIndex2] += 10
 
-                val aftSymbolWeights = preSymbolWeights
-
-                updateWeightRow(targetRow, aftSymbolWeights.toList())
+                updateWeightRow(targetRow, preSymbolWeights.toList())
             }
         }
     }

@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.utils.TitleUi
 
-
 @Composable
 fun Copyright(
     modifier: Modifier = Modifier,

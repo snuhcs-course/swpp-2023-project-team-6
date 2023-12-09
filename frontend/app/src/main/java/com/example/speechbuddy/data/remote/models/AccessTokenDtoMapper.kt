@@ -1,7 +1,6 @@
 package com.example.speechbuddy.data.remote.models
 
 import com.example.speechbuddy.domain.models.AccessToken
-import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.domain.utils.DomainMapper
 
 class AccessTokenDtoMapper : DomainMapper<AccessTokenDto, AccessToken> {

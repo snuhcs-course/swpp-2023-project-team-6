@@ -15,6 +15,7 @@ import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.AccessToken
 import com.example.speechbuddy.domain.models.AuthToken
 import com.example.speechbuddy.service.AuthService
+import com.example.speechbuddy.utils.Constants.Companion.GUEST_ID
 import com.example.speechbuddy.utils.Resource
 import com.example.speechbuddy.utils.ResponseCode
 import com.example.speechbuddy.utils.ResponseHandler
@@ -179,7 +180,7 @@ class AuthRepository @Inject constructor(
         }.map { pair ->
             val userId = pair.first
             val authToken = pair.second
-            if (userId != null && authToken.accessToken!!.isNotEmpty() && authToken.refreshToken!!.isNotEmpty())
+            if ((userId == GUEST_ID) || (userId != null && authToken.accessToken!!.isNotEmpty() && authToken.refreshToken!!.isNotEmpty()))
                 Resource.success(Pair(userId, authToken))
             else
                 Resource.error("Couldn't find previous user", null)
