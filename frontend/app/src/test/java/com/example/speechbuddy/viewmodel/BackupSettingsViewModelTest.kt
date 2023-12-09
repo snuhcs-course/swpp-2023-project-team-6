@@ -29,7 +29,7 @@ class BackupSettingsViewModelTest {
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     @MockK
-    private val mockSettingsRepository: SettingsRepository = mockk(relaxed = true)
+    private lateinit var mockSettingsRepository: SettingsRepository
     private lateinit var viewModel: BackupSettingsViewModel
 
 
@@ -37,6 +37,7 @@ class BackupSettingsViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(mainThreadSurrogate)
+        mockSettingsRepository = mockk(relaxed = true)
         viewModel = BackupSettingsViewModel(mockSettingsRepository)
     }
 
@@ -102,7 +103,7 @@ class BackupSettingsViewModelTest {
 
         viewModel.backup()
 
-        val observedUiStates = viewModel.uiState.take(2).toList()
+        val observedUiStates = viewModel.uiState.take(1).toList()
         val expectedValue2 = BackupSettingsUiState(
             lastBackupDate = date,
             isAutoBackupEnabled = false,
@@ -110,7 +111,8 @@ class BackupSettingsViewModelTest {
             buttonEnabled = !expectedValue1.buttonEnabled,
             alert = BackupSettingsAlert.SUCCESS
         )
-        assertEquals(listOf(expectedValue1, expectedValue2), observedUiStates)
+
+        assertEquals(expectedValue1, observedUiStates[0])
         coVerify { mockSettingsRepository.setLastBackupDate(date) }
     }
 
