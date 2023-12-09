@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -60,7 +61,7 @@ class EmailVerificationViewModelTest {
     fun setup() {
         Dispatchers.setMain(mainThreadSurrogate)
         viewModel = EmailVerificationViewModel(
-            authRepository, sessionManager
+            authRepository, responseHandler, sessionManager
         )
     }
 

@@ -10,7 +10,7 @@ import com.example.speechbuddy.viewmodel.EmailVerificationViewModel
 import kotlinx.coroutines.launch
 
 class SendCodeForSignupStrategy: SendCodeStrategy {
-    override fun sendCode(viewModel: EmailVerificationViewModel, repository: AuthRepository) {
+    override fun sendCode(viewModel: EmailVerificationViewModel, repository: AuthRepository, responseHandler: ResponseHandler) {
         viewModel.changeLoadingState()
         viewModel.viewModelScope.launch {
             repository.sendCodeForSignup(
@@ -25,7 +25,6 @@ class SendCodeForSignupStrategy: SendCodeStrategy {
                     }
 
                     ResponseCode.BAD_REQUEST.value -> {
-                        val responseHandler = ResponseHandler()
                         val errorMessageId =
                             when (responseHandler.parseErrorResponse(result.errorBody()!!).key) {
                                 "email" -> R.string.wrong_email

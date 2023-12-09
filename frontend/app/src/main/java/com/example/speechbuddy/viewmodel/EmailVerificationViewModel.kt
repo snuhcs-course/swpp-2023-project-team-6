@@ -14,6 +14,7 @@ import com.example.speechbuddy.ui.models.EmailVerificationError
 import com.example.speechbuddy.ui.models.EmailVerificationErrorType
 import com.example.speechbuddy.ui.models.EmailVerificationUiState
 import com.example.speechbuddy.utils.ResponseCode
+import com.example.speechbuddy.utils.ResponseHandler
 import com.example.speechbuddy.utils.Status
 import com.example.speechbuddy.utils.isValidCode
 import com.example.speechbuddy.utils.isValidEmail
@@ -29,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EmailVerificationViewModel @Inject internal constructor(
     private val repository: AuthRepository,
+    private val responseHandler: ResponseHandler,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -112,7 +114,7 @@ class EmailVerificationViewModel @Inject internal constructor(
         } else {
             val navigationSendCode = NavigationSendCode()
             navigationSendCode.setSource(source.value!!)
-            navigationSendCode.sendCode(this, repository)
+            navigationSendCode.sendCode(this, repository, responseHandler)
         }
     }
 
