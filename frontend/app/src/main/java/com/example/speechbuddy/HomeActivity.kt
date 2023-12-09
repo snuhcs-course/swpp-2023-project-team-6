@@ -3,6 +3,7 @@ package com.example.speechbuddy
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
@@ -15,18 +16,23 @@ import com.example.speechbuddy.ui.SpeechBuddyTheme
 import com.example.speechbuddy.worker.SeedDatabaseWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.example.speechbuddy.utils.Constants.Companion.GUEST_ID
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        // force the database worker to build a new db
-        // in order to check if the weight-db is empty or not and fill it
-        val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>().build()
-        WorkManager.getInstance(this).enqueue(request)
+        if(sessionManager.userId.value==GUEST_ID) {
+            // only activates if it is in guest mode.
+            // does not activate when logged in since db is overwritten on login
+            // force the database worker to build a new db
+            // in order to check if the weight-db is empty or not and fill it
+            Log.d("test", "home acrivity starting initialization of db")
+            val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>().build()
+            WorkManager.getInstance(this).enqueue(request)
+        }
         setContent {
             SpeechBuddyTheme(
                 settingsRepository = settingsRepository,
@@ -41,7 +47,7 @@ class HomeActivity : BaseActivity() {
 
     private fun subscribeObservers() {
         sessionManager.isAuthorized.observe(this) { isAuthorized ->
-            if (!isAuthorized) navAuthActivity()
+            if (!isAuthorized && !intent.getBooleanExtra("isTest", false)) navAuthActivity()
         }
     }
 
@@ -52,10 +58,10 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun getInitialPage(): Boolean {
-        var initialPage = false
+        var initialPage = true
         lifecycleScope.launch {
             settingsRepository.getInitialPage().collect {
-                initialPage = it.data?: false
+                initialPage = it.data?: true
             }
         }
         return initialPage

@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -61,7 +62,7 @@ fun DisplaySettings(
                         Switch(
                             checked = uiState.isDarkModeEnabled,
                             onCheckedChange = { viewModel.setDarkMode(it) },
-                            modifier = Modifier.heightIn(max = 32.dp)
+                            modifier = Modifier.heightIn(max = 32.dp).testTag("dark_mode")
                         )
                     }
                 )
@@ -101,7 +102,7 @@ fun InitialPageColumn(
                     RadioButton(
                         selected = initialPage == InitialPage.SYMBOL_SELECTION,
                         onClick = { onSelectInitialPage(InitialPage.SYMBOL_SELECTION) },
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp).testTag("initial_page_symbol")
                     )
                 }
             }
@@ -117,7 +118,7 @@ fun InitialPageColumn(
                     RadioButton(
                         selected = initialPage == InitialPage.TEXT_TO_SPEECH,
                         onClick = { onSelectInitialPage(InitialPage.TEXT_TO_SPEECH) },
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp).testTag("initial_page_tts")
                     )
                 }
             }

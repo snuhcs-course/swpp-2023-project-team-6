@@ -29,7 +29,10 @@ class ResetPasswordScreenTest {
     fun setUp() {
         hiltRule.inject()
         composeTestRule.activity.setContent {
-            SpeechBuddyTheme {
+            SpeechBuddyTheme(
+                settingsRepository = composeTestRule.activity.settingsRepository,
+                initialDarkMode = false
+            ) {
                 ResetPasswordScreen(
                     navigateToLogin = {}
                 )

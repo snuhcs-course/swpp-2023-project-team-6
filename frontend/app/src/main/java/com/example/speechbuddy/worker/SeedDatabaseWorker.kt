@@ -27,20 +27,24 @@ class SeedDatabaseWorker(
             val database = AppDatabase.getInstance(applicationContext)
 
 
-
             if (!applicationContext.getDatabasePath("speechbuddy-db").exists()) {
+                Log.d("create-db", "no db->initializing db")
                 createWeightTable(database)
             }
             else{ // check if the weight table is filled with 0
                 val currentDb = database.weightRowDao().getAllWeightRows().first()
-                var cnt = 1
+                var cnt = 0
                 for (currentWeightRowEntity in currentDb) {
                     if (currentWeightRowEntity.weights.all{it == 0}){
                         cnt+=1 // count the rows with 0 weights
                     }
                 }
                 if (cnt == currentDb.size){ // if weight table is filled with 0
+                    Log.d("create-db", "empty db->initializing db")
                     createWeightTable(database)
+                }
+                else{
+                    Log.d("create-db", "db exists")
                 }
             }
             
