@@ -150,6 +150,7 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.0")
 
     // Glide
     val glideVersion = "1.0.0-alpha.3"
