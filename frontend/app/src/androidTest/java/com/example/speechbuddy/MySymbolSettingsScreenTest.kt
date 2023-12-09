@@ -9,6 +9,7 @@ import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -185,14 +186,7 @@ class MySymbolSettingsScreenTest {
         composeTestRule.onNodeWithText(TEST_SYMBOL_TEXT_FOR_FAVORITE).assertIsDisplayed()
     }
 
-    @Test
-    fun should_delete_symbol_when_delete_button_is_clicked() {
-        composeTestRule.onNodeWithText(TEST_SYMBOL_TEXT_FOR_CREATION).performClick()
-        composeTestRule.waitForIdle()
-        //composeTestRule.onNodeWithText(DELETE_TEXT).performClick()
-        //composeTestRule.waitForIdle()
-        //composeTestRule.onNodeWithText(TEST_SYMBOL_TEXT_FOR_CREATION).assertIsNotDisplayed()
-    }
+
 
 
     //

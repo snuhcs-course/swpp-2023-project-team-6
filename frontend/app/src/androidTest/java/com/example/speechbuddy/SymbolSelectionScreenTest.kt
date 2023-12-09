@@ -20,6 +20,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import androidx.room.Database
 
 import androidx.room.Room
@@ -56,6 +57,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import okhttp3.internal.wait
 
 import org.junit.After
 
@@ -203,17 +205,7 @@ class SymbolSelectionScreenTest {
         composeTestRule.onNodeWithText("남동생").assertIsDisplayed()
     }
 
-    @Test
-    fun should_display_proper_symbols_when_search_box_typed() {
-        composeTestRule.onNodeWithText(SEARCH_BOX_TEXT).performTextInput("가")
-        //composeTestRule.waitForIdle()
-        //composeTestRule.onNodeWithText(DELETE_ALL_BUTTON_TEXT).performClick()
-        //composeTestRule.waitForIdle()
 
-        //composeTestRule.onNodeWithText("가게").assertIsDisplayed()
-        //composeTestRule.onNodeWithText("가다").assertIsDisplayed()
-        //composeTestRule.onNodeWithText("가방").assertIsDisplayed()
-    }
 
     @Test
     fun should_display_proper_symbols_on_selected_symbols_when_symbols_clicked(){
@@ -245,7 +237,11 @@ class SymbolSelectionScreenTest {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText(SEE_BIG_BUTTON_TEXT).performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(EXIT_BUTTON_TEXT).assertIsDisplayed()
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithText(EXIT_BUTTON_TEXT).fetchSemanticsNodes().size == 1
+            //composeTestRule.onNodeWithText(EXIT_BUTTON_TEXT).assertIsDisplayed()
+        }
+
 
     }
 

@@ -160,7 +160,7 @@ class SymbolCreationScreenTest {
     @Test
     fun should_display_alertdialog_with_three_options_when_symbolcreation_clicked(){
         composeTestRule.onNodeWithContentDescription(PHOTO_ICON_DESCRIPTION).performClick()
-        Thread.sleep(1000)
+        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText(ALERT_MESSAGE).assertIsDisplayed()
         composeTestRule.onNodeWithText(TAKE_PICTURE).assertIsDisplayed()
         composeTestRule.onNodeWithText(SELECT_FROM_EXISTING).assertIsDisplayed()
@@ -169,7 +169,7 @@ class SymbolCreationScreenTest {
     @Test
     fun should_display_all_categories_when_category_selection_is_clicked(){
         composeTestRule.onNodeWithText(BIG_CATEGORY_BOX_TEXT).performClick()
-        Thread.sleep(1000)
+        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("가족").assertIsDisplayed()
     }
 
