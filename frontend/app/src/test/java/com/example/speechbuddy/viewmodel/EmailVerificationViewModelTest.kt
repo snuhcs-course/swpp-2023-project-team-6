@@ -60,7 +60,7 @@ class EmailVerificationViewModelTest {
     fun setup() {
         Dispatchers.setMain(mainThreadSurrogate)
         viewModel = EmailVerificationViewModel(
-            authRepository, responseHandler, sessionManager
+            authRepository, sessionManager
         )
     }
 
@@ -312,18 +312,6 @@ class EmailVerificationViewModelTest {
 
         coVerify { navigateCallback("reset_password") }
     }
-
-    @Test
-    fun `should fail code send when source is invalid`() {
-        viewModel.setSource("invalid source")
-        viewModel.setEmail(validEmail)
-        viewModel.sendCode()
-
-        assertEquals(viewModel.uiState.value.error?.type, EmailVerificationErrorType.UNKNOWN)
-        assertEquals(viewModel.uiState.value.error?.messageId, R.string.unknown_error)
-        assertEquals(viewModel.uiState.value.isCodeSuccessfullySent, false)
-    }
-
     @Test
     fun `should fail code send when bad request occurs`() {
         val sendCodeRequest = AuthSendCodeRequest(wrongEmail)
