@@ -12,13 +12,14 @@ class ProxyImageDownloader @Inject constructor(
 ) : ImageDownloader {
     fun checkImage(symbolList: List<Symbol>) {
         val internalDir = context.filesDir
-        var flag = false
-        for (symbol in symbolList) {
+        val flag = mutableListOf<Boolean>()
+        for (symbol in symbolList.drop(499)) { // compare after 500
             internalDir.listFiles()?.forEach { file ->
                 // Check if the file matches your criteria
-                flag = file.name == "symbol_${symbol.id}.png"
+                flag.add(file.name == "symbol_${symbol.id}.png")
             }
-            if (!flag && symbol.id > 500) {
+            val result = flag.any{ it }
+            if (!result && symbol.id > 500) {
                 symbol.imageUrl?.let { downloadImage(it, "symbol_${symbol.id}.png") }
             }
         }
