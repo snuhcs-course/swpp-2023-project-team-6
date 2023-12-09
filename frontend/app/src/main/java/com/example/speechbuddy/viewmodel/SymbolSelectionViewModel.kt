@@ -80,11 +80,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
     fun setQuery(input: String) {
         queryInput = input
-        /**
-         * Passes a new queryInput to getEntries() to ensure that
-         * getEntries() is called precisely because of a change in query
-         */
-        getEntries(input)
+        getEntries()
     }
 
     fun clear(symbolItem: SymbolItem) {
@@ -105,6 +101,12 @@ class SymbolSelectionViewModel @Inject internal constructor(
 
         val newSymbolItem = SymbolItem(id = selectedSymbols.size, symbol = symbol)
         selectedSymbols = selectedSymbols.plus(newSymbolItem)
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                displayMode = DisplayMode.SYMBOL
+            )
+        }
 
         provideSuggestion(symbol)
 
@@ -157,7 +159,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
         }
     }
 
-    private fun getEntries(query: String? = null) {
+    private fun getEntries() {
         getEntriesJob?.cancel()
         needsToBeRecalled = false
         getEntriesJob = viewModelScope.launch {
@@ -168,31 +170,16 @@ class SymbolSelectionViewModel @Inject internal constructor(
                     }
                 }
 
-                /**
-                 * In case of DisplayMode.SYMBOL and DisplayMode.CATEGORY,
-                 * if getEntries() is called by setQuery(),
-                 * retrieve both symbols and categories from the repository
-                 */
                 DisplayMode.SYMBOL -> {
-                    if (!query.isNullOrEmpty()) // called from setQuery()
-                        repository.getEntries(query).collect { entries ->
-                            _entries.postValue(entries)
-                        }
-                    else // called from somewhere else
-                        repository.getSymbols(queryInput).collect { symbols ->
-                            _entries.postValue(symbols)
-                        }
+                    repository.getSymbols(queryInput).collect { symbols ->
+                        _entries.postValue(symbols)
+                    }
                 }
 
                 DisplayMode.CATEGORY -> {
-                    if (!query.isNullOrEmpty())
-                        repository.getEntries(query).collect { entries ->
-                            _entries.postValue(entries)
-                        }
-                    else
-                        repository.getCategories(queryInput).collect { categories ->
-                            _entries.postValue(categories)
-                        }
+                    repository.getCategories(queryInput).collect { categories ->
+                        _entries.postValue(categories)
+                    }
                 }
 
                 DisplayMode.FAVORITE -> {
