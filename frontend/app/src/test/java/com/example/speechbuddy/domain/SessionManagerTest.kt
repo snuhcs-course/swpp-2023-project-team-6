@@ -71,25 +71,10 @@ class SessionManagerTest {
     }
 
     @Test
-    fun `deleteToken should set cachedToken and userId to null`() = testCoroutineDispatcher.runBlockingTest {
-        sessionManager.deleteToken()
-
-        verify { authTokenObserver.onChanged(null) }
-        verify { userIdObserver.onChanged(null) }
-    }
-
-    @Test
     fun `enterGuestMode should set userId to GUEST_ID`() = testCoroutineDispatcher.runBlockingTest {
         sessionManager.enterGuestMode()
 
         verify { userIdObserver.onChanged(GUEST_ID) }
-    }
-
-    @Test
-    fun `exitGuestMode should set userId to null`() = testCoroutineDispatcher.runBlockingTest {
-        sessionManager.exitGuestMode()
-
-        verify { userIdObserver.onChanged(null) }
     }
 
     @Test

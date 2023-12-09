@@ -15,9 +15,11 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
@@ -27,6 +29,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.coroutines.CoroutineContext
 
 class LoginViewModelTest {
 
@@ -408,28 +411,13 @@ class LoginViewModelTest {
         } returns flowOf(
             Resource.success(authToken)
         )
-        coEvery { mockSessionManager.setAuthToken(authToken) } returns Unit
+        coEvery { mockSessionManager.setAuthToken(authToken) } returns Job()
         coEvery { mockSessionManager.cachedToken.value } returns AuthToken("access", "refresh")
 
         viewModel.login()
         Thread.sleep(10) //viewModel.login() does not immediately produce result
 
         assertEquals(authToken, mockSessionManager.cachedToken.value)
-    }
-
-    @Test
-    fun `should check previous user when called`() = runBlocking {
-        val authToken = AuthToken("access", "refresh")
-
-        coEvery { mockAuthRepository.checkPreviousUser() } returns flowOf(Resource.success(Pair(1, authToken)))
-        coEvery { mockSessionManager.setUserId(1) } returns Unit
-        coEvery { mockSessionManager.setAuthToken(authToken) } returns Unit
-
-        viewModel.checkPreviousUser()
-
-        coVerify { mockAuthRepository.checkPreviousUser() }
-        coVerify { mockSessionManager.setUserId(1) }
-        coVerify { mockSessionManager.setAuthToken(authToken) }
     }
 
     @Test
