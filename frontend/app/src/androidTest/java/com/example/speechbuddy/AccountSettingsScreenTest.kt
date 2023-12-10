@@ -1,12 +1,12 @@
 package com.example.speechbuddy
 
-import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -14,7 +14,6 @@ import com.example.speechbuddy.compose.settings.AccountSettings
 import com.example.speechbuddy.ui.SpeechBuddyTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.DelicateCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -23,17 +22,11 @@ import org.junit.Test
 @HiltAndroidTest
 class AccountSettingsScreenTest {
 
-    private val androidTestUtil = AndroidTestUtil()
-
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = androidTestUtil.createAndroidIntentComposeRule<HomeActivity> {
-        Intent(it, HomeActivity::class.java).apply {
-            putExtra("isTest", true)
-        }
-    }
+    val composeTestRule = createAndroidComposeRule<AuthActivity>()
 
     @Before
     fun setUp() {
