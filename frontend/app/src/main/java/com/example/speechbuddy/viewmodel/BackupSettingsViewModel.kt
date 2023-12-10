@@ -98,7 +98,9 @@ class BackupSettingsViewModel @Inject internal constructor(
                     ResponseCode.SUCCESS.value -> {
                         symbolListBackup()
                     }
-
+                    ResponseCode.BAD_REQUEST.value -> {
+                        handleNoInternetConnection()
+                    }
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
                     }
@@ -114,7 +116,9 @@ class BackupSettingsViewModel @Inject internal constructor(
                     ResponseCode.SUCCESS.value -> {
                         favoriteSymbolBackup()
                     }
-
+                    ResponseCode.BAD_REQUEST.value -> {
+                        handleNoInternetConnection()
+                    }
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
                     }
@@ -132,7 +136,9 @@ class BackupSettingsViewModel @Inject internal constructor(
                     ResponseCode.SUCCESS.value -> {
                         weightTableBackup()
                     }
-
+                    ResponseCode.BAD_REQUEST.value -> {
+                        handleNoInternetConnection()
+                    }
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
                     }
@@ -148,7 +154,9 @@ class BackupSettingsViewModel @Inject internal constructor(
                     ResponseCode.SUCCESS.value -> {
                         handleSuccess()
                     }
-
+                    ResponseCode.BAD_REQUEST.value -> {
+                        handleNoInternetConnection()
+                    }
                     ResponseCode.NO_INTERNET_CONNECTION.value -> {
                         handleNoInternetConnection()
                     }

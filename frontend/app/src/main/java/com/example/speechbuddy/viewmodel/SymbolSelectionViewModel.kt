@@ -94,9 +94,10 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun clearAll() {
         weightTableRepository.update(selectedSymbols)
         selectedSymbols = emptyList()
+        getEntries()
     }
 
-    fun selectSymbol(symbol: Symbol): Int {
+    fun selectSymbol(symbol: Symbol) {
         queryInput = ""
 
         val newSymbolItem = SymbolItem(id = selectedSymbols.size, symbol = symbol)
@@ -109,8 +110,6 @@ class SymbolSelectionViewModel @Inject internal constructor(
         }
 
         provideSuggestion(symbol)
-
-        return newSymbolItem.id
     }
 
     fun updateFavorite(symbol: Symbol, value: Boolean) {
