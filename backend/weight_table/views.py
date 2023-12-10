@@ -17,6 +17,19 @@ class WeightTableBackupView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        # Delete weight rows if user deleted corresponding symbols
+        weight_symbols = WeightTable.objects.filter(user=user).values('symbol_id')
+        weight_to_delete = [item['symbol_id'] for item in weight_symbols]
+
+        try:
+            for item in serializer.validated_data:
+                weight_to_delete.remove(item.get('symbol_id'))
+        except ValueError:
+            pass
+
+        for id in weight_to_delete:
+            WeightTable.objects.get(symbol_id=id, user=user).delete()
+
         return Response(status=status.HTTP_200_OK)
 
     def get(self, request):
