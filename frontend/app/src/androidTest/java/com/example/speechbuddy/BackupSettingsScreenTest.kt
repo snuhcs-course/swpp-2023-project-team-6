@@ -1,13 +1,14 @@
 package com.example.speechbuddy
 
+import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -21,12 +22,17 @@ import org.junit.Test
 
 @HiltAndroidTest
 class BackupSettingsScreenTest {
+    private val androidTestUtil = AndroidTestUtil()
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<AuthActivity>()
+    val composeTestRule = androidTestUtil.createAndroidIntentComposeRule<HomeActivity> {
+        Intent(it, HomeActivity::class.java).apply {
+            putExtra("isTest", true)
+        }
+    }
 
     @Before
     fun setUp() {

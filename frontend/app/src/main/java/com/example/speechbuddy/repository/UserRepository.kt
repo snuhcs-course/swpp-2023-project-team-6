@@ -2,7 +2,6 @@ package com.example.speechbuddy.repository
 
 import com.example.speechbuddy.data.local.UserDao
 import com.example.speechbuddy.data.local.UserIdPrefsManager
-import com.example.speechbuddy.data.local.models.UserEntity
 import com.example.speechbuddy.data.local.models.UserMapper
 import com.example.speechbuddy.data.remote.UserRemoteSource
 import com.example.speechbuddy.data.remote.models.UserDtoMapper
@@ -74,13 +73,6 @@ class UserRepository @Inject constructor(
             if (userId != GUEST_ID) userDao.deleteUserById(userId)
             userIdPrefsManager.clearUserId()
             sessionManager.nullify()
-        }
-    }
-
-    fun setMyInfo(id: Int, email: String, nickname: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            userIdPrefsManager.saveUserId(id)
-            userDao.insertUser(UserEntity(id, email, nickname))
         }
     }
 

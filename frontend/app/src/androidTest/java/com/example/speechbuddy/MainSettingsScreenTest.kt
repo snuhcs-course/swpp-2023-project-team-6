@@ -1,10 +1,10 @@
 package com.example.speechbuddy
 
+import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.NavHostController
 import com.example.speechbuddy.compose.settings.MainSettings
@@ -18,18 +18,23 @@ import org.junit.Test
 
 @HiltAndroidTest
 class MainSettingsScreenTest {
+    private val androidTestUtil = AndroidTestUtil()
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<AuthActivity>()
+    val composeTestRule = androidTestUtil.createAndroidIntentComposeRule<HomeActivity> {
+        Intent(it, HomeActivity::class.java).apply {
+            putExtra("isTest", true)
+        }
+    }
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        val fakeId = 1
-        val fakeEmail = "email@email.com"
+        val fakeId = 0
+        val fakeEmail = "email"
         val fakeNickname = "nickname"
         composeTestRule.activity.sessionManager.setUserId(fakeId)
         composeTestRule.activity.userRepository.setMyInfo(fakeId, fakeEmail, fakeNickname)
