@@ -94,6 +94,7 @@ class SymbolSelectionViewModel @Inject internal constructor(
     fun clearAll() {
         weightTableRepository.update(selectedSymbols)
         selectedSymbols = emptyList()
+        getEntries()
     }
 
     fun selectSymbol(symbol: Symbol): Int {
