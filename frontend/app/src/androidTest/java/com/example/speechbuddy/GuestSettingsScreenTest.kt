@@ -1,11 +1,11 @@
 package com.example.speechbuddy
 
-import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import com.example.speechbuddy.compose.settings.GuestSettings
 import com.example.speechbuddy.ui.SpeechBuddyTheme
@@ -18,26 +18,21 @@ import org.junit.Test
 
 @HiltAndroidTest
 class GuestSettingsScreenTest {
-    private val androidTestUtil = AndroidTestUtil()
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = androidTestUtil.createAndroidIntentComposeRule<HomeActivity> {
-        Intent(it, HomeActivity::class.java).apply {
-            putExtra("isTest", true)
-        }
-    }
+    val composeTestRule = createAndroidComposeRule<AuthActivity>()
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        val guestId = -1
-        val fakeEmail = "guest"
-        val fakeNickname = "guest"
-        composeTestRule.activity.sessionManager.setUserId(guestId)
-        composeTestRule.activity.userRepository.setMyInfo(guestId, fakeEmail, fakeNickname)
+        val fakeId = 1
+        val fakeEmail = "email@email.com"
+        val fakeNickname = "nickname"
+        composeTestRule.activity.sessionManager.setUserId(fakeId)
+        composeTestRule.activity.userRepository.setMyInfo(fakeId, fakeEmail, fakeNickname)
         composeTestRule.activity.setContent {
             SpeechBuddyTheme(
                 settingsRepository = composeTestRule.activity.settingsRepository,
