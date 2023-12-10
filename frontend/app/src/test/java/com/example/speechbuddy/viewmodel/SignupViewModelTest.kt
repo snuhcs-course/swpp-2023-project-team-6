@@ -2,22 +2,31 @@ package com.example.speechbuddy.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.speechbuddy.R
+import com.example.speechbuddy.data.remote.requests.AuthSignupRequest
 import com.example.speechbuddy.repository.AuthRepository
+import com.example.speechbuddy.ui.models.SignupError
 import com.example.speechbuddy.ui.models.SignupErrorType
+import com.example.speechbuddy.ui.models.SignupUiState
+import com.example.speechbuddy.utils.ErrorResponse
 import com.example.speechbuddy.utils.ResponseHandler
+import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import retrofit2.Response
 
 class SignupViewModelTest {
 
@@ -199,6 +208,61 @@ class SignupViewModelTest {
         assertEquals(SignupErrorType.PASSWORD, viewModel.uiState.value.error?.type)
         assertEquals(false, viewModel.uiState.value.isValidPassword)
     }
+
+    @Test
+    fun `should set error type unknown when email is null`() {
+        viewModel.setEmail(null)
+        viewModel.setNickname(validNickname)
+        viewModel.setPassword(validPassword)
+        viewModel.setPasswordCheck(validPassword)
+        viewModel.signup {}
+        assertEquals(
+            SignupUiState(
+                isValidEmail = false,
+                isValidNickname = true,
+                isValidPassword = true,
+                error = SignupError(
+                    type = SignupErrorType.UNKNOWN,
+                    messageId = R.string.unknown_error
+                )
+            ), viewModel.uiState.value
+        )
+    }
+
+    @Test
+    fun `should set error type email when abd request is returned`() = runBlocking {
+        viewModel.setEmail(validEmail)
+        viewModel.setNickname(validNickname)
+        viewModel.setPassword(validPassword)
+        viewModel.setPasswordCheck(validPassword)
+
+        val errorResponseBody = "Error message or JSON here".toResponseBody(null)
+        val errorResponse: Response<Void> = Response.success(null)
+        val errorResponse2 = ErrorResponse(key = "email")
+        coEvery {
+            mockAuthRepository.signup(
+                AuthSignupRequest(
+                    email = validEmail,
+                    nickname = validNickname,
+                    password = validPassword
+                )
+            )
+        } returns flowOf(errorResponse)
+//        coEvery { mockResponseHandler.parseErrorResponse(errorResponseBody)} returns errorResponse2
+        val expectedUiState = SignupUiState(
+            isValidEmail = false,
+            isValidNickname = true,
+            isValidPassword = true,
+            buttonEnabled = !viewModel.uiState.value.buttonEnabled,
+            loading = !viewModel.uiState.value.loading,
+            error = null
+        )
+        viewModel.signup {}
+
+        assertEquals(expectedUiState, viewModel.uiState.value)
+    }
+
+
 
     @Test
     fun `should set error type null after signup click when short password is changed to valid password`() {
