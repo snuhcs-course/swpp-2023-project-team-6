@@ -103,6 +103,7 @@ fun SymbolSelectionScreen(
                                 symbol = entry,
                                 onSelect = {
                                     coroutineScope.launch {
+                                        viewModel.selectSymbol(entry)
                                         lazyGridState.animateScrollToItem(0)
                                     }
                                 },
