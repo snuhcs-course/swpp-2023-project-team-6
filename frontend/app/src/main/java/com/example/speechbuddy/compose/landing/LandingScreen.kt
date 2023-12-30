@@ -60,7 +60,7 @@ fun LandingScreen(
                         text = stringResource(id = R.string.start_guest_mode),
                         onClick = { viewModel.enterGuestMode() }
                     )
-                    ButtonUi(text = stringResource(id = R.string.do_login), onClick = onLoginClick)
+//                    ButtonUi(text = stringResource(id = R.string.do_login), onClick = onLoginClick)
                 }
             }
         }
