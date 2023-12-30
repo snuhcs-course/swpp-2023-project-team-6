@@ -26,7 +26,7 @@ class AccountSettingsViewModel @Inject internal constructor(
     private val settingsRepository: SettingsRepository,
     private val weightTableRepository: WeightTableRepository,
     private val symbolRepository: SymbolRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AccountSettingsUiState())
@@ -72,6 +72,7 @@ class AccountSettingsViewModel @Inject internal constructor(
                     ResponseCode.SUCCESS.value -> {
                         settingsRepository.resetSettings()
                         weightTableRepository.resetAllWeightRows()
+                        symbolRepository.removeImages()
                         symbolRepository.resetSymbolsAndFavorites()
                         userRepository.deleteUserInfo()
                         hideAlert()
@@ -93,6 +94,7 @@ class AccountSettingsViewModel @Inject internal constructor(
                     ResponseCode.SUCCESS.value -> {
                         settingsRepository.resetSettings()
                         weightTableRepository.resetAllWeightRows()
+                        symbolRepository.removeImages()
                         symbolRepository.resetSymbolsAndFavorites()
                         userRepository.deleteUserInfo()
                         hideAlert()
@@ -110,6 +112,7 @@ class AccountSettingsViewModel @Inject internal constructor(
         viewModelScope.launch {
             settingsRepository.resetSettings()
             weightTableRepository.resetAllWeightRows()
+            symbolRepository.removeImages()
             symbolRepository.resetSymbolsAndFavorites()
             userRepository.deleteUserInfo()
         }

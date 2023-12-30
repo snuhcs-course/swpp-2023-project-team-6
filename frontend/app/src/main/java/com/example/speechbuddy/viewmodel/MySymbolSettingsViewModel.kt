@@ -80,6 +80,7 @@ class MySymbolSettingsViewModel @Inject internal constructor(
             val checkedSymbols = _checkedSymbols.toList()
             for (symbol in checkedSymbols) {
                 symbolRepository.deleteSymbol(symbol)
+                symbolRepository.removeSelectedImage(symbol)
                 weightTableRepository.updateWeightTableForDeletedSymbol(symbol)
             }
             _checkedSymbols.clear()

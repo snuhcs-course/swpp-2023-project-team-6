@@ -7,6 +7,7 @@ import com.example.speechbuddy.data.local.models.SymbolEntity
 import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.remote.MySymbolRemoteSource
 import com.example.speechbuddy.data.remote.ProxyImageDownloader
+import com.example.speechbuddy.data.remote.RemoveImage
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.models.Category
@@ -39,11 +40,27 @@ class SymbolRepository @Inject constructor(
     private val sessionManager: SessionManager,
     private val symbolMapper: SymbolMapper,
     private val categoryMapper: CategoryMapper,
-    private val proxyImageDownloader: ProxyImageDownloader
+    private val proxyImageDownloader: ProxyImageDownloader,
+    private val removeImage: RemoveImage
 ) {
 
     fun checkImages() {
         runBlocking { proxyImageDownloader.checkImage(getAllSymbols().first()) }
+    }
+
+    fun removeImages() {
+        runBlocking {
+            val removeList = removeImage.checkImage(getAllSymbols().first())
+            for (removeItem in removeList) {
+                removeImage.removeImage(removeItem)
+            }
+        }
+    }
+
+    fun removeSelectedImage(symbol: Symbol) {
+        runBlocking {
+            removeImage.removeImage("symbol_${symbol.id}.png")
+        }
     }
 
     fun getSymbols(query: String) =
