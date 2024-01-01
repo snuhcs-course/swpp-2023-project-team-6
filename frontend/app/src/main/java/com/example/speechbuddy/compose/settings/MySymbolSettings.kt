@@ -44,6 +44,8 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.speechbuddy.R
 import com.example.speechbuddy.compose.symbolselection.SymbolSearchTextField
 import com.example.speechbuddy.compose.utils.NoRippleInteractionSource
@@ -264,7 +266,14 @@ fun MySymbolUi(
                     model = filepath.plus("symbol_${symbol.id}.png"),
                     contentDescription = symbol.text,
                     modifier = Modifier.height(90.dp),
-                    contentScale = ContentScale.FillHeight
+                    contentScale = ContentScale.FillHeight,
+                    requestBuilderTransform = { requestBuilder ->
+                        requestBuilder.apply(
+                            RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                        )
+                    }
                 )
 
                 Box(

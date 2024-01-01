@@ -22,6 +22,7 @@ import com.example.speechbuddy.data.local.models.SymbolMapper
 import com.example.speechbuddy.data.remote.MySymbolRemoteSource
 import com.example.speechbuddy.data.remote.ProxyImageDownloader
 import com.example.speechbuddy.data.remote.RealImageDownloader
+import com.example.speechbuddy.data.remote.RemoveImage
 import com.example.speechbuddy.data.remote.models.MySymbolDtoMapper
 import com.example.speechbuddy.domain.SessionManager
 import com.example.speechbuddy.domain.utils.Converters
@@ -117,7 +118,8 @@ class SymbolCreationScreenTest {
                             symbolMapper = SymbolMapper(),
                             categoryMapper = CategoryMapper(),
                             sessionManager = SessionManager(),
-                            responseHandler = ResponseHandler()
+                            responseHandler = ResponseHandler(),
+                            removeImage = RemoveImage(context)
                         ),
                         weightTableRepository = WeightTableRepository(
                             symbolDao = symbolDao,
