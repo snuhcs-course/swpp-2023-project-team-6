@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.speechbuddy.R
 import com.example.speechbuddy.domain.models.Symbol
 import com.example.speechbuddy.utils.Constants.Companion.DEFAULT_SYMBOL_COUNT
@@ -98,7 +100,14 @@ fun SymbolUi(
                     model = filepath.plus("symbol_${symbol.id}.png"),
                     contentDescription = symbol.text,
                     modifier = Modifier.height(90.dp),
-                    contentScale = ContentScale.FillHeight
+                    contentScale = ContentScale.FillHeight,
+                    requestBuilderTransform = { requestBuilder ->
+                        requestBuilder.apply(
+                            RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                        )
+                    }
                 )
 
                 Box(

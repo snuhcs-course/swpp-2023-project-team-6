@@ -43,6 +43,13 @@ fun Copyright(
                 text = stringResource(R.string.copyright),
                 style = MaterialTheme.typography.bodyMedium
             )
+
+            Spacer(modifier = modifier.height(20.dp))
+
+            Text(
+                text = stringResource(R.string.bird_img_copyright),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
